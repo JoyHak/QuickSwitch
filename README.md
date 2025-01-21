@@ -32,7 +32,7 @@ QuickSwitch modification by Rafaello. Based on `v0.5dw9a` by *NotNull*, *DaWolfi
 
 #### TODO
 
-- AuotSwitch on clipboard change
+- AutoSwitch on clipboard change
 - drag and drop any file field
 - get all File Explorer QTTabBar tabs
 - get all Directory Opus panes
