@@ -1,0 +1,26 @@
+name: "Improvement"
+description: Share an idea on how to improve the code or suggest smth new
+labels: ["improvement"]
+
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Describe your idea/how your code works
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Code
+      description: Suggest your code
+      render: js
+    validations:
+      required: false
+      
+  - type: input
+    attributes:
+      label: Line number
+      placeholder: example  https://github.com/JoyHak/customize-vivaldi-buttons/blob/d788dac5f8d478e1479e623f5827313603820f72/public.js#L8
+      description: Point to the corresponding file and line number(s) which could be improved. Click on the line number in GitHub to create an [anchored link](https://github.com/JoyHak/customize-vivaldi-buttons/blob/d788dac5f8d478e1479e623f5827313603820f72/public.js#L8) to the corresponding code section
+    validations:
+      required: false    
