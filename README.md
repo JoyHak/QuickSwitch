@@ -1,5 +1,20 @@
 QuickSwitch modification by Rafaello. Based on `v0.5dw9a` by *NotNull*, *DaWolfi* and others: https://www.voidtools.com/forum/viewtopic.php?f=2&t=9881
-		
+
+#### ABOUT
+
+QuickSwitch allows you to switch file dialogs (like Save-As or Open) to any folder opened in supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
+
+![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(3).png)	
+![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(4).png)
+![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(5).png)
+
+It has two modes:
+
+1. **QuickSwitch Menu Mode**: Displays a list of opened folders. Selecting one switches the file dialog to that folder. The menu won't appear if no folders are open.
+
+2. **AutoSwitch Mode**: After enabling this mode, the file dialog automatically opens the last active folder in the file manager when you Alt-Tab between them. If the file manager was active before opening the dialog, it opens that folder immediately. You can still use Control-Q to access the menu if needed.
+
+There's also a "Never" option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
 
 #### CHANGELOG
 
@@ -19,19 +34,15 @@ QuickSwitch modification by Rafaello. Based on `v0.5dw9a` by *NotNull*, *DaWolfi
 
 - The ability to shorten the displayed path and cut the path from either side *(left or right)* has now been added.
 
+###### Extended support for XYplorer:
   
-
-  
-
-  ###### Extended support for XYplorer:
-  
-  - If you open a Rapid Access Folder or a virtual path (Rapid/Music, Downloads), it can be displayed instead of the full path.
-  - The menu will display the paths from all open folders starting from the current one. Previously, only 1 path was displayed.
-  
-  ​		
+- If you open a Rapid Access Folder or a virtual path (Rapid/Music, Downloads), it can be displayed instead of the full path.
+- The menu will display the paths from all open folders starting from the current one. Previously, only 1 path was displayed.
+    ​		
 
 #### TODO
 
+- Autohotkey v2 port
 - AutoSwitch on clipboard change
 - drag and drop any file field
 - get all File Explorer QTTabBar tabs
