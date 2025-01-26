@@ -1,8 +1,6 @@
-QuickSwitch modification by Rafaello. Based on `v0.5dw9a` by *NotNull*, *DaWolfi* and others: https://www.voidtools.com/forum/viewtopic.php?f=2&t=9881
-
 This is an improved version of the `QuickSwitch script v0.5` from Gepruts. It was first improved by DaWolfi. And I have released the next version 1.0, in which I have made significant improvements!
 
-This is an improved version of the [`QuickSwitch script v0.5`](https://github.com/gepruts/QuickSwitch) from Gepruts. [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) first improved it to [`v0.5dw9a`](https://www.voidtools.com/forum/download/file.php?id=2235), and I've now [released `v1.0`] (https://github.com/JoyHak/QuickSwitch/releases), where I've made some really significant improvements!
+This is an improved version of the [`QuickSwitch script v0.5`](https://github.com/gepruts/QuickSwitch) from Gepruts. [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) first improved it to [`v0.5dw9a`](https://www.voidtools.com/forum/download/file.php?id=2235), and I've now [released `v1.0`](https://github.com/JoyHak/QuickSwitch/releases), where I've made some really significant improvements!
 
 #### ABOUT
 
