@@ -17,7 +17,7 @@ It has two modes:
 **AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
 
 ## Installation
-This script is written in the [Autohotkey language](https://www.autohotkey.com/download/). 
+This script is written in the [Autohotkey language](https://gist.github.com/Lexikos/a871ca393387b37204ccb4f36f2c5ddc#history). It will be compiled later.
 
 1. [Download](https://www.autohotkey.com/download/) `Autohotkey v1.1...` and install it. 
 
