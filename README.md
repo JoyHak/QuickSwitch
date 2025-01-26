@@ -19,9 +19,9 @@ It has two modes:
 ## Installation
 This script is written in the [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey). It will be compiled later.
 
-1. [Download](https://www.autohotkey.com/download/) `Autohotkey v1.1...` and install it. 
+1. [Download](https://www.autohotkey.com/download/) Autohotkey v1.1 and install it. 
 
-> PLEASE KEEP IN MIND: Autohotkey v1 is an **outdated version.** If you want to start learning the language, install `v2`. **Do not learn autohotkey v1 yourself** and use it exclusively to run old scripts. This script needs to be updated from `AHK v1 -> v2` !
+> PLEASE KEEP IN MIND: Autohotkey v1 is an **outdated version.** If you want to start learning the language, install `v2`. **Do not learn autohotkey v1 yourself** and use it exclusively to run old scripts. This script needs to be updated from `v1` to `v2` !
 
 2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
 Once the AutoHotkey help file opens, you can read or close it now. 
