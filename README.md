@@ -26,11 +26,12 @@ This script is written in the [Autohotkey language](https://www.autohotkey.com/d
 2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
 Once the AutoHotkey help file opens, you can read or close it now. 
 
-3. Download this repository *(and explore it if you want)*.
+3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of this repository *(and explore it if you want)*.
+> [Subscribe to notifications](https://docs.github.com/en/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications#notifications-and-subscriptions) so you don't miss out on improvements.
 
-4. Run `QuickSwitch.ahk` and check its existence in the tray.
+5. Run `QuickSwitch.ahk` and check its existence in the tray.
 
-5. Open different folders in a supported file manager,
+6. Open different folders in a supported file manager,
 > E.g., open `C:\` in `Explorer`.
 
 7. Open any application and try to open/save a file using it.
