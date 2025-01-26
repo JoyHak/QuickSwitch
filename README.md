@@ -2,7 +2,7 @@ This is an improved version of the [`QuickSwitch script v0.5`](https://github.co
 
 ## About
 
-QuickSwitch allows you to switch file dialogs (like Save-As or Open) to any folder opened in supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
+Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the folder on your system. QuickSwitch lets you automatically switch to the folder you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
 
 ![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(3).png)	
 ![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(4).png)
@@ -10,11 +10,11 @@ QuickSwitch allows you to switch file dialogs (like Save-As or Open) to any fold
 
 It has two modes:
 
-1. **QuickSwitch Menu Mode**: Displays a list of opened folders. Selecting one switches the file dialog to that folder. The menu won't appear if no folders are open.
+1. **Menu mode**: displays a list of opened folders. Selecting one switches the file dialog to that folder. The menu won't appear if no folders are open.
 
-2. **AutoSwitch Mode**: After enabling this mode, the file dialog automatically opens the last active folder in the file manager when you Alt-Tab between them. If the file manager was active before opening the dialog, it opens that folder immediately. You can still use Control-Q to access the menu if needed.
+2. **AutoSwitch mode**: the file dialog automatically opens the last active folder in the file manager when you `Alt-Tab` between them. If the file manager was active before opening the dialog, it opens that folder immediately. You can still use `Ctr+Q` to access the menu if needed.
 
-There's also a "Never" option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
+**AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
 
 ## Installation
 This script is written in the [Autohotkey language](https://www.autohotkey.com/download/). 
