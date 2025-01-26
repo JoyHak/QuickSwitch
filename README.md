@@ -26,8 +26,8 @@ This script is written in the [Autohotkey language](https://en.m.wikipedia.org/w
 2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
 Once the AutoHotkey help file opens, you can read or close it now. 
 
-3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of this repository *(and explore it if you want)*.
-> [Subscribe to notifications](https://docs.github.com/en/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications#notifications-and-subscriptions) so you don't miss out on improvements.
+3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of QuickSwitch.
+> [Subscribe to releases](https://docs.github.com/en/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications#notifications-and-subscriptions) so you don't miss critical updates!
 
 5. Run `QuickSwitch.ahk` and check its existence in the tray.
 
@@ -42,7 +42,7 @@ Once the AutoHotkey help file opens, you can read or close it now.
 
 11. Explore the available options in the menu, open the settings and experiment with them. Choose a convenient style and logic of the menu!
 
-## To-do
+## To-Do
 - ByRef params in most functions
 - Check for update (lib and setting)
 - AutoSwitch on clipboard change
