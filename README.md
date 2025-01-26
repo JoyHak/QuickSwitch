@@ -16,6 +16,28 @@ It has two modes:
 
 There's also a "Never" option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
 
+#### INSTALLATION
+This script is written in the [Autohotkey language](https://www.autohotkey.com/download/). 
+
+1. [Download][https://www.autohotkey.com/download/] `Autohotkey v1.1...` and install it. 
+
+> PLEASE KEEP IN MIND: Autohotkey v1 is an **outdated version.** If you want to start learning the language, install `v2`. **DO NOT LEARN AUTOHOTKEY V1 YOURSELF** and use it exclusively to run old scripts. This script needs to be updated from `AHK v1 -> v2` !
+
+2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
+Once the AutoHotkey help file opens, you can read or close it now. 
+
+3. Download this repository (and explore it if you want). The `Libs` folder contains the components of the main `QuickSwitch.ahk` script.
+
+4. Run `QuickSwitch.ahk` and check its existence in the tray.
+
+5. Open different folders in a supported file manager, *for example, open `C:\` in `Explorer`.*
+
+6. Open any application and try to open/save a file using it. *For example, open `Notepad` then `File -> Open...`*
+
+7. Press `Ctrl+Q` (the combination can be changed in the main script) and look at the paths in the *menu* that opens. All folders opened in *supported file managers* will be displayed here. *From any similar dialog box, from any application, you can quickly navigate to these folders using this menu and save/open a file from them.*
+
+8. Explore the available options in the menu, open the settings and experiment with them. Choose a convenient style and logic of the menu!
+
 #### CHANGELOG
 
 - Following the clearance of the code, the syntax has been modified to closely resemble that of Autohotkey v2, facilitating further adaptation to v2.
