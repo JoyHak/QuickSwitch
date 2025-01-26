@@ -1,6 +1,6 @@
 This is an improved version of the [`QuickSwitch script v0.5`](https://github.com/gepruts/QuickSwitch) from Gepruts. [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) first improved it to [`v0.5dw9a`](https://www.voidtools.com/forum/download/file.php?id=2235), and I've now [released `v1.0`](https://github.com/JoyHak/QuickSwitch/releases), where I've made some really significant improvements!
 
-#### ABOUT
+## About
 
 QuickSwitch allows you to switch file dialogs (like Save-As or Open) to any folder opened in supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
 
@@ -16,7 +16,7 @@ It has two modes:
 
 There's also a "Never" option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
 
-#### INSTALLATION
+## Installation
 This script is written in the [Autohotkey language](https://www.autohotkey.com/download/). 
 
 1. [Download](https://www.autohotkey.com/download/) `Autohotkey v1.1...` and install it. 
@@ -42,13 +42,13 @@ Once the AutoHotkey help file opens, you can read or close it now.
 
 11. Explore the available options in the menu, open the settings and experiment with them. Choose a convenient style and logic of the menu!
 
-#### TODO
+## To-do
 - ByRef params in most functions
 - Check for update (lib and setting)
 - AutoSwitch on clipboard change
 - drag and drop any file field
 
-###### Need help with:
+### Need help with:
 - `Autohotkey v2` port
 - `Explorer`: QTTabBar tabs
 - `File managers`:
