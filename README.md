@@ -17,11 +17,11 @@ It has two modes:
 **AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
 
 ## Installation
-This script is written in the [Autohotkey language](https://gist.github.com/Lexikos/a871ca393387b37204ccb4f36f2c5ddc#history). It will be compiled later.
+This script is written in the [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey). It will be compiled later.
 
 1. [Download](https://www.autohotkey.com/download/) `Autohotkey v1.1...` and install it. 
 
-> PLEASE KEEP IN MIND: Autohotkey v1 is an **outdated version.** If you want to start learning the language, install `v2`. **DO NOT LEARN AUTOHOTKEY V1 YOURSELF** and use it exclusively to run old scripts. This script needs to be updated from `AHK v1 -> v2` !
+> PLEASE KEEP IN MIND: Autohotkey v1 is an **outdated version.** If you want to start learning the language, install `v2`. **Do not learn autohotkey v1 yourself** and use it exclusively to run old scripts. This script needs to be updated from `AHK v1 -> v2` !
 
 2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
 Once the AutoHotkey help file opens, you can read or close it now. 
