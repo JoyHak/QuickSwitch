@@ -4,9 +4,7 @@ This is an improved version of the [QuickSwitch script v0.5](https://github.com/
 
 Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the folder on your system. QuickSwitch lets you automatically switch to the folder you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
 
-![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(3).png)	
-![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(4).png)
-![](https://github.com/JoyHak/QuickSwitch-/blob/main/Images/(5).png)
+![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/menu.gif)
 
 It has two modes:
 
@@ -15,6 +13,8 @@ It has two modes:
 2. **AutoSwitch mode**: the file dialog automatically opens the last active folder in the file manager when you `Alt-Tab` between them. If the file manager was active before opening the dialog, it opens that folder immediately. You can still use `Ctr+Q` to access the menu if needed.
 
 **AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
+
+![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/AutoSwitch.gif)
 
 ## Installation
 
@@ -37,6 +37,8 @@ It has two modes:
 > From any similar dialog box, from any application, you can quickly navigate to these folders using this menu and `save\open` a file from them.
 
 6. Explore the available options in the menu, open the settings and experiment with them. Choose a convenient style and logic of the menu!
+
+![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.gif)
 
 ##  Scripting
 
