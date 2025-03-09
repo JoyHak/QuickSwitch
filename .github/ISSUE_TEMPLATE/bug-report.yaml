@@ -1,19 +1,12 @@
 name: "Bug Report"
-description: Describe the bug with a screenshot
+description: Describe the bug 
 labels: ["bug"]
 
 body:
   - type: markdown
     attributes:
-      value: Describe the bug with a screenshot
-
-  - type: checkboxes
-    attributes:
-      label: Checks
-      options:
-        - label: >
-            I tried to fix the problem myself by reading the contents of the error in the console.
-        
+      value: Describe the bug or unusual menu behavior. If the problem is "strange" or "hidden", be sure to look at the log. 
+       
   - type: textarea
     attributes:
       label: Problem Description
@@ -23,7 +16,14 @@ body:
 
   - type: textarea
     attributes:
-      label: Screenshots
-      description: Add screenshots from [console](https://github.com/JoyHak/customize-vivaldi-buttons/blob/main/screenshots/console.png).
+      label: Images
+      description: Attach screenshots with an error in MsgBox. If necessary, attach screenshots not directly related to the error. Or attach gif with unusual behavior. 
+    validations:
+      required: true
+  
+    - type: textarea
+    attributes:
+      label: Log
+      description: Add Errors.log from script directory
     validations:
       required: true
