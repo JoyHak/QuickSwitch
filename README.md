@@ -51,8 +51,9 @@ This script is written in the [Autohotkey language](https://en.m.wikipedia.org/w
 2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
 Once the AutoHotkey help file opens, you can read or close it now. 
 
-3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of QuickSwitch.
-5.  Unpack `.zip` and run `QuickSwitch.ahk`. Check it's existence in the tray.
+3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of archive.
+
+4.  Unpack `.zip` and run `QuickSwitch.ahk`. Check it's existence in the tray.
 
 ## Compiling	
 
