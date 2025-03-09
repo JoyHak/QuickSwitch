@@ -28,7 +28,7 @@ body:
     validations:
       required: true
   
-    - type: textarea
+  - type: textarea
     attributes:
       label: Log
       description: Add Errors.log from script directory
