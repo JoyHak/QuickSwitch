@@ -6,13 +6,7 @@ body:
   - type: markdown
     attributes:
       value: Describe the bug or unusual menu behavior. If the problem is "strange" or "hidden", be sure to look at the log. 
-       
-  - type: textarea
-    attributes:
-      label: Problem Description
-      description: A clear and concise description of what the problem is.
-    validations:
-      required: true
+      
 
   
     - type: textarea
