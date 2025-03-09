@@ -3,7 +3,7 @@ description: Describe the bug
 labels: ["bug"]
 
 body:
-  - type: markdown
+  - type: md
     attributes:
       value: Describe the bug 
       
