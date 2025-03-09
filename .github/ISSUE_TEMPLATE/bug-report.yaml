@@ -5,7 +5,7 @@ labels: ["bug"]
 body:
   - type: markdown
     attributes:
-      value: Describe the bug or unusual menu behavior
+      value: Describe the bug 
       
 
   
