@@ -3,11 +3,30 @@ description: Describe the bug
 labels: ["bug"]
 
 body:
-  - type: md
+  - type: markdown
     attributes:
-      value: Describe the bug 
-      
+      value: Describe the bug or unusual menu behavior. If the problem is "strange" or "hidden", be sure to look at the log. 
 
+  - type: checkboxes
+    attributes:
+      label: Checks
+      options:
+        - label: >
+            I tried to fix the problem myself by reading the contents of the MsgBox and Errors.log
+        
+  - type: textarea
+    attributes:
+      label: Problem Description
+      description: A clear and concise description of what the problem is.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Images
+      description: Attach screenshots with an error in MsgBox. If necessary, attach screenshots not directly related to the error. Or attach gif with unusual behavior. 
+    validations:
+      required: true
   
     - type: textarea
     attributes:
