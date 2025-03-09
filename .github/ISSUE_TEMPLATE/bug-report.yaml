@@ -21,12 +21,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
-    attributes:
-      label: Images
-      description: Attach screenshots with an error in MsgBox. 
-    validations:
-      required: true
+
   
     - type: textarea
     attributes:
