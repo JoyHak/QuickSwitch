@@ -24,7 +24,7 @@ body:
   - type: textarea
     attributes:
       label: Images
-      description: Attach screenshots with an error in MsgBox. If necessary, attach screenshots not directly related to the error. Or attach gif with unusual behavior. 
+      description: Attach screenshots with an error in MsgBox. 
     validations:
       required: true
   
