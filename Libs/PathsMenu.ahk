@@ -30,7 +30,7 @@ AddPathsMenuItems() {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, %_display%, PathChoice
+        Menu, ContextMenu, Insert,, %_display%, SelectPath
         _display := ""
     }
 }
@@ -41,7 +41,7 @@ AddPathsMenuSettings() {
 ;_____________________________________________________________________________  
 
     global DialogAction
-    
+
     Menu ContextMenu, Add,
     Menu ContextMenu, Add, Settings, Dummy
     Menu ContextMenu, disable, Settings
@@ -62,7 +62,8 @@ AddPathsMenuSettings() {
     
     ; new GUI added for other settings
     Menu ContextMenu, Add,
-    Menu ContextMenu, Add, More &Settings..., ShowSettingsMenu
+    Menu ContextMenu, Add, Menu &settings, ShowMenuSettings
+    Menu ContextMenu, Add, &App settings,  ShowAppSettings
 }
 
 ;_____________________________________________________________________________
@@ -76,15 +77,16 @@ ShowPathsMenu() {
 
     ; Get dialog position (also used for settings menu positon)
     WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
-    if paths {     
+    if paths.Count() {     
         AddPathsMenuItems()
         AddPathsMenuSettings()
-        
+
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100        
                
-        Menu ContextMenu, UseErrorLevel  ; Ignore errors
+        ;Menu ContextMenu, UseErrorLevel  ; Ignore errors
         Menu ContextMenu, Delete         ; Delete previous menu
     } 
     Return
 }
+

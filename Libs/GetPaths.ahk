@@ -1,8 +1,8 @@
 ; Here are the main functions for obtaining paths and interacting with them.
 ; All functions add values to the global paths array.
-PathChoice() {    
+SelectPath() {    
     /*     
-        ID, paths and FuncObj FeedDialog declared in ShowFolderPaths()
+        ID, paths and FuncObj FeedDialog declared in ShowPathsMenu()
         The path is bound to the position of the menu item 
         and MUST BE ADDED to the array in the same order as the menu item 
     */
@@ -65,8 +65,7 @@ ShowShortPath(ByRef _path) {
             return _path     ; not enough to shorten the path
         
         _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
-    } 
-    else {
+    } else {
         ; Direct search starting from the pos of the 1st slash 
         _pathIndex    := 3    
         _slashesCount := 1
@@ -89,7 +88,7 @@ ShowShortPath(ByRef _path) {
 
     Loop, % FoldersCount {
         _left    := _slashIndexes[A_Index]
-        _right := _slashIndexes[A_Index + 1]    
+        _right   := _slashIndexes[A_Index + 1]    
         if (_left != -1 and _right != -1) {    
             _left++     ; exclude slash from name
             

@@ -35,7 +35,8 @@ FeedDialogGENERAL(ByRef _thisID, _path) {
         _parentClass    := ""
 
     }
-
+    
+    _FolderSet := false
     if (_UseToolbar and _EnterToolbar) {
         Loop, 5 {
             SendInput ^l
@@ -47,10 +48,11 @@ FeedDialogGENERAL(ByRef _thisID, _path) {
             if ((_ctrlFocus != "Edit1") and InStr(_ctrlFocus, "Edit")) {
                 Control, EditPaste, %_path%, %_ctrlFocus%, A
                 ControlGetText, _editAddress, %_ctrlFocus%, ahk_id %_thisID%
-
-                if (_editAddress == _path) 
+                
+                if (_editAddress == _path) {
                     _FolderSet := true
-
+                    Sleep, 15
+                }
             }
 
             ; Start next round clean
@@ -63,7 +65,7 @@ FeedDialogGENERAL(ByRef _thisID, _path) {
             ; Click control to "execute" new folder
             ControlClick, %_EnterToolbar%, ahk_id %_thisID%
             ; Focus file name
-            Sleep, 15
+            Sleep, 25
             ControlFocus Edit1, ahk_id %_thisID%
         }
     } else {
