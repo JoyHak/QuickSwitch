@@ -5,7 +5,7 @@ labels: ["bug"]
 body:
   - type: markdown
     attributes:
-      value: Describe the bug or unusual menu behavior. If the problem is "strange" or "hidden", be sure to look at the log. 
+      value: Describe the bug or unusual menu behavior
       
 
   
