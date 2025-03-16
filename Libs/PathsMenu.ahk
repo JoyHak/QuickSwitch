@@ -76,15 +76,16 @@ ShowPathsMenu() {
 
     ; Get dialog position (also used for settings menu positon)
     WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
-    if paths {     
+    if paths.Count() {     
         AddPathsMenuItems()
         AddPathsMenuSettings()
-        
+
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100        
                
-        Menu ContextMenu, UseErrorLevel  ; Ignore errors
+        ;Menu ContextMenu, UseErrorLevel  ; Ignore errors
         Menu ContextMenu, Delete         ; Delete previous menu
     } 
     Return
 }
+
