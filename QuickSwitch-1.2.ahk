@@ -28,39 +28,47 @@
 #SingleInstance force
 #NoEnv
 #Warn
-
+FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
+
+global ScriptName := "QuickSwitch" 
+global INI := ScriptName ".ini"
+global ERRORS := "Errors.log"
+
+; Detailed info in Libs\README.md
 #Include %A_ScriptDir%
+#Include Libs\Log.ahk
 #Include Libs\Values.ahk
 #Include Libs\FileDialogs.ahk
 #Include Libs\GetPaths.ahk
 #Include Libs\AutoSwitch.ahk
-#Include Libs\Debug.ahk
 
+#Include Libs\Debug.ahk
 #Include Libs\AppSettings.ahk
 #Include Libs\MenuSettings.ahk
 #Include Libs\PathsMenu.ahk
 
 SetDefaultValues()
 ReadValues()
-
-Menu, Tray, UseErrorLevel 
-Menu, Tray, Icon, %MainIcon% 
-
+ValidateLog()
 ValidateAutoStartup()
+
 ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off")
 ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On") 
+Menu, Tray, UseErrorLevel 
+Menu, Tray, Icon, %MainIcon% 
 
 ; Wait for dialog
 Loop {
     WinWaitActive, ahk_class #32770
     DialogID     := WinExist("A")
-    FeedDialog   := FeedDialogFunc(DialogID)
+    FileDialog   := GetFileDialog(DialogID)
 
     ; if there is any GUI left from previous calls....
     Gui, Destroy
     
-    if FeedDialog 
+    IniRead, MainKey, %INI%, App, MainKey
+    if FileDialog 
     {                                                       ; This is a supported dialog    
         GetPaths()
         WinGet, ahk_exe, ProcessName, ahk_id %DialogID%

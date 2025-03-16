@@ -12,18 +12,18 @@ ShouldOpen() {
     Return OpenMenu or (FromSettings and ReDisplayMenu)
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 AddPathsMenuItems() {
-;_____________________________________________________________________________  
+;─────────────────────────────────────────────────────────────────────────────  
 
-    global VirtualPath, FolderNum, ShortPath, paths, virtuals
+    global VirtualPath, PathNumbers, ShortPath, paths, virtuals
     _paths := VirtualPath ? virtuals : paths
 
     for _index, _path in _paths {
         _display := ""
         
-        if FolderNum
+        if PathNumbers
             _display .= "&" . _index . " " 
         if ShortPath
             _display .= ShowShortPath(_path)
@@ -35,10 +35,10 @@ AddPathsMenuItems() {
     }
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 AddPathsMenuSettings() {
-;_____________________________________________________________________________  
+;─────────────────────────────────────────────────────────────────────────────  
 
     global DialogAction
 
@@ -66,12 +66,21 @@ AddPathsMenuSettings() {
     Menu ContextMenu, Add, &App settings,  ShowAppSettings
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
+;
+HidePathsMenu() {
+;───────────────────────────────────────────────────────────────────────────── 
+    global
+    Menu ContextMenu, UseErrorLevel  ; Ignore errors
+    Menu ContextMenu, Delete         ; Delete previous menu
+}
+
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ShowPathsMenu() {
-;_____________________________________________________________________________  
-    global DialogID, paths, MenuColor, LastMenuItem
-    global WinX, WinY, WinWidth, WinHeight, MenuColor, ReDisplayMenu
+;─────────────────────────────────────────────────────────────────────────────  
+    global DialogID, paths, MenuColor
+    global WinX, WinY, WinWidth, WinHeight, MenuColor
     global FromSettings := false
     ReadValues()
 
@@ -83,9 +92,8 @@ ShowPathsMenu() {
 
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100        
-               
-        ;Menu ContextMenu, UseErrorLevel  ; Ignore errors
-        Menu ContextMenu, Delete         ; Delete previous menu
+        HidePathsMenu()       
+
     } 
     Return
 }

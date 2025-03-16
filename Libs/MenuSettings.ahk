@@ -15,15 +15,18 @@ ResetSettings() {
 }
 
 SaveSettings() {
-    ; read current GUI (global) values
+    ; Read current GUI (global) values
     Gui, Submit  
     WriteValues()
     ValidateAutoStartup()
     Return
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
 ToggleShortPath() {
-    ; Hides or displays additional options
+;───────────────────────────────────────────────────────────────────────────── 
+    ; Hide or display additional options
     global
     
     Gui, Submit, NoHide   
@@ -34,10 +37,10 @@ ToggleShortPath() {
     
     GuiControl, Show%ShortPath%, CutFromEnd
     GuiControl, Show%ShortPath%, ShowDriveLetter
-    GuiControl, Show%ShortPath%, FoldersCount
-    GuiControl, Show%ShortPath%, FoldersCountText
-    GuiControl, Show%ShortPath%, FolderNameLength
-    GuiControl, Show%ShortPath%, FolderNameLengthText
+    GuiControl, Show%ShortPath%, DirsCount
+    GuiControl, Show%ShortPath%, DirsCountText
+    GuiControl, Show%ShortPath%, DirNameLength
+    GuiControl, Show%ShortPath%, DirNameLengthText
     GuiControl, Show%ShortPath%, PathSeparator
     GuiControl, Show%ShortPath%, PathSeparatorText
     GuiControl, Show%ShortPath%, ShortNameIndicator
@@ -46,10 +49,10 @@ ToggleShortPath() {
     Return
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ShowMenuSettings() {
-;_____________________________________________________________________________ 
+;───────────────────────────────────────────────────────────────────────────── 
 
     /*
         References to global variables are being used. 
@@ -60,7 +63,7 @@ ShowMenuSettings() {
         the development of which will require careful thought!   
     */ 
     global 
-    
+
     LastMenuItem := A_ThisMenuItem
     FromSettings := true
     
@@ -69,16 +72,16 @@ ShowMenuSettings() {
        
     ; LEFT ALIGNED TEXT					
     ;				type		coordinates		vVARIABLE  gGOTO							title                                                 
-    Gui, 	Add, 	Checkbox, 	x30 y+20        vShowDriveLetter checked%ShowDriveLetter%,  Show &drive letter
+    Gui, 	Add, 	Checkbox, 	x12 y+20        vShowDriveLetter checked%ShowDriveLetter%,  Show &drive letter
     Gui, 	Add, 	Checkbox, 					vCutFromEnd checked%CutFromEnd%, 			&Cut from the end
     
     ; Section here is anchor YS pos for right aligned fields
     ; After this block edits will appear starting from this YS pos
-    Gui, 	Add, 	Text, 		        	    vFolderNameLengthText Section,				Length of &folder names	    
-    Gui, 	Add, 	Text, 		    y+13        vFoldersCountText,						    Number of &folders displayed		   
+    Gui, 	Add, 	Text, 		        	    vDirNameLengthText Section,				    Length of &dir names	    
+    Gui, 	Add, 	Text, 		    y+13        vDirsCountText,						        Number of &dirs displayed		   
     Gui, 	Add, 	Text, 		    y+13        vPathSeparatorText,						    P&ath separator			       
     
-    Gui, 	Add, 	Checkbox,  w200 y+10        vShortPath gToggleShortPath checked%ShortPath%, 	Show &short path											  
+    Gui, 	Add, 	Checkbox,       y+10        vShortPath gToggleShortPath checked%ShortPath%, 	Show short path, indicate as:											  
     Gui, 	Add, 	Checkbox, 	        		vVirtualPath checked%VirtualPath%, 			Show &virtual path	
    
     Gui, 	Add, 	Text, 		    y+20		,											Menu &backgroud color (HEX)                            
@@ -123,7 +126,7 @@ ShowMenuSettings() {
     ; These dialog coord. are obtained in ShowPathsMenu()
     local Xpos := WinX
     local Ypos := WinY + 100 
-    Gui, Show, x%Xpos% y%Ypos%, Menu settings
-    
+    Gui, Show, AutoSize x%Xpos% y%Ypos%, Menu settings
+
     Return
 }
