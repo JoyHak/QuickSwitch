@@ -1,6 +1,8 @@
 ; These parameters are not saved in the INI
-global LastMenuItem  := ""
 global FromSettings  := false
+global LastMenuItem  := ""
+global XYdata        := ""
+
 
 ; These parameters must not be reset
 global AutoStartup   := 1
