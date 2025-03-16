@@ -41,7 +41,7 @@ AddPathsMenuSettings() {
 ;_____________________________________________________________________________  
 
     global DialogAction
-    
+
     Menu ContextMenu, Add,
     Menu ContextMenu, Add, Settings, Dummy
     Menu ContextMenu, disable, Settings
@@ -62,7 +62,8 @@ AddPathsMenuSettings() {
     
     ; new GUI added for other settings
     Menu ContextMenu, Add,
-    Menu ContextMenu, Add, More &Settings..., ShowSettingsMenu
+    Menu ContextMenu, Add, Menu &settings, ShowMenuSettings
+    Menu ContextMenu, Add, &App settings,  ShowAppSettings
 }
 
 ;_____________________________________________________________________________
