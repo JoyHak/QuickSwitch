@@ -30,7 +30,7 @@ AddPathsMenuItems() {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, %_display%, PathChoice
+        Menu, ContextMenu, Insert,, %_display%, SelectPath
         _display := ""
     }
 }
