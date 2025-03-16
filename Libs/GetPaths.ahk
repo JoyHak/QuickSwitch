@@ -1,29 +1,29 @@
-﻿; Here are the main functions for obtaining paths and interacting with them.
+; Here are the main functions for obtaining paths and interacting with them.
 ; All functions add values to the global paths array.
-
-SelectPath() {    
+PathChoice() {    
     /*     
+        ID, paths and FuncObj FeedDialog declared in ShowFolderPaths()
         The path is bound to the position of the menu item 
         and MUST BE ADDED to the array in the same order as the menu item 
     */
     global
-    FileDialog.call(DialogID, paths[A_ThisMenuItemPos])
+    FeedDialog.call(DialogID, paths[A_ThisMenuItemPos])
 }
 
 ShowShortPath(ByRef _path) {
     /* 
-        _fullPath is shortened to the last N dirs (DirsCount) starting from the end of the path.
-        Dirs are selected as intervals between slashes, excluding them.
-        boundaries = indexes of any slashes \ / in the path: /dir/dir/ 
+        _fullPath is shortened to the last N folders (foldersCount) starting from the end of the path.
+        Folders are selected as intervals between slashes, excluding them.
+        boundaries = indexes of any slashes \ / in the path: /folder/folder/ 
     */
-    global CutFromEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator 
+    global CutFromEnd, FoldersCount, FolderNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator 
     
-    ; Return input path if it's really short
+    ; Return if really short
     _length := StrLen(_path)
     if _length < 4                
         Return _path    ; Just drive and slash
     
-    ; Declare variable to return    
+    ; Init return var    
     if ShowDriveLetter {
         SplitPath, _path,,,,, _letter
         _shortPath := _letter
@@ -32,25 +32,25 @@ ShowShortPath(ByRef _path) {
     }
         
     
-    ; The number of slashes (indexes) is one more than the number of dirs: /f1/f2/ - 2 dirs, 3 slashes
-    _maxSlashes := DirsCount + 1
-    ; if the number of slashes is less than DirsCount, the array will contain -1
-    ; This is necessary for handling paths where the number of dirs is less than DirsCount: C:/dir
+    ; The number of slashes (indexes) is 1 more than the number of folders: /f1/f2/ - 2 folders, 3 slashes
+    _maxSlashes := FoldersCount + 1
+    ; if the number of slashes is less than FoldersCount, the array will contain -1
+    ; This is necessary for handling paths where the number of folders is less than FoldersCount: C:/folder
     _slashIndexes := []
     Loop, % _maxSlashes {
          _slashIndexes.Push(-1)
     }
 
-    ;─────────────────────────────────────────────────────────────────────────────
+    ;_____________________________________________________________________________
     ;
     ; Parsing the path, looking for the indexes of slashes
-    ;─────────────────────────────────────────────────────────────────────────────    
+    ;_____________________________________________________________________________    
     
-    _fullPath := _path . "/"         ; Last dir bound
+    _fullPath := _path . "/"         ; Last folder bound
     _length++
     if CutFromEnd {
         ; Reverse slash search until enough is found 
-        ; to display the required number of dirs
+        ; to display the required number of folders
         _pathIndex    := _length
         _slashesCount := _maxSlashes 
         while (_pathIndex >= 3 and _slashesCount >= 1) {     ; 3 is pos of the 1st slash        
@@ -65,7 +65,8 @@ ShowShortPath(ByRef _path) {
             return _path     ; not enough to shorten the path
         
         _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
-    } else {
+    } 
+    else {
         ; Direct search starting from the pos of the 1st slash 
         _pathIndex    := 3    
         _slashesCount := 1
@@ -81,28 +82,28 @@ ShowShortPath(ByRef _path) {
             return _path     ; not enough to shorten the path
     }
     
-    ;─────────────────────────────────────────────────────────────────────────────
+    ;_____________________________________________________________________________
     ;
-    ; Parsing the slash indexes and extracting the dir names.
-    ;───────────────────────────────────────────────────────────────────────────── 
+    ; Parsing the slash indexes and extracting the folder names.
+    ;_____________________________________________________________________________ 
 
-    Loop, % DirsCount {
+    Loop, % FoldersCount {
         _left    := _slashIndexes[A_Index]
-        _right   := _slashIndexes[A_Index + 1]    
+        _right := _slashIndexes[A_Index + 1]    
         if (_left != -1 and _right != -1) {    
             _left++     ; exclude slash from name
             
             _length     := _right - _left
-            _nameLength := Min(_length, DirNameLength)
-            _dirName := SubStr(_fullPath, _left, _nameLength)
-            _shortPath    .= PathSeparator . _dirName
+            _nameLength := Min(_length, FolderNameLength)
+            _folderName := SubStr(_fullPath, _left, _nameLength)
+            _shortPath    .= PathSeparator . _folderName
             
-            if (DirNameLength - _length < 0)
+            if (folderNameLength - _length < 0)
                 _shortPath .= ShortNameIndicator
                 
         } 
     }
-    _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the last dir
+    _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the last folder
     Return _shortPath
 }
 
@@ -142,10 +143,10 @@ FeedXYdata(_wParam, _lParam) {
 }
 OnMessage(0x4a, "FeedXYdata") 
 
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 GetXYpaths(ByRef _WinID) {
-;─────────────────────────────────────────────────────────────────────────────  
+;_____________________________________________________________________________  
 
     ; Put path(s) to XYdata (the variable is filled in anew each time it is called)
     ; then push to array
@@ -179,10 +180,10 @@ GetXYpaths(ByRef _WinID) {
             
     }
 }
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 GetWINpaths(ByRef _WinID) {
-;─────────────────────────────────────────────────────────────────────────────  
+;_____________________________________________________________________________  
     global paths
     
     for _instance in ComObjCreate("Shell.Application").Windows {
@@ -196,10 +197,10 @@ GetWINpaths(ByRef _WinID) {
     Return            
 }
 
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 GetTCPaths(_WinID) {
-;───────────────────────────────────────────────────────────────────────────── 
+;_____________________________________________________________________________ 
          
     global paths
     ; Save clipboard to restore later
@@ -208,11 +209,11 @@ GetTCPaths(_WinID) {
         
     ; wait a little, or source path may not be captured!
     Sleep, 50
-    SendMessage 1075, 2029, 0, , ahk_id %_WinID%    ; CopySrcPathToClip
+    SendMessage 1075, %cm_CopySrcPathToClip%, 0, , ahk_id %_WinID%
     Sleep, 50
     paths.push(clipboard)    
         
-    SendMessage 1075, 2030, 0, , ahk_id %_WinID%    ; CopyTrgPathToClip
+    SendMessage 1075, %cm_CopyTrgPathToClip%, 0, , ahk_id %_WinID%
     Sleep, 50
     paths.push(clipboard)     
     
@@ -223,42 +224,43 @@ GetTCPaths(_WinID) {
     Return    
 }
 
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 GetDOPUSPaths(_WinID) {
-;─────────────────────────────────────────────────────────────────────────────  
+;_____________________________________________________________________________  
     global paths
     
-    EnvGet, _temp, TEMP
-    _dopusInfo := _temp . "\dopusinfo.xml"
+    EnvGet, _tempfolder, TEMP
+    _tempfile := _tempfolder . "\dopusinfo.xml"
 
     ; Arg comma needs escaping: `,
-    _command = "%_dopus_exe%\..\dopusrt.exe" /info "%_dopusInfo%"`, paths
+    _command = "%_dopus_exe%\..\dopusrt.exe" /info "%_tempfile%"`, paths
     Run, _command, , , DUMMY
     Sleep, 300
-    FileRead, OpusInfo, %_dopusInfo%
+    FileRead, OpusInfo, %_tempfile%
     Sleep, 300
-    FileDelete, %_dopusInfo%
+    FileDelete, %_tempfile%
     
     ; Get active path of this lister (regex instead of XML library)
     RegExMatch(OpusInfo, "mO)^.*lister=\""" . _WinID . "\"".*tab_state=\""1\"".*\>(.*)\<\/path\>$", out)
-    _path := out.Value(1)
-    paths.push(_path)
+    _thisFolder := out.Value(1)
+    paths.push(_thisFolder)
     
     ; Get passive path of this lister
     RegExMatch(OpusInfo, "mO)^.*lister=\""" . _WinID . "\"".*tab_state=\""2\"".*\>(.*)\<\/path\>$", out)
-    _path := out.Value(1)
-    paths.push(_path)
-   
+    _thisFolder := out.Value(1)
+    paths.push(_thisFolder)
+    
+    _thisFolder := ""    
     Return
 }
 
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 GetPaths() {
-;─────────────────────────────────────────────────────────────────────────────  
+;_____________________________________________________________________________  
 
-    ; Update the values after each call
+    ; Update the values with each call
     global paths    := []
     global virtuals := []
     
