@@ -30,10 +30,10 @@ ValidateAutoStartup() {
 	}
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ShowAppSettings() {
-;_____________________________________________________________________________ 
+;───────────────────────────────────────────────────────────────────────────── 
     global 
     
     Gui, Font,,%MainFont%
@@ -57,7 +57,7 @@ ShowAppSettings() {
     Gui, 	Add, 	Edit, 		x120 yp-4 w174 	vMainFont -Wrap r1, 					    %MainFont%  
     
     ; hidden default button used for accepting {Enter} to leave GUI	
-    Gui, 	Add, 	Button, 	x30 y+20 w74 	Default  gOK, 								&OK
+    Gui, 	Add, 	Button, 	x30 y+20 w74 	Default  gSaveSettings, 					&OK
     Gui, 	Add, 	Button, 	x+20 w74 		Cancel   gCancel, 							&Cancel
     Gui, 	Add, 	Button, 	x+20 w74 		         gShowDebugMenu, 					&Debug
     

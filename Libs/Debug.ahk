@@ -41,10 +41,13 @@ CancelLV() {
 }
 
 ShowDebugMenu() {
-    GUI, Destroy
     ; Add ControlGetPos [, X, Y, Width, Height, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
-    ; change folder to ahk folder. change name to fingerpringt.csv
+    ; Change dir to ahk
+    ; Change name to fingerpringt.csv
+       
     global GuiColor
+    GUI, Destroy
+
     SetFormat, Integer, D
     ; Header for list
     Gui, Add, ListView, r30 w1024, Control|ID|PID||Text|X|Y|Width|Height

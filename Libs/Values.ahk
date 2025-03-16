@@ -41,10 +41,10 @@ SetDefaultValues() {
     Return    
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 WriteValues() { 
-;_____________________________________________________________________________     
+;─────────────────────────────────────────────────────────────────────────────     
     /*     
         The status of the checkboxes from the settings menu is writed immediately
         Strings and colors from fields are checked before writing.
@@ -81,16 +81,16 @@ WriteValues() {
     ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off")
     ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On")
     
-    ValidateWriteColor(GuiColor, 	"GuiBGColor")
-    ValidateWriteColor(MenuColor, 	"MenuBGColor")
+    ValidateWriteColor(GuiColor, 	"GuiColor")
+    ValidateWriteColor(MenuColor, 	"MenuColor")
 
     Return
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ReadValues() {
-;_____________________________________________________________________________ 
+;───────────────────────────────────────────────────────────────────────────── 
     /*     
         read values from INI
         the current value of global variables is set at the top of the script
@@ -146,10 +146,10 @@ ValidateWriteKey(_new, _paramName, _funcObj, _state) {       ; bind key
         Hotkey, % _old, Off
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ValidateWriteInteger(_new, _paramName) {    ; integer only
-;_____________________________________________________________________________     
+;─────────────────────────────────────────────────────────────────────────────     
     global INI
     
     if _new is Integer 
@@ -158,10 +158,10 @@ ValidateWriteInteger(_new, _paramName) {    ; integer only
         throw Exception(_new " is not an integer for the " _paramName " parameter", _paramName)
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
-;_____________________________________________________________________________ 
+;───────────────────────────────────────────────────────────────────────────── 
     global INI
 
     _matchPos := RegExMatch(_color, "i)[a-f0-9]{6}$")
@@ -173,10 +173,10 @@ ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
     }
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ValidateWriteString(_new, _paramName) {     ; format to string
-;_____________________________________________________________________________     
+;─────────────────────────────────────────────────────────────────────────────     
     global INI
     
     _result := Format("{}", _new)    
