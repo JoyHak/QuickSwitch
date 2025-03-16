@@ -3,7 +3,7 @@
     All entered/checked values are saved in the INI only when you click OK
 */
 
-ResetToDefaults() {
+ResetSettings() {
     Gui, Destroy
 
     ; Rolling back values and showing them in settings
@@ -14,15 +14,15 @@ ResetToDefaults() {
     Return
 }
 
-OK() {
+SaveSettings() {
     ; read current GUI (global) values
-    Gui, Submit    
+    Gui, Submit  
     WriteValues()
     ValidateAutoStartup()
     Return
 }
 
-ShortPath() {
+ToggleShortPath() {
     ; Hides or displays additional options
     global
     
@@ -78,7 +78,7 @@ ShowMenuSettings() {
     Gui, 	Add, 	Text, 		    y+13        vFoldersCountText,						    Number of &folders displayed		   
     Gui, 	Add, 	Text, 		    y+13        vPathSeparatorText,						    P&ath separator			       
     
-    Gui, 	Add, 	Checkbox,  w200 y+10        vShortPath gShortPath checked%ShortPath%, 	Show &short path											  
+    Gui, 	Add, 	Checkbox,  w200 y+10        vShortPath gToggleShortPath checked%ShortPath%, 	Show &short path											  
     Gui, 	Add, 	Checkbox, 	        		vVirtualPath checked%VirtualPath%, 			Show &virtual path	
    
     Gui, 	Add, 	Text, 		    y+20		,											Menu &backgroud color (HEX)                            
@@ -99,9 +99,9 @@ ShowMenuSettings() {
             
     ; hidden default button used for accepting {Enter} to leave GUI	
     local button := "y+20 xp w74"    
-    Gui, 	Add, 	Button, 	%button%  	    Default  gOK, 								&OK
+    Gui, 	Add, 	Button, 	%button%  	    Default  gSaveSettings, 					&OK
     Gui, 	Add, 	Button, 	%button%  		Cancel   gCancel, 							&Cancel
-    Gui, 	Add, 	Button, 	%button%  		         gResetToDefaults, 					&Reset
+    Gui, 	Add, 	Button, 	%button%  		         gResetSettings, 					&Reset
 
    
     ; RIGHT ALIGNED FIELDS	
@@ -118,7 +118,7 @@ ShowMenuSettings() {
     
     ; SETUP AND SHOW GUI
     ; current checkbox state
-    ShortPath() 
+    ToggleShortPath() 
         
     ; These dialog coord. are obtained in ShowPathsMenu()
     local Xpos := WinX
