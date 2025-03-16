@@ -4,9 +4,9 @@
 */
 
 ResetSettings() {
+    ; Roll back values and show them in settings
     Gui, Destroy
 
-    ; Rolling back values and showing them in settings
     SetDefaultValues()
     WriteValues() 
     ShowMenuSettings()
