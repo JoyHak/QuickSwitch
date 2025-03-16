@@ -68,20 +68,16 @@ AddPathsMenuSettings()
   ; new GUI added for other settings
   Menu ContextMenu, Add,
   Menu ContextMenu, Add, More &Settings..., ShowSettingsMenu
-  
-  Return
 }
 
 ;_____________________________________________________________________________
 ;
-SkipPathsMenuErrors()
+HidePathsMenu()
 ;_____________________________________________________________________________ 
 {
-  global
+  ; Ignore errors
   Menu ContextMenu, UseErrorLevel
   Menu ContextMenu, Delete
-  
-  Return
 }
 
 ;_____________________________________________________________________________
@@ -102,7 +98,7 @@ ShowPathsMenu()
     AddPathsMenuSettings()
     Menu ContextMenu, Color, %MenuColor%
     Menu ContextMenu, Show, 0, 100    
-	SkipPathsMenuErrors()
+	HidePathsMenu()
 
     If ((LastMenuItem != "")
         and !RegExMatch(LastMenuItem, "\\|&Jump|Settings")
@@ -113,7 +109,7 @@ ShowPathsMenu()
   }
   Else
   {
-	SkipPathsMenuErrors()
+	HidePathsMenu()
   }
   Return
 }
