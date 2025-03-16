@@ -31,60 +31,12 @@ SetDefaultValues() {
                                      
     global PathSeparator             := "/"
     global ShortNameIndicator        := ".."
-                                     
-    global GuiColor                  := "202020"
-    global MenuColor                 := "202020"
+    
+    ; use system default
+    global GuiColor                  := ""
+    global MenuColor                 := ""
     
     Return    
-}
-SetDefaultValues()
-
-; These parameters are not saved in the INI
-global LastMenuItem  := ""
-global FromSettings  := false
-global NrOfEntries 	 := 0
-
-; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
-paths    := []
-; Virtual paths are used only in the PathsMenu
-virtuals := []
-
-
-;_____________________________________________________________________________
-;
-ValidateWriteString(_new, _iniParamName) {     ; format to string
-;_____________________________________________________________________________     
-    global INI
-    
-    _result := Format("{}", _new)    
-    IniWrite, %_result%, %INI%, Menu, %_iniParamName%
-}
-
-;_____________________________________________________________________________
-;
-ValidateWriteInteger(_new, _iniParamName) {    ; write if integer
-;_____________________________________________________________________________     
-    global INI
-
-    if _new is Integer
-        IniWrite, %_new%, %INI%, Menu, %_iniParamName%
-    else
-        TrayTip, %ScriptName% error, You did not enter an integer for the %_iniParamName% parameter,, 0x2 
-}
-
-;_____________________________________________________________________________
-;
-ValidateWriteColor(_color, _iniParamName) {    ; valid only
-;_____________________________________________________________________________ 
-    global INI
-    
-    _matchPos := RegExMatch(_color, "i)[a-f0-9]{6}$")
-    if (_matchPos > 0) {
-        _result := SubStr(_color, _matchPos)
-        IniWrite, %_result%, %INI%, Colors, %_iniParamName%
-    } else {
-        TrayTip, %ScriptName% error, You have chosen the wrong color for %_iniParamName%! Enter the HEX value,, 0x2 
-    }
 }
 
 ;_____________________________________________________________________________
@@ -149,7 +101,63 @@ ReadValues() {
     IniRead, 	PathSeparator, 				%INI%,		Menu, 		PathSeparator,      	    %PathSeparator%
     IniRead, 	ShortNameIndicator, 	 	%INI%,		Menu, 		ShortNameIndicator,      	%ShortNameIndicator%
                 
-    IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiBGColor, 				%GuiColor%
-    IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuBGColor, 				%MenuColor%
+    IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiBGColor, 				%A_Space%
+    IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuBGColor, 				%A_Space%
+    
     Return
+}
+
+;_____________________________________________________________________________
+;
+ValidateWriteKey(_new, _paramName, _funcObj, _state) {       ; bind key
+;_____________________________________________________________________________     
+    global INI
+    
+    try {
+        Hotkey, % _new, % _funcObj, % _state                 ; create hotkey
+        IniWrite, % _new, % INI, App, % _paramName           ; save
+    } catch _error {
+        LogError(_error)
+        Return
+    }  
+    IniRead, _old, % INI, App, % _paramName, % _new          ; remove old if exist    
+    if (_old != _new)
+        Hotkey, % _old, Off
+}
+
+;_____________________________________________________________________________
+;
+ValidateWriteInteger(_new, _paramName) {    ; integer only
+;_____________________________________________________________________________     
+    global INI
+    
+    if _new is Integer 
+        IniWrite, % _new, % INI, Menu, % _paramName
+    else 
+        throw Exception(_new " is not an integer for the " _paramName " parameter", _paramName)
+}
+
+;_____________________________________________________________________________
+;
+ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
+;_____________________________________________________________________________ 
+    global INI
+
+    _matchPos := RegExMatch(_color, "i)[a-f0-9]{6}$")
+    if (_color == "" or _matchPos > 0) {
+        _result := SubStr(_color, _matchPos)
+        IniWrite, % _result, % INI, Colors, % _paramName
+    } else {
+        throw Exception(_color " is wrong color! Enter the HEX value", _paramName)
+    }
+}
+
+;_____________________________________________________________________________
+;
+ValidateWriteString(_new, _paramName) {     ; format to string
+;_____________________________________________________________________________     
+    global INI
+    
+    _result := Format("{}", _new)    
+    IniWrite, % _result, % INI, Menu, % _paramName
 }
