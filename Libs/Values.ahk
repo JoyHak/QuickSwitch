@@ -22,14 +22,14 @@ virtuals := []
 SetDefaultValues() {
     global OpenMenu                  := 1
     global ReDisplayMenu             := 1
-    global FolderNum                 := 0
+    global PathNumbers               := 0
     
     global ShortPath                 := 0
     global VirtualPath 		         := 0  
     global ShowDriveLetter 	         := 0 
     global CutFromEnd 		         := 1  
-    global FoldersCount              := 3    
-    global FolderNameLength          := 20  
+    global DirsCount                 := 3    
+    global DirNameLength             := 20  
                                      
     global PathSeparator             := "/"
     global ShortNameIndicator        := ".."
@@ -59,10 +59,10 @@ WriteValues() {
         IniWrite, 	%MainIcon%, 			    %INI%, 		App, 	    MainIcon    
         IniWrite, 	%MainFont%, 			    %INI%, 		App, 	    MainFont    
         IniWrite, 	%RestartWhere%, 			%INI%, 		App, 	    RestartWhere    
-        IniWrite, 	%OpenMenu%, 				%INI%, 		Menu, 		AlwaysOpenMenu
+        IniWrite, 	%OpenMenu%, 				%INI%, 		Menu, 		OpenMenu
         IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
         IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
-        IniWrite, 	%FolderNum%, 				%INI%, 		Menu, 		ShowFolderNumbers
+        IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
         IniWrite, 	%VirtualPath%, 				%INI%, 		Menu, 		VirtualPath
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%CutFromEnd%, 				%INI%, 		Menu, 		CutFromEnd
@@ -72,8 +72,8 @@ WriteValues() {
         LogError(Exception(INI . " write", "Failed to write values to the configuration", "Maybe INI file is not created?"))
     }
 
-    ValidateWriteInteger(FoldersCount, 		"FoldersCount")
-    ValidateWriteInteger(FolderNameLength, 	"FolderNameLength")
+    ValidateWriteInteger(DirsCount, 		"DirsCount")
+    ValidateWriteInteger(DirNameLength, 	"DirNameLength")
     
     ValidateWriteString(PathSeparator, 		"PathSeparator")
     ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
@@ -108,30 +108,30 @@ ReadValues() {
     IniRead, 	RestartKey, 				%INI%,		App, 		RestartKey, 	            %RestartKey%
     IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
     
-    IniRead, 	OpenMenu, 					%INI%,		Menu, 		AlwaysOpenMenu, 	        %OpenMenu%
+    IniRead, 	OpenMenu, 					%INI%,		Menu, 		OpenMenu, 	                %OpenMenu%
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	ReDisplayMenu, 				%INI%,		Menu, 		ReDisplayMenu,  	        %ReDisplayMenu%
-    IniRead, 	FolderNum, 					%INI%,		Menu, 		ShowFolderNumbers, 			%FolderNum%
+    IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
     IniRead, 	VirtualPath, 				%INI%,		Menu, 		VirtualPath, 				%VirtualPath%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
     IniRead, 	CutFromEnd, 				%INI%,		Menu, 		CutFromEnd, 				%CutFromEnd%
                     
-    IniRead, 	FoldersCount, 				%INI%,		Menu, 		FoldersCount,      	    	%FoldersCount%
-    IniRead, 	FolderNameLength, 			%INI%,		Menu, 		FolderNameLength,      	    %FolderNameLength%
+    IniRead, 	DirsCount, 				    %INI%,		Menu, 		DirsCount,      	    	%DirsCount%
+    IniRead, 	DirNameLength, 			    %INI%,		Menu, 		DirNameLength,      	    %DirNameLength%
     
     IniRead, 	PathSeparator, 				%INI%,		Menu, 		PathSeparator,      	    %PathSeparator%
     IniRead, 	ShortNameIndicator, 	 	%INI%,		Menu, 		ShortNameIndicator,      	%ShortNameIndicator%
                 
-    IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiBGColor, 				%A_Space%
-    IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuBGColor, 				%A_Space%
+    IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiColor, 				    %A_Space%
+    IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuColor, 				    %A_Space%
     
     Return
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 ValidateWriteKey(_new, _paramName, _funcObj, _state) {       ; bind key
-;_____________________________________________________________________________     
+;─────────────────────────────────────────────────────────────────────────────     
     global INI
     
     try {
