@@ -64,58 +64,62 @@ ShowMenuSettings() {
     LastMenuItem := A_ThisMenuItem
     FromSettings := true
     
+    Gui, Font,,%MainFont%
+    Gui, Color, %GuiColor%, %GuiColor%
+       
+    ; LEFT ALIGNED TEXT					
+    ;				type		coordinates		vVARIABLE  gGOTO							title                                                 
+    Gui, 	Add, 	Checkbox, 	x30 y+20        vShowDriveLetter checked%ShowDriveLetter%,  Show &drive letter
+    Gui, 	Add, 	Checkbox, 					vCutFromEnd checked%CutFromEnd%, 			&Cut from the end
+    
+    ; Section here is anchor YS pos for right aligned fields
+    ; After this block edits will appear starting from this YS pos
+    Gui, 	Add, 	Text, 		        	    vFolderNameLengthText Section,				Length of &folder names	    
+    Gui, 	Add, 	Text, 		    y+13        vFoldersCountText,						    Number of &folders displayed		   
+    Gui, 	Add, 	Text, 		    y+13        vPathSeparatorText,						    P&ath separator			       
+    
+    Gui, 	Add, 	Checkbox,  w200 y+10        vShortPath gShortPath checked%ShortPath%, 	Show &short path											  
+    Gui, 	Add, 	Checkbox, 	        		vVirtualPath checked%VirtualPath%, 			Show &virtual path	
+   
+    Gui, 	Add, 	Text, 		    y+20		,											Menu &backgroud color (HEX)                            
+    Gui, 	Add, 	Text, 		    y+13		,											Dialogs background &color (HEX)
+    
+            
+    ; LEFT ALIGNED CHECKBOXES		
+    Gui, 	Add, 	CheckBox, 	xs y+20         vOpenMenu  		checked%OpenMenu%, 			&Always open Menu if AutoSwitch disabled
+    Gui, 	Add, 	CheckBox, 					vReDisplayMenu  checked%ReDisplayMenu%, 	Show Menu a&fter leaving settings
+    
     ; Folder numbers radio buttons states
     Radio0 := 0
     Radio1 := 0
-    ; Toggle radio depends on FolderNum global state
-    Radio%FolderNum% := 1		
-    
-    Gui, Font,,%MainFont%
-       
-    ; SHORT PATH					
-    ;				type		coordinates		vVARIABLE  gGOTO							title                                                 
-    Gui, 	Add, 	Checkbox, 	x30  w200 y+10  vShowDriveLetter checked%ShowDriveLetter%, 	Show &drive letter
-    Gui, 	Add, 	Checkbox, 					vCutFromEnd checked%CutFromEnd%, 			&Cut from the end
-    
-    Gui, 	Add, 	Text, 		x30				vFolderNameLengthText,						Length of &folder names	
-    Gui, 	Add, 	Edit, 		x230 yp-4 w63 	vFolderNameLength, 							%FolderNameLength%
-    
-    Gui, 	Add, 	Text, 		x30				vFoldersCountText,							Number of &folders displayed		
-    Gui, 	Add, 	Edit, 		x230 yp-4 w63 	vFoldersCount, 								%FoldersCount%
-    
-    Gui, 	Add, 	Text, 		x30				vPathSeparatorText,							P&ath separator			
-    Gui, 	Add, 	Edit, 		x230 yp-4 w63 	vPathSeparator, 							%PathSeparator%
-    
-    Gui, 	Add, 	Checkbox, 	x30  w200		vShortPath gShortPath checked%ShortPath%, 	Show &short path											
-    Gui, 	Add, 	Edit, 		x230 yp-4 w63 	vShortNameIndicator, 						%ShortNameIndicator%
-    
-    Gui, 	Add, 	Checkbox, 	x30  w200		vVirtualPath checked%VirtualPath%, 			Show &virtual path											
-        
-    ; MENU SETTINS		
-    Gui, 	Add, 	CheckBox, 	         		vOpenMenu  		checked%OpenMenu%, 			&Always open Menu if AutoSwitch disabled
-    Gui, 	Add, 	CheckBox, 					vReDisplayMenu  checked%ReDisplayMenu%, 	Show Menu a&fter leaving settings
-                        
-    Gui, 	Add, 	Text, 		x30, 														Menu &backgroud color (HEX)
-    Gui, 	Add, 	Edit, 		x230 yp-4 w63 	vMenuColor, 								%MenuColor%
-                        
-    Gui, 	Add, 	Text, 		x30, 														Dialogs background &color (HEX)
-    Gui, 	Add, 	Edit, 		x230 yp-4 w63 	vGuiColor, 				    				%GuiColor%
-                    
-    Gui, 	Add, 	Radio, 		x30 y+15 		vFolderNum    	Checked%Radio0%, 			&No folder numbering
-    Gui, 	Add, 	Radio, 									  	Checked%Radio1%,			&Folder numbers with shortcuts 1-0 (10)
+    Radio%FolderNum% := 1    
+    Gui, 	Add, 	Radio, 		   y+20 		vFolderNum    	checked%Radio0%, 			&No folder numbering
+    Gui, 	Add, 	Radio, 									  	checked%Radio1%,			&Folder numbers with shortcuts 1-0 (10)
             
             
-    ; hidden default button used for accepting {Enter} to leave GUI			
-    Gui, 	Add, 	Button, 	y+20 w74  	    Default  gOK, 								&OK
-    Gui, 	Add, 	Button, 	x+20 w74  		Cancel   gCancel, 							&Cancel
-    Gui, 	Add, 	Button, 	x+20 w74  		         gResetToDefaults, 					&Reset
+    ; hidden default button used for accepting {Enter} to leave GUI	
+    local button := "y+20 xp w74"    
+    Gui, 	Add, 	Button, 	%button%  	    Default  gOK, 								&OK
+    Gui, 	Add, 	Button, 	%button%  		Cancel   gCancel, 							&Cancel
+    Gui, 	Add, 	Button, 	%button%  		         gResetToDefaults, 					&Reset
+
+   
+    ; RIGHT ALIGNED FIELDS	
+    ; Start from first text YS pos
+    local edit   := "w63 r1 Limit6 -Wrap"
+    Gui, 	Add, 	Edit,   ys-6 %edit%         vFolderNameLength, 						    %FolderNameLength%
+    Gui, 	Add, 	Edit, 	y+4  %edit% 	    vFoldersCount, 								%FoldersCount%
+    Gui, 	Add, 	Edit, 	y+4  %edit% 	    vPathSeparator, 							%PathSeparator%
+    Gui, 	Add, 	Edit, 	y+4  %edit% 	    vShortNameIndicator, 						%ShortNameIndicator%
+    
+    Gui, 	Add, 	Edit, 	y+30 %edit% 	    vMenuColor, 								%MenuColor%
+    Gui, 	Add, 	Edit, 	y+4  %edit% 	    vGuiColor, 				    				%GuiColor%
     
     
     ; SETUP AND SHOW GUI
     ; current checkbox state
     ShortPath() 
-    Gui, Color, %GuiColor%
-    
+        
     ; These dialog coord. are obtained in ShowPathsMenu()
     local Xpos := WinX
     local Ypos := WinY + 100 
