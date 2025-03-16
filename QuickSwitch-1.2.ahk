@@ -1,9 +1,6 @@
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe 
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe 
-
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 ;@Ahk2Exe-SetMainIcon QuickSwitch.ico
-;@Ahk2Exe-SetDescription Quickly Switch to the folder from any file manager.
+;@Ahk2Exe-SetDescription Quickly Switch to the path from any file manager.
 ;@Ahk2Exe-SetCopyright Rafaello
 ;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license
 ;@Ahk2Exe-SetCompanyName ToYu studio
@@ -35,15 +32,14 @@ global ScriptName := "QuickSwitch"
 global INI := ScriptName ".ini"
 global ERRORS := "Errors.log"
 
-; Detailed info in Libs\README.md
 #Include %A_ScriptDir%
 #Include Libs\Log.ahk
 #Include Libs\Values.ahk
 #Include Libs\FileDialogs.ahk
 #Include Libs\GetPaths.ahk
 #Include Libs\AutoSwitch.ahk
-
 #Include Libs\Debug.ahk
+
 #Include Libs\AppSettings.ahk
 #Include Libs\MenuSettings.ahk
 #Include Libs\PathsMenu.ahk
@@ -76,8 +72,7 @@ Loop {
         FingerPrint := ahk_exe . "___" . window_title
 
         ; Check if FingerPrint entry is already in INI, so we know what to do.
-        IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%
-
+        IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%, 0
         if (DialogAction == 1) {                                           ; ======= AutoSwitch ==        
             AutoSwitch()
         } else if (DialogAction == 0) {                                    ; ======= Never here ==        
@@ -91,7 +86,6 @@ Loop {
 
         ; if we end up here, we checked the INI for what to do in this supported dialog and did it
         ; We are still in this dialog and can now enable the hotkey for manual menu-activation
-        ; Activate the CTR-Q hotkey. When pressed, start the ShowPathsMenu routine
 
         Hotkey, %MainKey%, On
 
@@ -108,8 +102,7 @@ Loop {
     DialogID        := ""
     DialogType      := ""
     
-}   ; End of continuous WinWaitActive / WinWaitNotActive loop
+}   ; End of continuous WinWaitActive loop
 
-
-MsgBox Dialog waiting error...
+LogError(Exception("Main menu error", "An error occurred while waiting for the file dialog to appear. Restart the app manually", "End of continuous WinWaitActive loop in main file"))
 ExitApp

@@ -1,7 +1,7 @@
 /* 
-    These options are available in the folder menu. 
+    These options are available in the Paths Menu. 
     AutoSwitch() is called each time a dialogue is opened if it is enabled.
-    Their result is the value of the DialogAction variable, which is bound to each window's FingerPrint.
+    Depends on DialogAction variable, which is bound to each window's FingerPrint.
 */
 
 AutoSwitch() {
@@ -9,8 +9,7 @@ AutoSwitch() {
     IniWrite, 1, %INI%, Dialogs, %FingerPrint%
     DialogAction := 1
 
-    ; ID and FuncObj FeedDialog declared in ShowFolderPaths()
-    FeedDialog.call(DialogID, paths[1])
+    FileDialog.call(DialogID, paths[1])
     LastMenuItem := A_ThisMenuItem
 
     Return

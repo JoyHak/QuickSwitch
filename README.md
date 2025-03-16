@@ -1,10 +1,8 @@
-This is an improved version of the [QuickSwitch script v0.5](https://github.com/gepruts/QuickSwitch) from Gepruts. [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) first improved it to [v0.5dw9a](https://www.voidtools.com/forum/download/file.php?id=2235), and I've now [released new version](https://github.com/JoyHak/QuickSwitch/releases), where I've made some really significant improvements!
+This is an improved version of the [QuickSwitch script v0.5](https://github.com/gepruts/QuickSwitch) from Gepruts. [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) first improved it to [v0.5dw9a](https://www.voidtools.com/forum/download/file.php?id=2235), and I've now [released v1.0](https://github.com/JoyHak/QuickSwitch/releases), where I've made some really significant improvements!
 
 ## About
 
 Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the folder on your system. QuickSwitch lets you automatically switch to the folder you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
-
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/menu.gif)
 
 It has two modes:
 
@@ -13,8 +11,6 @@ It has two modes:
 2. **AutoSwitch mode**: the file dialog automatically opens the last active folder in the file manager when you `Alt-Tab` between them. If the file manager was active before opening the dialog, it opens that folder immediately. You can still use `Ctr+Q` to access the menu if needed.
 
 **AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
-
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/AutoSwitch.gif)
 
 ## Installation
 
@@ -38,8 +34,6 @@ It has two modes:
 
 6. Explore the available options in the menu, open the settings and experiment with them. Choose a convenient style and logic of the menu!
 
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.gif)
-
 ##  Scripting
 
 This script is written in the [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey).
@@ -51,9 +45,8 @@ This script is written in the [Autohotkey language](https://en.m.wikipedia.org/w
 2. When the installation is complete, you are presented with another menu. Choose `Run AutoHotkey`.
 Once the AutoHotkey help file opens, you can read or close it now. 
 
-3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of archive.
-
-4.  Unpack `.zip` and run `QuickSwitch.ahk`. Check it's existence in the tray.
+3. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version of QuickSwitch.
+5.  Unpack `.zip` and run `QuickSwitch.ahk`. Check it's existence in the tray.
 
 ## Compiling	
 

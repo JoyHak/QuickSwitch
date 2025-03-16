@@ -91,32 +91,25 @@ ShowMenuSettings() {
     ; LEFT ALIGNED CHECKBOXES		
     Gui, 	Add, 	CheckBox, 	xs y+20         vOpenMenu  		checked%OpenMenu%, 			&Always open Menu if AutoSwitch disabled
     Gui, 	Add, 	CheckBox, 					vReDisplayMenu  checked%ReDisplayMenu%, 	Show Menu a&fter leaving settings
-    
-    ; Folder numbers radio buttons states
-    Radio0 := 0
-    Radio1 := 0
-    Radio%FolderNum% := 1    
-    Gui, 	Add, 	Radio, 		   y+20 		vFolderNum    	checked%Radio0%, 			&No folder numbering
-    Gui, 	Add, 	Radio, 									  	checked%Radio1%,			&Folder numbers with shortcuts 1-0 (10)
+    Gui, 	Add, 	CheckBox, 					vPathNumbers	checked%PathNumbers%,		&Path numbers with shortcuts 1-0 (10)
             
-            
-    ; hidden default button used for accepting {Enter} to leave GUI	
-    local button := "y+20 xp w74"    
-    Gui, 	Add, 	Button, 	%button%  	    Default  gSaveSettings, 					&OK
-    Gui, 	Add, 	Button, 	%button%  		Cancel   gCancel, 							&Cancel
-    Gui, 	Add, 	Button, 	%button%  		         gResetSettings, 					&Reset
-
-   
+ 
     ; RIGHT ALIGNED FIELDS	
     ; Start from first text YS pos
     local edit   := "w63 r1 Limit6 -Wrap"
-    Gui, 	Add, 	Edit,   ys-6 %edit%         vFolderNameLength, 						    %FolderNameLength%
-    Gui, 	Add, 	Edit, 	y+4  %edit% 	    vFoldersCount, 								%FoldersCount%
+    Gui, 	Add, 	Edit,   ys-6 %edit%         vDirNameLength, 						    %DirNameLength%
+    Gui, 	Add, 	Edit, 	y+4  %edit% 	    vDirsCount, 								%DirsCount%
     Gui, 	Add, 	Edit, 	y+4  %edit% 	    vPathSeparator, 							%PathSeparator%
     Gui, 	Add, 	Edit, 	y+4  %edit% 	    vShortNameIndicator, 						%ShortNameIndicator%
     
     Gui, 	Add, 	Edit, 	y+30 %edit% 	    vMenuColor, 								%MenuColor%
     Gui, 	Add, 	Edit, 	y+4  %edit% 	    vGuiColor, 				    				%GuiColor%
+    
+    
+    ; hidden default button used for accepting {Enter} to leave GUI	    
+    Gui, 	Add, 	Button, 	w74 xm+12       Default  gSaveSettings, 					&OK
+    Gui, 	Add, 	Button, 	wp x+20 yp  	Cancel   gCancel, 							&Cancel
+    Gui, 	Add, 	Button, 	wp x+20 yp 		         gResetSettings, 					&Reset
     
     
     ; SETUP AND SHOW GUI

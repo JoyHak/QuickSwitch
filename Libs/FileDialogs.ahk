@@ -1,70 +1,69 @@
 /* 
- There are a few different types of possible dialogues, and each one has its own function. 
- There's also a function called FeedDialogFunc() 
- Depending on the current dialogue, it finds the right function from this file (FuncObj). 
- You can FuncObj.call(id, folder) anywhere.
+    There are a few different types of possible dialogues, and each one has its own function. 
+    There's also a function called GetFileDialog() 
+    It returns the FuncObj to call it later and feed the current dialogue.
 */
 
-FeedDialogGENERAL(ByRef _thisID, _path) {
+FeedDialogGENERAL(ByRef _WinID, _path) {
     global DialogType
 
-    WinActivate, ahk_id %_thisID%
+    WinActivate, ahk_id %_WinID%
     Sleep, 50
 
     ; Focus Edit1
-    ControlFocus Edit1, ahk_id %_thisID%
-    WinGet, ActivecontrolList, ControlList, ahk_id %_thisID%
+    ControlFocus Edit1, ahk_id %_WinID%
+    WinGet, ActivecontrolList, ControlList, ahk_id %_WinID%
 
     Loop, Parse, ActivecontrolList, `n  
     {       ; which addressbar and "Enter" controls to use   
         if InStr(A_LoopField, "ToolbarWindow32") {
-            ControlGet, _ctrlHandle, Hwnd, , %A_LoopField%, ahk_id %_thisID%
+            ControlGet, _ctrlHandle, Hwnd, , %A_LoopField%, ahk_id %_WinID%
             _parentHandle := DllCall("GetParent", "Ptr", _ctrlHandle)
             WinGetClass, _parentClass, ahk_id %_parentHandle%
 
             if InStr(_parentClass, "Breadcrumb Parent")
-                _UseToolbar := A_LoopField
+                _useToolbar := A_LoopField
 
             if Instr(_parentClass, "msctls_progress32")
-                _EnterToolbar := A_LoopField
+                _enterToolbar := A_LoopField
         }
-
         ; Start next round clean
         _ctrlHandle     := ""
         _parentHandle   := ""
         _parentClass    := ""
-
     }
-
-    if (_UseToolbar and _EnterToolbar) {
+    
+    _pathSet := false
+    if (_useToolbar and _enterToolbar) {
         Loop, 5 {
             SendInput ^l
             Sleep, 100
 
-            ; Check and insert folder
+            ; Check and insert path
             ControlGetFocus, _ctrlFocus, A
 
             if ((_ctrlFocus != "Edit1") and InStr(_ctrlFocus, "Edit")) {
                 Control, EditPaste, %_path%, %_ctrlFocus%, A
-                ControlGetText, _editAddress, %_ctrlFocus%, ahk_id %_thisID%
-
-                if (_editAddress == _path) 
-                    _FolderSet := true
-
+                ControlGetText, _editAddress, %_ctrlFocus%, ahk_id %_WinID%
+                
+                if (_editAddress == _path) {
+                    _pathSet := true
+                    Sleep, 15
+                }
             }
 
             ; Start next round clean
             _ctrlFocus    := ""
             _editAddress  := ""
 
-        } Until _FolderSet
+        } Until _pathSet
 
-        if (_FolderSet) {
-            ; Click control to "execute" new folder
-            ControlClick, %_EnterToolbar%, ahk_id %_thisID%
+        if (_pathSet) {
+            ; Click control to "execute" new path
+            ControlClick, %_enterToolbar%, ahk_id %_WinID%
             ; Focus file name
-            Sleep, 15
-            ControlFocus Edit1, ahk_id %_thisID%
+            Sleep, 25
+            ControlFocus Edit1, ahk_id %_WinID%
         }
     } else {
         MsgBox This type of dialog can not be handled (yet).`nPlease report it!
@@ -73,19 +72,19 @@ FeedDialogGENERAL(ByRef _thisID, _path) {
     Return
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 FeedDialogSYSLISTVIEW(ByRef _WinID, _path) {
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 
     global DialogType
 
-    WinActivate, ahk_id %_thisID%
-    ControlGetText _oldText, Edit1, ahk_id %_thisID%
+    WinActivate, ahk_id %_WinID%
+    ControlGetText _editOld, Edit1, ahk_id %_WinID%
     Sleep, 20
 
     ; Make sure there exactly one slash at the end.
-    _path := RTrim( _path , "\")
+    _path := RTrim(_path , "\")
     _path := _path . "\"
     
     ; Make sure no element is preselected in listview, 
@@ -93,44 +92,44 @@ FeedDialogSYSLISTVIEW(ByRef _WinID, _path) {
     Sleep, 10
     Loop, 100 {
         Sleep, 10
-        ControlFocus SysListView321, ahk_id %_thisID%
-        ControlGetFocus, _Focus, ahk_id %_thisID%
+        ControlFocus SysListView321, ahk_id %_WinID%
+        ControlGetFocus, _Focus, ahk_id %_WinID%
 
     } Until _Focus == "SysListView321"
-    ControlSend SysListView321, {Home}, ahk_id %_thisID%
+    ControlSend SysListView321, {Home}, ahk_id %_WinID%
 
     Loop, 100 {
         Sleep, 10 
-        ControlSend SysListView321, ^{Space}, ahk_id %_thisID%
-        ControlGet, _Focus, List, Selected, SysListView321, ahk_id %_thisID%
+        ControlSend SysListView321, ^{Space}, ahk_id %_WinID%
+        ControlGet, _Focus, List, Selected, SysListView321, ahk_id %_WinID%
 
     } Until !_Focus
 
     Loop, 20 {
         Sleep, 10
-        ControlSetText, Edit1, %_path%, ahk_id %_thisID%
-        ControlGetText, _Edit1, Edit1, ahk_id %_thisID%
+        ControlSetText, Edit1, %_path%, ahk_id %_WinID%
+        ControlGetText, _Edit1, Edit1, ahk_id %_WinID%
 
         if (_Edit1 == _path)        
-            _FolderSet := true
+            _pathSet := true
 
-    } Until _FolderSet
+    } Until _pathSet
 
-    if _FolderSet {
+    if _pathSet {
         Sleep, 20
-        ControlFocus Edit1, ahk_id %_thisID% ControlSend Edit1, {Enter}, ahk_id %_thisID%
+        ControlFocus Edit1, ahk_id %_WinID% ControlSend Edit1, {Enter}, ahk_id %_WinID%
 
-        ; Restore original filename / make empty in case of previous folder
+        ; Restore original filename / make empty in case of previous path
         Sleep, 15
-        ControlFocus Edit1, ahk_id %_thisID%
+        ControlFocus Edit1, ahk_id %_WinID%
         Sleep, 20
 
         Loop, 5 {
-            ControlSetText, Edit1, %_oldText%, ahk_id %_thisID%             ; set
+            ControlSetText, Edit1, %_editOld%, ahk_id %_WinID%        ; set
             Sleep, 15
-            ControlGetText, _2thisCONTROLTEXT, Edit1, ahk_id %_thisID%      ; check
+            ControlGetText, _editContent, Edit1, ahk_id %_WinID%      ; check
 
-            if (_2thisCONTROLTEXT == _oldText)
+            if (_editContent == _editOld)
                 Break
         }
     }
@@ -138,17 +137,14 @@ FeedDialogSYSLISTVIEW(ByRef _WinID, _path) {
     Return
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
 FeedDialogSYSTREEVIEW(ByRef _WinID, _path) {
-;_____________________________________________________________________________
-
-    global DialogType
-
-    WinActivate, ahk_id %_thisID%
+;─────────────────────────────────────────────────────────────────────────────
+    WinActivate, ahk_id %_WinID%
 
     ; Read the current text in the "File Name:" box (= OldText)
-    ControlGetText _oldText, Edit1, ahk_id %_thisID%
+    ControlGetText _editOld, Edit1, ahk_id %_WinID%
     Sleep, 20
 
     ; Make sure there exactly one slash at the end.
@@ -157,29 +153,29 @@ FeedDialogSYSTREEVIEW(ByRef _WinID, _path) {
 
     Loop, 20 {
         Sleep, 10
-        ControlSetText, Edit1, %_path%, ahk_id %_thisID%
-        ControlGetText, _Edit1, Edit1, ahk_id %_thisID%
+        ControlSetText, Edit1, %_path%, ahk_id %_WinID%
+        ControlGetText, _Edit1, Edit1, ahk_id %_WinID%
 
         if (_Edit1 == _path)
-            _FolderSet := true
+            _pathSet := true
 
-    } Until _FolderSet
+    } Until _pathSet
 
-    if _FolderSet {
+    if _pathSet {
         Sleep, 20
-        ControlFocus Edit1, ahk_id %_thisID% ControlSend Edit1, {Enter}, ahk_id %_thisID%
+        ControlFocus Edit1, ahk_id %_WinID% ControlSend Edit1, {Enter}, ahk_id %_WinID%
 
-        ; Restore original filename / make empty in case of previous folder
+        ; Restore original filename / make empty in case of previous path
         Sleep, 15
-        ControlFocus Edit1, ahk_id %_thisID%
+        ControlFocus Edit1, ahk_id %_WinID%
         Sleep, 20
 
         Loop, 5 {
-            ControlSetText, Edit1, %_oldText%, ahk_id %_thisID%             ; set
+            ControlSetText, Edit1, %_editOld%, ahk_id %_WinID%             ; set
             Sleep, 15
-            ControlGetText, _2thisCONTROLTEXT, Edit1, ahk_id %_thisID%      ; check
+            ControlGetText, _editContent, Edit1, ahk_id %_WinID%      ; check
 
-            if (_2thisCONTROLTEXT == _oldText)
+            if (_editContent == _editOld)
                 Break
         
         }
@@ -188,10 +184,10 @@ FeedDialogSYSTREEVIEW(ByRef _WinID, _path) {
     Return
 }
 
-;_____________________________________________________________________________
+;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogFunc(ByRef _DialogID) {
-;_____________________________________________________________________________
+GetFileDialog(ByRef _DialogID) {
+;─────────────────────────────────────────────────────────────────────────────
 
     ; Detection of a File dialog. Returns FuncObj / false
 
@@ -222,20 +218,20 @@ FeedDialogFunc(ByRef _DialogID) {
     }
     
     if (_DirectUIHWND1 and _ToolbarWindow321 and _Edit1)
-    Return Func("FeedDialogGENERAL")
+        Return Func("FeedDialogGENERAL")
     
     else if (_SysListView321 and _ToolbarWindow321 and _Edit1 and _SysHeader321)
-    Return Func("FeedDialogSYSTREEVIEW")
+        Return Func("FeedDialogSYSTREEVIEW")
     
     else if (_SysListView321 and _ToolbarWindow321 and _Edit1)
-    Return Func("FeedDialogSYSLISTVIEW")
+        Return Func("FeedDialogSYSLISTVIEW")
     
     else if (_SysListView321 and _SysHeader321 and _Edit1)
-    Return Func("FeedDialogSYSLISTVIEW")
+        Return Func("FeedDialogSYSLISTVIEW")
     
     else if (_SysTreeView321 and _Edit1)
-    Return Func("FeedDialogSYSTREEVIEW")
+        Return Func("FeedDialogSYSTREEVIEW")
     
     else
-    Return false
+        Return false
 }
