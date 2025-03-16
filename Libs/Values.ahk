@@ -1,15 +1,26 @@
-; INI file
-global ScriptName := "QuickSwitch"
-;SplitPath, A_ScriptFullPath,,,, ScriptName
-global INI := ScriptName . ".ini"
+; These parameters are not saved in the INI
+global LastMenuItem  := ""
+global FromSettings  := false
+
+; These parameters must not be reset
+global AutoStartup   := 1
+global MainIcon      := "QuickSwitch.ico"
+global MainFont      := "Tahoma"
+global MainKey       := "^q"
+global RestartKey    := "~^s"
+global RestartWhere  := "ahk_exe notepad++.exe"
+
+; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
+paths    := []
+; Virtual paths are used only in the PathsMenu
+virtuals := []
 
 ; set defaults without overwriting existing INI
 ; these values are used if the INI settings are invalid
 SetDefaultValues() {
-    global AutoStartup               := 1
-    global OpenMenu                  := 0
+    global OpenMenu                  := 1
     global ReDisplayMenu             := 1
-    global FolderNum                 := 1
+    global FolderNum                 := 0
     
     global ShortPath                 := 0
     global VirtualPath 		         := 0  
