@@ -50,22 +50,34 @@ WriteValues() {
         are identical to those in ReadValues() 
     */
     global
-    FolderNum--
-    
-    ; 			value						INI name	section		param name
-    IniWrite, 	%OpenMenu%, 				%INI%, 		Menu, 		AlwaysOpenMenu
-    IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
-    IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
-    IniWrite, 	%FolderNum%, 				%INI%, 		Menu, 		ShowFolderNumbers
-    IniWrite, 	%VirtualPath%, 				%INI%, 		Menu, 		VirtualPath
-    IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
-    IniWrite, 	%CutFromEnd%, 				%INI%, 		Menu, 		CutFromEnd
-    
+
+    try {
+        ; 			value						INI name	section		param name
+        IniWrite, 	%AutoStartup%, 				%INI%, 		App, 		AutoStartup    
+        IniWrite, 	%MainIcon%, 			    %INI%, 		App, 	    MainIcon    
+        IniWrite, 	%MainFont%, 			    %INI%, 		App, 	    MainFont    
+        IniWrite, 	%RestartWhere%, 			%INI%, 		App, 	    RestartWhere    
+        IniWrite, 	%OpenMenu%, 				%INI%, 		Menu, 		AlwaysOpenMenu
+        IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
+        IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
+        IniWrite, 	%FolderNum%, 				%INI%, 		Menu, 		ShowFolderNumbers
+        IniWrite, 	%VirtualPath%, 				%INI%, 		Menu, 		VirtualPath
+        IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
+        IniWrite, 	%CutFromEnd%, 				%INI%, 		Menu, 		CutFromEnd
+        
+        Menu, Tray, Icon, %MainIcon% 
+    } catch {
+        LogError(Exception(INI . " write", "Failed to write values to the configuration", "Maybe INI file is not created?"))
+    }
+
     ValidateWriteInteger(FoldersCount, 		"FoldersCount")
     ValidateWriteInteger(FolderNameLength, 	"FolderNameLength")
     
     ValidateWriteString(PathSeparator, 		"PathSeparator")
     ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
+    
+    ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off")
+    ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On")
     
     ValidateWriteColor(GuiColor, 	"GuiBGColor")
     ValidateWriteColor(MenuColor, 	"MenuBGColor")
@@ -85,8 +97,15 @@ ReadValues() {
         to those in WriteValues() 
     */
     global
-    
+
     ;			global						INI name	section		param name					default value
+    IniRead, 	AutoStartup, 				%INI%,		App, 		AutoStartup, 	            %AutoStartup%
+    IniRead, 	MainIcon, 				    %INI%,		App, 		MainIcon, 	                %MainIcon%
+    IniRead, 	MainFont, 				    %INI%,		App, 		MainFont, 	                %MainFont%
+    IniRead, 	MainKey, 				    %INI%,		App, 		MainKey, 	                %MainKey%
+    IniRead, 	RestartKey, 				%INI%,		App, 		RestartKey, 	            %RestartKey%
+    IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
+    
     IniRead, 	OpenMenu, 					%INI%,		Menu, 		AlwaysOpenMenu, 	        %OpenMenu%
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	ReDisplayMenu, 				%INI%,		Menu, 		ReDisplayMenu,  	        %ReDisplayMenu%
