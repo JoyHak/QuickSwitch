@@ -12,36 +12,36 @@ ShouldOpen() {
     Return OpenMenu or (FromSettings and ReDisplayMenu)
 }
 
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 AddPathsMenuItems() {
-;─────────────────────────────────────────────────────────────────────────────  
+;_____________________________________________________________________________  
 
-    global VirtualPath, PathNumbers, ShortPath, paths, virtuals
+    global VirtualPath, FolderNum, ShortPath, paths, virtuals
     _paths := VirtualPath ? virtuals : paths
 
     for _index, _path in _paths {
         _display := ""
         
-        if PathNumbers
+        if FolderNum
             _display .= "&" . _index . " " 
         if ShortPath
             _display .= ShowShortPath(_path)
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, %_display%, SelectPath
+        Menu, ContextMenu, Insert,, %_display%, PathChoice
         _display := ""
     }
 }
 
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 AddPathsMenuSettings() {
-;─────────────────────────────────────────────────────────────────────────────  
+;_____________________________________________________________________________  
 
     global DialogAction
-
+    
     Menu ContextMenu, Add,
     Menu ContextMenu, Add, Settings, Dummy
     Menu ContextMenu, disable, Settings
@@ -66,34 +66,26 @@ AddPathsMenuSettings() {
     Menu ContextMenu, Add, &App settings,  ShowAppSettings
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-HidePathsMenu() {
-;───────────────────────────────────────────────────────────────────────────── 
-    global
-    Menu ContextMenu, UseErrorLevel  ; Ignore errors
-    Menu ContextMenu, Delete         ; Delete previous menu
-}
-
-;─────────────────────────────────────────────────────────────────────────────
+;_____________________________________________________________________________
 ;
 ShowPathsMenu() {
-;─────────────────────────────────────────────────────────────────────────────  
-    global DialogID, paths, MenuColor
-    global WinX, WinY, WinWidth, WinHeight, MenuColor
+;_____________________________________________________________________________  
+    global DialogID, paths, MenuColor, LastMenuItem
+    global WinX, WinY, WinWidth, WinHeight, MenuColor, ReDisplayMenu
     global FromSettings := false
     ReadValues()
 
     ; Get dialog position (also used for settings menu positon)
     WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
-    if paths.Count() {     
+    if paths {     
         AddPathsMenuItems()
         AddPathsMenuSettings()
-
+        
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100        
-        HidePathsMenu()       
-
+               
+        Menu ContextMenu, UseErrorLevel  ; Ignore errors
+        Menu ContextMenu, Delete         ; Delete previous menu
     } 
     Return
 }
