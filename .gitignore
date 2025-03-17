@@ -1,5 +1,1 @@
-*/*.log
-*/*.ini
-*/*.exe
-/old*/
-/reserv*/
+*.log
