@@ -1,1 +1,5 @@
+*.exe
 *.log
+*.ini
+/old*/
+/reserv*/
