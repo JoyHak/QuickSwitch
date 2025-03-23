@@ -1,3 +1,6 @@
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe 
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe 
+
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 ;@Ahk2Exe-SetMainIcon QuickSwitch.ico
 ;@Ahk2Exe-SetDescription Quickly Switch to the path from any file manager.
@@ -25,6 +28,7 @@
 #SingleInstance force
 #NoEnv
 #Warn
+
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
