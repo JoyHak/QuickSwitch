@@ -38,7 +38,9 @@ global BugReportLink   := "https://github.com/JoyHak/QuickSwitch/issues/new?temp
 #Include Libs\PathsMenu.ahk
 
 ValidateLog()
+;@Ahk2Exe-IgnoreBegin
 ValidateWriteTrayIcon(MainIcon, "MainIcon")
+;@Ahk2Exe-IgnoreEnd
 
 SetDefaultValues()
 ReadValues()

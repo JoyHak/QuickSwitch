@@ -45,27 +45,29 @@ LogHeader() {
     ), % ErrorsLog
 
     ; A_Language 4-digit code: https://www.autohotkey.com/docs/v1/misc/Languages.htm
+    Return
 }
 
 LogInfo() {
     ; Info about current launched script/compiled app
     global ErrorsLog
-
-    /*@Ahk2Exe-Keep
-        FileAppend, Script is compiled by %A_UserName% `n, % ErrorsLog
-
-        FileGetVersion, _ver, % A_ScriptFullPath
-        FileAppend, Version: %_ver% `n`n, % ErrorsLog
-    */
+    
     _bit  := A_PtrSize * 8
     _arch := A_Is64bitOS ? "64-bit" : "32-bit"
-    FileAppend, %_bit%-bit script for %_arch% system `n`n, % ErrorsLog
+    
+    _header := ""    
+    /*@Ahk2Exe-Keep
+        FileGetVersion, _ver, % A_ScriptFullPath
+        _header .= "Script is compiled. Version: " _ver "`n"
+    */
+    _header .= _bit "-bit script for " _arch " system `n`n"
+    FileAppend, % _header, % ErrorsLog
 }
 
 ValidateLog() {
     global INI, ErrorsLog, ScriptName
 
-    if FileExist(ErrorsLog) {
+    if (FileExist(ErrorsLog)) {
         ; Clean log
         FileGetSize, _size, % ErrorsLog, K
         if (_size > 30) {
