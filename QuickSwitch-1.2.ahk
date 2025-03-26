@@ -1,28 +1,15 @@
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe 
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe 
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe
 
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 ;@Ahk2Exe-SetMainIcon QuickSwitch.ico
-;@Ahk2Exe-SetDescription Quickly Switch to the path from any file manager.
+;@Ahk2Exe-SetDescription https://github.com/JoyHak/QuickSwitch
 ;@Ahk2Exe-SetCopyright Rafaello
 ;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license
 ;@Ahk2Exe-SetCompanyName ToYu studio
 
 ;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
 ;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Libs" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
-
-/*
-    Modification by Rafaello:
-    https://github.com/JoyHak/QuickSwitch
-
-    Based on v0.5dw9a by NotNull, DaWolfi and Tuska:
-    https://www.voidtools.com/forum/viewtopic.php?f=2&t=9881
-
-
-    This is the main file that is waiting for the dialog window to appear.
-    Then initializes the menu display.
-    The hotkey is declared once and linked to the ShowPathsMenu().
-*/
 
 #Requires AutoHotkey v1.1+
 #SingleInstance force
