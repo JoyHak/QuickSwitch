@@ -82,11 +82,12 @@ WriteValues() {
     ValidateWriteString(PathSeparator, 		"PathSeparator")
     ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
 
-    ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off")
-    ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On")
+    ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off",      MainKeyHook)
+    ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On",       RestartKeyHook)
 
     ValidateWriteColor(GuiColor, 	"GuiColor")
     ValidateWriteColor(MenuColor, 	"MenuColor")
+    ValidateWriteTrayIcon(MainIcon, "MainIcon")
 
     Return
 }
@@ -110,7 +111,11 @@ ReadValues() {
     IniRead, 	MainFont, 				    %INI%,		App, 		MainFont, 	                %MainFont%
     IniRead, 	MainKey, 				    %INI%,		App, 		MainKey, 	                %MainKey%
     IniRead, 	RestartKey, 				%INI%,		App, 		RestartKey, 	            %RestartKey%
+
+    IniRead, 	MainKeyHook, 				%INI%,		App, 		MainKeyHook, 	            %MainKeyHook%
+    IniRead, 	RestartKeyHook, 			%INI%,		App, 		RestartKeyHook, 	        %RestartKeyHook%
     IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
+    IniRead, 	LastTabSettings, 			%INI%,		App, 		LastTabSettings, 	        %LastTabSettings%
 
     IniRead, 	OpenMenu, 					%INI%,		Menu, 		OpenMenu, 	                %OpenMenu%
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
@@ -134,20 +139,23 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteKey(_new, _paramName, _funcObj, _state) {       ; bind key
+ValidateWriteKey(_new, _paramName, _funcObj, _state := "On", _useHook := false) {       ; bind key
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
+    _prefix := _useHook ? "" : "~"
 
     try {
-        Hotkey, % _new, % _funcObj, % _state                 ; create hotkey
+        Hotkey, % _prefix . _new, % _funcObj, % _state       ; create hotkey
         IniWrite, % _new, % INI, App, % _paramName           ; save
     } catch _error {
         LogError(_error)
         Return
     }
     IniRead, _old, % INI, App, % _paramName, % _new          ; remove old if exist
-    if (_old != _new)
+    if (_old != _new) {
         Hotkey, % _old, Off
+        Hotkey, % "~" . _old, Off
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
