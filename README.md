@@ -2,15 +2,15 @@ This is an improved version of the [QuickSwitch script v0.5](https://github.com/
 
 ## About
 
-Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the folder on your system. QuickSwitch lets you automatically switch to the folder you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
+Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the directory on your system. QuickSwitch lets you automatically switch to the path you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
 
 It has two modes:
 
-1. **Menu mode**: displays a list of opened folders. Selecting one switches the file dialog to that folder. The menu won't appear if no folders are open.
+1. **Menu mode**: displays a list of opened directories. Selecting one switches the file dialog to that path. The menu won't appear if no directories are open.
 
-2. **AutoSwitch mode**: the file dialog automatically opens the last active folder in the file manager when you `Alt-Tab` between them. If the file manager was active before opening the dialog, it opens that folder immediately. You can still use `Ctr+Q` to access the menu if needed.
+2. **AutoSwitch mode**: the file dialog automatically opens the last active directory in the file manager when you `Alt-Tab` between them. If the file manager was active before opening the dialog, it opens that directory immediately. You can still use `Ctr+Q` to access the menu if needed.
 
-**AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers, which manage their own folders.
+**AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers or backup applications.
 
 ## Installation
 
@@ -20,7 +20,7 @@ It has two modes:
 
 2. Run `.exe` for your CPU architecture and check it's existence in the tray.
 
-3. Open different folders in a supported file manager.
+3. Open different directories in a supported file manager.
 
 > E.g., open `C:\` in `Explorer`.
 
@@ -28,9 +28,7 @@ It has two modes:
 
 > E.g., open `Notepad` then `File - Open...`. Or try downloading any file.
 
-5. Press `Ctrl+Q` and look at the paths in the **menu** that opens. All folders opened in supported file managers will be displayed here.
-
-> From any similar dialog box, from any application, you can quickly navigate to these folders using this menu and `save\open` a file from them.
+5. Press `Ctrl+Q` and look at the paths in the **menu** that opens. All directories opened in supported file managers will be displayed here.
 
 6. Explore the available options in the menu, open the settings and experiment with them. Choose a convenient style and logic of the menu!
 
