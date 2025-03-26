@@ -58,9 +58,11 @@ WriteValues() {
     try {
         ; 			value						INI name	section		param name
         IniWrite, 	%AutoStartup%, 				%INI%, 		App, 		AutoStartup
-        IniWrite, 	%MainIcon%, 			    %INI%, 		App, 	    MainIcon
         IniWrite, 	%MainFont%, 			    %INI%, 		App, 	    MainFont
         IniWrite, 	%RestartWhere%, 			%INI%, 		App, 	    RestartWhere
+        IniWrite, 	%MainKeyHook%, 			    %INI%, 		App, 	    MainKeyHook
+        IniWrite, 	%RestartKeyHook%, 			%INI%, 		App, 	    RestartKeyHook
+        IniWrite, 	%LastTabSettings%, 			%INI%, 		App, 	    LastTabSettings
         IniWrite, 	%OpenMenu%, 				%INI%, 		Menu, 		OpenMenu
         IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
         IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
@@ -183,4 +185,23 @@ ValidateWriteString(_new, _paramName) {     ; format to string
 
     _result := Format("{}", _new)
     IniWrite, % _result, % INI, Menu, % _paramName
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateWriteTrayIcon(_new, _paramName) {
+;─────────────────────────────────────────────────────────────────────────────
+    global INI
+
+    if !FileExist(_new) {
+        LogError(Exception("Icon `'" _new "`' not found", "Tray icon", "Specify the full path to the file"))
+        Return
+    }
+
+    try {
+        Menu, Tray, Icon, %MainIcon%
+        IniWrite, % _new, % INI, App, % _paramName
+    } catch _error {
+        LogError(_error)
+    }
 }
