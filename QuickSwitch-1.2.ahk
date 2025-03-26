@@ -19,9 +19,11 @@
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
-global ScriptName := "QuickSwitch"
-global INI := ScriptName ".ini"
-global ERRORS := "Errors.log"
+global ScriptName      := "QuickSwitch"
+global MainIcon        := "QuickSwitch.ico"
+global INI             := ScriptName ".ini"
+global ErrorsLog       := "Errors.log"
+global BugReportLink   := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 
 #Include %A_ScriptDir%
 #Include Libs\Log.ahk

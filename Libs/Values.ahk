@@ -3,14 +3,16 @@ global FromSettings  := false
 global LastMenuItem  := ""
 global XYdata        := ""
 
-
 ; These parameters must not be reset
-global AutoStartup   := 1
-global MainIcon      := "QuickSwitch.ico"
-global MainFont      := "Tahoma"
-global MainKey       := "^q"
-global RestartKey    := "~^s"
-global RestartWhere  := "ahk_exe notepad++.exe"
+global LastTabSettings  := 1
+global AutoStartup      := 1
+global MainFont         := "Tahoma"
+global MainKey          := "^q"
+global RestartKey       := "^s"
+
+global MainKeyHook      := 1
+global RestartKeyHook   := 0
+global RestartWhere     := "ahk_exe notepad++.exe"
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
 paths    := []
