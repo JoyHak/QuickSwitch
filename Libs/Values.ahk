@@ -70,10 +70,8 @@ WriteValues() {
         IniWrite, 	%VirtualPath%, 				%INI%, 		Menu, 		VirtualPath
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%CutFromEnd%, 				%INI%, 		Menu, 		CutFromEnd
-
-        Menu, Tray, Icon, %MainIcon%
     } catch {
-        LogError(Exception(INI . " write", "Failed to write values to the configuration", "Maybe INI file is not created?"))
+        LogError(Exception("Failed to write values to the configuration", INI . " write", "Create INI file manually or change the INI global variable"))
     }
 
     ValidateWriteInteger(DirsCount, 		"DirsCount")
@@ -181,7 +179,7 @@ ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
         _result := SubStr(_color, _matchPos)
         IniWrite, % _result, % INI, Colors, % _paramName
     } else {
-        throw Exception(_color " is wrong color! Enter the HEX value", _paramName)
+        throw Exception("`'" _color "`' is wrong color! Enter the HEX value", _paramName)
     }
 }
 

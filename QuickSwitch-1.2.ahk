@@ -33,59 +33,64 @@ global BugReportLink   := "https://github.com/JoyHak/QuickSwitch/issues/new?temp
 #Include Libs\AutoSwitch.ahk
 #Include Libs\Debug.ahk
 
-#Include Libs\AppSettings.ahk
-#Include Libs\MenuSettings.ahk
+#Include Libs\SettingsBackend.ahk
+#Include Libs\SettingsFrontend.ahk
 #Include Libs\PathsMenu.ahk
+
+ValidateLog()
+ValidateWriteTrayIcon(MainIcon, "MainIcon")
 
 SetDefaultValues()
 ReadValues()
-ValidateLog()
 ValidateAutoStartup()
 
-ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off")
-ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On")
-Menu, Tray, UseErrorLevel
-Menu, Tray, Icon, %MainIcon%
+ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off",      MainKeyHook)
+ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On",       RestartKeyHook)
 
 ; Wait for dialog
 Loop {
     WinWaitActive, ahk_class #32770
-    DialogID     := WinExist("A")
-    FileDialog   := GetFileDialog(DialogID)
 
-    ; if there is any GUI left from previous calls....
-    Gui, Destroy
+    try {
+        DialogID     := WinExist("A")
+        FileDialog   := GetFileDialog(DialogID)
 
-    IniRead, MainKey, %INI%, App, MainKey
-    if FileDialog
-    {                                                       ; This is a supported dialog
-        GetPaths()
-        WinGet, ahk_exe, ProcessName, ahk_id %DialogID%
-        WinGetTitle, window_title, ahk_id %DialogID%
-        FingerPrint := ahk_exe . "___" . window_title
+        ; if there is any GUI left from previous calls....
+        Gui, Destroy
 
-        ; Check if FingerPrint entry is already in INI, so we know what to do.
-        IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%, 0
-        if (DialogAction == 1) {                                           ; ======= AutoSwitch ==
-            AutoSwitch()
-        } else if (DialogAction == 0) {                                    ; ======= Never here ==
-            if ShouldOpen() {
-                ShowPathsMenu()         ; AutoOpenMenu only
+        IniRead, MainKey, %INI%, App, MainKey
+        if FileDialog
+        {                                                       ; This is a supported dialog
+            GetPaths()
+            WinGet, ahk_exe, ProcessName, ahk_id %DialogID%
+            WinGetTitle, window_title, ahk_id %DialogID%
+            FingerPrint := ahk_exe . "___" . window_title
+
+            ; Check if FingerPrint entry is already in INI, so we know what to do.
+            IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%, 0
+            if (DialogAction == 1) {                                           ; ======= AutoSwitch ==
+                AutoSwitch()
+            } else if (DialogAction == 0) {                                    ; ======= Never here ==
+                if ShouldOpen() {
+                    ShowPathsMenu()         ; AutoOpenMenu only
+                }
             }
-        }
-        else if ShouldOpen() {                                             ; ======= Show Menu ==
-            ShowPathsMenu()             ; hotkey or AutoOpenMenu
-        }
+            else if ShouldOpen() {                                             ; ======= Show Menu ==
+                ShowPathsMenu()             ; hotkey or AutoOpenMenu
+            }
 
-        ; if we end up here, we checked the INI for what to do in this supported dialog and did it
-        ; We are still in this dialog and can now enable the hotkey for manual menu-activation
+            ; if we end up here, we checked the INI for what to do in this supported dialog and did it
+            ; We are still in this dialog and can now enable the hotkey for manual menu-activation
 
-        Hotkey, %MainKey%, On
+            Hotkey, %MainKey%, On
 
-    }   ; End of File Dialog routine
+        }   ; End of File Dialog routine
 
-    Sleep, 100
-    WinWaitNotActive
+        Sleep, 100
+        WinWaitNotActive
+    } catch _globalError {
+        LogError(_globalError)
+    }
 
     ; Clean up
     Hotkey, %MainKey%, Off
@@ -96,5 +101,5 @@ Loop {
 
 }   ; End of continuous WinWaitActive loop
 
-LogError(Exception("Main menu", "An error occurred while waiting for the file dialog to appear. Restart the app manually", "End of continuous WinWaitActive loop in main file"))
+LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart the app manually", "Main menu", "End of continuous WinWaitActive loop in main file"))
 ExitApp

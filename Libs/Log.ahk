@@ -1,5 +1,5 @@
 LogError(_error) {
-    global ERRORS, ScriptName
+    global ErrorsLog, ScriptName
 
     ; generate call stack
     _stack := ""
@@ -15,8 +15,9 @@ LogError(_error) {
     ; Log
     _what := _error.What
     _msg  := _error.Message
-    FormatTime, _time,, Time
-    FileAppend, % _time "    [" _stack _what "]    " _msg "    " _error.Extra "`n", % ERRORS
+
+    FormatTime, _date
+    FileAppend, % _date "    [" _stack _what "]    " _msg "    " _error.Extra "`n", % ErrorsLog
 
     TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
     Return true
@@ -26,48 +27,56 @@ OnError("LogError")
 
 LogHeader() {
     ; Header about log and OS
-    global ERRORS
-
-    FileAppend, Contains only %ScriptName% errors! `n, % ERRORS
-    FileAppend, Report about error: https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml `n, % ERRORS
-    FileAppend, AHK %A_AhkVersion% `n, % ERRORS
+    global ErrorsLog, BugReportLink, ScriptName
 
     _reg := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
     RegRead, _OSname, % _reg, ProductName
     RegRead, _OSversion, % _reg, DisplayVersion
     RegRead, _OSbuild, % _reg, CurrentBuild
-    FileAppend, % _OSname " " _OSversion "|" _OSbuild " [lang " A_Language "]`n`n", % ERRORS   ; A_Language 4-digit code: https://www.autohotkey.com/docs/v1/misc/Languages.htm
+
+    FileAppend,
+    (LTrim
+        Contains only %ScriptName% errors!
+        Report about error: %BugReportLink%
+        AHK %A_AhkVersion%
+        %_OSname% %_OSversion% | %_OSbuild% [lang %A_Language%]
+
+
+    ), % ErrorsLog
+
+    ; A_Language 4-digit code: https://www.autohotkey.com/docs/v1/misc/Languages.htm
 }
 
 LogInfo() {
     ; Info about current launched script/compiled app
-    global ERRORS
+    global ErrorsLog
 
-    FileAppend, `n--------`n`n, % ERRORS
     /*@Ahk2Exe-Keep
-        FileAppend, Script is compiled by %A_UserName% `n, % ERRORS
+        FileAppend, Script is compiled by %A_UserName% `n, % ErrorsLog
 
         FileGetVersion, _ver, % A_ScriptFullPath
-        FileAppend, Version: %_ver% `n`n, % ERRORS
+        FileAppend, Version: %_ver% `n`n, % ErrorsLog
     */
     _bit  := A_PtrSize * 8
     _arch := A_Is64bitOS ? "64-bit" : "32-bit"
-    FileAppend, %_bit%-bit script for %_arch% system `n`n, % ERRORS
+    FileAppend, %_bit%-bit script for %_arch% system `n`n, % ErrorsLog
 }
 
 ValidateLog() {
-    global INI, ERRORS, ScriptName
+    global INI, ErrorsLog, ScriptName
 
-    if FileExist(ERRORS) {
+    if FileExist(ErrorsLog) {
         ; Clean log
-        FileGetSize, _size, % ERRORS, K
+        FileGetSize, _size, % ErrorsLog, K
         if (_size > 30) {
-            FileDelete, % ERRORS
+            FileDelete, % ErrorsLog
             Sleep, 500
         }
     }
-    if !FileExist(ERRORS)
+    if !FileExist(ErrorsLog) {
         LogHeader()
+        LogInfo()
+    }
 
     ; does the cur. dir. match the dir. of the script that previously created this log?
     IniRead, _lastPath, % INI, App, LastPath
@@ -77,6 +86,4 @@ ValidateLog() {
         IniWrite, % _curPath, % INI, App, LastPath
         LogInfo()
     }
-    FormatTime, _date
-    FileAppend, `n-------- %A_ScriptName% started at %_date% `n`n, % ERRORS
 }
