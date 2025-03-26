@@ -78,6 +78,7 @@ ValidateLog() {
     if !FileExist(ErrorsLog) {
         LogHeader()
         LogInfo()
+        Return
     }
 
     ; does the cur. dir. match the dir. of the script that previously created this log?
