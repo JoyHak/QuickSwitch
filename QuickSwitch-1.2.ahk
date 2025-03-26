@@ -104,9 +104,8 @@ Loop {
     window_title    := ""
     DialogAction    := ""
     DialogID        := ""
-    DialogType      := ""
     
 }   ; End of continuous WinWaitActive loop
 
-LogError(Exception("Main menu error", "An error occurred while waiting for the file dialog to appear. Restart the app manually", "End of continuous WinWaitActive loop in main file"))
+LogError(Exception("Main menu", "An error occurred while waiting for the file dialog to appear. Restart the app manually", "End of continuous WinWaitActive loop in main file"))
 ExitApp
