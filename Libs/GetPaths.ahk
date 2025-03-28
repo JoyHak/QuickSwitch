@@ -129,18 +129,6 @@ XyplorerScript(ByRef _WinID, ByRef _script) {
     Return DllCall("User32.dll\SendMessageW", "Ptr", _WinID, "UInt", 74, "Ptr", 0, "Ptr", &COPYDATA, "Ptr")
 }
 
-FeedXyplorerData(_wParam, _lParam) {
-     global XyplorerData
-
-     _stringAddress := NumGet(_lParam + 2 * A_PtrSize)
-     _copyOfData := StrGet(_stringAddress)
-     _cbData := NumGet(_lParam + A_PtrSize) / 2
-     StringLeft, XyplorerData, _copyOfData, _cbData
-
-     Return
-}
-OnMessage(0x4a, "FeedXyplorerData")
-
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 GetXyplorerPaths(ByRef _WinID) {
@@ -148,8 +136,12 @@ GetXyplorerPaths(ByRef _WinID) {
 
     ; Put path(s) to XyplorerData (the variable is filled in anew each time it is called)
     ; then push to array
-    global XyplorerData, VirtualPath, paths, virtuals
-
+    global VirtualPath, paths, virtuals
+    
+    ; Save clipboard to restore later
+    ClipSaved := ClipboardAll
+    Clipboard := ""
+    
     _script =
     ( LTrim Join
         ::
@@ -160,21 +152,29 @@ GetXyplorerPaths(ByRef _WinID) {
                 $reals .= "|" . pathreal($path);
             }
             $reals = replace($reals, "|",,,1,1);
-            copydata %A_ScriptHwnd%, $reals, 2`;
-        ',,s)`;
+            copytext $reals;
+        ',,s);
     )
     XyplorerScript(_WinID, _script)
-
-    Loop, parse, XyplorerData, `|
+    
+    while !clipboard
+        sleep, 20
+    Loop, parse, Clipboard, `|
         paths.push(A_LoopField)
 
     if paths and VirtualPath {
         _script = ::copydata %A_ScriptHwnd%, get("tabs_sf", "|"), 2`;
         XyplorerScript(_WinID, _script)
-        Loop, parse, XyplorerData, `|
-            virtuals.push(A_LoopField)
-
+        
+        while !clipboard
+            sleep, 20
+        Loop, parse, Clipboard, `|
+            virtuals.push(A_LoopField)			
     }
+    ; Restore
+    Clipboard := ClipSaved
+    ClipSaved := ""
+    Return
 }
 ;─────────────────────────────────────────────────────────────────────────────
 ;
