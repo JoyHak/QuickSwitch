@@ -131,6 +131,16 @@ XyplorerScript(ByRef _WinID, ByRef _script) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+PushClipboardPaths(_array) {
+;─────────────────────────────────────────────────────────────────────────────
+    while !clipboard
+        sleep, 20
+    Loop, parse, Clipboard, `|
+        _array.push(A_LoopField)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetXyplorerPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
 
@@ -156,20 +166,12 @@ GetXyplorerPaths(ByRef _WinID) {
         ',,s);
     )
     XyplorerScript(_WinID, _script)
-    
-    while !clipboard
-        sleep, 20
-    Loop, parse, Clipboard, `|
-        paths.push(A_LoopField)
+    PushClipboardPaths(_array)
 
     if paths and VirtualPath {
         _script = ::copydata %A_ScriptHwnd%, get("tabs_sf", "|"), 2`;
         XyplorerScript(_WinID, _script)
-        
-        while !clipboard
-            sleep, 20
-        Loop, parse, Clipboard, `|
-            virtuals.push(A_LoopField)			
+        PushClipboardPaths(virtuals)		
     }
     ; Restore
     Clipboard := ClipSaved
