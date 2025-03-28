@@ -107,13 +107,13 @@ ShowShortPath(ByRef _path) {
 }
 
 /*
-    After execution XYscript waits for a signal and executes FeedXYdata
-    to get XYdata from XYplorer to Autohotkey.
+    After execution XYscript waits for a signal and executes FeedXyplorerData
+    to get XyplorerData from XYplorer to Autohotkey.
 
     Alternative variants are provided in Libs/Reserved, including v2
 */
 
-XYscript(ByRef _WinID, ByRef _script) {
+XyplorerScript(ByRef _WinID, ByRef _script) {
     _size := StrLen(_script)
     if !(A_IsUnicode) {
         VarSetCapacity(_data, _size * 2, 0)
@@ -130,26 +130,26 @@ XYscript(ByRef _WinID, ByRef _script) {
     Return DllCall("User32.dll\SendMessageW", "Ptr", _WinID, "UInt", 74, "Ptr", 0, "Ptr", &COPYDATA, "Ptr")
 }
 
-FeedXYdata(_wParam, _lParam) {
-     global XYdata
+FeedXyplorerData(_wParam, _lParam) {
+     global XyplorerData
 
      _stringAddress := NumGet(_lParam + 2 * A_PtrSize)
      _copyOfData := StrGet(_stringAddress)
      _cbData := NumGet(_lParam + A_PtrSize) / 2
-     StringLeft, XYdata, _copyOfData, _cbData
+     StringLeft, XyplorerData, _copyOfData, _cbData
 
      Return
 }
-OnMessage(0x4a, "FeedXYdata")
+OnMessage(0x4a, "FeedXyplorerData")
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetXYpaths(ByRef _WinID) {
+GetXyplorerPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
 
-    ; Put path(s) to XYdata (the variable is filled in anew each time it is called)
+    ; Put path(s) to XyplorerData (the variable is filled in anew each time it is called)
     ; then push to array
-    global XYdata, VirtualPath, paths, virtuals
+    global XyplorerData, VirtualPath, paths, virtuals
 
     _script =
     ( LTrim Join
@@ -164,22 +164,22 @@ GetXYpaths(ByRef _WinID) {
             copydata %A_ScriptHwnd%, $reals, 2`;
         ',,s)`;
     )
-    XYscript(_WinID, _script)
+    XyplorerScript(_WinID, _script)
 
-    Loop, parse, XYdata, `|
+    Loop, parse, XyplorerData, `|
         paths.push(A_LoopField)
 
     if paths and VirtualPath {
         _script = ::copydata %A_ScriptHwnd%, get("tabs_sf", "|"), 2`;
-        XYscript(_WinID, _script)
-        Loop, parse, XYdata, `|
+        XyplorerScript(_WinID, _script)
+        Loop, parse, XyplorerData, `|
             virtuals.push(A_LoopField)
 
     }
 }
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetWINpaths(ByRef _WinID) {
+GetWindowsPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     global paths
 
@@ -196,7 +196,7 @@ GetWINpaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetTCPaths(_WinID) {
+GetTotalCommanderPaths(_WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
 
     global paths
@@ -223,12 +223,11 @@ GetTCPaths(_WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetDOPUSPaths(_WinID) {
+GetDopusPaths(_WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     global paths
-
     try {
-        ; Configuring parameters to get paths via DOpus CLI (dopusrt)
+        ; Configure parameters to get paths via DOpus CLI (dopusrt)
         WinGet, _exe, ProcessPath, ahk_id %_WinID%
         _dir := StrReplace(_exe, "\dopus.exe")
         _result := _dir "\paths.xml"
