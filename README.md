@@ -12,6 +12,13 @@ It has two modes:
 
 **AutoSwitch** can be disabled using the `Never` option. There's also `Never here` option to disable QuickSwitch for specific dialogs, like web browsers or backup applications.
 
+The latest versions include the following features:
+- Added application auto-startup at Windows log-on.
+- The menu will display the paths from all open folders starting from the current one. 
+- The path can be displayed in a shortened form.
+- Improved settings interface and additional customization options and features.
+- Added minimalistic display of errors about incorrectly entered settings.
+
 ## Installation
 
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version.
@@ -78,8 +85,6 @@ C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe
 - auto-check for update (lib and setting)
 - AutoSwitch on clipboard change
 - drag and drop any file field
-- change main hotkey in settings
-- Xyplorer history
 - Pin favourite paths
 - `Explorer`: 
   - QTTabBar tabs
@@ -88,8 +93,6 @@ C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe
 
 ### Need help with:
 - `Autohotkey v2` port
-
 - `File managers`:
   - tabs from all panes
-  - new commands to avoid using clipboard
-  > XYplorer receives a command using `DllCall` and sends the XYdata directly to RAM, from where Autohotkey reads it
+  - new file managers support
