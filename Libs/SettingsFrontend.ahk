@@ -77,8 +77,8 @@ ShowMenuSettings() {
     Gui, 	Add, 	Text, 		y+13,                                                       Font (GUI)
 
     edit := "w160 r1 -Wrap -vscroll"
-    Gui, 	Add, 	Hotkey,   ys-4 %edit% w100	vMainKey                    Section, 		%MainKey%
-    Gui, 	Add, 	Hotkey,   y+4  %edit% w100	vRestartKey, 							    %RestartKey%
+    Gui, 	Add, 	Edit,   ys-4 %edit% w100	vMainKey                    Section, 		%MainKey%
+    Gui, 	Add, 	Edit,   y+4  %edit% w100	vRestartKey, 							    %RestartKey%
     Gui, 	Add, 	CheckBox, ys+4              vMainKeyHook    checked%MainKeyHook%, 	    hook
     Gui, 	Add, 	CheckBox, y+12	            vRestartKeyHook checked%RestartKeyHook%,    hook
 

@@ -120,10 +120,9 @@ ReadValues() {
 ValidateWriteKey(_new, _paramName, _funcObj, _state := "On", _useHook := false) {       ; bind key
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
-    _prefix := _useHook ? "" : "~"
 
     try {
-        Hotkey, % _prefix . _new, % _funcObj, % _state       ; create hotkey
+        Hotkey, % _new, % _funcObj, % _state                 ; create hotkey
         IniWrite, % _new, % INI, App, % _paramName           ; save
     } catch _error {
         LogError(_error)
@@ -132,7 +131,6 @@ ValidateWriteKey(_new, _paramName, _funcObj, _state := "On", _useHook := false) 
     IniRead, _old, % INI, App, % _paramName, % _new          ; remove old if exist
     if (_old != _new) {
         Hotkey, % _old, Off
-        Hotkey, % "~" . _old, Off
     }
 }
 
