@@ -130,7 +130,7 @@ GetXyplorerPaths(ByRef _WinID) {
 
     ; Put path(s) to XyplorerData (the variable is filled in anew each time it is called)
     ; then push to array
-    global VirtualPath, paths, virtuals
+    global paths
     
     _script =
     ( LTrim Join
@@ -150,14 +150,8 @@ GetXyplorerPaths(ByRef _WinID) {
     Loop, parse, Clipboard, `|
         paths.push(A_LoopField)
 
-    if paths and VirtualPath {
-        _script = ::copytext get("tabs_sf", "|");
-        XyplorerScript(_WinID, _script)
-            ClipWait
-            Loop, parse, Clipboard, `|
-                virtuals.push(A_LoopField)		
-    }
 }
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 GetWindowsPaths(ByRef _WinID) {
@@ -228,9 +222,7 @@ GetPaths() {
 
     ; Update the values after each call
     global paths    := []
-    global virtuals := []
-    global VirtualPath
-    IniRead, VirtualPath, %INI%, Menu, VirtualPath, %VirtualPath%
+    global INI
     
     ; Save clipboard to restore later
     ClipSaved := ClipboardAll
