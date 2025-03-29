@@ -14,10 +14,9 @@ ShouldOpen() {
 AddPathsMenuItems() {
 ;─────────────────────────────────────────────────────────────────────────────
 
-    global VirtualPath, PathNumbers, ShortPath, paths, virtuals
-    _paths := VirtualPath ? virtuals : paths
+    global PathNumbers, ShortPath, paths
 
-    for _index, _path in _paths {
+    for _index, _path in paths {
         _display := ""
 
         if PathNumbers
