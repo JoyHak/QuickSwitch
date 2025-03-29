@@ -1,4 +1,4 @@
-﻿; Here are the main functions for obtaining paths and interacting with them.
+; Here are the main functions for obtaining paths and interacting with them.
 ; All functions add values to the global paths array.
 
 SelectPath() {
@@ -131,7 +131,7 @@ GetXyplorerPaths(ByRef _WinID) {
     ; Put path(s) to XyplorerData (the variable is filled in anew each time it is called)
     ; then push to array
     global paths
-    
+
     _script =
     ( LTrim Join
         ::
@@ -178,7 +178,7 @@ GetTotalCommanderPaths(_WinID) {
     SendMessage 1075, 2029, 0, , ahk_id %_WinID%    ; cm_CopySrcPathToClip
     ClipWait
     paths.push(clipboard)
-    
+
     SendMessage 1075, 2030, 0, , ahk_id %_WinID%    ; cm_CopyTrgPathToClip
     ClipWait
     paths.push(clipboard)
@@ -223,7 +223,7 @@ GetPaths() {
     ; Update the values after each call
     global paths    := []
     global INI
-    
+
     ; Save clipboard to restore later
     ClipSaved := ClipboardAll
     Clipboard := ""
@@ -232,7 +232,7 @@ GetPaths() {
     Loop, %_allWindows% {
         _WinID := _allWindows%A_Index%
         WinGetClass, _WinClass, ahk_id %_WinID%
-        
+
         switch _WinClass {
             case "CabinetWClass":       GetWindowsPaths(_WinID)
             case "ThunderRT6FormDC":    GetXyplorerPaths(_WinID)
@@ -240,7 +240,7 @@ GetPaths() {
             case "dopus.lister":        GetDopusPaths(_WinID)
         }
     }
-    
+
     ; Restore
     Clipboard := ClipSaved
     ClipSaved := ""

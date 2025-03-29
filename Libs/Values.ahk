@@ -16,19 +16,17 @@ paths := []
 ; set defaults without overwriting existing INI
 ; these values are used if the INI settings are invalid
 SetDefaultValues() {
-    global 
-    
+    global
+
     OpenMenu := ReDisplayMenu := CutFromEnd := 1
     PathNumbers := ShortPath := ShowDriveLetter := 0
-    
+
     DirsCount            := 3
     , DirNameLength      := 20
     , PathSeparator      := "/"
     , ShortNameIndicator := ".."
     , GuiColor           := ""
     , MenuColor          := ""
-
-    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -73,8 +71,6 @@ WriteValues() {
     ValidateWriteColor(GuiColor, 	"GuiColor")
     ValidateWriteColor(MenuColor, 	"MenuColor")
     ValidateWriteTrayIcon(MainIcon, "MainIcon")
-
-    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -117,8 +113,6 @@ ReadValues() {
     IniRead, 	MainIcon, 				    %INI%,		App, 		MainIcon, 	                %A_Space%
     IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiColor, 				    %A_Space%
     IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuColor, 				    %A_Space%
-
-    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -159,10 +153,10 @@ ValidateWriteInteger(_new, _paramName) {    ; integer only
 ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
-    
+
     if !(_color && _paramName)
         Return
-    
+
     _matchPos := RegExMatch(_color, "i)[a-f0-9]{6}$")
     if (_matchPos > 0) {
         _result := SubStr(_color, _matchPos)
@@ -177,10 +171,10 @@ ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
 ValidateWriteString(_new, _paramName) {     ; format to string
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
-    
+
     if !(_new && _paramName)
         Return
-    
+
     _result := Format("{}", _new)
     IniWrite, % _result, % INI, Menu, % _paramName
 }
