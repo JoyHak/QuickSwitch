@@ -148,14 +148,14 @@ GetXyplorerPaths(ByRef _WinID) {
     XyplorerScript(_WinID, _script)
     ClipWait
     Loop, parse, Clipboard, `|
-        _array.push(A_LoopField)
+        paths.push(A_LoopField)
 
     if paths and VirtualPath {
-        _script = ::copydata %A_ScriptHwnd%, get("tabs_sf", "|"), 2`;
+        _script = ::copytext get("tabs_sf", "|");
         XyplorerScript(_WinID, _script)
             ClipWait
             Loop, parse, Clipboard, `|
-                _array.push(A_LoopField)		
+                virtuals.push(A_LoopField)		
     }
 }
 ;─────────────────────────────────────────────────────────────────────────────
@@ -181,11 +181,11 @@ GetTotalCommanderPaths(_WinID) {
 
     global paths
 
-    SendMessage 1075, 2029, 0, , ahk_id %_WinID%    ; CopySrcPathToClip
+    SendMessage 1075, 2029, 0, , ahk_id %_WinID%    ; cm_CopySrcPathToClip
     ClipWait
     paths.push(clipboard)
     
-    SendMessage 1075, 2030, 0, , ahk_id %_WinID% ; Equivalent to cm_CopyFullNamesToClip
+    SendMessage 1075, 2030, 0, , ahk_id %_WinID%    ; cm_CopyTrgPathToClip
     ClipWait
     paths.push(clipboard)
 }
