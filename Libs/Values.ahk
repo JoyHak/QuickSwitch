@@ -5,7 +5,6 @@ LastMenuItem  := ""
 ; These parameters must not be reset
 LastTabSettings  := AutoStartup := MainKeyHook := 1
 MainFont         := "Tahoma"
-, MainKey        := "^q"
 , RestartKey     := "^s"
 , RestartKeyHook := 0
 , RestartWhere   := "ahk_exe notepad++.exe"
@@ -17,8 +16,8 @@ paths := []
 ; these values are used if the INI settings are invalid
 SetDefaultValues() {
     global
-
-    OpenMenu := ReDisplayMenu := CutFromEnd := 1
+    OpenMenu := 1
+    ReDisplayMenu := CutFromEnd := 1
     PathNumbers := ShortPath := ShowDriveLetter := 0
 
     DirsCount            := 3

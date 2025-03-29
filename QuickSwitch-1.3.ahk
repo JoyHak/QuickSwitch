@@ -56,6 +56,7 @@ SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
+MainKey := "^q"
 ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off",      MainKeyHook)
 ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On",       RestartKeyHook)
 
@@ -83,11 +84,11 @@ Loop {
             if (DialogAction == 1) {                                           ; ======= AutoSwitch ==
                 AutoSwitch()
             } else if (DialogAction == 0) {                                    ; ======= Never here ==
-                if ShouldOpen() {
+                if OpenMenu or (FromSettings and ReDisplayMenu) {
                     ShowPathsMenu()         ; AutoOpenMenu only
                 }
             }
-            else if ShouldOpen() {                                             ; ======= Show Menu ==
+            else if OpenMenu or (FromSettings and ReDisplayMenu){                                             ; ======= Show Menu ==
                 ShowPathsMenu()             ; hotkey or AutoOpenMenu
             }
 

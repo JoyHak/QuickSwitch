@@ -4,10 +4,6 @@
     which allows you to display anything.
 */
 
-ShouldOpen() {
-    global
-    Return OpenMenu or (FromSettings and ReDisplayMenu)
-}
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
