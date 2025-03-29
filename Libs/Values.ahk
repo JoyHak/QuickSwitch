@@ -183,7 +183,10 @@ ValidateWriteString(_new, _paramName) {     ; format to string
 ;
 ValidateWriteTrayIcon(_new, _paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global INI
+    global INI, MainIcon
+
+    if !(_new && _paramName)
+        Return
 
     if !FileExist(_new) {
         LogError(Exception("Icon `'" _new "`' not found", "Tray icon", "Specify the full path to the file"))
