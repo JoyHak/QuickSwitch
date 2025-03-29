@@ -3,15 +3,12 @@ global FromSettings  := false
 global LastMenuItem  := ""
 
 ; These parameters must not be reset
-global LastTabSettings  := 1
-global AutoStartup      := 1
-global MainFont         := "Tahoma"
-global MainKey          := "^q"
-global RestartKey       := "^s"
-
-global MainKeyHook      := 1
-global RestartKeyHook   := 0
-global RestartWhere     := "ahk_exe notepad++.exe"
+global LastTabSettings := AutoStartup := MainKeyHook := 1
+global MainFont    := "Tahoma"
+, MainKey          := "^q"
+, RestartKey       := "^s"
+, RestartKeyHook   := 0
+, RestartWhere     := "ahk_exe notepad++.exe"
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
 paths    := []
@@ -21,23 +18,17 @@ virtuals := []
 ; set defaults without overwriting existing INI
 ; these values are used if the INI settings are invalid
 SetDefaultValues() {
-    global OpenMenu                  := 1
-    global ReDisplayMenu             := 1
-    global PathNumbers               := 0
-
-    global ShortPath                 := 0
-    global VirtualPath 		         := 0
-    global ShowDriveLetter 	         := 0
-    global CutFromEnd 		         := 1
-    global DirsCount                 := 3
-    global DirNameLength             := 20
-
-    global PathSeparator             := "/"
-    global ShortNameIndicator        := ".."
-
-    ; use system default
-    global GuiColor                  := ""
-    global MenuColor                 := ""
+    global 
+    
+    OpenMenu := ReDisplayMenu := CutFromEnd := 1
+    PathNumbers := ShortPath := VirtualPath := ShowDriveLetter := 0
+    
+    DirsCount            := 3
+    , DirNameLength      := 20
+    , PathSeparator      := "/"
+    , ShortNameIndicator := ".."
+    , GuiColor           := ""
+    , MenuColor          := ""
 
     Return
 }
