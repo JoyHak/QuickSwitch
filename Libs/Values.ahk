@@ -92,9 +92,8 @@ ReadValues() {
 
     ;			global						INI name	section		param name					default value
     IniRead, 	AutoStartup, 				%INI%,		App, 		AutoStartup, 	            %AutoStartup%
-    IniRead, 	MainIcon, 				    %INI%,		App, 		MainIcon, 	                %MainIcon%
-    IniRead, 	MainFont, 				    %INI%,		App, 		MainFont, 	                %MainFont%
     IniRead, 	MainKey, 				    %INI%,		App, 		MainKey, 	                %MainKey%
+    IniRead, 	MainFont, 				    %INI%,		App, 		MainFont, 	                %MainFont%
     IniRead, 	RestartKey, 				%INI%,		App, 		RestartKey, 	            %RestartKey%
 
     IniRead, 	MainKeyHook, 				%INI%,		App, 		MainKeyHook, 	            %MainKeyHook%
@@ -115,6 +114,7 @@ ReadValues() {
     IniRead, 	PathSeparator, 				%INI%,		Menu, 		PathSeparator,      	    %PathSeparator%
     IniRead, 	ShortNameIndicator, 	 	%INI%,		Menu, 		ShortNameIndicator,      	%ShortNameIndicator%
 
+    IniRead, 	MainIcon, 				    %INI%,		App, 		MainIcon, 	                %A_Space%
     IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiColor, 				    %A_Space%
     IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuColor, 				    %A_Space%
 
