@@ -87,8 +87,6 @@ ShowPathsMenu() {
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100
         HidePathsMenu()
-
     }
-    Return
 }
 

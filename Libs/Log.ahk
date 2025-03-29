@@ -15,7 +15,7 @@ LogError(_error) {
     ; Log
     _what := _error.What
     _msg  := _error.Message
-    
+
     FormatTime, _date,, dd.MM hh:mm:ss
     FileAppend, % _date "    [" _stack _what "]    " _msg "    " _error.Extra "`n", % ErrorsLog
 
@@ -45,17 +45,16 @@ LogHeader() {
     ), % ErrorsLog
 
     ; A_Language 4-digit code: https://www.autohotkey.com/docs/v1/misc/Languages.htm
-    Return
 }
 
 LogInfo() {
     ; Info about current launched script/compiled app
     global ErrorsLog
-    
+
     _bit  := A_PtrSize * 8
     _arch := A_Is64bitOS ? "64-bit" : "32-bit"
-    
-    _header := "`n"    
+
+    _header := "`n"
     /*@Ahk2Exe-Keep
         FileGetVersion, _ver, % A_ScriptFullPath
         _header .= "Script is compiled. Version: " _ver "`n"
