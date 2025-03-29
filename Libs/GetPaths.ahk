@@ -114,29 +114,13 @@ ShowShortPath(ByRef _path) {
 
 XyplorerScript(ByRef _WinID, ByRef _script) {
     _size := StrLen(_script)
-    if !(A_IsUnicode) {
-        VarSetCapacity(_data, _size * 2, 0)
-        StrPut(_script, &_data, "UTF-16")
-    } else {
-        _data := _script
-    }
 
     VarSetCapacity(COPYDATA, A_PtrSize * 3, 0)
     NumPut(4194305, COPYDATA, 0, "Ptr")
     NumPut(_size * 2, COPYDATA, A_PtrSize, "UInt")
-    NumPut(&_data, COPYDATA, A_PtrSize * 2, "Ptr")
+    NumPut(&_script, COPYDATA, A_PtrSize * 2, "Ptr")
 
     Return DllCall("User32.dll\SendMessageW", "Ptr", _WinID, "UInt", 74, "Ptr", 0, "Ptr", &COPYDATA, "Ptr")
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-PushClipboardPaths(_array) {
-;─────────────────────────────────────────────────────────────────────────────
-    while !clipboard
-        sleep, 20
-    Loop, parse, Clipboard, `|
-        _array.push(A_LoopField)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
