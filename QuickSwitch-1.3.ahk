@@ -48,6 +48,7 @@ BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-
 
 ValidateLog()
 ;@Ahk2Exe-IgnoreBegin
+MainIcon := "QuickSwitch.ico"
 ValidateWriteTrayIcon(MainIcon, "MainIcon")
 ;@Ahk2Exe-IgnoreEnd
 
