@@ -28,6 +28,7 @@ AddPathsMenuItems() {
             _display .= _path
 
         Menu, ContextMenu, Insert,, %_display%, SelectPath
+        _display := ""
     }
 }
 
