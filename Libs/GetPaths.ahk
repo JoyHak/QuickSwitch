@@ -227,30 +227,27 @@ GetDOPUSPaths(_WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     global paths
 
-    try {
-        ; Configuring parameters to get paths via DOpus CLI (dopusrt)
-        WinGet, _exe, ProcessPath, ahk_id %_WinID%
-        _dir := StrReplace(_exe, "\dopus.exe")
-        _result := _dir "\paths.xml"
+    EnvGet, _temp, TEMP
+    _dopusInfo := _temp . "\dopusinfo.xml"
 
-        ; Arg comma needs escaping: `,
-        RunWait, dopusrt.exe /info %_result%`,paths, %_dir%
-        while !FileExist(_result)
-            sleep, 20
+    ; Arg comma needs escaping: `,
+    _command = "%_dopus_exe%\..\dopusrt.exe" /info "%_dopusInfo%"`, paths
+    Run, _command, , , DUMMY
+    Sleep, 300
+    FileRead, OpusInfo, %_dopusInfo%
+    Sleep, 300
+    FileDelete, %_dopusInfo%
 
-        ; Prepare XML parsing
-        FileRead, _paths, % _result
+    ; Get active path of this lister (regex instead of XML library)
+    RegExMatch(OpusInfo, "mO)^.*lister=\""" . _WinID . "\"".*tab_state=\""1\"".*\>(.*)\<\/path\>$", out)
+    _path := out.Value(1)
+    paths.push(_path)
 
-        _xml := ComObjCreate("MSXML2.DOMDocument.6.0")
-        _xml.async := false
-        _xml.loadXML(_paths)
+    ; Get passive path of this lister
+    RegExMatch(OpusInfo, "mO)^.*lister=\""" . _WinID . "\"".*tab_state=\""2\"".*\>(.*)\<\/path\>$", out)
+    _path := out.Value(1)
+    paths.push(_path)
 
-        for _node in _xml.selectSingleNode("results").selectNodes("path") {
-            paths.Push(_node.text)
-        }
-    } catch _error {
-        LogError(_error)
-    }
     Return
 }
 
