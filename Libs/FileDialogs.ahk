@@ -34,7 +34,7 @@ FeedDialogGENERAL(ByRef _WinID, _path) {
     _pathSet := false
     if (_useToolbar and _enterToolbar) {
         Loop, 5 {
-            SendEvent ^l
+            SendInput ^l
             Sleep, 100
 
             ; Check and insert path

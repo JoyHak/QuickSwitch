@@ -12,19 +12,10 @@
 ;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Libs" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
 
 #Requires AutoHotkey v1.1+
-#Warn
-#NoEnv
-#Persistent
 #SingleInstance force
-#MaxHotkeysPerInterval 99000000
-#HotkeyInterval 99000000
-#KeyHistory 0
-ListLines Off
-Process, Priority, , A
-SetBatchLines, -1
-SetKeyDelay, -1, -1
-SetWinDelay, -1
-SetControlDelay, -1
+#NoEnv
+#Warn
+
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
