@@ -11,6 +11,8 @@ AutoSwitch() {
 
     FileDialog.call(DialogID, paths[1])
     LastMenuItem := A_ThisMenuItem
+
+    Return
 }
 
 Never() {
@@ -18,6 +20,8 @@ Never() {
     IniWrite, 0, %INI%, Dialogs, %FingerPrint%
     DialogAction := 0
     LastMenuItem := A_ThisMenuItem
+
+    Return
 }
 
 ThisMenu() {
@@ -25,6 +29,8 @@ ThisMenu() {
     IniDelete, %INI%, Dialogs, %FingerPrint%
     DialogAction := ""
     LastMenuItem := A_ThisMenuItem
+
+    Return
 }
 
 Dummy() {

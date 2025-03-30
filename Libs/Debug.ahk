@@ -42,11 +42,14 @@ DebugExport() {
     } else {                                          ; File could not be initialized
         Msgbox Cant create %_fileName%
     }
+    Return
 }
 
 CancelLV() {
     LV_Delete()
     GUI, Destroy
+
+    Return
 }
 
 ShowDebugMenu() {
@@ -86,5 +89,6 @@ ShowDebugMenu() {
 
     Gui, Color, %GuiColor%
     Gui, Show
+
     Return
 }

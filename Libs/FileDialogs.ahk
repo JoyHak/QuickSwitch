@@ -1,6 +1,6 @@
-/*
-    There are a few different types of possible dialogues, and each one has its own function.
-    There's also a function called GetFileDialog()
+/* 
+    There are a few different types of possible dialogues, and each one has its own function. 
+    There's also a function called GetFileDialog() 
     It returns the FuncObj to call it later and feed the current dialogue.
 */
 
@@ -30,7 +30,7 @@ FeedDialogGENERAL(ByRef _WinID, _path) {
         _parentHandle   := ""
         _parentClass    := ""
     }
-
+    
     _pathSet := false
     if (_useToolbar and _enterToolbar) {
         Loop, 5 {
@@ -43,7 +43,7 @@ FeedDialogGENERAL(ByRef _WinID, _path) {
             if ((_ctrlFocus != "Edit1") and InStr(_ctrlFocus, "Edit")) {
                 Control, EditPaste, %_path%, %_ctrlFocus%, A
                 ControlGetText, _editAddress, %_ctrlFocus%, ahk_id %_WinID%
-
+                
                 if (_editAddress == _path) {
                     _pathSet := true
                     Sleep, 15
@@ -67,6 +67,7 @@ FeedDialogGENERAL(ByRef _WinID, _path) {
         MsgBox This type of dialog can not be handled (yet).`nPlease report it!
         LogError(Exception("File dialog", "This type of dialog can not be handled!", "`'Breadcrumb Parent`' and `'msctls_progress32`' controls not found"))
     }
+    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -81,8 +82,8 @@ FeedDialogSYSLISTVIEW(ByRef _WinID, _path) {
     ; Make sure there exactly one slash at the end.
     _path := RTrim(_path , "\")
     _path := _path . "\"
-
-    ; Make sure no element is preselected in listview,
+    
+    ; Make sure no element is preselected in listview, 
     ; it would always be used later on if you continue with {Enter}!
     Sleep, 10
     Loop, 100 {
@@ -130,6 +131,7 @@ FeedDialogSYSLISTVIEW(ByRef _WinID, _path) {
                 Break
         }
     }
+    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -176,6 +178,7 @@ FeedDialogSYSTREEVIEW(ByRef _WinID, _path) {
                 Break
         }
     }
+    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

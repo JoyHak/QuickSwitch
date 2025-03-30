@@ -101,5 +101,6 @@ ShowMenuSettings() {
     local Xpos := WinX
     local Ypos := WinY + 100
     Gui, Show, AutoSize x%Xpos% y%Ypos%, Menu settings
+
     Return
 }

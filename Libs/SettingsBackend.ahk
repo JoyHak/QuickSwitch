@@ -7,6 +7,8 @@ ResetSettings() {
     SetDefaultValues()
     WriteValues()
     ShowMenuSettings()
+
+    Return
 }
 
 SaveSettings() {
@@ -14,6 +16,7 @@ SaveSettings() {
     Gui, Submit
     WriteValues()
     ValidateAutoStartup()
+    Return
 }
 
 RestartApp() {
@@ -50,6 +53,8 @@ ToggleShortPath() {
     GuiControl, Enable%ShortPath%, PathSeparatorText
     GuiControl, Show%ShortPath%,   ShortNameIndicator
     GuiControl, Show%ShortPath%,   ShortNameIndicatorText
+
+    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
