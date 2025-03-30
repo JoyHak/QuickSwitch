@@ -159,12 +159,9 @@ ValidateWriteInteger(_new, _paramName) {    ; integer only
 ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
-    
-    if !(_color && _paramName)
-        Return
-    
+
     _matchPos := RegExMatch(_color, "i)[a-f0-9]{6}$")
-    if (_matchPos > 0) {
+    if (_color == "" or _matchPos > 0) {
         _result := SubStr(_color, _matchPos)
         IniWrite, % _result, % INI, Colors, % _paramName
     } else {
@@ -177,10 +174,7 @@ ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
 ValidateWriteString(_new, _paramName) {     ; format to string
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
-    
-    if !(_new && _paramName)
-        Return
-    
+
     _result := Format("{}", _new)
     IniWrite, % _result, % INI, Menu, % _paramName
 }
