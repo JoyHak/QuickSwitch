@@ -180,14 +180,25 @@ GetTotalCommanderPaths(_WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
 
     global paths
+    ; Save clipboard to restore later
+    ClipSaved := ClipboardAll
+    Clipboard := ""
 
+    ; wait a little, or source path may not be captured!
+    Sleep, 50
     SendMessage 1075, 2029, 0, , ahk_id %_WinID%    ; CopySrcPathToClip
-    ClipWait
+    Sleep, 50
     paths.push(clipboard)
-    
-    SendMessage 1075, 2030, 0, , ahk_id %_WinID% ; Equivalent to cm_CopyFullNamesToClip
-    ClipWait
+
+    SendMessage 1075, 2030, 0, , ahk_id %_WinID%    ; CopyTrgPathToClip
+    Sleep, 50
     paths.push(clipboard)
+
+    ; Restore
+    Clipboard := ClipSaved
+    ClipSaved := ""
+
+    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
