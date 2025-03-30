@@ -61,7 +61,7 @@ ToggleShortPath() {
 ;
 ValidateAutoStartup() {
 ;─────────────────────────────────────────────────────────────────────────────
-	global AutoStartup, ScriptName, INI
+	global AutoStartup, ScriptName
 
     IniRead, AutoStartup, %INI%, App, AutoStartup, %AutoStartup%
 	link := A_Startup . "\" . ScriptName . ".lnk"
