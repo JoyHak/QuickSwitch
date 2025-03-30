@@ -269,15 +269,15 @@ GetPaths() {
     WinGet, _allWindows, list
     Loop, %_allWindows% {
         _WinID := _allWindows%A_Index%
-        WinGetClass, _WinClass, ahk_id %_WinID%
+        WinGetClass, _thisClass, ahk_id %_WinID%
 
-        if (_WinClass == "CabinetWClass")
+        if (_thisClass == "CabinetWClass")
             GetWINpaths(_WinID)
-        if (_WinClass == "ThunderRT6FormDC")
+        if (_thisClass == "ThunderRT6FormDC")
             GetXYpaths(_WinID)
-        if (_WinClass == "dopus.lister")
+        if (_thisClass == "dopus.lister")
             GetDOPUSPaths(_WinID)
-        if (_WinClass == "TTOTAL_CMD")
+        if (_thisClass == "TTOTAL_CMD")
             GetTCPaths(_WinID)
 
    }
