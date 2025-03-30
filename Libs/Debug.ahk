@@ -1,5 +1,17 @@
+Timer(R := 0) {
+    /* 
+        Measure script performance
+        Start timer by Timer(1).
+        Save result by Timer(0)
+    */   
+    
+    static P := 0, F := 0, Q := DllCall("QueryPerformanceFrequency", "Int64P", F)
+    return !DllCall("QueryPerformanceCounter", "Int64P", Q) + (R ? (P := Q) / F : (Q - P) / F) 
+}
+
 DebugExport() {
     global FingerPrint
+    
     _fileName := A_ScriptDir . "\" . FingerPrint . ".csv"
     oFile := FileOpen(_fileName, "w") ; Creates a new file, overwriting any existing file.
 
