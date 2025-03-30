@@ -44,6 +44,7 @@ ToggleShortPath() {
         GuiControl,, ShortPath, Show short path
 
     GuiControl, Enable%ShortPath%, CutFromEnd
+    GuiControl, Enable%ShortPath%, VirtualPath
     GuiControl, Enable%ShortPath%, ShowDriveLetter
     GuiControl, Enable%ShortPath%, DirsCount
     GuiControl, Enable%ShortPath%, DirsCountText

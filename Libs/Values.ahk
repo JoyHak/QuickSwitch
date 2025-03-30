@@ -21,7 +21,7 @@ SetDefaultValues() {
     global 
     
     OpenMenu := ReDisplayMenu := CutFromEnd := 1
-    PathNumbers := ShortPath := ShowDriveLetter := 0
+    PathNumbers := ShortPath := VirtualPath := ShowDriveLetter := 0
     
     DirsCount            := 3
     , DirNameLength      := 20
@@ -57,6 +57,7 @@ WriteValues() {
         IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
         IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
+        IniWrite, 	%VirtualPath%, 				%INI%, 		Menu, 		VirtualPath
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%CutFromEnd%, 				%INI%, 		Menu, 		CutFromEnd
     } catch {
@@ -108,6 +109,7 @@ ReadValues() {
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	ReDisplayMenu, 				%INI%,		Menu, 		ReDisplayMenu,  	        %ReDisplayMenu%
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
+    IniRead, 	VirtualPath, 				%INI%,		Menu, 		VirtualPath, 				%VirtualPath%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
     IniRead, 	CutFromEnd, 				%INI%,		Menu, 		CutFromEnd, 				%CutFromEnd%
 
