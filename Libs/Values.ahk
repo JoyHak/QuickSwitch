@@ -1,7 +1,7 @@
 ; These parameters are not saved in the INI
 global FromSettings  := false
 global LastMenuItem  := ""
-global XyplorerData  := ""
+global XYdata        := ""
 
 ; These parameters must not be reset
 global LastTabSettings  := 1
