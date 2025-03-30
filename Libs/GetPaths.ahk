@@ -155,6 +155,7 @@ GetXYpaths(ByRef _WinID) {
     ( LTrim Join
         ::
         load('
+
             $paths = get("tabs_sf", "|");
             $reals = "";
             foreach($path, $paths, "|") {
@@ -162,6 +163,7 @@ GetXYpaths(ByRef _WinID) {
             }
             $reals = replace($reals, "|",,,1,1);
             copydata %A_ScriptHwnd%, $reals, 2`;
+
         ',,s)`;
     )
     XYscript(_WinID, _script)
