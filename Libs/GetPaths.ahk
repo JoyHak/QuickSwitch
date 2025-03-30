@@ -132,6 +132,10 @@ GetXyplorerPaths(ByRef _WinID) {
     ; then push to array
     global VirtualPath, paths, virtuals
     
+    ; Save clipboard to restore later
+    ClipSaved := ClipboardAll
+    Clipboard := ""
+    
     _script =
     ( LTrim Join
         ::
@@ -146,17 +150,17 @@ GetXyplorerPaths(ByRef _WinID) {
         ',,s);
     )
     XyplorerScript(_WinID, _script)
-    ClipWait
-    Loop, parse, Clipboard, `|
-        _array.push(A_LoopField)
+    PushClipboardPaths(_array)
 
     if paths and VirtualPath {
         _script = ::copydata %A_ScriptHwnd%, get("tabs_sf", "|"), 2`;
         XyplorerScript(_WinID, _script)
-            ClipWait
-            Loop, parse, Clipboard, `|
-                _array.push(A_LoopField)		
+        PushClipboardPaths(virtuals)		
     }
+    ; Restore
+    Clipboard := ClipSaved
+    ClipSaved := ""
+    Return
 }
 ;─────────────────────────────────────────────────────────────────────────────
 ;
@@ -242,12 +246,9 @@ GetPaths() {
     ; Update the values after each call
     global paths    := []
     global virtuals := []
+
     global VirtualPath
     IniRead, VirtualPath, %INI%, Menu, VirtualPath, %VirtualPath%
-    
-    ; Save clipboard to restore later
-    ClipSaved := ClipboardAll
-    Clipboard := ""
 
     WinGet, _allWindows, list
     Loop, %_allWindows% {
@@ -261,10 +262,6 @@ GetPaths() {
             case "dopus.lister":        GetDopusPaths(_WinID)
         }
     }
-    
-    ; Restore
-    Clipboard := ClipSaved
-    ClipSaved := ""
 }
 
 
