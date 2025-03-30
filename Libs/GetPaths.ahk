@@ -275,7 +275,7 @@ GetPaths() {
             case "TTOTAL_CMD":          GetTotalCommanderPaths(_WinID)
             case "dopus.lister":        GetDopusPaths(_WinID)
         }
-    }
+   }
 }
 
 
