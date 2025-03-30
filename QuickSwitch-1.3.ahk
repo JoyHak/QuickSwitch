@@ -28,11 +28,11 @@ SetControlDelay, -1
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
-ScriptName    := "QuickSwitch"
-MainIcon      := ""
-INI           := ScriptName ".ini"
-ErrorsLog     := "Errors.log"
-BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
+global ScriptName      := "QuickSwitch"
+global MainIcon        := "QuickSwitch.ico"
+global INI             := ScriptName ".ini"
+global ErrorsLog       := "Errors.log"
+global BugReportLink   := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 
 #Include %A_ScriptDir%
 #Include Libs\Log.ahk

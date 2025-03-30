@@ -1,17 +1,19 @@
 ; These parameters are not saved in the INI
-FromSettings  := false
-LastMenuItem  := ""
+global FromSettings  := false
+global LastMenuItem  := ""
 
 ; These parameters must not be reset
-LastTabSettings  := AutoStartup := MainKeyHook := 1
-MainFont         := "Tahoma"
-, MainKey        := "^q"
-, RestartKey     := "^s"
-, RestartKeyHook := 0
-, RestartWhere   := "ahk_exe notepad++.exe"
+global LastTabSettings := AutoStartup := MainKeyHook := 1
+global MainFont    := "Tahoma"
+, MainKey          := "^q"
+, RestartKey       := "^s"
+, RestartKeyHook   := 0
+, RestartWhere     := "ahk_exe notepad++.exe"
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
-paths := []
+paths    := []
+; Virtual paths are used only in the PathsMenu
+virtuals := []
 
 ; set defaults without overwriting existing INI
 ; these values are used if the INI settings are invalid
