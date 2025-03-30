@@ -187,9 +187,9 @@ GetWindowsPaths(ByRef _WinID) {
     for _instance in ComObjCreate("Shell.Application").Windows {
         if (_WinID == _instance.hwnd) {
             _path := _instance.Document.Folder.Self.Path
-            if !InStr(_path, "::{") {
+            if !InStr(_path, "::{")
                 paths.push(_path)
-            }
+
         }
     }
     Return
