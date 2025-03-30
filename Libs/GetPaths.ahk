@@ -102,6 +102,7 @@ ShowShortPath(ByRef _path) {
 
         }
     }
+    _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the last dir
     Return _shortPath
 }
 
