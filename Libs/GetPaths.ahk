@@ -16,7 +16,7 @@ GetShortPath(ByRef _path) {
         Dirs are selected as intervals between slashes, excluding them.
         boundaries = indexes of any slashes \ / in the path: /dir/dir/
     */
-    global CutFromEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator
+    global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator
     
     try {
         ; Return input path if it's really short
@@ -24,16 +24,10 @@ GetShortPath(ByRef _path) {
         if _length < 4
             Return _path    ; Just drive and slash
     
-        ; Declare variable to return
-        if ShowDriveLetter {
-            SplitPath, _path,,,,, _letter
-            _shortPath := _letter
-        } else {
-            _shortPath := ""
-        }
-    
-    
-        ; The number of slashes (indexes) is one more than the number of dirs: /f1/f2/ - 2 dirs, 3 slashes
+        ; Variable to return
+        _shortPath := ShowDriveLetter ? Substr(_path, 1, 2) : ""
+          
+        ; The number of slashes (indexes) is one more than the number of dirs: C:/dir/dir/ - 2 dirs, 3 slashes
         _maxSlashes := DirsCount + 1
         ; if the number of slashes is less than DirsCount, the array will contain -1
         ; This is necessary for handling paths where the number of dirs is less than DirsCount: C:/dir
@@ -49,14 +43,29 @@ GetShortPath(ByRef _path) {
     
         _fullPath := _path . "/"         ; Last dir bound
         _length++
-        if CutFromEnd {
-            ; Reverse slash search until enough is found
+
+        if ShortenEnd {
+            ; Forward search starting from the pos of the 1st slash
+            _pathIndex    := 3
+            _slashesCount := 1
+            while (_pathIndex <= _length and _slashesCount <= _maxSlashes) {
+                _char := SubStr(_fullPath, _pathIndex, 1)
+                if (_char = "\" || _char = "/") {
+                    _slashIndexes[_slashesCount] := _pathIndex
+                    _slashesCount++
+                }
+                _pathIndex++
+            }
+            if (_slashesCount < 3)
+                return _path     ; not enough to shorten the path
+        } else {
+            ; Backward slash search until enough is found
             ; to display the required number of dirs
             _pathIndex    := _length
             _slashesCount := _maxSlashes
             while (_pathIndex >= 3 and _slashesCount >= 1) {     ; 3 is pos of the 1st slash
                 _char := SubStr(_fullPath, _pathIndex, 1)
-                if (_char == "/" || _char == "\") {
+                if (_char = "\" || _char = "/") {
                     _slashIndexes[_slashesCount] := _pathIndex
                     _slashesCount--
                 }
@@ -66,20 +75,6 @@ GetShortPath(ByRef _path) {
                 return _path     ; not enough to shorten the path
     
             _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
-        } else {
-            ; Direct search starting from the pos of the 1st slash
-            _pathIndex    := 3
-            _slashesCount := 1
-            while (_pathIndex <= _length and _slashesCount <= _maxSlashes) {
-                _char := SubStr(_fullPath, _pathIndex, 1)
-                if (_char == "/" || _char == "\") {
-                    _slashIndexes[_slashesCount] := _pathIndex
-                    _slashesCount++
-                }
-                _pathIndex++
-            }
-            if (_slashesCount < 3)
-                return _path     ; not enough to shorten the path
         }
     
         ;─────────────────────────────────────────────────────────────────────────────
@@ -96,7 +91,7 @@ GetShortPath(ByRef _path) {
                 _length     := _right - _left
                 _nameLength := Min(_length, DirNameLength)
                 _dirName := SubStr(_fullPath, _left, _nameLength)
-                _shortPath    .= PathSeparator . _dirName
+                _shortPath  .= PathSeparator . _dirName
     
                 if (DirNameLength - _length < 0)
                     _shortPath .= ShortNameIndicator

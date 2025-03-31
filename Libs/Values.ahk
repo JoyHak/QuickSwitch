@@ -18,7 +18,7 @@ paths := []
 SetDefaultValues() {
     global
 
-    OpenMenu := ReDisplayMenu := CutFromEnd := 1
+    OpenMenu := ReDisplayMenu := ShortenEnd := 1
     PathNumbers := ShortPath := ShowDriveLetter := 0
 
     DirsCount            := 3
@@ -54,7 +54,7 @@ WriteValues() {
         IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
-        IniWrite, 	%CutFromEnd%, 				%INI%, 		Menu, 		CutFromEnd
+        IniWrite, 	%ShortenEnd%, 				%INI%, 		Menu, 		ShortenEnd
     } catch {
         LogError(Exception("Failed to write values to the configuration", INI . " write", "Create INI file manually or change the INI global variable"))
     }
@@ -102,7 +102,7 @@ ReadValues() {
     IniRead, 	ReDisplayMenu, 				%INI%,		Menu, 		ReDisplayMenu,  	        %ReDisplayMenu%
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
-    IniRead, 	CutFromEnd, 				%INI%,		Menu, 		CutFromEnd, 				%CutFromEnd%
+    IniRead, 	ShortenEnd, 				%INI%,		Menu, 		ShortenEnd, 				%ShortenEnd%
 
     IniRead, 	DirsCount, 				    %INI%,		Menu, 		DirsCount,      	    	%DirsCount%
     IniRead, 	DirNameLength, 			    %INI%,		Menu, 		DirNameLength,      	    %DirNameLength%

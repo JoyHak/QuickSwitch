@@ -40,7 +40,7 @@ ToggleShortPath() {
     else
         GuiControl,, ShortPath, Show short path
 
-    GuiControl, Enable%ShortPath%, CutFromEnd
+    GuiControl, Enable%ShortPath%, ShortenEnd
     GuiControl, Enable%ShortPath%, ShowDriveLetter
     GuiControl, Enable%ShortPath%, DirsCount
     GuiControl, Enable%ShortPath%, DirsCountText
