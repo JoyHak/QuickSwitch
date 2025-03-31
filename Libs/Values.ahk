@@ -124,15 +124,14 @@ ValidateWriteKey(_new, _paramName, _funcObj, _state := "On", _useHook := false) 
 
     try {
         Hotkey, % _prefix . _new, % _funcObj, % _state       ; create hotkey
+        IniRead, _old, % INI, App, % _paramName, % _new      ; remove old if exist
+        if (_old != _new) {
+            Hotkey, % _old, Off
+            Hotkey, % "~" . _old, Off
+        }
         IniWrite, % _new, % INI, App, % _paramName           ; save
     } catch _error {
         LogError(_error)
-        Return
-    }
-    IniRead, _old, % INI, App, % _paramName, % _new          ; remove old if exist
-    if (_old != _new) {
-        Hotkey, % _old, Off
-        Hotkey, % "~" . _old, Off
     }
 }
 
