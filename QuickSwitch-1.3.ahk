@@ -54,8 +54,8 @@ SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
-ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off",      MainKeyHook)
-ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On",       RestartKeyHook)
+ValidateWriteKey(MainKey, 	 "MainKey",    "ShowPathsMenu", "Off", MainKeyHook)
+ValidateWriteKey(RestartKey, "RestartKey", "RestartApp",    "On",  RestartKeyHook)
 
 ; Wait for dialog
 Loop {
