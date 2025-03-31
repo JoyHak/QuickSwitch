@@ -144,7 +144,7 @@ ValidateWriteInteger(_new, _paramName) {    ; integer only
     if _new is Integer
         IniWrite, % _new, % INI, Menu, % _paramName
     else
-        throw Exception(_new " is not an integer for the " _paramName " parameter", _paramName)
+        LogError(Exception(_new " is not an integer for the " _paramName " parameter", _paramName))
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -161,7 +161,7 @@ ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
         _result := SubStr(_color, _matchPos)
         IniWrite, % _result, % INI, Colors, % _paramName
     } else {
-        throw Exception("`'" _color "`' is wrong color! Enter the HEX value", _paramName)
+        LogError(Exception("`'" _color "`' is wrong color! Enter the HEX value", _paramName))
     }
 }
 
