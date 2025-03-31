@@ -150,7 +150,10 @@ GetXyplorerPaths(ByRef _WinID) {
         )
         XyplorerScript(_WinID, _script)
         
-        ClipWait
+        ClipWait, 3
+        if ErrorLevel
+            Return
+                
         Loop, parse, Clipboard, `| 
         {
             paths.push(A_LoopField)
@@ -188,13 +191,14 @@ GetTotalCommanderPaths(_WinID) {
     global paths
     
     try {
-        SendMessage 1075, 2029, 0, , ahk_id %_WinID%    ; cm_CopySrcPathToClip
-        ClipWait
-        paths.push(clipboard)
-    
-        SendMessage 1075, 2030, 0, , ahk_id %_WinID%    ; cm_CopyTrgPathToClip
-        ClipWait
-        paths.push(clipboard)
+        Loop, 2 {
+            SendMessage 1075, 2028 + A_Index, 0, , ahk_id %_WinID%
+            ClipWait, 3
+            if ErrorLevel
+                Return
+
+            paths.push(clipboard)
+        }
     } catch _error {
         LogError(_error)
     }
