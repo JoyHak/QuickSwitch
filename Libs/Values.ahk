@@ -3,12 +3,12 @@ FromSettings  := false
 LastMenuItem  := ""
 
 ; These parameters must not be reset
-LastTabSettings  := AutoStartup := MainKeyHook := 1
-MainFont         := "Tahoma"
-, MainKey        := "^q"
-, RestartKey     := "^s"
-, RestartKeyHook := 0
-, RestartWhere   := "ahk_exe notepad++.exe"
+LastTabSettings := AutoStartup := MainKeyHook := 1
+MainFont        := "Tahoma"
+MainKey         := "^q"
+RestartKey      := "^s"
+RestartKeyHook  := 0
+RestartWhere    := "ahk_exe notepad++.exe"
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
 paths := []
@@ -21,12 +21,12 @@ SetDefaultValues() {
     OpenMenu := ReDisplayMenu := ShortenEnd := 1
     PathNumbers := ShortPath := ShowDriveLetter := 0
 
-    DirsCount            := 3
-    , DirNameLength      := 20
-    , PathSeparator      := "/"
-    , ShortNameIndicator := ".."
-    , GuiColor           := ""
-    , MenuColor          := ""
+    ShortNameIndicator := ".."
+    DirsCount     := 3
+    DirNameLength := 20
+    PathSeparator := "/"
+    GuiColor      := ""
+    MenuColor     := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
