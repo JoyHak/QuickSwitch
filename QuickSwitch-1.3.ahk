@@ -16,8 +16,6 @@
 #NoEnv
 #Persistent
 #SingleInstance force
-#MaxHotkeysPerInterval 99000000
-#HotkeyInterval 99000000
 #KeyHistory 0
 ListLines Off
 Process, Priority, , A
