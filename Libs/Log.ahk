@@ -22,8 +22,6 @@ LogError(_error) {
     TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
     Return true
 }
-OnError("LogError")
-
 
 LogHeader() {
     ; Header about log and OS

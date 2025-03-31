@@ -57,19 +57,23 @@ ToggleShortPath() {
 ValidateAutoStartup() {
 ;─────────────────────────────────────────────────────────────────────────────
 	global AutoStartup, ScriptName, INI
-
-    IniRead, AutoStartup, %INI%, App, AutoStartup, %AutoStartup%
-	link := A_Startup . "\" . ScriptName . ".lnk"
-
-    if AutoStartup {
-		if !FileExist(link) {
-			FileCreateShortcut, %A_ScriptFullPath%, %link%, %A_ScriptDir%
-			TrayTip, %ScriptName%, AutoStartup enabled
-		}
-	} else {
-		if FileExist(link) {
-			FileDelete, %link%
-            TrayTip, %ScriptName%, AutoStartup disabled,, 0x2
-		}
-	}
+    
+    try {
+        IniRead, AutoStartup, %INI%, App, AutoStartup, %AutoStartup%
+        link := A_Startup . "\" . ScriptName . ".lnk"
+    
+        if AutoStartup {
+            if !FileExist(link) {
+                FileCreateShortcut, %A_ScriptFullPath%, %link%, %A_ScriptDir%
+                TrayTip, %ScriptName%, AutoStartup enabled
+            }
+        } else {
+            if FileExist(link) {
+                FileDelete, %link%
+                TrayTip, %ScriptName%, AutoStartup disabled,, 0x2
+            }
+        }
+    } catch _error {
+        LogError(_error)
+    }
 }

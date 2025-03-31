@@ -12,36 +12,40 @@ Timer(R := 0) {
 DebugExport() {
     global FingerPrint
     
-    _fileName := A_ScriptDir . "\" . FingerPrint . ".csv"
-    oFile := FileOpen(_fileName, "w") ; Creates a new file, overwriting any existing file.
-
-    if IsObject(oFile) {
-        ; Header
-        _line := "ControlName;ID;PID;Text;X;Y;Width;Height"
-        oFile.WriteLine(_line)
-        Gui, ListView
-
-        Loop % LV_GetCount() {
-            LV_GetText(_col1, A_index, 1)
-            LV_GetText(_col2, A_index, 2)
-            LV_GetText(_col3, A_index, 3)
-            LV_GetText(_col4, A_index, 4)
-            LV_GetText(_col5, A_index, 5)
-            LV_GetText(_col6, A_index, 6)
-            LV_GetText(_col7, A_index, 7)
-            LV_GetText(_col8, A_index, 8)
-
-            _line := _col1 ";" _col2 "," _col3 ";" _col4 ";" _col5 ";" _col6 ";" _col7 ";" _col8 ";"
+    try {
+        _fileName := A_ScriptDir . "\" . FingerPrint . ".csv"
+        oFile := FileOpen(_fileName, "w") ; Creates a new file, overwriting any existing file.
+    
+        if IsObject(oFile) {
+            ; Header
+            _line := "ControlName;ID;PID;Text;X;Y;Width;Height"
             oFile.WriteLine(_line)
+            Gui, ListView
+    
+            Loop % LV_GetCount() {
+                LV_GetText(_col1, A_index, 1)
+                LV_GetText(_col2, A_index, 2)
+                LV_GetText(_col3, A_index, 3)
+                LV_GetText(_col4, A_index, 4)
+                LV_GetText(_col5, A_index, 5)
+                LV_GetText(_col6, A_index, 6)
+                LV_GetText(_col7, A_index, 7)
+                LV_GetText(_col8, A_index, 8)
+    
+                _line := _col1 ";" _col2 "," _col3 ";" _col4 ";" _col5 ";" _col6 ";" _col7 ";" _col8 ";"
+                oFile.WriteLine(_line)
+            }
+    
+            oFile.Close()
+            oFile:=""
+            
+            TrayTip, Successfully exported, Results exported to %_filename%
+        } else {                                          ; File could not be initialized
+            LogError(Exception("Cant create " _fileName,, "File unavailable for writing. Check the attributes of the target directory"))
         }
-
-        oFile.Close()
-        oFile:=""
-
-        Msgbox Results exported to:`n`n"%_filename%"
-    } else {                                          ; File could not be initialized
-        Msgbox Cant create %_fileName%
-    }
+    } catch _error {
+        LogError(_error)
+    }    
 }
 
 CancelLV() {

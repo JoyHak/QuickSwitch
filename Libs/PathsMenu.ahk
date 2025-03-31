@@ -22,7 +22,7 @@ AddPathsMenuItems() {
         if PathNumbers
             _display .= "&" . _index . " "
         if ShortPath
-            _display .= ShowShortPath(_path)
+            _display .= GetShortPath(_path)
         else
             _display .= _path
 
