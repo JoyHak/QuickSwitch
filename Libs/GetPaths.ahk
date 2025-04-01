@@ -236,10 +236,10 @@ WinGetTextFast(ByRef _WinID, _hidden := false) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ParseDopusControls(ByRef _WinID) {
+GetDopusPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
-    ; Searches for active tab using DOpus window title (fast but unreliable approach)
+    ; Searches for active tab using DOpus window title
     
     global paths
     
@@ -284,44 +284,6 @@ ParseDopusControls(ByRef _WinID) {
             
     } catch _error {
         LogError(_error)
-        return false
-    }
-    return true
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ParseDopusXml(ByRef _WinID) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Queries DOpusRT for info about current paths to the file and analyzes it.
-    ; Looks for the “active_tab” attribute to find the active tab (slow but accurate approach)
-    
-    global paths
-  
-    try {
-        ; Configure parameters to get paths via DOpus CLI (dopusrt)
-        WinGet, _exe, ProcessPath, ahk_id %_WinID%
-        _dir := StrReplace(_exe, "\dopus.exe")
-        _result := _dir "\paths.xml"
-
-        ; Arg comma needs escaping: `,
-        RunWait, dopusrt.exe /info %_result%`,paths, %_dir%
-        
-        _active := ""
-        Loop, read, % _result
-        {
-            if (!InStr(A_LoopReadLine, "activ",, 26) && A_Index > 2) {  ; skip first lines
-                ; Backward: omit closing </path> tag + possible short path C:\
-                _start := InStr(A_LoopReadLine, ">",, -10)
-
-                ; Forward: omit ">" char at the beginning, omit closing </path> tag at the end
-                if (_start && _path := SubStr(A_LoopReadLine, _start + 1, -7)) {
-                    paths.push(_path)
-                }
-            }
-        }
-    } catch _error {
-        LogError(_error)
     }
 }
 
@@ -329,8 +291,9 @@ ParseDopusXml(ByRef _WinID) {
 ;
 GetPaths() {
 ;─────────────────────────────────────────────────────────────────────────────
-
-    ; Update the values after each call
+    ; Requests paths from all applications whose window class 
+    ; is recognized as a known file manager class.
+    ; Updates the global array after each call
     global paths := []
     
     ; Save clipboard to restore later
