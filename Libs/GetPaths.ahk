@@ -108,6 +108,7 @@ GetShortPath(ByRef _path) {
 ;
 GetWindowsPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
+    ; Analyzes open Explorer windows and looks for non-virtual paths
     global paths
     
     try {
@@ -129,6 +130,7 @@ GetWindowsPaths(ByRef _WinID) {
 ;
 GetTotalCommanderPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
+    ; Sends internal commands and analyzes the clipboard
     global paths
 
     try {
@@ -163,11 +165,13 @@ XyplorerScript(ByRef _WinID, ByRef _script) {
 ;
 GetXyplorerPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; If second pane enabled, get tabs from all panes, otherwise get from active pane,
-    ; separate paths by |
-    ; For each path get real path (XY have special and virtual paths)
-    ; Remove | from $reals beginning
-    ; Place $reals to clipboard, parse it and push all paths to the array
+    ; Sends a message as an internal script.
+    ; If the second panel is enabled, gets tabs from all panels, 
+    ; otherwise gets tabs from the active panel.
+    ; The path separator is |
+    ; For each path, gets the real path (XY has special and virtual paths)
+    ; Removes the extra | from the beginning of $reals
+    ; Places $reals on the clipboard, parses it and puts all paths into the global array
     
     global paths
     
