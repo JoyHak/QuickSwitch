@@ -306,13 +306,14 @@ GetPaths() {
         WinGetClass, _WinClass, ahk_id %_WinID%
 
         switch _WinClass {
-            case "CabinetWClass":       GetWindowsPaths(_WinID)
-            case "ThunderRT6FormDC":    GetXyplorerPaths(_WinID)
-            case "TTOTAL_CMD":          GetTotalCommanderPaths(_WinID)
+            case "CabinetWClass":       
+                GetWindowsPaths(_WinID)
+            case "ThunderRT6FormDC":    
+                GetXyplorerPaths(_WinID)
+            case "TTOTAL_CMD":          
+                GetTotalCommanderPaths(_WinID)
             case "dopus.lister":        
-                if !ParseDopusControls(_WinID) {
-                    ParseDopusXml(_WinID)
-                }
+                GetDopusPaths(_WinID)
         }
     }
 
