@@ -18,7 +18,7 @@ ShowMenuSettings() {
     FromSettings := true
 
     ; Options that affects subsequent controls
-    Gui, -E0x200 -SysMenu           ; hide window border and header
+    Gui, -E0x200 -SysMenu +AlwaysOnTop           ; hide window border and header
     Gui, Font, q5, %MainFont%       ; clean quality
     Gui, Color, %GuiColor%, %GuiColor%
 
