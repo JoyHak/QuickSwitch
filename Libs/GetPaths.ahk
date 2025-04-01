@@ -128,20 +128,63 @@ GetWindowsPaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+TotalCommanderUserCommand(ByRef _WinID, ByRef _command) {
+;─────────────────────────────────────────────────────────────────────────────
+    VarSetCapacity(_copyData, A_PtrSize * 3)
+    VarSetCapacity(_result, StrPut(_command, "UTF-8"))	
+    _size := StrPut(_command, &_result, "UTF-8")
+    
+    NumPut(19781, _copyData, 0)
+    NumPut(_size, _copyData, A_PtrSize)
+    NumPut(&_result , _copyData, A_PtrSize * 2)
+    
+    ; WM_COPYDATA without recieve
+    SendMessage, 74, 0, &_copyData,, ahk_id %_WinID%
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetTotalCommanderPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends internal commands and analyzes the clipboard
     global paths
-
+       
     try {
-        Loop, 2 {
-            SendMessage 1075, 2028 + A_Index, 0, , ahk_id %_WinID%
-            ClipWait, 3
-            if ErrorLevel
-                Return
-
-            paths.push(clipboard)
+        static APPDATA_PATH := A_AppData "\GHISLER"
+        static CONFIG       := APPDATA_PATH "\usercmd.ini"
+        static COMMAND      := "EM_SaveAllTabs"
+        
+        _section := ""
+        loop, 3 {
+            IniRead, _section, % CONFIG, % COMMAND
+            if (!_section || _section = "ERROR") {
+                FileSetAttrib, n, % APPDATA_PATH
+                FileSetAttrib, n, % CONFIG
+                sleep, 20 * A_Index
+                
+                FileAppend,
+                (LTrim
+                    # Please dont add commands with the same name
+                    [%COMMAND%]
+                    cmd=SaveTabs2 
+                    param=`"%APPDATA_PATH%\Tabs.tab`"
+                    
+                ), % CONFIG
+                sleep, 50 * A_Index
+            } else {
+                break
+            }
         }
+        
+        if !FileExist(CONFIG)
+            throw Exception("Unable to create usercmd.ini", "Total Commander" "usercmd.ini doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH)
+        
+        IniRead, _section, % CONFIG, % COMMAND
+        if (!_section || _section = "ERROR")
+            throw Exception("Unable to access usercmd.ini", "Total Commander", "Сheck the usercmd.ini attributes and uncheck Read-Only")
+        
+        TotalCommanderUserCommand(_WinID, COMMAND)
+        
     } catch _error {
         LogError(_error)
     }
@@ -151,14 +194,16 @@ GetTotalCommanderPaths(ByRef _WinID) {
 ;
 XyplorerScript(ByRef _WinID, ByRef _script) {
 ;─────────────────────────────────────────────────────────────────────────────
+    ; https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654
     _size := StrLen(_script)
 
-    VarSetCapacity(COPYDATA, A_PtrSize * 3, 0)
-    NumPut(4194305, COPYDATA, 0, "Ptr")
-    NumPut(_size * 2, COPYDATA, A_PtrSize, "UInt")
-    NumPut(&_script, COPYDATA, A_PtrSize * 2, "Ptr")
-
-    Return DllCall("User32.dll\SendMessageW", "Ptr", _WinID, "UInt", 74, "Ptr", 0, "Ptr", &COPYDATA, "Ptr")
+    VarSetCapacity(_copyData, A_PtrSize * 3, 0)
+    NumPut(4194305, _copyData, 0, "Ptr")
+    NumPut(_size * 2, _copyData, A_PtrSize, "UInt")
+    NumPut(&_script, _copyData, A_PtrSize * 2, "Ptr")
+    
+    ; WM_COPYDATA without recieve
+    SendMessage, 74, 0, &_copyData,, ahk_id %_WinID%
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
