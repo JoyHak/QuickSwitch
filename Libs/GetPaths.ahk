@@ -10,7 +10,7 @@ SelectPath() {
     FileDialog.call(DialogID, paths[A_ThisMenuItemPos])
 }
 
-GetShortPath(ByRef _path) {
+GetShortPath(ByRef path) {
     /*
         _fullPath is shortened to the last N dirs (DirsCount) starting from the end of the path.
         Dirs are selected as intervals between slashes, excluding them.
@@ -20,12 +20,12 @@ GetShortPath(ByRef _path) {
     
     try {
         ; Return input path if it's really short
-        _length := StrLen(_path)
+        _length := StrLen(path)
         if _length < 4
-            Return _path    ; Just drive and slash
+            Return path    ; Just drive and slash
     
         ; Variable to return
-        _shortPath := ShowDriveLetter ? Substr(_path, 1, 2) : ""
+        _shortPath := ShowDriveLetter ? Substr(path, 1, 2) : ""
           
         ; The number of slashes (indexes) is one more than the number of dirs: C:/dir/dir/ - 2 dirs, 3 slashes
         _maxSlashes := DirsCount + 1
@@ -41,7 +41,7 @@ GetShortPath(ByRef _path) {
         ; Parsing the path, looking for the indexes of slashes
         ;─────────────────────────────────────────────────────────────────────────────
     
-        _fullPath := _path . "/"         ; Last dir bound
+        _fullPath := path . "/"         ; Last dir bound
         _length++
 
         if ShortenEnd {
@@ -57,7 +57,7 @@ GetShortPath(ByRef _path) {
                 _pathIndex++
             }
             if (_slashesCount < 3)
-                return _path     ; not enough to shorten the path
+                return path     ; not enough to shorten the path
         } else {
             ; Backward slash search until enough is found
             ; to display the required number of dirs
@@ -72,7 +72,7 @@ GetShortPath(ByRef _path) {
                 _pathIndex--
             }
             if (_slashesCount > _maxSlashes - 2)
-                return _path     ; not enough to shorten the path
+                return path     ; not enough to shorten the path
     
             _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
         }
@@ -99,21 +99,21 @@ GetShortPath(ByRef _path) {
         }
     } catch _error {
         LogError(_error)
-        Return _path
+        Return path
     }
     Return _shortPath
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetWindowsPaths(ByRef _WinID) {
+GetWindowsPaths(ByRef winID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes open Explorer windows and looks for non-virtual paths
     global paths
     
     try {
         for _instance in ComObjCreate("Shell.Application").Windows {
-            if (_WinID == _instance.hwnd) {
+            if (winID == _instance.hwnd) {
                 _path := _instance.Document.Folder.Self.Path
                 if !InStr(_path, "::{") {
                     paths.push(_path)
@@ -128,23 +128,23 @@ GetWindowsPaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-TotalCommanderUserCommand(ByRef _WinID, ByRef _command) {
+TotalCommanderUserCommand(ByRef winId, ByRef command) {
 ;─────────────────────────────────────────────────────────────────────────────
     VarSetCapacity(_copyData, A_PtrSize * 3)
-    VarSetCapacity(_result, StrPut(_command, "UTF-8"))	
-    _size := StrPut(_command, &_result, "UTF-8")
+    VarSetCapacity(_result, StrPut(command, "UTF-8"))	
+    _size := StrPut(command, &_result, "UTF-8")
     
     NumPut(19781, _copyData, 0)
     NumPut(_size, _copyData, A_PtrSize)
     NumPut(&_result , _copyData, A_PtrSize * 2)
     
     ; WM_COPYDATA without recieve
-    SendMessage, 74, 0, &_copyData,, ahk_id %_WinID%
+    SendMessage, 74, 0, &_copyData,, ahk_id %winId%
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetTotalCommanderTabs(ByRef _WinID) {
+GetTotalCommanderTabs(ByRef winId) {
 ;───────────────────────────────────────────────────────────────────────────── 
     ; Creates user command (if necessary) in usercmd.ini 
     ; and uses it to request the current tabs file. 
@@ -157,13 +157,13 @@ GetTotalCommanderTabs(ByRef _WinID) {
     static COMMAND      := "EM_SaveAllTabs"
     
     ; Check and create user command
-    static _created := false
-    if !_created { 
+    static created := false
+    if !created { 
         loop, 4 {
             ; Read the contents of the config until it appears or the loop ends with an error
             IniRead, _section, % CONFIG, % COMMAND
             if (_section && _section != "ERROR") {
-                _created := true
+                created := true
                 break
             }            
             
@@ -185,9 +185,9 @@ GetTotalCommanderTabs(ByRef _WinID) {
         }
     }
     
-    if _created { 
+    if created { 
         ; Send and wait
-        TotalCommanderUserCommand(_WinID, COMMAND)
+        TotalCommanderUserCommand(winId, COMMAND)
         loop, 10 {
             if (FileExist(TABS_RESULT)) {
                 return TABS_RESULT
@@ -204,14 +204,14 @@ GetTotalCommanderTabs(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetTotalCommanderPaths(ByRef _WinID) {
+GetTotalCommanderPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Requests a file with current tabs and analyzes it. 
     ; Searches for the active tab using the "activetab" parameter
     global paths
        
     try { 
-        _tabs   := GetTotalCommanderTabs(_WinID)
+        _tabs   := GetTotalCommanderTabs(winId)
         _paths  := []
         _last   := 0
         Loop, read, % _tabs
@@ -239,23 +239,23 @@ GetTotalCommanderPaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-XyplorerScript(ByRef _WinID, ByRef _script) {
+XyplorerScript(ByRef winId, ByRef script) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654
-    _size := StrLen(_script)
+    _size := StrLen(script)
 
     VarSetCapacity(_copyData, A_PtrSize * 3, 0)
     NumPut(4194305, _copyData, 0, "Ptr")
     NumPut(_size * 2, _copyData, A_PtrSize, "UInt")
-    NumPut(&_script, _copyData, A_PtrSize * 2, "Ptr")
+    NumPut(&script, _copyData, A_PtrSize * 2, "Ptr")
     
     ; WM_COPYDATA without recieve
-    SendMessage, 74, 0, &_copyData,, ahk_id %_WinID%
+    SendMessage, 74, 0, &_copyData,, ahk_id %winId%
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetXyplorerPaths(ByRef _WinID) {
+GetXyplorerPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends a message as an internal script.
     ; If the second panel is enabled, gets tabs from all panels, 
@@ -280,7 +280,7 @@ GetXyplorerPaths(ByRef _WinID) {
             $reals = replace($reals, "|",,,1,1);
             copytext $reals;
         )
-        XyplorerScript(_WinID, _script)
+        XyplorerScript(winId, script)
         
         ClipWait, 3
         if ErrorLevel
@@ -297,7 +297,7 @@ GetXyplorerPaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetDopusPaths(ByRef _WinID) {
+GetDopusPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
     ; Searches for active tab using DOpus window title    
@@ -312,7 +312,7 @@ GetDopusPaths(ByRef _WinID) {
         
         ; Find the first address bar HWND
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexa
-        _previousHwnd := DllCall("FindWindowEx", "ptr", _WinID, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+        _previousHwnd := DllCall("FindWindowEx", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
         _startHwnd    := _previousHwnd
         _paths        := []
 
@@ -322,7 +322,7 @@ GetDopusPaths(ByRef _WinID) {
             if DllCall("GetWindowText", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
                 _paths.push(_text)
             }
-            _nextHwnd := DllCall("FindWindowEx", "ptr", _WinID, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
+            _nextHwnd := DllCall("FindWindowEx", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
             
             ; The loop iterates through all the tabs over and over again, 
             ; so we must stop when it repeats
@@ -333,7 +333,7 @@ GetDopusPaths(ByRef _WinID) {
         }
         
         ; Push the active tab to the global array first
-        WinGetTitle, _title, ahk_id %_WinID%
+        WinGetTitle, _title, ahk_id %winId%
         for _index, _path in _paths {
             if InStr(_path, _title) {
                 paths.push(_path)
@@ -355,31 +355,23 @@ GetPaths() {
     ; is recognized as a known file manager class.
     ; Updates the global array after each call
     global paths := []
-    
-    ; Save clipboard to restore later
-    ClipSaved := ClipboardAll
-    Clipboard := ""
 
     WinGet, _allWindows, list
     Loop, %_allWindows% {
-        _WinID := _allWindows%A_Index%
-        WinGetClass, _WinClass, ahk_id %_WinID%
+        winId := _allWindows%A_Index%
+        WinGetClass, _WinClass, ahk_id %winId%
 
         switch _WinClass {
             case "CabinetWClass":       
-                GetWindowsPaths(_WinID)
+                GetWindowsPaths(winId)
             case "ThunderRT6FormDC":    
-                GetXyplorerPaths(_WinID)
+                GetXyplorerPaths(winId)
             case "TTOTAL_CMD":          
-                GetTotalCommanderPaths(_WinID)
+                GetTotalCommanderPaths(winId)
             case "dopus.lister":        
-                GetDopusPaths(_WinID)
+                GetDopusPaths(winId)
         }
     }
-
-    ; Restore
-    Clipboard := ClipSaved
-    ClipSaved := ""
 }
 
 
