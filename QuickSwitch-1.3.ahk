@@ -97,8 +97,8 @@ Loop {
 
         Sleep, 100
         WinWaitNotActive
-    } catch _globalError {
-        LogError(_globalError)
+    } catch GlobalError {
+        LogError(GlobalError)
     }
 
     ; Clean up
