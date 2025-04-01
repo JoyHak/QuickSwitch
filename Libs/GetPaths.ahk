@@ -146,11 +146,17 @@ TotalCommanderUserCommand(ByRef _WinID, ByRef _command) {
 ;
 GetTotalCommanderTabs(ByRef _WinID) {
 ;───────────────────────────────────────────────────────────────────────────── 
+    ; Creates user command (if necessary) in usercmd.ini 
+    ; and uses it to request the current tabs file. 
+    ; If the second panel is enabled, file contains tabs from all panels, 
+    ; otherwise file contains tabs from the active panel
+    
     static APPDATA_PATH := A_AppData "\GHISLER"
     static TABS_RESULT  := APPDATA_PATH "\Tabs.tab"
     static CONFIG       := APPDATA_PATH "\usercmd.ini"
     static COMMAND      := "EM_SaveAllTabs"
     
+    ; Check and create user command
     _created := false
     loop, 4 {
         ; Read the contents of the config until it appears or the loop ends with an error
@@ -178,6 +184,7 @@ GetTotalCommanderTabs(ByRef _WinID) {
     }
     
     if _created { 
+        ; Send and wait
         TotalCommanderUserCommand(_WinID, COMMAND)
         loop, 10 {
             if (FileExist(TABS_RESULT)) {
@@ -197,7 +204,8 @@ GetTotalCommanderTabs(ByRef _WinID) {
 ;
 GetTotalCommanderPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Sends internal commands and analyzes the clipboard
+    ; Requests a file with current tabs and analyzes it. 
+    ; Searches for the active tab using the "activetab" parameter
     global paths
        
     try {           
@@ -240,8 +248,7 @@ GetXyplorerPaths(ByRef _WinID) {
     ; The path separator is |
     ; For each path, gets the real path (XY has special and virtual paths)
     ; Removes the extra | from the beginning of $reals
-    ; Places $reals on the clipboard, parses it and puts all paths into the global array
-    
+    ; Places $reals on the clipboard, parses it and puts all paths into the global array    
     global paths
     
     try {
@@ -278,8 +285,7 @@ GetXyplorerPaths(ByRef _WinID) {
 GetDopusPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
-    ; Searches for active tab using DOpus window title
-    
+    ; Searches for active tab using DOpus window title    
     global paths
     
     try {
