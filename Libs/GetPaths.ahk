@@ -234,34 +234,49 @@ WinGetTextFast(ByRef _WinID, _hidden := false) {
 ;
 ParseDopusControls(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
+    ; Analyzes the text of address bars of each tab using MS C++ functions. 
+    ; Searches for active tab using DOpus window title (fast but unreliable approach)
+    
     global paths
     
     try {
-        ; Each tab has it's own address bar
+        ; Each tab has its own address bar, so we can use it to determine the path of each tab
         static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer" 
         ; Defined in AutoHotkey source
         static WINDOW_TEXT_SIZE := 32767 
         VarSetCapacity(_text, WINDOW_TEXT_SIZE * 2)
         
+        ; Find the first address bar HWND
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexa
         _previousHwnd := DllCall("FindWindowEx", "ptr", _WinID, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
         _startHwnd    := _previousHwnd
-        _found        := false
-        
+        _paths        := []
+
         loop {
+            ; Pass every HWND to GetWindowText() and get the content
             ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtexta
             if DllCall("GetWindowText", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
-                paths.push(_text)
+                _paths.push(_text)
             }
-            
             _nextHwnd := DllCall("FindWindowEx", "ptr", _WinID, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
+            
+            ; The loop iterates through all the tabs over and over again, 
+            ; so we must stop when it repeats
             if (_nextHwnd = _startHwnd)
                 break
             
             _previousHwnd := _nextHwnd
         }
-        if !_found
-            return false
+        
+        ; Push the active tab to the global array first
+        WinGetTitle, _title, ahk_id %_WinID%
+        for _index, _path in _paths {
+            if InStr(_path, _title) {
+                paths.push(_path)
+            }
+        }
+        ; Add the remaining tabs (contains a duplicate)
+        paths.push(_paths*)
             
     } catch _error {
         LogError(_error)
@@ -274,6 +289,9 @@ ParseDopusControls(ByRef _WinID) {
 ;
 ParseDopusXml(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
+    ; Queries DOpusRT for info about current paths to the file and analyzes it.
+    ; Looks for the “active_tab” attribute to find the active tab (slow but accurate approach)
+    
     global paths
   
     try {
