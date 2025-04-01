@@ -52,28 +52,21 @@ CancelLV() {
 }
 
 ShowDebugMenu() {
-    ; Add ControlGetPos [, X, Y, Width, Height, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
-    ; Change dir to ahk
-    ; Change name to fingerpringt.csv
-
     global GuiColor
     GUI, Destroy
 
     SetFormat, Integer, D
     ; Header for list
     Gui, Add, ListView, r30 w1024, Control|ID|PID||Text|X|Y|Width|Height
-    ; Loop through controls
+    
     WinGet, ActivecontrolList, ControlList, A
-
     Loop, Parse, ActivecontrolList, `n
     {
-        ;Get ID
         ControlGet, _ctrlHandle, Hwnd, , %A_LoopField%, A
-        ;Get Text
         ControlGetText _ctrlText, , ahk_id %_ctrlHandle%
-        ;Get control coordinates
         ControlGetPos _X, _Y, _Width, _Height, , ahk_id %_ctrlHandle%
-        ;Get PID
+        
+        ; Get PID
         _parentHandle := DllCall("GetParent", "Ptr", _ctrlHandle)
         ;Add to listview ; abs for hex to dec
         LV_Add(, A_LoopField, abs(_ctrlHandle), _parentHandle, _ctrlText, _X, _Y, _Width, _Height)
