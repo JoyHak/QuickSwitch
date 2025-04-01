@@ -13,13 +13,13 @@ DebugExport() {
     global FingerPrint
     
     try {
-        _fileName := A_ScriptDir . "\" . FingerPrint . ".csv"
-        oFile := FileOpen(_fileName, "w") ; Creates a new file, overwriting any existing file.
+        _fileName := A_ScriptDir "\" FingerPrint ".csv"
+        _file := FileOpen(_fileName, "w") ; Creates a new file, overwriting any existing file.
     
-        if IsObject(oFile) {
+        if IsObject(_file) {
             ; Header
             _line := "ControlName;ID;PID;Text;X;Y;Width;Height"
-            oFile.WriteLine(_line)
+            _file.WriteLine(_line)
             Gui, ListView
     
             Loop % LV_GetCount() {
