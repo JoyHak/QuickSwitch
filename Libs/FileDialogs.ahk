@@ -5,7 +5,6 @@
 */
 
 FeedDialogGENERAL(ByRef _WinID, _path) {
-
     WinActivate, ahk_id %_WinID%
     Sleep, 50
 
@@ -73,7 +72,6 @@ FeedDialogGENERAL(ByRef _WinID, _path) {
 ;
 FeedDialogSYSLISTVIEW(ByRef _WinID, _path) {
 ;─────────────────────────────────────────────────────────────────────────────
-
     WinActivate, ahk_id %_WinID%
     ControlGetText _editOld, Edit1, ahk_id %_WinID%
     Sleep, 20
@@ -182,45 +180,43 @@ FeedDialogSYSTREEVIEW(ByRef _WinID, _path) {
 ;
 GetFileDialog(ByRef _DialogID) {
 ;─────────────────────────────────────────────────────────────────────────────
-
     ; Detection of a File dialog. 
     ; Returns FuncObj if required controls found,
     ; otherwise returns false
     
     try {
         WinGet, _controlList, ControlList, ahk_id %_DialogID%
-        _SysListView321 := _SysHeader321 := _ToolbarWindow321 := _DirectUIHWND1 := _Edit1 := _SysTreeView321 := 0
+        _flag := 0
 
         Loop, Parse, _controlList, `n
         {
-            if (A_LoopField == "SysListView321")
-                _SysListView321 := 1
-            else if (A_LoopField == "SysHeader321")
-                _SysHeader321 := 1
-            else if (A_LoopField == "ToolbarWindow321")
-                _ToolbarWindow321 := 1
-            else if (A_LoopField == "DirectUIHWND1")
-                _DirectUIHWND1 := 1
-            else if (A_LoopField == "Edit1")
-                _Edit1 := 1
-            else if (A_LoopField == "SysTreeView321")
-                _SysTreeView321 := 1
+            switch A_LoopField {
+                case "Edit1": 
+                    _flag |= 1
+                case "SysListView321": 
+                    _flag |= 2
+                case "SysTreeView321": 
+                    _flag |= 4
+                case "SysHeader321": 
+                    _flag |= 8
+                case "ToolbarWindow321": 
+                    _flag |= 16
+                case "DirectUIHWND1": 
+                    _flag |= 32
+            }
         }
-    
-        if (_DirectUIHWND1 and _ToolbarWindow321 and _Edit1)
+        
+        if (_flag & 1 && _flag & 16 && _flag & 32)
             Return Func("FeedDialogGENERAL")
-    
-        else if (_SysListView321 and _ToolbarWindow321 and _Edit1 and _SysHeader321)
+        else if (_flag & 1 && _flag & 2 && _flag & 8 && _flag & 16)
             Return Func("FeedDialogSYSTREEVIEW")
-    
-        else if (_SysListView321 and _ToolbarWindow321 and _Edit1)
+        else if (_flag & 1 && _flag & 2 && _flag & 16)
             Return Func("FeedDialogSYSLISTVIEW")
-    
-        else if (_SysListView321 and _SysHeader321 and _Edit1)
+        else if (_flag & 1 && _flag & 2 && _flag & 8)
             Return Func("FeedDialogSYSLISTVIEW")
-    
+
     } catch _error {
         LogError(_error)
     }
     Return false
-}   
+}
