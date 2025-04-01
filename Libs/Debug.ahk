@@ -33,15 +33,13 @@ DebugExport() {
                 LV_GetText(_col8, A_index, 8)
     
                 _line := _col1 ";" _col2 "," _col3 ";" _col4 ";" _col5 ";" _col6 ";" _col7 ";" _col8 ";"
-                oFile.WriteLine(_line)
-            }
-    
-            oFile.Close()
-            oFile:=""
-            
-            TrayTip, Successfully exported, Results exported to %_filename%
-        } else {                                          ; File could not be initialized
-            LogError(Exception("Cant create " _fileName,, "File unavailable for writing. Check the attributes of the target directory"))
+                _file.WriteLine(_line)
+            }    
+            _file.Close()
+            clipboard := _filename
+            TrayTip, Successfully exported (path in clipboard), Results exported to %_filename%
+        } else {
+            LogError(Exception("Cant create " _fileName,, "File closed for writing. Check the attributes of the target directory"))
         }
     } catch _error {
         LogError(_error)
