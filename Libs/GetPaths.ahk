@@ -157,30 +157,32 @@ GetTotalCommanderTabs(ByRef _WinID) {
     static COMMAND      := "EM_SaveAllTabs"
     
     ; Check and create user command
-    _created := false
-    loop, 4 {
-        ; Read the contents of the config until it appears or the loop ends with an error
-        IniRead, _section, % CONFIG, % COMMAND
-        if (FileExist(CONFIG) && _section && _section != "ERROR") {
-            _created := true
-            break
-        }            
-        
-        ; Set normal attributes (write access)
-        FileSetAttrib, n, % APPDATA_PATH
-        FileSetAttrib, n, % CONFIG
-        sleep, 20 * A_Index
-        
-        ; Create new section
-        FileAppend,
-        (LTrim
-            # Please dont add commands with the same name
-            [%COMMAND%]
-            cmd=SaveTabs2 
-            param=`"%TABS_RESULT%`"
+    static _created := false
+    if !_created { 
+        loop, 4 {
+            ; Read the contents of the config until it appears or the loop ends with an error
+            IniRead, _section, % CONFIG, % COMMAND
+            if (_section && _section != "ERROR") {
+                _created := true
+                break
+            }            
             
-        ), % CONFIG
-        sleep, 50 * A_Index
+            ; Set normal attributes (write access)
+            FileSetAttrib, n, % APPDATA_PATH
+            FileSetAttrib, n, % CONFIG
+            sleep, 20 * A_Index
+            
+            ; Create new section
+            FileAppend,
+            (LTrim
+                # Please dont add commands with the same name
+                [%COMMAND%]
+                cmd=SaveTabs2 
+                param=`"%TABS_RESULT%`"
+                
+            ), % CONFIG
+            sleep, 50 * A_Index
+        }
     }
     
     if _created { 
