@@ -19,6 +19,16 @@ The latest versions include the following features:
 - Improved settings interface and additional customization options and features.
 - Added minimalistic display of errors about incorrectly entered settings.
 
+## Performance
+
+This version is aimed at high performance and is devoid of various checks. To ensure that the correct current paths always appear in the menu:
+- Disable localized folder names *(e.g. C:\Users, C:\Användare, ...).*                       
+- Periodically open the file manager you need *(a big number of windows makes it difficult to find the last open manager).*
+- Do not keep virtual folders open *(e.g. coll://, Desktop, Rapid Access, ...).*
+- Do not disable window title bars *(otherwise the program will request paths through files)*.
+- Do not change attributes of directories with file managers *(e.g. "read only")*.
+- Don't use AHK's `OnClipBoardChange` function or CopyQ's `setData` function to change the contents of the last clipboard item *( the program uses the clipboard and may receive incorrect contents)*.
+
 ## Installation
 
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version.
