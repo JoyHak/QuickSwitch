@@ -206,36 +206,6 @@ GetXyplorerPaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-WinGetTextFast(ByRef _WinID, _hidden := false) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; https://github.com/Lexikos/AutoHotkey-Release/blob/master/installer/source/WindowSpy.v1.ahk
-	; WinGetText ALWAYS uses the "Slow" mode - TitleMatchMode only affects the
-	; WinText/ExcludeText parameters.  In "Fast" mode, GetWindowText() is used
-	; to retrieve the text of each control.
-    
-    try {
-        WinGet, _controls, ControlListHwnd, ahk_id %_WinID%
-        static WINDOW_TEXT_SIZE := 32767 ; Defined in AutoHotkey source.
-        VarSetCapacity(_buffer, WINDOW_TEXT_SIZE * 2)
-        
-        _text := ""
-        Loop Parse, _controls, `n
-        {
-            if !(_hidden || DllCall("IsWindowVisible", "ptr", A_LoopField))
-                continue
-            if !DllCall("GetWindowText", "ptr", A_LoopField, "str", _buffer, "int", WINDOW_TEXT_SIZE)
-                continue
-            _text .= _buffer "`r`n"
-        }
-    } catch _error {
-        LogError(_error)
-        Return
-    }
-	return _text
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 GetDopusPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
