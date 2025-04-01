@@ -4,16 +4,7 @@
     which allows you to display anything.
 */
 
-ShouldOpen() {
-    global
-    Return OpenMenu or (FromSettings and ReDisplayMenu)
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 AddPathsMenuItems() {
-;─────────────────────────────────────────────────────────────────────────────
-
     global PathNumbers, ShortPath, paths
 
     for _index, _path in paths {
@@ -26,7 +17,7 @@ AddPathsMenuItems() {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, %_display%, SelectPath
+        Menu, ContextMenu, Add, %_display%, SelectPath
     }
 }
 
@@ -34,7 +25,6 @@ AddPathsMenuItems() {
 ;
 AddPathsMenuSettings() {
 ;─────────────────────────────────────────────────────────────────────────────
-
     global DialogAction
 
     Menu ContextMenu, Add,
@@ -46,16 +36,14 @@ AddPathsMenuSettings() {
     Menu ContextMenu, Add, &Not now, ThisMenu, Radio
 
     ; Activate radiobutton for current setting (depends on INI setting)
-    ; Only show AutoSwitchException if AutoSwitch is activated.
-
-    if DialogAction
+    if (DialogAction = 1)
         Menu ContextMenu, Check, &Allow AutoSwitch
-    else if !DialogAction
+    else if (DialogAction = 0)
         Menu ContextMenu, Check, Never &here
     else
         Menu ContextMenu, Check, &Not now
 
-    ; new GUI added for other settings
+    ; New GUI added for other settings
     Menu ContextMenu, Add,
     Menu ContextMenu, Add, Menu &settings, ShowMenuSettings
 }
@@ -64,7 +52,6 @@ AddPathsMenuSettings() {
 ;
 HidePathsMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global
     Menu ContextMenu, UseErrorLevel  ; Ignore errors
     Menu ContextMenu, Delete         ; Delete previous menu
 }
@@ -73,9 +60,8 @@ HidePathsMenu() {
 ;
 ShowPathsMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogID, paths, MenuColor
-    global WinX, WinY, WinWidth, WinHeight, MenuColor
-    global FromSettings := false
+    global DialogID, paths, MenuColor, WinX, WinY, WinWidth, WinHeight
+
     ReadValues()
 
     ; Get dialog position (also used for settings menu positon)
