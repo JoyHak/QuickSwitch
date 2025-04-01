@@ -267,7 +267,12 @@ GetXyplorerPaths(ByRef winId) {
     global paths
     
     try {
-        _script =
+        ; Save clipboard to restore later
+        _clipSaved := ClipboardAll
+        Clipboard  := ""
+    
+        static script
+        script =
         ( LTrim Join
             ::$paths = <get tabs_sf | a>;
             if (get("#800")) { 
@@ -290,6 +295,9 @@ GetXyplorerPaths(ByRef winId) {
         {
             paths.push(A_LoopField)
         }
+        ; Restore
+        Clipboard := _clipSaved
+        
     } catch _error {
         LogError(_error)
     }
