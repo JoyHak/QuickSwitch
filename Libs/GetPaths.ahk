@@ -104,14 +104,51 @@ GetShortPath(ByRef _path) {
     Return _shortPath
 }
 
-/*
-    After execution XYscript waits for a signal and executes FeedXyplorerData
-    to get XyplorerData from XYplorer to Autohotkey.
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetWindowsPaths(ByRef _WinID) {
+;─────────────────────────────────────────────────────────────────────────────
+    global paths
+    
+    try {
+        for _instance in ComObjCreate("Shell.Application").Windows {
+            if (_WinID == _instance.hwnd) {
+                _path := _instance.Document.Folder.Self.Path
+                if !InStr(_path, "::{") {
+                    paths.push(_path)
+                }
+            }
+        }
+    } catch _error {
+        LogError(_error)
+    }
+    
+}
 
-    Alternative variants are provided in Libs/Reserved, including v2
-*/
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetTotalCommanderPaths(ByRef _WinID) {
+;─────────────────────────────────────────────────────────────────────────────
+    global paths
 
+    try {
+        Loop, 2 {
+            SendMessage 1075, 2028 + A_Index, 0, , ahk_id %_WinID%
+            ClipWait, 3
+            if ErrorLevel
+                Return
+
+            paths.push(clipboard)
+        }
+    } catch _error {
+        LogError(_error)
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 XyplorerScript(ByRef _WinID, ByRef _script) {
+;─────────────────────────────────────────────────────────────────────────────
     _size := StrLen(_script)
 
     VarSetCapacity(COPYDATA, A_PtrSize * 3, 0)
@@ -165,51 +202,80 @@ GetXyplorerPaths(ByRef _WinID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetWindowsPaths(ByRef _WinID) {
+WinGetTextFast(ByRef _WinID, _hidden := false) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; https://github.com/Lexikos/AutoHotkey-Release/blob/master/installer/source/WindowSpy.v1.ahk
+	; WinGetText ALWAYS uses the "Slow" mode - TitleMatchMode only affects the
+	; WinText/ExcludeText parameters.  In "Fast" mode, GetWindowText() is used
+	; to retrieve the text of each control.
+    
+    try {
+        WinGet, _controls, ControlListHwnd, ahk_id %_WinID%
+        static WINDOW_TEXT_SIZE := 32767 ; Defined in AutoHotkey source.
+        VarSetCapacity(_buffer, WINDOW_TEXT_SIZE * 2)
+        
+        _text := ""
+        Loop Parse, _controls, `n
+        {
+            if !(_hidden || DllCall("IsWindowVisible", "ptr", A_LoopField))
+                continue
+            if !DllCall("GetWindowText", "ptr", A_LoopField, "str", _buffer, "int", WINDOW_TEXT_SIZE)
+                continue
+            _text .= _buffer "`r`n"
+        }
+    } catch _error {
+        LogError(_error)
+        Return
+    }
+	return _text
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ParseDopusControls(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     global paths
     
     try {
-        for _instance in ComObjCreate("Shell.Application").Windows {
-            if (_WinID == _instance.hwnd) {
-                _path := _instance.Document.Folder.Self.Path
-                if !InStr(_path, "::{") {
-                    paths.push(_path)
-                }
+        ; Each tab has it's own address bar
+        static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer" 
+        ; Defined in AutoHotkey source
+        static WINDOW_TEXT_SIZE := 32767 
+        VarSetCapacity(_text, WINDOW_TEXT_SIZE * 2)
+        
+        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexa
+        _previousHwnd := DllCall("FindWindowEx", "ptr", _WinID, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+        _startHwnd    := _previousHwnd
+        _found        := false
+        
+        loop {
+            ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtexta
+            if DllCall("GetWindowText", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
+                paths.push(_text)
             }
+            
+            _nextHwnd := DllCall("FindWindowEx", "ptr", _WinID, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
+            if (_nextHwnd = _startHwnd)
+                break
+            
+            _previousHwnd := _nextHwnd
         }
+        if !_found
+            return false
+            
     } catch _error {
         LogError(_error)
+        return false
     }
-    
+    return true
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetTotalCommanderPaths(_WinID) {
+ParseDopusXml(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     global paths
-    
-    try {
-        Loop, 2 {
-            SendMessage 1075, 2028 + A_Index, 0, , ahk_id %_WinID%
-            ClipWait, 3
-            if ErrorLevel
-                Return
-
-            paths.push(clipboard)
-        }
-    } catch _error {
-        LogError(_error)
-    }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-GetDopusPaths(_WinID) {
-;─────────────────────────────────────────────────────────────────────────────
-    global paths
-
+  
     try {
         ; Configure parameters to get paths via DOpus CLI (dopusrt)
         WinGet, _exe, ProcessPath, ahk_id %_WinID%
@@ -219,21 +285,22 @@ GetDopusPaths(_WinID) {
         ; Arg comma needs escaping: `,
         RunWait, dopusrt.exe /info %_result%`,paths, %_dir%
         
+        _active := ""
         Loop, read, % _result
         {
-            if (A_Index > 2) {  ; skip first lines
+            if (!InStr(A_LoopReadLine, "activ",, 26) && A_Index > 2) {  ; skip first lines
                 ; Backward: omit closing </path> tag + possible short path C:\
                 _start := InStr(A_LoopReadLine, ">",, -10)
 
                 ; Forward: omit ">" char at the beginning, omit closing </path> tag at the end
-                if (_start && _path := SubStr(A_LoopReadLine, _start + 1, -7))
+                if (_start && _path := SubStr(A_LoopReadLine, _start + 1, -7)) {
                     paths.push(_path)
+                }
             }
         }
     } catch _error {
         LogError(_error)
     }
-    Return
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -257,7 +324,10 @@ GetPaths() {
             case "CabinetWClass":       GetWindowsPaths(_WinID)
             case "ThunderRT6FormDC":    GetXyplorerPaths(_WinID)
             case "TTOTAL_CMD":          GetTotalCommanderPaths(_WinID)
-            case "dopus.lister":        GetDopusPaths(_WinID)
+            case "dopus.lister":        
+                if !ParseDopusControls(_WinID) {
+                    ParseDopusXml(_WinID)
+                }
         }
     }
 
