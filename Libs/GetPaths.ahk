@@ -144,46 +144,70 @@ TotalCommanderUserCommand(ByRef _WinID, ByRef _command) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+GetTotalCommanderTabs(ByRef _WinID) {
+;───────────────────────────────────────────────────────────────────────────── 
+    static APPDATA_PATH := A_AppData "\GHISLER"
+    static TABS_RESULT  := APPDATA_PATH "\Tabs.tab"
+    static CONFIG       := APPDATA_PATH "\usercmd.ini"
+    static COMMAND      := "EM_SaveAllTabs"
+    
+    _created := false
+    loop, 4 {
+        ; Read the contents of the config until it appears or the loop ends with an error
+        IniRead, _section, % CONFIG, % COMMAND
+        if (FileExist(CONFIG) && _section && _section != "ERROR") {
+            _created := true
+            break
+        }            
+        
+        ; Set normal attributes (write access)
+        FileSetAttrib, n, % APPDATA_PATH
+        FileSetAttrib, n, % CONFIG
+        sleep, 20 * A_Index
+        
+        ; Create new section
+        FileAppend,
+        (LTrim
+            # Please dont add commands with the same name
+            [%COMMAND%]
+            cmd=SaveTabs2 
+            param=`"%TABS_RESULT%`"
+            
+        ), % CONFIG
+        sleep, 50 * A_Index
+    }
+    
+    if _created { 
+        TotalCommanderUserCommand(_WinID, COMMAND)
+        loop, 10 {
+            if (FileExist(TABS_RESULT)) {
+                return TABS_RESULT
+            }  
+            sleep, 20
+        }
+        ; Loop finished without return
+        throw Exception("Unable to access tabs", "Total Commander " TABS_RESULT, "Close TotalCommander. The architecture/bitness of the script and TotalCommander must be the same (e.g. x64)")
+
+    }
+    ; Flag not rised
+    throw Exception("Unable to create configuration", "Total Commander " CONFIG, CONFIG " doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetTotalCommanderPaths(ByRef _WinID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends internal commands and analyzes the clipboard
     global paths
        
-    try {
-        static APPDATA_PATH := A_AppData "\GHISLER"
-        static CONFIG       := APPDATA_PATH "\usercmd.ini"
-        static COMMAND      := "EM_SaveAllTabs"
-        
-        _section := ""
-        loop, 3 {
-            IniRead, _section, % CONFIG, % COMMAND
-            if (!_section || _section = "ERROR") {
-                FileSetAttrib, n, % APPDATA_PATH
-                FileSetAttrib, n, % CONFIG
-                sleep, 20 * A_Index
-                
-                FileAppend,
-                (LTrim
-                    # Please dont add commands with the same name
-                    [%COMMAND%]
-                    cmd=SaveTabs2 
-                    param=`"%APPDATA_PATH%\Tabs.tab`"
-                    
-                ), % CONFIG
-                sleep, 50 * A_Index
-            } else {
-                break
+    try {           
+        Loop, read, % GetTotalCommanderTabs(_WinID)
+        {
+            if (_pos := InStr(A_LoopReadLine, "path=")) {
+                ; Omit "path=" key and start from value position
+                paths.push(SubStr(A_LoopReadLine, _pos + 5))
             }
         }
-        
-        if !FileExist(CONFIG)
-            throw Exception("Unable to create usercmd.ini", "Total Commander" "usercmd.ini doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH)
-        
-        IniRead, _section, % CONFIG, % COMMAND
-        if (!_section || _section = "ERROR")
-            throw Exception("Unable to access usercmd.ini", "Total Commander", "Сheck the usercmd.ini attributes and uncheck Read-Only")
-        
-        TotalCommanderUserCommand(_WinID, COMMAND)
         
     } catch _error {
         LogError(_error)
