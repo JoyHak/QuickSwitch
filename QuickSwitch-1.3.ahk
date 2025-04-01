@@ -45,6 +45,7 @@ BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-
 #Include Libs\PathsMenu.ahk
 
 ValidateLog()
+
 ;@Ahk2Exe-IgnoreBegin
 MainIcon := "QuickSwitch.ico"
 ValidateWriteTrayIcon(MainIcon, "MainIcon")
@@ -103,7 +104,7 @@ Loop {
     ; Clean up
     Hotkey, %MainKey%, Off
     ahk_exe         := ""
-    window_title    := ""
+    WinTitle        := ""
     DialogAction    := ""
     DialogID        := ""
 
