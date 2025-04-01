@@ -57,41 +57,39 @@ ValidateAutoStartup()
 ValidateWriteKey(MainKey, 	 "MainKey",    "ShowPathsMenu", "Off", MainKeyHook)
 ValidateWriteKey(RestartKey, "RestartKey", "RestartApp",    "On",  RestartKeyHook)
 
-; Wait for dialog
+; Wait for any "Open/Save as" file dialog
 Loop {
     WinWaitActive, ahk_class #32770
 
     try {
-        DialogID     := WinExist("A")
-        FileDialog   := GetFileDialog(DialogID)
+        DialogID   := WinExist("A")
+        FileDialog := GetFileDialog(DialogID)
 
         ; if there is any GUI left from previous calls....
         Gui, Destroy
 
         IniRead, MainKey, %INI%, App, MainKey
-        if FileDialog
-        {                                                       ; This is a supported dialog
+        if FileDialog {
+            ; This is a supported dialog
             GetPaths()
             WinGet, ahk_exe, ProcessName, ahk_id %DialogID%
-            WinGetTitle, window_title, ahk_id %DialogID%
-            FingerPrint := ahk_exe . "___" . window_title
+            WinGetTitle, WinTitle, ahk_id %DialogID%
+            FingerPrint := ahk_exe . "___" . WinTitle
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
             IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%, 0
-            if (DialogAction == 1) {                                           ; ======= AutoSwitch ==
+
+            if (DialogAction = 1) {
                 AutoSwitch()
-            } else if (DialogAction == 0) {                                    ; ======= Never here ==
-                if ShouldOpen() {
-                    ShowPathsMenu()         ; AutoOpenMenu only
+            } else if (DialogAction = 0) {
+                ; Never here
+                if OpenMenu or (FromSettings and ReDisplayMenu) {
+                    ; AutoOpenMenu only
+                    ShowPathsMenu()
                 }
+            } else if OpenMenu or (FromSettings and ReDisplayMenu) {
+                ShowPathsMenu()
             }
-            else if ShouldOpen() {                                             ; ======= Show Menu ==
-                ShowPathsMenu()             ; hotkey or AutoOpenMenu
-            }
-
-            ; if we end up here, we checked the INI for what to do in this supported dialog and did it
-            ; We are still in this dialog and can now enable the hotkey for manual menu-activation
-
             Hotkey, %MainKey%, On
 
         }   ; End of File Dialog routine
