@@ -138,117 +138,6 @@ GetWindowsPaths(ByRef winID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-TotalCommanderUserCommand(ByRef winId, ByRef command) {
-;─────────────────────────────────────────────────────────────────────────────
-    VarSetCapacity(_copyData, A_PtrSize * 3)
-    VarSetCapacity(_result, StrPut(command, "UTF-8"))	
-    _size := StrPut(command, &_result, "UTF-8")
-    
-    NumPut(19781, _copyData, 0)
-    NumPut(_size, _copyData, A_PtrSize)
-    NumPut(&_result , _copyData, A_PtrSize * 2)
-    
-    ; WM_COPYDATA without recieve
-    SendMessage, 74, 0, &_copyData,, ahk_id %winId%
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-GetTotalCommanderTabs(ByRef winId) {
-;───────────────────────────────────────────────────────────────────────────── 
-    ; Creates user command (if necessary) in usercmd.ini 
-    ; and uses it to request the current tabs file. 
-    ; If the second panel is enabled, file contains tabs from all panels, 
-    ; otherwise file contains tabs from the active panel
-    
-    static APPDATA_PATH := A_AppData "\GHISLER"
-    static TABS_RESULT  := APPDATA_PATH "\Tabs.tab"
-    static CONFIG       := APPDATA_PATH "\usercmd.ini"
-    static COMMAND      := "EM_SaveAllTabs"
-    
-    ; Check and create user command
-    static created := false
-    if !created { 
-        loop, 4 {
-            ; Read the contents of the config until it appears or the loop ends with an error
-            IniRead, _section, % CONFIG, % COMMAND
-            if (_section && _section != "ERROR") {
-                created := true
-                break
-            }            
-            
-            ; Set normal attributes (write access)
-            FileSetAttrib, n, % APPDATA_PATH
-            FileSetAttrib, n, % CONFIG
-            sleep, 20 * A_Index
-            
-            ; Create new section
-            FileAppend,
-            (LTrim
-                # Please dont add commands with the same name
-                [%COMMAND%]
-                cmd=SaveTabs2 
-                param=`"%TABS_RESULT%`"
-                
-            ), % CONFIG
-            sleep, 50 * A_Index
-        }
-    }
-    
-    if created { 
-        ; Send and wait
-        TotalCommanderUserCommand(winId, COMMAND)
-        loop, 10 {
-            if (FileExist(TABS_RESULT)) {
-                return TABS_RESULT
-            }  
-            sleep, 20
-        }
-        ; Loop finished without return
-        throw Exception("Unable to access tabs", "Total Commander " TABS_RESULT, "Close TotalCommander. The architecture/bitness of the script and TotalCommander must be the same (e.g. x64)")
-
-    }
-    ; Flag not rised
-    throw Exception("Unable to create configuration", "Total Commander " CONFIG, CONFIG " doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH)
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-GetTotalCommanderPaths(ByRef winId) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Requests a file with current tabs and analyzes it. 
-    ; Searches for the active tab using the "activetab" parameter
-    global paths
-       
-    try { 
-        _tabs   := GetTotalCommanderTabs(winId)
-        _paths  := []
-        _last   := 0
-        Loop, read, % _tabs
-        {
-            ; Omit the InStr key and SubStr from value position
-            if (_pos := InStr(A_LoopReadLine, "path=")) {                
-                _paths.push(SubStr(A_LoopReadLine, _pos + 5))
-            }
-            if (_num := InStr(A_LoopReadLine, "activetab=")) {
-                ; Skip next active tab by saving last
-                _active := _last
-                _last   := SubStr(A_LoopReadLine, _num + 10)                
-            }
-        }
-        ; Push the active tab to the global array first
-        ; Tabs index starts with 0, array index starts with 1
-        paths.push(_paths[_active + 1])
-        paths.push(_paths*)
-        FileDelete, % _tabs
-        
-    } catch _error {
-        LogError(_error)
-    }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 XyplorerScript(ByRef winId, ByRef script) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654
@@ -258,6 +147,22 @@ XyplorerScript(ByRef winId, ByRef script) {
     NumPut(4194305, _copyData, 0, "Ptr")
     NumPut(_size * 2, _copyData, A_PtrSize, "UInt")
     NumPut(&script, _copyData, A_PtrSize * 2, "Ptr")
+    
+    ; WM_COPYDATA without recieve
+    SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+TotalCommanderUserCommand(ByRef winId, ByRef command) {
+;─────────────────────────────────────────────────────────────────────────────
+    VarSetCapacity(_copyData, A_PtrSize * 3)
+    VarSetCapacity(_result, StrPut(command, "UTF-8"))	
+    _size := StrPut(command, &_result, "UTF-8")
+    
+    NumPut(19781, _copyData, 0)
+    NumPut(_size, _copyData, A_PtrSize)
+    NumPut(&_result , _copyData, A_PtrSize * 2)
     
     ; WM_COPYDATA without recieve
     SendMessage, 74, 0, &_copyData,, ahk_id %winId%
@@ -315,6 +220,106 @@ GetXyplorerPaths(ByRef winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+GetTotalCommanderTabs(ByRef winId) {
+;───────────────────────────────────────────────────────────────────────────── 
+    ; Creates user command (if necessary) in usercmd.ini 
+    ; and uses it to request the current tabs file. 
+    ; If the second panel is enabled, file contains tabs from all panels, 
+    ; otherwise file contains tabs from the active panel
+    
+    static APPDATA_PATH := A_AppData "\GHISLER"
+    static TABS_RESULT  := APPDATA_PATH "\Tabs.tab"
+    static CONFIG       := APPDATA_PATH "\usercmd.ini"
+    static COMMAND      := "EM_SaveAllTabs"
+    
+    ; Check and create user command
+    static created := false
+    if !created { 
+        loop, 4 {
+            ; Read the contents of the config until it appears or the loop ends with an error
+            IniRead, _section, % CONFIG, % COMMAND
+            if (_section && _section != "ERROR") {
+                created := true
+                break
+            }            
+            
+            ; Set normal attributes (write access)
+            FileSetAttrib, n, % APPDATA_PATH
+            FileSetAttrib, n, % CONFIG
+            sleep, 20 * A_Index
+            
+            ; Create new section
+            FileAppend,
+            (LTrim
+                # Please dont add commands with the same name
+                [%COMMAND%]
+                cmd=SaveTabs2 
+                param=`"%TABS_RESULT%`"
+                
+            ), % CONFIG
+            sleep, 50 * A_Index
+        }
+    }
+    
+    if created { 
+        ; Send and wait
+        FileDelete, % TABS_RESULT
+        TotalCommanderUserCommand(winId, COMMAND)
+        
+        loop, 10 {
+            if (FileExist(TABS_RESULT)) {
+                return TABS_RESULT
+            }  
+            sleep, 20
+        }
+        ; Loop finished without return
+        throw Exception("Unable to access tabs", "Total Commander " TABS_RESULT, "Close TotalCommander. The architecture/bitness of the script and TotalCommander must be the same (e.g. x64)")
+
+    }
+    ; Flag not rised
+    throw Exception("Unable to create configuration", "Total Commander " CONFIG, CONFIG " doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetTotalCommanderPaths(ByRef winId) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Requests a file with current tabs and analyzes it. 
+    ; Searches for the active tab using the "activetab" parameter
+    global paths
+       
+    try { 
+        _tabs   := GetTotalCommanderTabs(winId)
+        _paths  := []
+        
+        ; Tabs index starts with 0, array index starts with 1
+        _active := _last := 0
+        
+        Loop, read, % _tabs
+        {
+            ; Omit the InStr key and SubStr from value position
+            if (_pos := InStr(A_LoopReadLine, "path=")) {                
+                _paths.push(SubStr(A_LoopReadLine, _pos + 5))
+            }
+            if (_num := InStr(A_LoopReadLine, "activetab=")) {
+                ; Skip next active tab by saving last
+                _active := _last
+                _last   := SubStr(A_LoopReadLine, _num + 10)                
+            }
+        }
+        ; Push the active tab to the global array first
+        paths.push(_paths[_active + 1])
+        ; Remove duplicate and add the remaining tabs
+        _paths.removeAt(_active + 1)
+        paths.push(_paths*)
+        
+    } catch _error {
+        LogError(_error)
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetDopusPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
@@ -354,10 +359,12 @@ GetDopusPaths(ByRef winId) {
         WinGetTitle, _title, ahk_id %winId%
         for _index, _path in _paths {
             if InStr(_path, _title) {
+                _active := _index
                 paths.push(_path)
             }
         }
-        ; Add the remaining tabs (contains a duplicate)
+        ; Remove duplicate and add the remaining tabs
+        _paths.removeAt(_active)
         paths.push(_paths*)
             
     } catch _error {
