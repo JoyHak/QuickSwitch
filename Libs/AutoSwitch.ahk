@@ -9,7 +9,7 @@ AutoSwitch() {
     IniWrite, 1, %INI%, Dialogs, %FingerPrint%
     DialogAction := 1
 
-    FileDialog.call(DialogID, paths[1])
+    FileDialog.call(DialogID, Paths[1])
     LastMenuItem := A_ThisMenuItem
 }
 

@@ -5,9 +5,9 @@
 */
 
 AddPathsMenuItems() {
-    global PathNumbers, ShortPath, paths
+    global PathNumbers, ShortPath, Paths
     ;Timer(1)
-    for _index, _path in paths {
+    for _index, _path in Paths {
         _display := ""
 
         if PathNumbers
@@ -61,13 +61,13 @@ HidePathsMenu() {
 ;
 ShowPathsMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogID, paths, MenuColor, WinX, WinY, WinWidth, WinHeight
+    global DialogID, Paths, MenuColor, WinX, WinY, WinWidth, WinHeight
 
     ReadValues()
 
     ; Get dialog position (also used for settings menu positon)
     WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
-    if paths.Count() {
+    if Paths.Count() {
         AddPathsMenuItems()
         AddPathsMenuSettings()
 

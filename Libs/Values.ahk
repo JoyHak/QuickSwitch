@@ -11,7 +11,7 @@ RestartKeyHook  := 0
 RestartWhere    := "ahk_exe notepad++.exe"
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
-paths := []
+Paths := []
 
 ; set defaults without overwriting existing INI
 ; these values are used if the INI settings are invalid

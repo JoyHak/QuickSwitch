@@ -7,7 +7,7 @@ SelectPath() {
         and MUST BE ADDED to the array in the same order as the menu item
     */
     global
-    FileDialog.call(DialogID, paths[A_ThisMenuItemPos])
+    FileDialog.call(DialogID, Paths[A_ThisMenuItemPos])
 }
 
 GetShortPath(ByRef path) {
@@ -119,14 +119,14 @@ GetShortPath(ByRef path) {
 GetWindowsPaths(ByRef winID) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
-    global paths
+    global Paths
     
     try {
         for _instance in ComObjCreate("Shell.Application").Windows {
             if (winID == _instance.hwnd) {
                 _path := _instance.Document.Folder.Self.Path
                 if !InStr(_path, "::{") {
-                    paths.push(_path)
+                    Paths.push(_path)
                 }
             }
         }
@@ -179,7 +179,7 @@ GetXyplorerPaths(ByRef winId) {
     ; For each path, gets the real path (XY has special and virtual paths)
     ; Removes the extra | from the beginning of $reals
     ; Places $reals on the clipboard, parses it and puts all paths into the global array    
-    global paths
+    global Paths
     
     try {
         ; Save clipboard to restore later
@@ -208,7 +208,7 @@ GetXyplorerPaths(ByRef winId) {
                 
         Loop, parse, Clipboard, `| 
         {
-            paths.push(A_LoopField)
+            Paths.push(A_LoopField)
         }
         ; Restore
         Clipboard := _clipSaved
@@ -286,7 +286,7 @@ GetTotalCommanderPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Requests a file with current tabs and analyzes it. 
     ; Searches for the active tab using the "activetab" parameter
-    global paths
+    global Paths
        
     try { 
         _tabs   := GetTotalCommanderTabs(winId)
@@ -308,10 +308,10 @@ GetTotalCommanderPaths(ByRef winId) {
             }
         }
         ; Push the active tab to the global array first
-        paths.push(_paths[_active + 1])
+        Paths.push(_paths[_active + 1])
         ; Remove duplicate and add the remaining tabs
         _paths.removeAt(_active + 1)
-        paths.push(_paths*)
+        Paths.push(_paths*)
         
     } catch _error {
         LogError(_error)
@@ -324,7 +324,7 @@ GetDopusPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
     ; Searches for active tab using DOpus window title    
-    global paths
+    global Paths
     
     try {
         ; Each tab has its own address bar, so we can use it to determine the path of each tab
@@ -360,12 +360,12 @@ GetDopusPaths(ByRef winId) {
         for _index, _path in _paths {
             if InStr(_path, _title) {
                 _active := _index
-                paths.push(_path)
+                Paths.push(_path)
             }
         }
         ; Remove duplicate and add the remaining tabs
         _paths.removeAt(_active)
-        paths.push(_paths*)
+        Paths.push(_paths*)
             
     } catch _error {
         LogError(_error)
@@ -379,7 +379,7 @@ GetPaths() {
     ; Requests paths from all applications whose window class 
     ; is recognized as a known file manager class.
     ; Updates the global array after each call
-    global paths := []
+    global Paths := []
 
     WinGet, _allWindows, list
     Loop, %_allWindows% {
