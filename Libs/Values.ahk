@@ -5,8 +5,8 @@ LastMenuItem  := ""
 ; These parameters must not be reset
 LastTabSettings := AutoStartup := MainKeyHook := 1
 MainFont        := "Tahoma"
-MainKey         := "^q"
-RestartKey      := "^s"
+MainKey         := "^sc010"
+RestartKey      := "^sc01F"
 RestartKeyHook  := 0
 RestartWhere    := "ahk_exe notepad++.exe"
 
@@ -119,19 +119,43 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteKey(_new, _paramName, _funcObj, _state := "On", _useHook := false) {       ; bind key
+ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef state := "On", ByRef useHook := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
-    _prefix := _useHook ? "" : "~"
 
     try {
-        Hotkey, % _prefix . _new, % _funcObj, % _state       ; create hotkey
-        IniRead, _old, % INI, App, % _paramName, % _new      ; remove old if exist
-        if (_old != _new) {
-            Hotkey, % _old, Off
-            Hotkey, % "~" . _old, Off
+        ; Convert sequence to Scan Codes (if not converted)
+        if !(sequence ~= "i)sc[a-f0-9]+") {
+            _key := ""
+            Loop, parse, sequence
+            {
+                if (!(A_LoopField ~= "[\!\^\+\#<>]") && _scCode := GetKeySC(A_LoopField)) {
+                    _key .= Format("sc{:x}", _scCode)
+                } else {
+                    _key .= A_LoopField
+                }
+            }
+        } else {
+            _key := sequence
         }
-        IniWrite, % _new, % INI, App, % _paramName           ; save
+        
+        _prefix := useHook ? "" : "~"
+        if funcName {
+            ; Create new hotkey
+            Hotkey, % _prefix . _key, % funcName, % state
+            
+            ; Remove old if exist 
+            IniRead, _old, % INI, App, % paramName, % _key
+            if (_old != _key)
+                Hotkey, % _old, Off
+                
+            IniWrite, % _key, % INI, App, % paramName
+        
+        } else {
+            ; Set state for existing hotkey
+            Hotkey, % _prefix . _key, % state
+        }
+
     } catch _error {
         LogError(_error)
     }

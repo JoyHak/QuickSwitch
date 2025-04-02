@@ -69,7 +69,6 @@ Loop {
         ; if there is any GUI left from previous calls....
         Gui, Destroy
 
-        IniRead, MainKey, %INI%, App, MainKey
         if FileDialog {
             ; This is a supported dialog
             GetPaths()
@@ -90,8 +89,8 @@ Loop {
                 }
             } else if OpenMenu or (FromSettings and ReDisplayMenu) {
                 ShowPathsMenu()
-            }
-            Hotkey, %MainKey%, On
+            }     
+            ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
         }   ; End of File Dialog routine
 
@@ -102,11 +101,11 @@ Loop {
     }
 
     ; Clean up
-    Hotkey, %MainKey%, Off
-    ahk_exe         := ""
-    WinTitle        := ""
-    DialogAction    := ""
-    DialogID        := ""
+    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
+    ahk_exe      := ""
+    WinTitle     := ""
+    DialogAction := ""
+    DialogID     := ""
 
 }   ; End of continuous WinWaitActive loop
 
