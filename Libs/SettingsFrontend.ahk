@@ -55,11 +55,12 @@ ShowMenuSettings() {
 
     Gui, 	Add, 	Checkbox,                   vShortPath gToggleShortPath checked%ShortPath% Section, 	Show short path, indicate as
 
-    Gui, 	Add, 	Text, 		    y+13        vPathSeparatorText,		                    P&ath separator
+    Gui, 	Add, 	Text, 		    y+13        vPathSeparatorText,		                    Path &separator
     Gui, 	Add, 	Text, 		    y+13        vDirsCountText,						        Number of &dirs displayed
-    Gui, 	Add, 	Text, 		    y+13    	vDirNameLengthText,		                    Length of &dir names
+    Gui, 	Add, 	Text, 		    y+13    	vDirNameLengthText,		                    &Length of dir names
     Gui, 	Add, 	Checkbox, 	    y+20        vShowDriveLetter checked%ShowDriveLetter%,  Show &drive letter
-    Gui, 	Add, 	Checkbox, 					vShortenEnd checked%ShortenEnd%, 			&Shorten the end
+    Gui, 	Add, 	Checkbox, 					vShowFirstSlash checked%ShowFirstSlash%,    Show &first slash
+    Gui, 	Add, 	Checkbox, 					vShortenEnd checked%ShortenEnd%, 			Shorten the &end
 
     Gui, 	Add, 	Edit, 	    ys-4  %edit% 	vShortNameIndicator, 						%ShortNameIndicator%
     Gui, 	Add, 	Edit, 	    y+4   %edit% 	vPathSeparator, 							%PathSeparator%

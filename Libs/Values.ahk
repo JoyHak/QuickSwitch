@@ -18,13 +18,13 @@ paths := []
 SetDefaultValues() {
     global
 
-    OpenMenu := ReDisplayMenu := ShortenEnd := 1
-    PathNumbers := ShortPath := ShowDriveLetter := 0
+    OpenMenu := ReDisplayMenu := 1
+    PathNumbers := ShortPath := ShowDriveLetter := ShowFirstSlash := ShortenEnd := 0
 
     ShortNameIndicator := ".."
     DirsCount     := 3
     DirNameLength := 20
-    PathSeparator := "/"
+    PathSeparator := "\"
     GuiColor      := ""
     MenuColor     := ""
 }
@@ -55,6 +55,7 @@ WriteValues() {
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%ShortenEnd%, 				%INI%, 		Menu, 		ShortenEnd
+        IniWrite, 	%ShowFirstSlash%, 			%INI%, 		Menu, 		ShowFirstSlash
     } catch {
         LogError(Exception("Failed to write values to the configuration", INI . " write", "Create INI file manually or change the INI global variable"))
     }
@@ -103,6 +104,7 @@ ReadValues() {
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
     IniRead, 	ShortenEnd, 				%INI%,		Menu, 		ShortenEnd, 				%ShortenEnd%
+    IniRead, 	ShowFirstSlash, 			%INI%,		Menu, 		ShowFirstSlash, 			%ShowFirstSlash%
 
     IniRead, 	DirsCount, 				    %INI%,		Menu, 		DirsCount,      	    	%DirsCount%
     IniRead, 	DirNameLength, 			    %INI%,		Menu, 		DirNameLength,      	    %DirNameLength%

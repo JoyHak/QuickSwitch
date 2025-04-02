@@ -16,13 +16,13 @@ GetShortPath(ByRef path) {
         Dirs are selected as intervals between slashes, excluding them.
         boundaries = indexes of any slashes \ / in the path: /dir/dir/
     */
-    global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator
+    global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator, ShowFirstSlash
     
     try {
         ; Return input path if it's really short
         _length := StrLen(path)
         if _length < 4
-            Return path    ; Just drive and slash
+            return path    ; Just drive and slash
     
         ; Variable to return
         _shortPath := ShowDriveLetter ? Substr(path, 1, 2) : ""
@@ -39,13 +39,13 @@ GetShortPath(ByRef path) {
         ;─────────────────────────────────────────────────────────────────────────────
         ;
         ; Parsing the path, looking for the indexes of slashes
-        ;─────────────────────────────────────────────────────────────────────────────
-    
-        _fullPath := path . "/"         ; Last dir bound
+        ;─────────────────────────────────────────────────────────────────────────────  
+        _fullPath := RTrim(path , "\") . "\"    ; Last dir bound
         _length++
 
         if ShortenEnd {
-            ; Forward search starting from the pos of the 1st slash
+            ; Forward slash search starting from the pos of the 1st slash
+            ; until enough slashes is found to display the required number of dirs
             _pathIndex    := 3
             _slashesCount := 1
             while (_pathIndex <= _length and _slashesCount <= _maxSlashes) {
@@ -58,9 +58,9 @@ GetShortPath(ByRef path) {
             }
             if (_slashesCount < 3)
                 return path     ; not enough to shorten the path
+                
         } else {
-            ; Backward slash search until enough is found
-            ; to display the required number of dirs
+            ; Backward slash search from the end
             _pathIndex    := _length
             _slashesCount := _maxSlashes
             while (_pathIndex >= 3 and _slashesCount >= 1) {     ; 3 is pos of the 1st slash
@@ -81,7 +81,7 @@ GetShortPath(ByRef path) {
         ;
         ; Parsing the slash indexes and extracting the dir names.
         ;─────────────────────────────────────────────────────────────────────────────
-    
+        
         Loop, % DirsCount {
             _left    := _slashIndexes[A_Index]
             _right   := _slashIndexes[A_Index + 1]
@@ -91,24 +91,34 @@ GetShortPath(ByRef path) {
                 _length     := _right - _left
                 _nameLength := Min(_length, DirNameLength)
                 _dirName := SubStr(_fullPath, _left, _nameLength)
-                _shortPath  .= PathSeparator . _dirName
-    
+                
+                if (A_Index != 1 || ShowFirstSlash || ShowDriveLetter)
+                    _shortPath .= PathSeparator
+     
+                _shortPath .= _dirName
                 if (DirNameLength - _length < 0)
                     _shortPath .= ShortNameIndicator
+                
             }
         }
+        
+        ; The shortened path fits into DirsCount but cuts off the remaining directories
+        if (StrLen(path) - StrLen(_shortPath) - (ShowDriveLetter ? 0 : 2)) > 0 {
+            _shortPath .= ShortNameIndicator
+        }
+        
     } catch _error {
         LogError(_error)
-        Return path
+        return path
     }
-    Return _shortPath
+    return _shortPath
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 GetWindowsPaths(ByRef winID) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Analyzes open Explorer windows and looks for non-virtual paths
+    ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
     global paths
     
     try {
