@@ -27,29 +27,27 @@ LogHeader() {
     ; Header about log and OS
     global ErrorsLog, BugReportLink, ScriptName
 
-    _reg := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
-    RegRead, _OSname, % _reg, ProductName
-    RegRead, _OSversion, % _reg, DisplayVersion
-    RegRead, _OSbuild, % _reg, CurrentBuild
+    static reg := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+    RegRead, _OSname, % reg, ProductName
+    RegRead, _OSversion, % reg, DisplayVersion
+    RegRead, _OSbuild, % reg, CurrentBuild
+    RegRead, _lang, HKEY_CURRENT_USER\Control Panel\International, LocaleName
 
     FileAppend,
     (LTrim
-        Contains only %ScriptName% errors!
-        Report about error: %BugReportLink%
-        AHK %A_AhkVersion%
-        %_OSname% %_OSversion% | %_OSbuild% [lang %A_Language%]
-
+     Contains only %ScriptName% errors!
+     Report about error: %BugReportLink%
+     AHK %A_AhkVersion%
+     %_OSname% %_OSversion% | %_OSbuild% [%_lang%]
 
     ), % ErrorsLog
-
-    ; A_Language 4-digit code: https://www.autohotkey.com/docs/v1/misc/Languages.htm
 }
 
 LogInfo() {
     ; Info about current launched script/compiled app
     global ErrorsLog
 
-    _bit  := A_PtrSize * 8
+    _bit  := (A_PtrSize * 8) . "-bit"
     _arch := A_Is64bitOS ? "64-bit" : "32-bit"
 
     _header := "`n"
@@ -57,7 +55,7 @@ LogInfo() {
         FileGetVersion, _ver, % A_ScriptFullPath
         _header .= "Script is compiled. Version: " _ver "`n"
     */
-    _header .= _bit "-bit script for " _arch " system `n`n"
+    _header .= _bit " script for " _arch " system `n`n"
     FileAppend, % _header, % ErrorsLog
 }
 
