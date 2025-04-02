@@ -137,64 +137,67 @@ ValidateWriteKey(_new, _paramName, _funcObj, _state := "On", _useHook := false) 
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteInteger(_new, _paramName) {    ; integer only
+ValidateWriteInteger(ByRef number, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    if _new is Integer
-        IniWrite, % _new, % INI, Menu, % _paramName
+    if number is Integer
+        IniWrite, % number, % INI, Menu, % paramName
     else
-        LogError(Exception(_new " is not an integer for the " _paramName " parameter", _paramName))
+        LogError(Exception(number " is not an integer for the " paramName " parameter", paramName))
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteColor(_color, _paramName) {    ; valid HEX / empty value only
+ValidateWriteColor(ByRef color, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    if !(_color && _paramName)
-        Return
+    if !(color && paramName)
+        return
 
-    _matchPos := RegExMatch(_color, "i)[a-f0-9]{6}$")
-    if (_matchPos > 0) {
-        _result := SubStr(_color, _matchPos)
-        IniWrite, % _result, % INI, Colors, % _paramName
+    _matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")
+    if _matchPos {
+        _result := SubStr(color, _matchPos)
+        IniWrite, % _result, % INI, Colors, % paramName
     } else {
-        LogError(Exception("`'" _color "`' is wrong color! Enter the HEX value", _paramName))
+        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
     }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteString(_new, _paramName) {     ; format to string
+ValidateWriteString(ByRef string, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    if !(_new && _paramName)
-        Return
-
-    _result := Format("{}", _new)
-    IniWrite, % _result, % INI, Menu, % _paramName
+    if !(string && paramName)
+        return
+    
+    try {
+        _result := Format("{}", string)
+        IniWrite, % _result, % INI, Menu, % paramName
+    } catch _error {
+        LogError(_error)
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteTrayIcon(_new, _paramName) {
+ValidateWriteTrayIcon(ByRef icon, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI, MainIcon
 
-    if !(_new && _paramName)
-        Return
+    if !(icon && paramName)
+        return
 
-    if !FileExist(_new) {
-        LogError(Exception("Icon `'" _new "`' not found", "Tray icon", "Specify the full path to the file"))
-        Return
+    if !FileExist(icon) {
+        return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
     }
 
     try {
         Menu, Tray, Icon, %MainIcon%
-        IniWrite, % _new, % INI, App, % _paramName
+        IniWrite, % icon, % INI, App, % paramName
     } catch _error {
         LogError(_error)
     }
