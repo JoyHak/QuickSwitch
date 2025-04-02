@@ -12,7 +12,6 @@
 */
 
 ShowMenuSettings() {
-
     global
     LastMenuItem := A_ThisMenuItem
     FromSettings := true
@@ -37,16 +36,15 @@ ShowMenuSettings() {
     */
 
     ;				type,	  [ coordinates	    vVARIABLE       gGOTO       Section      ],	title
-
     Gui,    Tab,    Menu       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, 	Add, 	CheckBox, 	                vOpenMenu  		checked%OpenMenu%, 			&Always open Menu if AutoSwitch disabled
-    Gui, 	Add, 	CheckBox, 					vReDisplayMenu  checked%ReDisplayMenu%, 	Show Menu a&fter leaving settings
+    Gui, 	Add, 	CheckBox, 					vReDisplayMenu  checked%ReDisplayMenu%, 	&Show Menu after leaving settings
     Gui, 	Add, 	CheckBox, 					vPathNumbers	checked%PathNumbers%,		&Path numbers with shortcuts 1-0 (10)
 
 
-    Gui, 	Add, 	Text, 		    y+20		                             Section,		    Menu &backgroud color (HEX)
-    Gui, 	Add, 	Text, 		    y+13,											        Dialogs background &color (HEX)
+    Gui, 	Add, 	Text, 		    y+20		                             Section,		&Menu backgroud color (HEX)
+    Gui, 	Add, 	Text, 		    y+13,											        &Dialogs background color (HEX)
 
     Gui, 	Add, 	Edit, 	    ys-4 %edit% 	vMenuColor, 								%MenuColor%
     Gui, 	Add, 	Edit, 	    y+4  %edit% 	vGuiColor, 				    				%GuiColor%
@@ -73,9 +71,9 @@ ShowMenuSettings() {
 
     Gui, 	Add, 	Text, 		y+20                                        Section,		Open &menu by
     Gui, 	Add, 	Text, 		y+13,						                                App &restart by
-    Gui, 	Add, 	Text, 		y+13,						                                Restart only in
-    Gui, 	Add, 	Text, 		y+13,						                                Icon (tray)
-    Gui, 	Add, 	Text, 		y+13,                                                       Font (GUI)
+    Gui, 	Add, 	Text, 		y+13,						                                Restart only &in
+    Gui, 	Add, 	Text, 		y+13,						                                Icon (&tray)
+    Gui, 	Add, 	Text, 		y+13,                                                       Font (&GUI)
 
     edit := "w160 r1 -Wrap -vscroll"
     Gui, 	Add, 	Hotkey,   ys-4 %edit% w100	vMainKey                    Section, 		%MainKey%
@@ -103,5 +101,5 @@ ShowMenuSettings() {
     local Xpos := WinX
     local Ypos := WinY + 100
     Gui, Show, AutoSize x%Xpos% y%Ypos%, Menu settings
-    Return
+    return
 }
