@@ -148,8 +148,12 @@ XyplorerScript(ByRef winId, ByRef script) {
     NumPut(_size * 2, _copyData, A_PtrSize, "UInt")
     NumPut(&script, _copyData, A_PtrSize * 2, "Ptr")
     
-    ; WM_COPYDATA without recieve
-    SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+    try {
+        ; WM_COPYDATA without recieve
+        SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+    } catch _error {
+        throw Exception("Unable to send a message to XYplorer", "Xyplorer script",  _error.What " " _error.Message " " _error.Extra)
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -163,9 +167,13 @@ TotalCommanderUserCommand(ByRef winId, ByRef command) {
     NumPut(19781, _copyData, 0)
     NumPut(_size, _copyData, A_PtrSize)
     NumPut(&_result , _copyData, A_PtrSize * 2)
-    
-    ; WM_COPYDATA without recieve
-    SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+     
+    try {
+        ; WM_COPYDATA without recieve
+        SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+    } catch _error {
+        throw Exception("Unable to execute TotalCommander user command", "TotalCommander command",  _error.What " " _error.Message " " _error.Extra)
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
