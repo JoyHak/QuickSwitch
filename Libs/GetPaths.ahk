@@ -157,21 +157,20 @@ GetXyplorerPaths(ByRef winId) {
         ; Save clipboard to restore later
         _clipSaved := ClipboardAll
         Clipboard  := ""
-    
-        static script
-        script =
+
+        static script := "
         ( LTrim Join
-            ::$paths = <get tabs_sf | a>;
-            if (get("#800")) { 
-                $paths .= "|" . <get tabs_sf | i>;
+            ::$paths = <get tabs_sf | a>`;
+            if (get('#800')) { 
+                $paths .= '|' . <get tabs_sf | i>`;
             }
-            $reals = "";
-            foreach($path, $paths, "|") {
-                $reals .= "|" . pathreal($path);
+            $reals = ''`;
+            foreach($path, $paths, '|') {
+                $reals .= '|' . pathreal($path)`;
             }
-            $reals = replace($reals, "|",,,1,1);
-            copytext $reals;
-        )
+            $reals = replace($reals, '|',,,1,1)`;
+            copytext $reals`;
+        )"
         XyplorerScript(winId, script)
         
         ClipWait, 3
