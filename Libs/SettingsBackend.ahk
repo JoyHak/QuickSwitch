@@ -48,6 +48,7 @@ ToggleShortPath() {
     GuiControl, Enable%ShortPath%, DirNameLengthText
     GuiControl, Enable%ShortPath%, PathSeparator
     GuiControl, Enable%ShortPath%, PathSeparatorText
+    GuiControl, Enable%ShortPath%, ShowFirstSeparator
     GuiControl, Show%ShortPath%,   ShortNameIndicator
     GuiControl, Show%ShortPath%,   ShortNameIndicatorText
 }

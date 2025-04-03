@@ -57,7 +57,7 @@ ShowMenuSettings() {
     Gui, 	Add, 	Text, 		    y+13        vDirsCountText,						        Number of &dirs displayed
     Gui, 	Add, 	Text, 		    y+13    	vDirNameLengthText,		                    &Length of dir names
     Gui, 	Add, 	Checkbox, 	    y+20        vShowDriveLetter checked%ShowDriveLetter%,  Show &drive letter
-    Gui, 	Add, 	Checkbox, 					vShowFirstSlash checked%ShowFirstSlash%,    Show &first slash
+    Gui, 	Add, 	Checkbox, 					vShowFirstSeparator checked%ShowFirstSeparator%, Show &first separator
     Gui, 	Add, 	Checkbox, 					vShortenEnd checked%ShortenEnd%, 			Shorten the &end
 
     Gui, 	Add, 	Edit, 	    ys-4  %edit% 	vShortNameIndicator, 						%ShortNameIndicator%

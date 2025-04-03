@@ -27,6 +27,7 @@ GetShortPath(ByRef path) {
         _dirs := StrSplit(path, "\")
         _size := _dirs.count()
         
+        ; Variable to return
         _shortPath := ShowDriveLetter ? _dirs[1] : ""
         
         ; Parse the _dirs array, omit drive letter
@@ -44,7 +45,11 @@ GetShortPath(ByRef path) {
             _stop  := Max(_last, _index - DirsCount)
             _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
         }
-            
+        
+        ; Add first separator if needed
+        if (ShowFirstSeparator || ShowDriveLetter)
+            _shortPath .= PathSeparator
+
         loop {
             _dir := _dirs[_index]
             _length  := StrLen(_dir)
