@@ -178,9 +178,8 @@ GetXyplorerPaths(ByRef winId) {
             return
                 
         Loop, parse, Clipboard, `| 
-        {
             Paths.push(A_LoopField)
-        }
+            
         ; Restore
         Clipboard := _clipSaved
         
