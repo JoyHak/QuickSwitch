@@ -271,21 +271,21 @@ GetTotalCommanderTabs(ByRef winId) {
     
     if created { 
         ; Send and wait
-        FileDelete, % TABS_RESULT
+        try FileDelete, % TABS_RESULT
         TotalCommanderUserCommand(winId, COMMAND)
         
-        loop, 10 {
+        loop, 100 {
             if (FileExist(TABS_RESULT)) {
                 return TABS_RESULT
             }  
             sleep, 20
         }
         ; Loop finished without return
-        throw Exception("Unable to access tabs", "Total Commander " TABS_RESULT, "Close TotalCommander. The architecture/bitness of the script and TotalCommander must be the same (e.g. x64)")
+        return LogError(Exception("Unable to access tabs", "Total Commander " TABS_RESULT, "Close TotalCommander. The architecture/bitness of the script and TotalCommander must be the same (e.g. x64)"))
 
     }
     ; Flag not rised
-    throw Exception("Unable to create configuration", "Total Commander " CONFIG, CONFIG " doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH)
+    return LogError(Exception("Unable to create configuration", "Total Commander " CONFIG, CONFIG " doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH))
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
