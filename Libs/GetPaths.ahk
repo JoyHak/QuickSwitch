@@ -65,7 +65,7 @@ GetShortPath(ByRef path) {
             _shortPath .= PathSeparator
             _index += _inc
         }
-
+        
         ; The shortened path fits into DirsCount 
         ; but there are still directories remaining
         if ((_index != _last) && (_length <= DirNameLength))
@@ -310,7 +310,7 @@ GetDopusPaths(ByRef winId) {
         _previousHwnd := DllCall("FindWindowEx", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
         _startHwnd    := _previousHwnd
         _paths        := []
-
+                
         loop {
             ; Pass every HWND to GetWindowText() and get the content
             ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtexta
@@ -338,7 +338,7 @@ GetDopusPaths(ByRef winId) {
         ; Remove duplicate and add the remaining tabs
         _paths.removeAt(_active)
         Paths.push(_paths*)
-            
+  
     } catch _error {
         LogError(_error)
     }

@@ -72,6 +72,7 @@ Loop {
         if FileDialog {
             ; This is a supported dialog
             GetPaths()
+            
             WinGet, Exe, ProcessName, ahk_id %DialogID%
             WinGetTitle, WinTitle, ahk_id %DialogID%
             FingerPrint := Exe . "___" . WinTitle
