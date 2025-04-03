@@ -66,7 +66,7 @@ Loop {
     try {
         DialogID   := WinExist("A")
         FileDialog := GetFileDialog(DialogID)
-
+        
         ; if there is any GUI left from previous calls....
         Gui, Destroy
 
