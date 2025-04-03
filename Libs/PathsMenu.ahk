@@ -6,20 +6,19 @@
 
 AddPathsMenuItems() {
     global PathNumbers, ShortPath, Paths
-    ;Timer(1)
+    
     for _index, _path in Paths {
         _display := ""
-
+    
         if PathNumbers
             _display .= "&" . _index . " "
         if ShortPath
             _display .= GetShortPath(_path)
         else
             _display .= _path
-
+    
         Menu, ContextMenu, Insert,, %_display%, SelectPath
     }
-    ;MsgBox % Timer(0)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

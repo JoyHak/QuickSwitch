@@ -16,97 +16,56 @@ GetShortPath(ByRef path) {
         Dirs are selected as intervals between slashes, excluding them.
         boundaries = indexes of any slashes \ / in the path: /dir/dir/
     */
-    global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator, ShowFirstSlash
+    global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator, ShowFirstSeparator
     
     try {
         ; Return input path if it's really short
-        _length := StrLen(path)
-        if _length < 4
+        if (StrLen(path) < 4)
             return path    ; Just drive and slash
-    
-        ; Variable to return
-        _shortPath := ShowDriveLetter ? Substr(path, 1, 2) : ""
-          
-        ; The number of slashes (indexes) is one more than the number of dirs: C:/dir/dir/ - 2 dirs, 3 slashes
-        _maxSlashes := DirsCount + 1
-        ; if the number of slashes is less than DirsCount, the array will contain -1
-        ; This is necessary for handling paths where the number of dirs is less than DirsCount: C:/dir
-        _slashIndexes := []
-        Loop, % _maxSlashes {
-            _slashIndexes.Push(-1)
-        }
-    
-        ;─────────────────────────────────────────────────────────────────────────────
-        ;
-        ; Parsing the path, looking for the indexes of slashes
-        ;─────────────────────────────────────────────────────────────────────────────  
-        _fullPath := RTrim(path , "\") . "\"    ; Last dir bound
-        _length++
-
+        
+        path  := RTrim(path, "\")
+        _dirs := StrSplit(path, "\")
+        _size := _dirs.count()
+        
+        _shortPath := ShowDriveLetter ? _dirs[1] : ""
+        
+        ; Parse the _dirs array, omit drive letter
         if ShortenEnd {
-            ; Forward slash search starting from the pos of the 1st slash
-            ; until enough slashes is found to display the required number of dirs
-            _pathIndex    := 3
-            _slashesCount := 1
-            while (_pathIndex <= _length and _slashesCount <= _maxSlashes) {
-                _char := SubStr(_fullPath, _pathIndex, 1)
-                if (_char = "\" || _char = "/") {
-                    _slashIndexes[_slashesCount] := _pathIndex
-                    _slashesCount++
-                }
-                _pathIndex++
-            }
-            if (_slashesCount < 3)
-                return path     ; not enough to shorten the path
-                
+            ; Forward direction
+            _index := 2
+            _inc   := 1
+            _last  := _size
+            _stop  := Min(DirsCount, _last)
         } else {
-            ; Backward slash search from the end
-            _pathIndex    := _length
-            _slashesCount := _maxSlashes
-            while (_pathIndex >= 3 and _slashesCount >= 1) {     ; 3 is pos of the 1st slash
-                _char := SubStr(_fullPath, _pathIndex, 1)
-                if (_char = "\" || _char = "/") {
-                    _slashIndexes[_slashesCount] := _pathIndex
-                    _slashesCount--
-                }
-                _pathIndex--
-            }
-            if (_slashesCount > _maxSlashes - 2)
-                return path     ; not enough to shorten the path
-    
+            ; Backward direction
+            _index := _size
+            _inc   := -1
+            _last  := 2
+            _stop  := Max(_last, _index - DirsCount)
             _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
         }
-    
-        ;─────────────────────────────────────────────────────────────────────────────
-        ;
-        ; Parsing the slash indexes and extracting the dir names.
-        ;─────────────────────────────────────────────────────────────────────────────
-        
-        Loop, % DirsCount {
-            _left    := _slashIndexes[A_Index]
-            _right   := _slashIndexes[A_Index + 1]
-            if (_left != -1 and _right != -1) {
-                _left++     ; exclude slash from name
-    
-                _length     := _right - _left
-                _nameLength := Min(_length, DirNameLength)
-                _dirName := SubStr(_fullPath, _left, _nameLength)
+            
+        loop {
+            _dir := _dirs[_index]
+            _length  := StrLen(_dir)
+            _dirName := SubStr(_dir, 1, Min(_length, DirNameLength))
+            
+            _shortPath .= _dirName
+            if (_length > DirNameLength)
+                _shortPath .= ShortNameIndicator
+            
+            if (_index == _stop)
+                break
                 
-                if (A_Index != 1 || ShowFirstSlash || ShowDriveLetter)
-                    _shortPath .= PathSeparator
-     
-                _shortPath .= _dirName
-                if (DirNameLength - _length < 0)
-                    _shortPath .= ShortNameIndicator
-                
-            }
+            _shortPath .= PathSeparator
+            _index += _inc
         }
-        
-        ; The shortened path fits into DirsCount but cuts off the remaining directories
-        if (StrLen(path) - StrLen(_shortPath) - (ShowDriveLetter ? 0 : 2)) > 0 {
+
+        ; The shortened path fits into DirsCount 
+        ; but there are still directories remaining
+        if ((_index != _last) && (_length <= DirNameLength))
             _shortPath .= ShortNameIndicator
-        }
-        
+
     } catch _error {
         LogError(_error)
         return path
