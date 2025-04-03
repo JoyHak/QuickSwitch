@@ -148,8 +148,10 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
             try {
                 ; Remove old if exist 
                 IniRead, _old, % INI, App, % paramName, % _key
-                if (_old != _key)
+                if (_old != _key) {
+                    Hotkey, % "~" . _old, Off
                     Hotkey, % _old, Off
+                }
             }
             IniWrite, % _key, % INI, App, % paramName
         
