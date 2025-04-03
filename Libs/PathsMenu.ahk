@@ -52,6 +52,7 @@ AddPathsMenuSettings() {
 ;
 HidePathsMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
+    global
     Menu ContextMenu, UseErrorLevel  ; Ignore errors
     Menu ContextMenu, Delete         ; Delete previous menu
 }
