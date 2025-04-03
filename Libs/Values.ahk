@@ -5,8 +5,8 @@ LastMenuItem  := ""
 ; These parameters must not be reset
 LastTabSettings := AutoStartup := MainKeyHook := 1
 MainFont        := "Tahoma"
-MainKey         := "^sc010"
-RestartKey      := "^sc01F"
+MainKey         := "^sc10"
+RestartKey      := "^sc1F"
 RestartKeyHook  := 0
 RestartWhere    := "ahk_exe notepad++.exe"
 
