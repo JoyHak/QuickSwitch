@@ -199,7 +199,7 @@ GetXyplorerPaths(ByRef winId) {
         ( LTrim Join
             ::$paths = <get tabs_sf | a>;
             if (get("#800")) { 
-                $paths .= |<get tabs_sf | i>
+                $paths .= "|" . <get tabs_sf | i>;
             }
             $reals = "";
             foreach($path, $paths, "|") {
