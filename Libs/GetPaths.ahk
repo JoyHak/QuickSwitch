@@ -27,30 +27,29 @@ GetShortPath(ByRef path) {
         _dirs := StrSplit(path, "\")
         _size := _dirs.count()
         
+        if (_size = 1)
+            return path
+            
         ; Variable to return
         _shortPath := ShowDriveLetter ? _dirs[1] : ""
         
         ; Parse the _dirs array, omit drive letter
         if ShortenEnd {
-            ; Forward direction
             _index := 2
-            _inc   := 1
-            _last  := _size
-            _stop  := Min(DirsCount, _last)
+            _stop  := Min(DirsCount + 1, _size)
         } else {
-            ; Backward direction
-            _index := _size
-            _inc   := -1
-            _last  := 2
-            _stop  := Max(_last, _index - DirsCount)
-            _shortPath .= ShortNameIndicator     ; An indication that there are more paths after the drive letter
+            _index := Max(2, _size - DirsCount + 1)
+            _stop  := _size
+            
+            ; An indication that there are more paths after the drive letter
+            _shortPath .= ShortNameIndicator     
         }
-        
+
         ; Add first separator if needed
         if (ShowFirstSeparator || ShowDriveLetter)
             _shortPath .= PathSeparator
 
-        loop {
+        loop, % _size {
             _dir := _dirs[_index]
             _length  := StrLen(_dir)
             _dirName := SubStr(_dir, 1, Min(_length, DirNameLength))
@@ -61,14 +60,14 @@ GetShortPath(ByRef path) {
             
             if (_index == _stop)
                 break
-                
+
             _shortPath .= PathSeparator
-            _index += _inc
+            _index++
         }
         
         ; The shortened path fits into DirsCount 
         ; but there are still directories remaining
-        if ((_index != _last) && (_length <= DirNameLength))
+        if ((_index != _size) && (_length <= DirNameLength))
             _shortPath .= ShortNameIndicator
 
     } catch _error {
@@ -196,53 +195,74 @@ GetTotalCommanderTabs(ByRef winId) {
     ; and uses it to request the current tabs file. 
     ; If the second panel is enabled, file contains tabs from all panels, 
     ; otherwise file contains tabs from the active panel
-    
-    static TABS_RESULT, CONFIG, COMMAND
+        
+    static COMMAND := "EM_SaveAllTabs"
+    static REG     := "HKEY_CURRENT_USER\SOFTWARE\Ghisler\Total Commander"
     static created := false
+    static TABS_RESULT
     if created
         return TABS_RESULT
     
-    ; Search for TC main directory
-    static APPDATA_PATH := A_AppData "\GHISLER\"     
-    if !FileExist(APPDATA_PATH) {    
-        static PATH
-        WinGet, PATH, ProcessPath, ahk_id %winId%
+    ; Search for TC root directory
+    RegRead, _regPath, % REG, InstallDir
+    WinGet, _winPath, ProcessPath, ahk_id %winId%
+ 
+    ; Remove exe name and leading slash \
+    _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12) - 1) 
+    
+    _ini := ""
+    if (_winPath = _regPath) {
+        ; Use registry values
+        _root := _regPath
+        RegRead, _iniPath, % REG, IniFileName
         
-        ; Remove exe name
-        PATH := SubStr(PATH, 1, InStr(PATH, "\",, -12)) 
-        APPDATA_PATH := PATH       
+        ; Convert env. variables        
+        for _i, _part in StrSplit(_iniPath, "`%") {
+            EnvGet, _env, % _part
+            if _env
+                _ini .= _env        
+            else 
+                _ini .= _part
+        }
+    } else {
+        _root := _winPath
+        Loop, Files, %_root%\wincmd.ini, R
+        {   
+            _ini .= A_LoopFileLongPath
+            break
+        }
+    
     }
-        
-    TABS_RESULT := APPDATA_PATH "Tabs.tab"
-    CONFIG      := APPDATA_PATH "usercmd.ini"
-    COMMAND     := "EM_SaveAllTabs"
-       
+    
+    _ini := StrReplace(_ini, "wincmd", "usercmd")
+    TABS_RESULT := _root "\Tabs.tab"     
+
     ; Check and create user command
     loop, 4 {
         ; Read the contents of the config until it appears or the loop ends with an error
-        IniRead, _section, % CONFIG, % COMMAND
+        IniRead, _section, % _ini, % COMMAND
         if (_section && _section != "ERROR") {
             created := true
             return TABS_RESULT
         }            
         
         ; Set normal attributes (write access)
-        FileSetAttrib, n, % APPDATA_PATH
-        FileSetAttrib, n, % CONFIG
+        FileSetAttrib, n, % _root
+        FileSetAttrib, n, % _ini
         sleep, 20 * A_Index
         
         ; Create new section
         FileAppend,
         (LTrim
-            # Please dont add commands with the same name
-            [%COMMAND%]
-            cmd=SaveTabs2 
-            param=`"%TABS_RESULT%`"
+         # Please dont add commands with the same name
+         [%COMMAND%]
+         cmd=SaveTabs2 
+         param=`"%TABS_RESULT%`"
             
-        ), % CONFIG
+        ), % _ini
         sleep, 50 * A_Index
     }
-    return LogError(Exception("Unable to create configuration", "Total Commander config", CONFIG " doesnt exist and cannot be created. Create it manually in the " APPDATA_PATH))
+    return LogError(Exception("Unable to create configuration", "Total Commander config", _ini " doesnt exist and cannot be created. Create it manually in the " _root))
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -277,7 +297,7 @@ GetTotalCommanderPaths(ByRef winId) {
                         _last   := SubStr(A_LoopReadLine, _num + 10)                
                     }
                 }
-                
+
                 ; Push the active tab to the global array first
                 Paths.push(_paths[_active + 1])
                 
@@ -288,7 +308,7 @@ GetTotalCommanderPaths(ByRef winId) {
             }
             sleep, 20
         }
-        return LogError(Exception("Unable to access tabs", "Total Commander tabs", "Close Total Commander. The architecture of the script and Total Commander must be the same: " . (A_PtrSize * 8)))
+        return LogError(Exception("Unable to access tabs", "Total Commander tabs", "Restart Total Commander and retry"))
         
     } catch _error {
         LogError(_error)
