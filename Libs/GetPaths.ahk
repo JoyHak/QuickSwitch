@@ -247,54 +247,6 @@ GetTotalCommanderTabs(ByRef winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ParseTotalCommanderTabs(ByRef tabs) {
-;─────────────────────────────────────────────────────────────────────────────
-    global Paths
-    
-    try { 
-        if FileExist(tabs) {
-            SetTimer,, off
-            _paths  := []
-            
-            ; Tabs index starts with 0, array index starts with 1
-            _active := _last := 0
-            
-            Loop, read, % tabs
-            {
-                ; Omit the InStr key and SubStr from value position
-                if (_pos := InStr(A_LoopReadLine, "path=")) {                
-                    _paths.push(SubStr(A_LoopReadLine, _pos + 5))
-                }
-                if (_num := InStr(A_LoopReadLine, "activetab=")) {
-                    ; Skip next active tab by saving last
-                    _active := _last
-                    _last   := SubStr(A_LoopReadLine, _num + 10)                
-                }
-            }
-            ; Push the active tab to the global array first
-            Paths.push(_paths[_active + 1])
-            ; Remove duplicate and add the remaining tabs
-            _paths.removeAt(_active + 1)
-            Paths.push(_paths*)
-            
-            try FileDelete, % tabs
-        }
-        
-        ; Check calls count
-        static counter := 0
-        counter++
-        if (counter == 100) {
-            SetTimer,, off
-            return LogError(Exception("Unable to access tabs", "Total Commander tabs", "Close Total Commander. The architecture of the script and Total Commander must be the same: " . (A_PtrSize * 8)))
-        }
-        
-    } catch _error {
-        LogError(_error)
-    }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 GetTotalCommanderPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Requests a file with current tabs and analyzes it. 
@@ -303,10 +255,41 @@ GetTotalCommanderPaths(ByRef winId) {
        
     try { 
         _tabs := GetTotalCommanderTabs(winId)
+        try FileDelete, % _tabs
         TotalCommanderUserCommand(winId, "EM_SaveAllTabs")
         
-        _parser := Func("ParseTotalCommanderTabs").Bind(_tabs)
-        SetTimer, % _parser, 20
+        loop, 600 {
+            if FileExist(_tabs) {
+                _paths  := []
+                
+                ; Tabs index starts with 0, array index starts with 1
+                _active := _last := 0
+                
+                Loop, read, % _tabs
+                {
+                    ; Omit the InStr key and SubStr from value position
+                    if (_pos := InStr(A_LoopReadLine, "path=")) {                
+                        _paths.push(SubStr(A_LoopReadLine, _pos + 5))
+                    }
+                    if (_num := InStr(A_LoopReadLine, "activetab=")) {
+                        ; Skip next active tab by saving last
+                        _active := _last
+                        _last   := SubStr(A_LoopReadLine, _num + 10)                
+                    }
+                }
+                
+                ; Push the active tab to the global array first
+                Paths.push(_paths[_active + 1])
+                
+                ; Remove duplicate and add the remaining tabs
+                _paths.removeAt(_active + 1)
+                Paths.push(_paths*)
+                return
+            }
+            sleep, 20
+        }
+        return LogError(Exception("Unable to access tabs", "Total Commander tabs", "Close Total Commander. The architecture of the script and Total Commander must be the same: " . (A_PtrSize * 8)))
+        
     } catch _error {
         LogError(_error)
     }
@@ -381,14 +364,14 @@ GetPaths() {
         WinGetClass, _WinClass, ahk_id %winId%
 
         switch _WinClass {
-            case "TTOTAL_CMD":          
-                GetTotalCommanderPaths(winId)
+            case "CabinetWClass":       
+                GetWindowsPaths(winId)
             case "ThunderRT6FormDC":    
                 GetXyplorerPaths(winId)
             case "dopus.lister":        
                 GetDopusPaths(winId)
-            case "CabinetWClass":       
-                GetWindowsPaths(winId)
+            case "TTOTAL_CMD":          
+                GetTotalCommanderPaths(winId)
         }
     }
 }
