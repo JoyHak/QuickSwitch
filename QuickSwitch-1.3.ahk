@@ -72,9 +72,9 @@ Loop {
         if FileDialog {
             ; This is a supported dialog
             GetPaths()
-            WinGet, ahk_exe, ProcessName, ahk_id %DialogID%
+            WinGet, Exe, ProcessName, ahk_id %DialogID%
             WinGetTitle, WinTitle, ahk_id %DialogID%
-            FingerPrint := ahk_exe . "___" . WinTitle
+            FingerPrint := Exe . "___" . WinTitle
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
             IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%, 0
@@ -102,7 +102,7 @@ Loop {
 
     ; Clean up
     ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
-    ahk_exe      := ""
+    Exe          := ""
     WinTitle     := ""
     DialogAction := ""
     DialogID     := ""
