@@ -17,8 +17,8 @@ ShowMenuSettings() {
     FromSettings := true
 
     ; Options that affects subsequent controls
-    Gui, -E0x200 -SysMenu +AlwaysOnTop           ; hide window border and header
-    Gui, Font, q5, %MainFont%       ; clean quality
+    Gui, -E0x200 -SysMenu +AlwaysOnTop  ; hide window border and header
+    Gui, Font, q5, %MainFont%           ; clean quality
     Gui, Color, %GuiColor%, %GuiColor%
 
     ; Edit fields: fixed width, one row, max 6 symbols, no multi-line word wrap and vertical scrollbar
@@ -36,7 +36,7 @@ ShowMenuSettings() {
     */
 
     ;				type,	  [ coordinates	    vVARIABLE       gGOTO       Section      ],	title
-    Gui,    Tab,    Menu       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
+    Gui,    Tab,    1       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, 	Add, 	CheckBox, 	                vOpenMenu  		checked%OpenMenu%, 			&Always open Menu if AutoSwitch disabled
     Gui, 	Add, 	CheckBox, 					vReDisplayMenu  checked%ReDisplayMenu%, 	&Show Menu after leaving settings
@@ -49,7 +49,7 @@ ShowMenuSettings() {
     Gui, 	Add, 	Edit, 	    ys-4 %edit% 	vMenuColor, 								%MenuColor%
     Gui, 	Add, 	Edit, 	    y+4  %edit% 	vGuiColor, 				    				%GuiColor%
 
-    Gui,    Tab,    Short path  ;───────────────────────────────────────────────────────────────────────────────────────────────────────
+    Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, 	Add, 	Checkbox,                   vShortPath gToggleShortPath checked%ShortPath% Section, 	Show short path, indicate as
 
@@ -65,7 +65,7 @@ ShowMenuSettings() {
     Gui, 	Add, 	Edit, 	    y+4   %edit% 	vDirsCount, 								%DirsCount%
     Gui, 	Add, 	Edit,       y+4   %edit%    vDirNameLength, 						    %DirNameLength%
 
-    Gui,    Tab,    App         ;───────────────────────────────────────────────────────────────────────────────────────────────────────
+    Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, 	Add, 	CheckBox, 	             	vAutoStartup checked%AutoStartup%,          Launch at &system startup
 
