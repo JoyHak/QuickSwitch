@@ -207,16 +207,16 @@ GetFileDialog(ByRef dialogId) {
         }
         
         if (_flag & 1 && _flag & 16 && _flag & 32)
-            Return Func("FeedDialogGENERAL")
+            return Func("FeedDialogGENERAL")
         else if (_flag & 1 && _flag & 2 && _flag & 8 && _flag & 16)
-            Return Func("FeedDialogSYSTREEVIEW")
+            return Func("FeedDialogSYSTREEVIEW")
         else if (_flag & 1 && _flag & 2 && _flag & 16)
-            Return Func("FeedDialogSYSLISTVIEW")
+            return Func("FeedDialogSYSLISTVIEW")
         else if (_flag & 1 && _flag & 2 && _flag & 8)
-            Return Func("FeedDialogSYSLISTVIEW")
+            return Func("FeedDialogSYSLISTVIEW")
 
     } catch _error {
         LogError(_error)
     }
-    Return false
+    return false
 }

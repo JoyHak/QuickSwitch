@@ -212,7 +212,7 @@ GetXyplorerPaths(ByRef winId) {
         
         ClipWait, 3
         if ErrorLevel
-            Return
+            return
                 
         Loop, parse, Clipboard, `| 
         {
