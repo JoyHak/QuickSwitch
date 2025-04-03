@@ -38,7 +38,7 @@ LogHeader() {
      Contains only %ScriptName% errors!
      Report about error: %BugReportLink%
      AHK %A_AhkVersion%
-     %_OSname% %_OSversion% | %_OSbuild% [%_lang%]
+     %_OSname% %_OSversion% | %_OSbuild% %_lang%
 
     ), % ErrorsLog
 }
