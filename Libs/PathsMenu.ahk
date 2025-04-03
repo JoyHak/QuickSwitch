@@ -50,15 +50,6 @@ AddPathsMenuSettings() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-HidePathsMenu() {
-;─────────────────────────────────────────────────────────────────────────────
-    global
-    Menu ContextMenu, UseErrorLevel  ; Ignore errors
-    Menu ContextMenu, Delete         ; Delete previous menu
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 ShowPathsMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogID, Paths, MenuColor, WinX, WinY, WinWidth, WinHeight
@@ -72,8 +63,8 @@ ShowPathsMenu() {
         AddPathsMenuSettings()
 
         Menu ContextMenu, Color, %MenuColor%
-        Menu ContextMenu, Show, 0, 100
-        HidePathsMenu()
+        Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
+        Menu ContextMenu, Delete            ; Delete previous menu
     }
 }
 
