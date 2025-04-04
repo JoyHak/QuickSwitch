@@ -1,14 +1,6 @@
 ; These parameters are not saved in the INI
-FromSettings  := false
-LastMenuItem  := ""
-
-; These parameters must not be reset
-LastTabSettings := AutoStartup := MainKeyHook := 1
-MainFont        := "Tahoma"
-MainKey         := "^sc10"
-RestartKey      := "^sc1F"
-RestartKeyHook  := 0
-RestartWhere    := "ahk_exe notepad++.exe"
+FromSettings    := false
+LastTabSettings := 1
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
 Paths := []
@@ -18,15 +10,21 @@ Paths := []
 SetDefaultValues() {
     global
 
-    OpenMenu := ReDisplayMenu := 1
-    PathNumbers := ShortPath := ShowDriveLetter := ShowFirstSeparator := ShortenEnd := 0
+    MainKeyHook := OpenMenu := ReDisplayMenu := AutoStartup := 1
+    RestartKeyHook := PathNumbers := ShortPath := ShowDriveLetter := ShowFirstSeparator := ShortenEnd := 0
+
+    GuiColor := MenuColor := ""
 
     ShortNameIndicator := ".."
-    DirsCount     := 3
-    DirNameLength := 20
-    PathSeparator := "\"
-    GuiColor      := ""
-    MenuColor     := ""
+    DirsCount      := 3
+    DirNameLength  := 20
+    PathSeparator  := "\"
+
+    MainFont       := "Tahoma"
+    MainKey        := "^sc10"
+    RestartKey     := "^sc1F"
+    RestartKeyHook := 0
+    RestartWhere   := "ahk_exe notepad++.exe"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
