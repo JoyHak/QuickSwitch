@@ -200,6 +200,7 @@ GetTotalCommanderTabs(ByRef winId) {
     static REG     := "HKEY_CURRENT_USER\SOFTWARE\Ghisler\Total Commander"
     static created := false
     static TABS_RESULT
+    
     if created
         return TABS_RESULT
     
@@ -210,9 +211,9 @@ GetTotalCommanderTabs(ByRef winId) {
     ; Remove exe name and leading slash \
     _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12) - 1) 
     
+    ; Search for configuration in registry
     _ini := ""
     if (_winPath = _regPath) {
-        ; Use registry values
         _root := _regPath
         RegRead, _iniPath, % REG, IniFileName
         
@@ -224,19 +225,25 @@ GetTotalCommanderTabs(ByRef winId) {
             else 
                 _ini .= _part
         }
-    } else {
+    } 
+    
+    ; Registry path is invalid, search in current TC directory
+    if !FileExist(_ini) {
         _root := _winPath
         Loop, Files, %_root%\wincmd.ini, R
         {   
-            _ini .= A_LoopFileLongPath
+            _ini := A_LoopFileLongPath
             break
         }
-    
     }
     
-    _ini := StrReplace(_ini, "wincmd", "usercmd")
+    ; Config not found after 2 attempts    
+    if !FileExist(_ini)
+        return LogError(Exception("Unable to find wincmd.ini", "Total Commander config", "File `'" _ini "`' not found in " _root " Change your settings: move your configuration to any sub-directory in the root"))
+    
+    _ini := StrReplace(_ini, "wincmd", "usercmd")      
     TABS_RESULT := _root "\Tabs.tab"     
-
+        
     ; Check and create user command
     loop, 4 {
         ; Read the contents of the config until it appears or the loop ends with an error
