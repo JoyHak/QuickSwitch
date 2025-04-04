@@ -205,9 +205,6 @@ ValidateWriteString(ByRef string, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    if !(string && paramName)
-        return
-    
     try {
         _result := Format("{}", string)
         IniWrite, % _result, % INI, Menu, % paramName
