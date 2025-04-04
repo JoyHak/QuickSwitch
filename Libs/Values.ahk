@@ -181,15 +181,21 @@ ValidateWriteColor(ByRef color, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    if !(color && paramName)
+    if !color {
+        IniWrite, % A_Space, % INI, Colors, % paramName
         return
+    }
 
-    _matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")
-    if _matchPos {
-        _result := SubStr(color, _matchPos)
-        IniWrite, % _result, % INI, Colors, % paramName
-    } else {
-        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+    try {
+        _matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")
+        if _matchPos {
+            _result := SubStr(color, _matchPos)
+            IniWrite, % _result, % INI, Colors, % paramName
+        } else {
+            LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+        }
+    } catch _error {
+        LogError(_error)
     }
 }
 
