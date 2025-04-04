@@ -25,7 +25,7 @@ ShowMenuSettings() {
     local edit   := "w63 r1 Limit6 -Wrap -vscroll"
 
     ; Split settings to the tabs
-    Gui, Add, Tab3, -Wrap -Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Short path|App
+    Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Short path|App
 
     /*
         To align "Edit" fields to the right after the "Text" fields,
