@@ -98,17 +98,17 @@ Loop {
 
         Sleep, 100
         WinWaitNotActive
+    
+        ; Clean up
+        ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)            
+        Exe          := ""
+        WinTitle     := ""
+        DialogAction := ""
+        DialogID     := ""
+        
     } catch GlobalError {
         LogError(GlobalError)
     }
-
-    ; Clean up
-    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
-    Exe          := ""
-    WinTitle     := ""
-    DialogAction := ""
-    DialogID     := ""
-
 }   ; End of continuous WinWaitActive loop
 
 LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart the app manually", "main menu", "End of continuous WinWaitActive loop in main file"))
