@@ -214,7 +214,6 @@ GetTotalCommanderTabs(ByRef winId) {
     ; Search for configuration in registry
     _ini := ""
     if (_winPath = _regPath) {
-        _root := _regPath
         RegRead, _iniPath, % REG, IniFileName
         
         ; Convert env. variables        
@@ -225,8 +224,11 @@ GetTotalCommanderTabs(ByRef winId) {
             else 
                 _ini .= _part
         }
+        
+        ; Remove ini name and leading slash \
+        _root := SubStr(_ini, 1, InStr(_ini, "\",, -10) - 1) 
     } 
-    
+
     ; Registry path is invalid, search in current TC directory
     if !FileExist(_ini) {
         _root := _winPath
@@ -239,7 +241,7 @@ GetTotalCommanderTabs(ByRef winId) {
     
     ; Config not found after 2 attempts    
     if !FileExist(_ini)
-        return LogError(Exception("Unable to find wincmd.ini", "Total Commander config", "File `'" _ini "`' not found in " _root " Change your settings: move your configuration to any sub-directory in the root"))
+        return LogError(Exception("Unable to find wincmd.ini", "Total Commander config", "File `'" _ini "`' not found. Change your TC configuration settings: your configuration should be in any sub-directory in the " _root))
     
     _ini := StrReplace(_ini, "wincmd", "usercmd")      
     TABS_RESULT := _root "\Tabs.tab"     
