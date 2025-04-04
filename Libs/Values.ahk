@@ -127,7 +127,7 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
             _key := ""
             Loop, parse, sequence
             {
-                if (!(A_LoopField ~= "[\!\^\+\#<>]") 
+                if (!(A_LoopField ~= "[\!\^\+\#<>]")
                     && _scCode := GetKeySC(A_LoopField)) {
                     _key .= Format("sc{:x}", _scCode)
                 } else {
@@ -137,14 +137,14 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
         } else {
             _key := sequence
         }
-        
+
         _prefix := useHook ? "" : "~"
         if funcName {
             ; Create new hotkey
             Hotkey, % _prefix . _key, % funcName, % state
 
             try {
-                ; Remove old if exist 
+                ; Remove old if exist
                 IniRead, _old, % INI, App, % paramName, % _key
                 if (_old != _key) {
                     Hotkey, % "~" . _old, Off
@@ -152,7 +152,7 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
                 }
             }
             IniWrite, % _key, % INI, App, % paramName
-        
+
         } else {
             ; Set state for existing hotkey
             Hotkey, % _prefix . _key, % state
