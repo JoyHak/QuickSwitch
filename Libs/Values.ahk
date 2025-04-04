@@ -219,12 +219,13 @@ ValidateWriteTrayIcon(ByRef icon, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI, MainIcon
 
-    if !(icon && paramName)
+    if !icon {
+        IniWrite, % A_Space, % INI, App, % paramName
         return
-
-    if !FileExist(icon) {
-        return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
     }
+
+    if !FileExist(icon)
+        return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
 
     try {
         Menu, Tray, Icon, %MainIcon%
