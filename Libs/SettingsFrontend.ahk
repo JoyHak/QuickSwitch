@@ -13,7 +13,6 @@
 
 ShowMenuSettings() {
     global
-    LastMenuItem := A_ThisMenuItem
     FromSettings := true
 
     ; Options that affects subsequent controls
