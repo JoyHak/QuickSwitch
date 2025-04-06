@@ -76,14 +76,12 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
     ControlGetText _editOld, Edit1, ahk_id %winId%
-    Sleep, 20
 
     ; Make sure there exactly one slash at the end.
     path := RTrim(path , "\") . "\"
 
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    Sleep, 10
     Loop, 100 {
         Sleep, 10
         ControlFocus SysListView321, ahk_id %winId%
