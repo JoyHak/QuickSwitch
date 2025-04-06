@@ -59,10 +59,13 @@ ShowMenuSettings() {
     Gui, 	Add, 	Checkbox, 					vShowFirstSeparator checked%ShowFirstSeparator%, Show &first separator
     Gui, 	Add, 	Checkbox, 					vShortenEnd checked%ShortenEnd%, 			Shorten the &end
 
-    Gui, 	Add, 	Edit, 	    ys-4  %edit% 	vShortNameIndicator, 						%ShortNameIndicator%
-    Gui, 	Add, 	Edit, 	    y+4   %edit% 	vPathSeparator, 							%PathSeparator%
-    Gui, 	Add, 	Edit, 	    y+4   %edit% 	vDirsCount, 								%DirsCount%
-    Gui, 	Add, 	Edit,       y+4   %edit%    vDirNameLength, 						    %DirNameLength%
+    Gui, 	Add, 	Edit, 	ys-4 %edit% 	vShortNameIndicator, 						%ShortNameIndicator%
+    Gui, 	Add, 	Edit, 	y+4  %edit% 	vPathSeparator, 							%PathSeparator%
+    
+    Gui, 	Add, 	Edit, 	y+4  %edit%
+    Gui, 	Add, 	UpDown, Range1-9999     vDirsCount, 								%DirsCount%
+    Gui, 	Add, 	Edit,   y+4   %edit%
+    Gui, 	Add, 	UpDown, Range1-9999     vDirNameLength, 						    %DirNameLength%
 
     Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
