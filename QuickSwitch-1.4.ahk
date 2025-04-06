@@ -35,11 +35,11 @@ BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-
 
 #Include %A_ScriptDir%
 #Include Libs\Log.ahk
+#Include Libs\Debug.ahk
 #Include Libs\Values.ahk
 #Include Libs\FileDialogs.ahk
 #Include Libs\GetPaths.ahk
 #Include Libs\AutoSwitch.ahk
-#Include Libs\Debug.ahk
 
 #Include Libs\SettingsBackend.ahk
 #Include Libs\SettingsFrontend.ahk
