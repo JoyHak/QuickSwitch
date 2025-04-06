@@ -85,17 +85,17 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     Loop, 100 {
         Sleep, 10
         ControlFocus SysListView321, ahk_id %winId%
-        ControlGetFocus, _Focus, ahk_id %winId%
+        ControlGetFocus, _focus, ahk_id %winId%
 
-    } Until _Focus == "SysListView321"
+    } Until (_focus == "SysListView321")
     ControlSend SysListView321, {Home}, ahk_id %winId%
 
     Loop, 100 {
         Sleep, 10
         ControlSend SysListView321, ^{Space}, ahk_id %winId%
-        ControlGet, _Focus, List, Selected, SysListView321, ahk_id %winId%
+        ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
 
-    } Until !_Focus
+    } Until !_focus
 
     _pathSet := false
     Loop, 20 {
@@ -103,10 +103,11 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
         ControlSetText, Edit1, %path%, ahk_id %winId%
         ControlGetText, _Edit1, Edit1, ahk_id %winId%
 
-        if (_Edit1 == path)
+        if (_Edit1 == path) {
             _pathSet := true
-
-    } Until _pathSet
+            break
+        }
+    }
 
     if _pathSet {
         Sleep, 20
@@ -116,8 +117,8 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
         ; Restore original filename / make empty in case of previous path
         Sleep, 15
         ControlFocus Edit1, ahk_id %winId%
-        Sleep, 20
 
+        Sleep, 20
         Loop, 5 {
             ControlSetText, Edit1, %_editOld%, ahk_id %winId%        ; set
             Sleep, 15
