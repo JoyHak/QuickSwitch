@@ -136,23 +136,23 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
 
-    ; Read the current text in the "File Name:" box (= OldText)
+    ; Read the current text in the "File Name"
     ControlGetText _editOld, Edit1, ahk_id %winId%
-    Sleep, 20
 
     ; Make sure there exactly one slash at the end.
     path := RTrim(path , "\") . "\"
-    _pathSet := false
 
+    _pathSet := false
     Loop, 20 {
         Sleep, 10
         ControlSetText, Edit1, %path%, ahk_id %winId%
         ControlGetText, _Edit1, Edit1, ahk_id %winId%
 
-        if (_Edit1 == path)
+        if (_Edit1 == path) {
             _pathSet := true
-
-    } Until _pathSet
+            break
+        }
+    }
 
     if _pathSet {
         Sleep, 20
@@ -170,7 +170,7 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
             ControlGetText, _editContent, Edit1, ahk_id %winId%      ; check
 
             if (_editContent == _editOld)
-                Break
+                break
         }
     }
 }
