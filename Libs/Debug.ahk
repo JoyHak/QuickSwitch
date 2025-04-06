@@ -48,15 +48,13 @@ DebugExport() {
 
 CancelLV() {
     LV_Delete()
-    GUI, Destroy
+    Gui, Destroy
 }
 
 ShowDebugMenu() {
-    global GuiColor
-    GUI, Destroy
+    Gui, Destroy
 
     SetFormat, Integer, D
-    ; Header for list
     Gui, Add, ListView, r30 w1024, Control|ID|PID||Text|X|Y|Width|Height
     
     WinGet, ActivecontrolList, ControlList, A
