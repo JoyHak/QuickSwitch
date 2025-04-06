@@ -66,14 +66,14 @@ Loop {
     try {
         DialogID   := WinExist("A")
         FileDialog := GetFileDialog(DialogID)
-        
+
         ; if there is any GUI left from previous calls....
         Gui, Destroy
 
         if FileDialog {
             ; This is a supported dialog
             GetPaths()
-            
+
             WinGet, Exe, ProcessName, ahk_id %DialogID%
             WinGetTitle, WinTitle, ahk_id %DialogID%
             FingerPrint := Exe . "___" . WinTitle
@@ -91,21 +91,21 @@ Loop {
                 }
             } else if (OpenMenu || (FromSettings && ReDisplayMenu)) {
                 ShowPathsMenu()
-            }     
+            }
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
         }   ; End of File Dialog routine
 
         Sleep, 100
         WinWaitNotActive
-    
+
         ; Clean up
-        ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)            
+        ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
         Exe          := ""
         WinTitle     := ""
         DialogAction := ""
         DialogID     := ""
-        
+
     } catch GlobalError {
         LogError(GlobalError)
     }
