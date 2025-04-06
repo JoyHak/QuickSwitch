@@ -54,12 +54,11 @@ WriteValues() {
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%ShortenEnd%, 				%INI%, 		Menu, 		ShortenEnd
         IniWrite, 	%ShowFirstSeparator%, 		%INI%, 		Menu, 		ShowFirstSeparator
+        IniWrite, 	%DirsCount%, 		        %INI%, 		Menu, 		DirsCount
+        IniWrite, 	%DirNameLength%, 		    %INI%, 		Menu, 		DirNameLength
     } catch {
         LogError(Exception("Failed to write values to the configuration", INI . " write", "Create INI file manually or change the INI global variable"))
     }
-
-    ValidateWriteInteger(DirsCount, 		"DirsCount")
-    ValidateWriteInteger(DirNameLength, 	"DirNameLength")
 
     ValidateWriteString(PathSeparator, 		"PathSeparator")
     ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
@@ -161,18 +160,6 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
     } catch _error {
         LogError(_error)
     }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateWriteInteger(ByRef number, ByRef paramName) {
-;─────────────────────────────────────────────────────────────────────────────
-    global INI
-
-    if number is Integer
-        IniWrite, % number, % INI, Menu, % paramName
-    else
-        LogError(Exception(number " is not an integer for the " paramName " parameter", paramName))
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
