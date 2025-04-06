@@ -4,76 +4,7 @@
     It returns the FuncObj to call it later and feed the current dialogue.
 */
 
-FeedDialogGENERAL(ByRef winId, ByRef path) {
-    WinActivate, ahk_id %winId%
-    Sleep, 50
-    
-    ControlFocus Edit1, ahk_id %winId%
-    
-    static ActiveControlList
-    WinGet, ActiveControlList, ControlList, ahk_id %winId%
-    
-    Loop, Parse, ActivecontrolList, `n
-    {
-        if InStr(A_LoopField, "ToolbarWindow32") {
-            ControlGet, _ctrlHandle, Hwnd, , %A_LoopField%, ahk_id %winId%
-            _parentHandle := DllCall("GetParent", "Ptr", _ctrlHandle)
-            WinGetClass, _parentClass, ahk_id %_parentHandle%
-
-            if InStr(_parentClass, "Breadcrumb Parent")
-                _useToolbar := A_LoopField
-
-            if Instr(_parentClass, "msctls_progress32")
-                _enterToolbar := A_LoopField
-        }
-        ; Start next round clean
-        _ctrlHandle     := ""
-        _parentHandle   := ""
-        _parentClass    := ""
-    }
-
-    _pathSet := false
-    if (_useToolbar and _enterToolbar) {
-        Loop, 5 {
-            SendEvent ^l
-            Sleep, 100
-
-            ; Check and insert path
-            ControlGetFocus, _ctrlFocus, A
-
-            if ((_ctrlFocus != "Edit1") and InStr(_ctrlFocus, "Edit")) {
-                Control, EditPaste, %path%, %_ctrlFocus%, A
-                ControlGetText, _editAddress, %_ctrlFocus%, ahk_id %winId%
-
-                if (_editAddress == path) {
-                    _pathSet := true
-                    Sleep, 15
-                }
-            }
-
-            ; Start next round clean
-            _ctrlFocus    := ""
-            _editAddress  := ""
-
-        } Until _pathSet
-
-        if (_pathSet) {
-            ; Click control to "execute" new path
-            ControlClick, %_enterToolbar%, ahk_id %winId%
-            ; Focus file name
-            Sleep, 25
-            ControlFocus Edit1, ahk_id %winId%
-        }
-    } else {
-        MsgBox This type of dialog can not be handled (yet).`nPlease report it!
-        LogError(Exception("This type of dialog can not be handled!", "file dialog", "`'Breadcrumb Parent`' and `'msctls_progress32`' controls not found"))
-    }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
-;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
     ControlGetText _editOld, Edit1, ahk_id %winId%
 
@@ -206,7 +137,7 @@ GetFileDialog(ByRef dialogId) {
         }
         
         if (_flag & 1 && _flag & 16 && _flag & 32)
-            return Func("FeedDialogGENERAL")
+            return Func("FeedDialogSYSTREEVIEW")
         else if (_flag & 1 && _flag & 2 && _flag & 8 && _flag & 16)
             return Func("FeedDialogSYSTREEVIEW")
         else if (_flag & 1 && _flag & 2 && _flag & 16)
