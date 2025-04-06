@@ -72,7 +72,7 @@ FeedDialogGENERAL(ByRef winId, ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSLISTVIEW(ByRef winId, path) {
+FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
     ControlGetText _editOld, Edit1, ahk_id %winId%
@@ -133,7 +133,7 @@ FeedDialogSYSLISTVIEW(ByRef winId, path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSTREEVIEW(ByRef winId, path) {
+FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
 
