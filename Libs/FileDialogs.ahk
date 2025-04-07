@@ -4,60 +4,15 @@
     It returns the FuncObj to call it later and feed the current dialogue.
 */
 
-FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
-    WinActivate, ahk_id %winId%
-    ControlGetText _editOld, Edit1, ahk_id %winId%
-
-    ; Make sure there exactly one slash at the end.
-    path := RTrim(path , "\") . "\"
-
-    ; Make sure no element is preselected in listview,
-    ; it would always be used later on if you continue with {Enter}!
-    Loop, 100 {
-        Sleep, 10
-        ControlFocus SysListView321, ahk_id %winId%
-        ControlGetFocus, _focus, ahk_id %winId%
-
-    } Until (_focus == "SysListView321")
-    
-    ControlSend SysListView321, {Home}, ahk_id %winId%
-
-    Loop, 100 {
-        Sleep, 10
-        ControlSend SysListView321, ^{Space}, ahk_id %winId%
-        ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
-
-    } Until !_focus
-
-    _pathSet := false
-    Loop, 20 {
-        Sleep, 10
-        ControlSetText, Edit1, %path%, ahk_id %winId%
-        ControlGetText, _Edit1, Edit1, ahk_id %winId%
-
-        if (_Edit1 == path) {
-            _pathSet := true
-            break
-        }
+FeedEditField(ByRef winId, ByRef content, ByRef attempts := 10) {
+    Loop, %attempts% {
+        ControlSetText, Edit1, %content%, ahk_id %winId%       ; set
+        sleep, 15
+        ControlGetText, _editContent, Edit1, ahk_id %winId%    ; check
+        if (_editContent == content)
+            return true        
     }
-
-    if _pathSet {
-        ControlFocus Edit1, ahk_id %winId%
-        ControlSend Edit1, {Enter}, ahk_id %winId%
-
-        ; Restore original filename / make empty in case of previous path
-        Sleep, 15
-        ControlFocus Edit1, ahk_id %winId%
-
-        Sleep, 20
-        Loop, 5 {
-            Sleep, 15
-            ControlSetText, Edit1, %_editOld%, ahk_id %winId%        ; set
-            Sleep, 15
-            ControlGetText, _editContent, Edit1, ahk_id %winId%      ; check
-
-        } Until (_editContent == _editOld)
-    }
+    return false
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -71,33 +26,60 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 
     ; Make sure there exactly one slash at the end.
     path := RTrim(path , "\") . "\"
-
-    _pathSet := false
-    Loop, 20 {
-        ControlSetText, Edit1, %path%, ahk_id %winId%
-        ControlGetText, _Edit1, Edit1, ahk_id %winId%
-
-        if (_Edit1 == path) {
-            _pathSet := true
-            break
-        }
-    }
-
-    if _pathSet {
-        ControlFocus Edit1, ahk_id %winId%
+    
+    if FeedEditField(winId, path) {
+        ; Restore original filename 
+        ; or make empty in case of previous path
         ControlSend Edit1, {Enter}, ahk_id %winId%
-
-        ; Restore original filename / make empty in case of previous path
-        Sleep, 15
+        
+        sleep, 20
         ControlFocus Edit1, ahk_id %winId%
+        sleep, 20
+        
+        FeedEditField(winId, _editOld)
+    }
+}
 
-        Loop, 5 {
-            Sleep, 15
-            ControlSetText, Edit1, %_editOld%, ahk_id %winId%        ; set
-            Sleep, 15
-            ControlGetText, _editContent, Edit1, ahk_id %winId%      ; check
-            
-        } Until (_editContent == _editOld)
+;─────────────────────────────────────────────────────────────────────────────
+;
+FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
+    WinActivate, ahk_id %winId%
+    
+    ; Read the current text in the "File Name"
+    ControlGetText _editOld, Edit1, ahk_id %winId%
+
+    ; Make sure there exactly one slash at the end.
+    path := RTrim(path , "\") . "\"
+
+    ; Make sure no element is preselected in listview,
+    ; it would always be used later on if you continue with {Enter}!
+    Loop, 100 {
+        Sleep, 15
+        ControlFocus SysListView321, ahk_id %winId%
+        ControlGetFocus, _focus, ahk_id %winId%
+
+    } Until (_focus == "SysListView321")
+    
+    ControlSend SysListView321, {Home}, ahk_id %winId%
+
+    Loop, 100 {
+        Sleep, 15
+        ControlSend SysListView321, ^{Space}, ahk_id %winId%
+        ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
+
+    } Until !_focus
+
+    if FeedEditField(winId, path) {
+        ; Restore original filename 
+        ; or make empty in case of previous path
+        ControlSend Edit1, {Enter}, ahk_id %winId%
+        
+        sleep, 15
+        ControlFocus Edit1, ahk_id %winId%
+        sleep, 15
+        
+        FeedEditField(winId, _editOld)
     }
 }
 
