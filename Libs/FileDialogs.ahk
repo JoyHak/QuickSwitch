@@ -110,39 +110,27 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;
 GetFileDialog(ByRef dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Detection of a File dialog. 
+    ; Detection of a File dialog by checking specific controls existence. 
     ; Returns FuncObj if required controls found,
     ; otherwise returns false
     
-    try {
-        WinGet, _controlList, ControlList, ahk_id %dialogId%
-        _flag := 0
+    try {      
+        _edit := _listView := _treeView := _header := _toolbar := _directUI := 0
+     
+        try ControlGet, _edit,      Hwnd,,  Edit1,             ahk_id %dialogId%
+        try ControlGet, _listView,  Hwnd,,  SysListView321,    ahk_id %dialogId%
+        try ControlGet, _treeView,  Hwnd,,  SysTreeView321,    ahk_id %dialogId%
+        try ControlGet, _header,    Hwnd,,  SysHeader321,      ahk_id %dialogId%
+        try ControlGet, _toolbar,   Hwnd,,  ToolbarWindow321,  ahk_id %dialogId%
+        try ControlGet, _directUI,  Hwnd,,  DirectUIHWND1,     ahk_id %dialogId%
 
-        Loop, Parse, _controlList, `n
-        {
-            switch A_LoopField {
-                case "Edit1": 
-                    _flag |= 1
-                case "SysListView321": 
-                    _flag |= 2
-                case "SysTreeView321": 
-                    _flag |= 4
-                case "SysHeader321": 
-                    _flag |= 8
-                case "ToolbarWindow321": 
-                    _flag |= 16
-                case "DirectUIHWND1": 
-                    _flag |= 32
-            }
-        }
-        
-        if (_flag & 1 && _flag & 16 && _flag & 32)
+        if (_edit && _toolbar && _directUI)
             return Func("FeedDialogSYSTREEVIEW")
-        else if (_flag & 1 && _flag & 2 && _flag & 8 && _flag & 16)
+        if (_listView && _toolbar && _header)
             return Func("FeedDialogSYSTREEVIEW")
-        else if (_flag & 1 && _flag & 2 && _flag & 16)
+        if (_listView && _toolbar)
             return Func("FeedDialogSYSLISTVIEW")
-        else if (_flag & 1 && _flag & 2 && _flag & 8)
+        if (_listView && _header)
             return Func("FeedDialogSYSLISTVIEW")
 
     } catch _error {
