@@ -83,6 +83,28 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     }
 }
 
+FindControls(winId, classNN) {
+    if !winId {
+        return winId
+    }
+    
+    if (_id := DllCall("FindWindowEx", "ptr", winId, "int", 0, "str", classNN, "int", 0)) {
+        return _id
+    }
+    
+    ; Search in childs
+    if (_child := DllCall("FindWindowEx", "ptr", winId, "int", 0, "int", 0, "int", 0)) {
+        Loop {
+            if (_flag := FindControls(_child, classNN)) {
+                return _flag
+            } 
+            if !(_child := DllCall("GetWindow", "ptr", _child, "uint", 2)) {
+                break
+            }
+        } 
+    }
+}
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 GetFileDialog(ByRef dialogId) {
