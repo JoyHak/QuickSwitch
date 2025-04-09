@@ -107,7 +107,7 @@ FindControls(winId, classNN, calls := 1) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetFileDialog(ByRef dialogId) {
+GetFileDialog(dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Detection of a File dialog by checking specific controls existence.
     ; Returns FuncObj if required controls found,
