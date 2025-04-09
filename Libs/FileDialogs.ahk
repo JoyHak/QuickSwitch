@@ -83,39 +83,34 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     }
 }
 
-FindControls(winId, classNN, calls := 1) {
+FindControls(_winId, _classes, _flag := 0) {
     ; Recursive search for all controls from the specified array
     ; that contains win32 / custom class names without instance number (Class != ClassNN)
     
-    ; Base case
-    if !winId
-        return false
-    
     ; Search in current window
     for _index, _class in _classes {
-        if DllCall("FindWindowEx", "ptr", _winId, "int", 0, "str", _class, "int", 0) {
+        if (_class && DllCall("FindWindowEx", "ptr", _winId, "ptr", 0, "str", _class, "ptr", 0)) {
             _flag |= 1 << (_index - 1)
-            _classes.removeAt(_index)
+            _classes[_index] := ""
         }      
-    }   
-    
-    ; All controls found
-    if !_classes.count()
-        return _flag
+    }
 
     ; Search in childs
-    if (_child := DllCall("FindWindowEx", "ptr", winId, "int", 0, "int", 0, "int", 0)) {
+    if (_winId && _child := DllCall("FindWindowEx", "ptr", _winId, "ptr", 0, "ptr", 0, "ptr", 0)) {
         Loop, 100 {
-            if (_flag := FindControls(_child, _classes, _flag))
-                return _flag
+            if (_f := FindControls(_child, _classes, _flag))
+                return _f
 
         } Until !(_child := DllCall("GetWindow", "ptr", _child, "uint", 2))
     }
+    return _flag
 }
+
+
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetFileDialog(dialogId) {
+GetFileDialog(ByRef dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Detection of a File dialog by checking specific controls existence.
     ; Returns FuncObj if required controls found,
