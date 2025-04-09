@@ -70,17 +70,18 @@ ShowPathsMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogID, Paths, MenuColor, WinX, WinY, WinWidth, WinHeight
 
-    ReadValues()
-
     ; Get dialog position (also used for settings menu positon)
     WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
     if Paths.Count() {
+        ReadValues()
         AddPathsMenuItems()
         AddPathsMenuSettings()
 
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
         Menu ContextMenu, Delete            ; Delete previous menu
+    } else {
+        ShowNoPaths()
     }
 }
 
