@@ -4,7 +4,23 @@
     which allows you to display anything.
 */
 
+DestroyTooltip() {
+    ToolTip
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ShowNoPaths() {
+;─────────────────────────────────────────────────────────────────────────────
+    global WinX, WinY
+    ToolTip, No available paths, % WinX, % WinY
+    SetTimer, DestroyTooltip, -2000
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 AddPathsMenuItems() {
+;─────────────────────────────────────────────────────────────────────────────
     global PathNumbers, ShortPath, Paths
     
     for _index, _path in Paths {
