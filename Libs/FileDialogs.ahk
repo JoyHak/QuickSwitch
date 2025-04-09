@@ -120,9 +120,6 @@ GetFileDialog(ByRef dialogId) {
         
         ; Check specific controls
         if (_f & 1) {
-            if (_f & 4)
-                return Func("FeedEditField")
-                
             if (_f & 16 && _f & 32)
                 return Func("FeedDialogSYSTREEVIEW")
                 
@@ -137,6 +134,9 @@ GetFileDialog(ByRef dialogId) {
                     return Func("FeedDialogSYSLISTVIEW")
                 }
             }
+            
+            if (_f & 4)
+                return Func("FeedEditField")
         }
 
     } catch _error {
