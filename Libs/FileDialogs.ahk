@@ -92,23 +92,48 @@ GetFileDialog(ByRef dialogId) {
     ; otherwise returns false
     
     try {      
-        _edit := _listView := _treeView := _header := _toolbar := _directUI := 0
-     
-        try ControlGet, _edit,      Hwnd,,  Edit1,             ahk_id %dialogId%
-        try ControlGet, _listView,  Hwnd,,  SysListView321,    ahk_id %dialogId%
-        try ControlGet, _treeView,  Hwnd,,  SysTreeView321,    ahk_id %dialogId%
-        try ControlGet, _header,    Hwnd,,  SysHeader321,      ahk_id %dialogId%
-        try ControlGet, _toolbar,   Hwnd,,  ToolbarWindow321,  ahk_id %dialogId%
-        try ControlGet, _directUI,  Hwnd,,  DirectUIHWND1,     ahk_id %dialogId%
+        ; Get specific controls
+        WinGet, _controlList, ControlList, ahk_id %dialogId%
 
-        if (_edit && _toolbar && _directUI)
-            return Func("FeedDialogSYSTREEVIEW")
-        if (_listView && _toolbar && _header)
-            return Func("FeedDialogSYSTREEVIEW")
-        if (_listView && _toolbar)
-            return Func("FeedDialogSYSLISTVIEW")
-        if (_listView && _header)
-            return Func("FeedDialogSYSLISTVIEW")
+        _f := 0
+        Loop, Parse, _controlList, `n
+        {
+            switch A_LoopField {
+                case "Edit1": 
+                    _f |= 1
+                case "SysListView321": 
+                    _f |= 2
+                case "SysTreeView321": 
+                    _f |= 4
+                case "SysHeader321": 
+                    _f |= 8
+                case "ToolbarWindow321": 
+                    _f |= 16
+                case "DirectUIHWND1": 
+                    _f |= 32
+            }
+        }
+        
+        ; Check specific controls
+        if (_f & 1) {
+            if (_f & 4)
+                return Func("FeedEditField")
+                
+            if (_f & 16 && _f & 32)
+                return Func("FeedDialogSYSTREEVIEW")
+                
+            if (_f & 2) {
+                if (_f & 8) {
+                    if (_f & 16) {
+                        return Func("FeedDialogSYSTREEVIEW")                        
+                    }
+                    return Func("FeedDialogSYSLISTVIEW")
+                }
+                if (_f & 16) {
+                    return Func("FeedDialogSYSLISTVIEW")
+                }
+            }
+        }
 
     } catch _error {
         LogError(_error)
