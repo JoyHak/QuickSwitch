@@ -10,7 +10,7 @@ FeedEditField(ByRef winId, ByRef content, ByRef attempts := 10) {
         sleep, 15
         ControlGetText, _editContent, Edit1, ahk_id %winId%    ; check
         if (_editContent == content)
-            return true        
+            return true
     }
     return false
 }
@@ -26,16 +26,16 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 
     ; Make sure there exactly one slash at the end.
     path := RTrim(path , "\") . "\"
-    
+
     if FeedEditField(winId, path) {
-        ; Restore original filename 
+        ; Restore original filename
         ; or make empty in case of previous path
         ControlSend Edit1, {Enter}, ahk_id %winId%
-        
+
         sleep, 20
         ControlFocus Edit1, ahk_id %winId%
         sleep, 20
-        
+
         FeedEditField(winId, _editOld)
     }
 }
@@ -45,7 +45,7 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
-    
+
     ; Read the current text in the "File Name"
     ControlGetText _editOld, Edit1, ahk_id %winId%
 
@@ -60,7 +60,7 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
         ControlGetFocus, _focus, ahk_id %winId%
 
     } Until (_focus == "SysListView321")
-    
+
     ControlSend SysListView321, {Home}, ahk_id %winId%
 
     Loop, 100 {
@@ -71,37 +71,37 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     } Until !_focus
 
     if FeedEditField(winId, path) {
-        ; Restore original filename 
+        ; Restore original filename
         ; or make empty in case of previous path
         ControlSend Edit1, {Enter}, ahk_id %winId%
-        
+
         sleep, 15
         ControlFocus Edit1, ahk_id %winId%
         sleep, 15
-        
+
         FeedEditField(winId, _editOld)
     }
 }
 
 FindControls(winId, classNN) {
-    if !winId {
+    ; Recursive search for all controls from the specified array
+    ; that contains win32 / custom class names without instance number (Class != ClassNN)
+    
+    ; Base case
+    if !winId
         return winId
-    }
     
-    if (_id := DllCall("FindWindowEx", "ptr", winId, "int", 0, "str", classNN, "int", 0)) {
+    ; Control found
+    if (_id := DllCall("FindWindowEx", "ptr", winId, "int", 0, "str", classNN, "int", 0))
         return _id
-    }
-    
+
     ; Search in childs
     if (_child := DllCall("FindWindowEx", "ptr", winId, "int", 0, "int", 0, "int", 0)) {
-        Loop {
-            if (_flag := FindControls(_child, classNN)) {
-                return _flag
-            } 
-            if !(_child := DllCall("GetWindow", "ptr", _child, "uint", 2)) {
-                break
-            }
-        } 
+        Loop, 100 {
+            if (_id := FindControls(_child, classNN))
+                return _id
+
+        } Until !(_child := DllCall("GetWindow", "ptr", _child, "uint", 2))
     }
 }
 
@@ -109,7 +109,7 @@ FindControls(winId, classNN) {
 ;
 GetFileDialog(ByRef dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Detection of a File dialog by checking specific controls existence. 
+    ; Detection of a File dialog by checking specific controls existence.
     ; Returns FuncObj if required controls found,
     ; otherwise returns false
     
