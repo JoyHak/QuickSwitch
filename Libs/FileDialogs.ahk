@@ -115,16 +115,33 @@ GetFileDialog(ByRef dialogId) {
     ; Detection of a File dialog by checking specific controls existence.
     ; Returns FuncObj if required controls found,
     ; otherwise returns false
-    static classes := ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND"]
-    
+
     try {
         ; Not a dialog
         if !DllCall("FindWindowEx", "ptr", dialogId, "ptr", 0, "str", "Button", "ptr", 0)
             return false
         
-        if (_f := FindControls(dialogId, classes)) {
-            MsgBox % _f
-        
+        ; Check specific controls
+        if (_f := FindControls(dialogId, ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND"])) {
+            if (_f & 1) {
+                if (_f & 4)
+                    return Func("FeedDialogSYSTREEVIEW")
+                    
+                if (_f & 16 && _f & 32)
+                    return Func("FeedDialogSYSTREEVIEW")
+                    
+                if (_f & 2) {
+                    if (_f & 8) {
+                        if (_f & 16) {
+                            return Func("FeedDialogSYSTREEVIEW")                        
+                        }
+                        return Func("FeedDialogSYSLISTVIEW")
+                    }
+                    if (_f & 16) {
+                        return Func("FeedDialogSYSLISTVIEW")
+                    }
+                }
+            }
         }
         
     } catch _error {
