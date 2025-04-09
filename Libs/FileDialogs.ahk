@@ -115,11 +115,12 @@ GetFileDialog(dialogId) {
 
     try {
         static _classes := ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND"]
+        _out := ""
         for _index, _class in _classes {
-            if (_id := FindControls(dialogId, _class))
-            MsgBox % _id
-        
+            if (_calls := FindControls(dialogId, _class))
+            _out .= _class ": " _calls "`n"        
         }
+        MsgBox % _out
 
     } catch _error {
         LogError(_error)
