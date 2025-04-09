@@ -83,23 +83,23 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     }
 }
 
-FindControls(winId, classNN) {
+FindControls(winId, classNN, calls := 1) {
     ; Recursive search for all controls from the specified array
     ; that contains win32 / custom class names without instance number (Class != ClassNN)
     
     ; Base case
     if !winId
-        return winId
+        return false
     
     ; Control found
     if (_id := DllCall("FindWindowEx", "ptr", winId, "int", 0, "str", classNN, "int", 0))
-        return _id
+        return calls
 
     ; Search in childs
     if (_child := DllCall("FindWindowEx", "ptr", winId, "int", 0, "int", 0, "int", 0)) {
         Loop, 100 {
-            if (_id := FindControls(_child, classNN))
-                return _id
+            if (_id := FindControls(_child, classNN, calls++))
+                return calls
 
         } Until !(_child := DllCall("GetWindow", "ptr", _child, "uint", 2))
     }
