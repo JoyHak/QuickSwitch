@@ -92,6 +92,10 @@ GetFileDialog(ByRef dialogId) {
     ; otherwise returns false
     
     try {      
+        ; Not a dialog
+        if !DllCall("FindWindowEx", "ptr", dialogId, "ptr", 0, "str", "Button", "ptr", 0)
+            return false
+    
         ; Get specific controls
         WinGet, _controlList, ControlList, ahk_id %dialogId%
 
