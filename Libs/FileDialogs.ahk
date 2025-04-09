@@ -91,15 +91,23 @@ FindControls(winId, classNN, calls := 1) {
     if !winId
         return false
     
-    ; Control found
-    if (_id := DllCall("FindWindowEx", "ptr", winId, "int", 0, "str", classNN, "int", 0))
-        return calls
+    ; Search in current window
+    for _index, _class in _classes {
+        if DllCall("FindWindowEx", "ptr", _winId, "int", 0, "str", _class, "int", 0) {
+            _flag |= 1 << (_index - 1)
+            _classes.removeAt(_index)
+        }      
+    }   
+    
+    ; All controls found
+    if !_classes.count()
+        return _flag
 
     ; Search in childs
     if (_child := DllCall("FindWindowEx", "ptr", winId, "int", 0, "int", 0, "int", 0)) {
         Loop, 100 {
-            if (_id := FindControls(_child, classNN, calls++))
-                return calls
+            if (_flag := FindControls(_child, _classes, _flag))
+                return _flag
 
         } Until !(_child := DllCall("GetWindow", "ptr", _child, "uint", 2))
     }
