@@ -114,13 +114,13 @@ GetFileDialog(dialogId) {
     ; otherwise returns false
 
     try {
-        static _classes := ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND"]
-        _out := ""
-        for _index, _class in _classes {
-            if (_calls := FindControls(dialogId, _class))
-            _out .= _class ": " _calls "`n"        
-        }
-        MsgBox % _out
+        ; Not a dialog
+        if !DllCall("FindWindowEx", "ptr", dialogId, "int", 0, "str", "Button", "int", 0)
+            return false
+    
+        static _classes := ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND", ""]
+        
+        MsgBox % FindControls(dialogId, "Button")
 
     } catch _error {
         LogError(_error)
