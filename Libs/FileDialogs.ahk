@@ -107,30 +107,19 @@ FindControls(winId, classNN, calls := 1) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetFileDialog(ByRef dialogId) {
+GetFileDialog(dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Detection of a File dialog by checking specific controls existence.
     ; Returns FuncObj if required controls found,
     ; otherwise returns false
 
     try {
-        _edit := _listView := _treeView := _header := _toolbar := _directUI := 0
-
-        try ControlGet, _edit,      Hwnd,,  Edit1,             ahk_id %dialogId%
-        try ControlGet, _listView,  Hwnd,,  SysListView321,    ahk_id %dialogId%
-        try ControlGet, _treeView,  Hwnd,,  SysTreeView321,    ahk_id %dialogId%
-        try ControlGet, _header,    Hwnd,,  SysHeader321,      ahk_id %dialogId%
-        try ControlGet, _toolbar,   Hwnd,,  ToolbarWindow321,  ahk_id %dialogId%
-        try ControlGet, _directUI,  Hwnd,,  DirectUIHWND1,     ahk_id %dialogId%
-
-        if (_edit && _toolbar && _directUI)
-            return Func("FeedDialogSYSTREEVIEW")
-        if (_listView && _toolbar && _header)
-            return Func("FeedDialogSYSTREEVIEW")
-        if (_listView && _toolbar)
-            return Func("FeedDialogSYSLISTVIEW")
-        if (_listView && _header)
-            return Func("FeedDialogSYSLISTVIEW")
+        static _classes := ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND"]
+        for _index, _class in _classes {
+            if (_id := FindControls(dialogId, _class))
+            MsgBox % _id
+        
+        }
 
     } catch _error {
         LogError(_error)
