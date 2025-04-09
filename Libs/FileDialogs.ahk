@@ -160,6 +160,7 @@ GetFileDialog(dialogId) {
             if (_f & 4)
                 return Func("FeedEditField")
         }
+        MsgBox % _out
 
     } catch _error {
         LogError(_error)
