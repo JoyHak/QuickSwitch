@@ -91,54 +91,52 @@ GetFileDialog(ByRef dialogId) {
     ; Returns FuncObj if required controls found,
     ; otherwise returns false
     
-    try {      
-        ; Not a dialog
-        if !DllCall("FindWindowEx", "ptr", dialogId, "ptr", 0, "str", "Button", "ptr", 0)
-            return false
-    
-        ; Get specific controls
-        WinGet, _controlList, ControlList, ahk_id %dialogId%
+    try {   
 
-        _f := 0
-        Loop, Parse, _controlList, `n
-        {
-            switch A_LoopField {
-                case "Edit1": 
-                    _f |= 1
-                case "SysListView321": 
-                    _f |= 2
-                case "SysTreeView321": 
-                    _f |= 4
-                case "SysHeader321": 
-                    _f |= 8
-                case "ToolbarWindow321": 
-                    _f |= 16
-                case "DirectUIHWND1": 
-                    _f |= 32
+        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
+        if DllCall("FindWindowExW", "ptr", dialogId, "int", 0, "str", "Button", "int", 0) {
+            
+            ; Dialog with buttons
+            ; Get specific controls
+            WinGet, _controlList, ControlList, ahk_id %dialogId%
+            
+            ; Search for...
+            static classes := {Edit1: 0x1, SysListView321: 0x2, SysTreeView321: 0x4, SysHeader321: 0x8, ToolbarWindow321: 0x10, DirectUIHWND1: 0x20} 
+            _classes := classes.clone()
+            
+            ; Find controls and set bitwise flag
+            _f := 0
+            Loop, Parse, _controlList, `n
+            {   
+                _class := _classes[A_LoopField]
+                if _class {
+                    _f |= _class
+                    _classes.delete(A_LoopField)
+                }
+            }
+       
+            ; Check specific controls
+            if (_f & 0x1) {
+                if (_f & 0x10 && _f & 0x20)
+                    return Func("FeedDialogSYSTREEVIEW")
+                    
+                if (_f & 0x2) {
+                    if (_f & 0x8) {
+                        if (_f & 0x10) {
+                            return Func("FeedDialogSYSTREEVIEW")                        
+                        }
+                        return Func("FeedDialogSYSLISTVIEW")
+                    }
+                    if (_f & 0x10) {
+                        return Func("FeedDialogSYSLISTVIEW")
+                    }
+                }
+                
+                if (_f & 0x4)
+                    return Func("FeedEditField")
             }
         }
         
-        ; Check specific controls
-        if (_f & 1) {
-            if (_f & 16 && _f & 32)
-                return Func("FeedDialogSYSTREEVIEW")
-                
-            if (_f & 2) {
-                if (_f & 8) {
-                    if (_f & 16) {
-                        return Func("FeedDialogSYSTREEVIEW")                        
-                    }
-                    return Func("FeedDialogSYSLISTVIEW")
-                }
-                if (_f & 16) {
-                    return Func("FeedDialogSYSLISTVIEW")
-                }
-            }
-            
-            if (_f & 4)
-                return Func("FeedEditField")
-        }
-
     } catch _error {
         LogError(_error)
     }
