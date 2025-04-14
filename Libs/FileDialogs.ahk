@@ -92,14 +92,14 @@ FindControls(_winId, _classes, _flag := 0) {
     ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexa
 
     for _index, _class in _classes {
-        if (_class && DllCall("FindWindowEx", "ptr", _winId, "ptr", 0, "str", _class, "ptr", 0)) {
+        if (_class && DllCall("FindWindowExW", "ptr", _winId, "ptr", 0, "ptr", &_class, "ptr", 0)) {
             _flag |= 1 << (_index - 1)
             _classes[_index] := ""
         }
     }
 
     ; Search in child windows
-    _child := DllCall("FindWindowEx", "ptr", _winId, "ptr", 0, "ptr", 0, "ptr", 0)
+    _child := DllCall("FindWindowExW", "ptr", _winId, "ptr", 0, "ptr", 0, "ptr", 0)
     while (_child) {
         _flag  := FindControls(_child, _classes, _flag)
         _child := DllCall("GetWindow", "ptr", _child, "uint", 2)  ; GW_HWNDNEXT 
