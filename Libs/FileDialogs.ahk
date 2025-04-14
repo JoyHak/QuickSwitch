@@ -49,9 +49,6 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     ; Read the current text in the "File Name"
     ControlGetText _editOld, Edit1, ahk_id %winId%
 
-    ; Make sure there exactly one slash at the end.
-    path := RTrim(path , "\") . "\"
-
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
     Loop, 100 {
