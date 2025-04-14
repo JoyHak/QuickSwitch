@@ -23,13 +23,13 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 
     ; Read the current text in the "File Name"
     ControlGetText _editOld, Edit1, ahk_id %winId%
-
-    ; Make sure there exactly one slash at the end.
-    path := RTrim(path , "\") . "\"
     
     if FeedEditField(winId, path) {
         ; Restore original filename 
         ; or make empty in case of previous path
+        sleep, 20
+        ControlFocus Edit1, ahk_id %winId%
+        sleep, 20
         ControlSend Edit1, {Enter}, ahk_id %winId%
         
         sleep, 20
@@ -73,11 +73,14 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     if FeedEditField(winId, path) {
         ; Restore original filename 
         ; or make empty in case of previous path
+        sleep, 20
+        ControlFocus Edit1, ahk_id %winId%
+        sleep, 20
         ControlSend Edit1, {Enter}, ahk_id %winId%
         
-        sleep, 15
+        sleep, 20
         ControlFocus Edit1, ahk_id %winId%
-        sleep, 15
+        sleep, 20
         
         FeedEditField(winId, _editOld)
     }
