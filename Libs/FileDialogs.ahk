@@ -118,52 +118,12 @@ GetFileDialog(ByRef dialogId) {
     
     try {      
         ; Not a dialog
-        if !DllCall("FindWindowEx", "ptr", dialogId, "ptr", 0, "str", "Button", "ptr", 0)
-            return false
-    
-        ; Get specific controls
-        WinGet, _controlList, ControlList, ahk_id %dialogId%
-
-        _f := 0
-        Loop, Parse, _controlList, `n
-        {
-            switch A_LoopField {
-                case "Edit1": 
-                    _f |= 1
-                case "SysListView321": 
-                    _f |= 2
-                case "SysTreeView321": 
-                    _f |= 4
-                case "SysHeader321": 
-                    _f |= 8
-                case "ToolbarWindow321": 
-                    _f |= 16
-                case "DirectUIHWND1": 
-                    _f |= 32
-            }
-        }
+        ;if !DllCall("FindWindowEx", "ptr", dialogId, "ptr", 0, "str", "Button", "ptr", 0)
+            ;return false
         
-        ; Check specific controls
-        if (_f & 1) {
-            if (_f & 16 && _f & 32)
-                return Func("FeedDialogSYSTREEVIEW")
-                
-            if (_f & 2) {
-                if (_f & 8) {
-                    if (_f & 16) {
-                        return Func("FeedDialogSYSTREEVIEW")                        
-                    }
-                    return Func("FeedDialogSYSLISTVIEW")
-                }
-                if (_f & 16) {
-                    return Func("FeedDialogSYSLISTVIEW")
-                }
-            }
-            
-            if (_f & 4)
-                return Func("FeedEditField")
-        }
-        MsgBox % _out
+        Timer(1)            
+        ToolTip % FindControls(dialogId, ["Edit", "SysListView32", "SysTreeView32", "SysHeader32", "ToolbarWindow32", "DirectUIHWND"]) " | " Timer(0)
+        
 
     } catch _error {
         LogError(_error)
