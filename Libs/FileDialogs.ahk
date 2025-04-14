@@ -4,12 +4,13 @@
     It returns the FuncObj to call it later and feed the current dialogue.
 */
 
-FeedEditField(ByRef winId, ByRef content, ByRef attempts := 10) {
-    Loop, %attempts% {
-        ControlSetText, Edit1, %content%, ahk_id %winId%       ; set
+FeedEditField(ByRef winId, ByRef path, ByRef attempts := 10) {
+    Loop, % attempts 
+    {
+        ControlSetText, Edit1, % path, ahk_id %winId%          ; set
         sleep, 15
         ControlGetText, _editContent, Edit1, ahk_id %winId%    ; check
-        if (_editContent == content)
+        if (_editContent == path)
             return true        
     }
     return false
