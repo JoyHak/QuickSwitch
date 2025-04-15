@@ -6,25 +6,24 @@
 
 ToggleBlackList() {
     global
-    
-    DialogAction := (DialogAction = -1) ? 0 : -1 
+
+    DialogAction := (DialogAction = -1) ? 0 : -1
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
 }
 
 ToggleAutoSwitch() {
     global
-    
+
     DialogAction := !DialogAction
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
-    
-    AutoSwitch()
+
+    if DialogAction
+        AutoSwitch()
 }
 
 AutoSwitch() {
     global
-    
-    if DialogAction
-        FileDialog.call(DialogID, Paths[1])
+    FileDialog.call(DialogID, Paths[1])
 }
 
 Dummy() {
