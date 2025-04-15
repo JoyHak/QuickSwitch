@@ -91,7 +91,14 @@ ShowMenuSettings() {
 
     Gui, 	Add, 	Button, 	w74             Default  gSaveSettings, 					        &OK
     Gui, 	Add, 	Button, 	wp x+20 yp  	Cancel   gCancel, 							        &Cancel
-    Gui, 	Add, 	Button, 	wp x+20 yp 		         gResetSettings, 					        &Reset
+    
+    if NukeSettings {
+        NukeSettings := false
+        Gui,  Add,    Button,     wp x+20 yp  gNukeSettings,   &Nuke
+    } else {                                                   
+        Gui,  Add,    Button,     wp x+20 yp  gResetSettings,  &Reset
+    }
+    
     Gui, 	Add, 	Button, 	wp xp ym-4               gShowDebugMenu, 				            &Debug
 
 
