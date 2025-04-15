@@ -102,6 +102,7 @@ Loop {
         ; Clean up
         ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
         ToolTip
+        FromSettings := false
         Exe          := ""
         WinTitle     := ""
         DialogAction := ""
