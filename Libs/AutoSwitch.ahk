@@ -4,24 +4,27 @@
     Depends on DialogAction variable, which is bound to each window's FingerPrint.
 */
 
+ToggleBlackList() {
+    global
+    
+    DialogAction := (DialogAction = -1) ? 0 : -1 
+    IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+}
+
+ToggleAutoSwitch() {
+    global
+    
+    DialogAction := !DialogAction
+    IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+    
+    AutoSwitch()
+}
+
 AutoSwitch() {
     global
-    IniWrite, 1, %INI%, Dialogs, %FingerPrint%
-    DialogAction := 1
-
-    FileDialog.call(DialogID, Paths[1])
-}
-
-Never() {
-    global
-    IniWrite, 0, %INI%, Dialogs, %FingerPrint%
-    DialogAction := 0
-}
-
-ThisMenu() {
-    global
-    IniDelete, %INI%, Dialogs, %FingerPrint%
-    DialogAction := ""
+    
+    if DialogAction
+        FileDialog.call(DialogID, Paths[1])
 }
 
 Dummy() {

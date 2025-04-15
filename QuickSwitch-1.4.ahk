@@ -84,13 +84,9 @@ Loop {
             if (DialogAction = 1) {
                 AutoSwitch()
             } else if (DialogAction = 0) {
-                ; Never here
                 if (OpenMenu || (FromSettings && ReDisplayMenu)) {
-                    ; AutoOpenMenu only
                     ShowPathsMenu()
                 }
-            } else if (OpenMenu || (FromSettings && ReDisplayMenu)) {
-                ShowPathsMenu()
             }
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
