@@ -1,6 +1,24 @@
 ; These functions are responsible for the GUI Settings functionality and its Controls
 
+NukeSettings() {
+    ; Delete configuration
+    global INI, ScriptName
+
+    ; Yes/No, Warn icon, default is "No", always on top without title bar
+    MsgBox, % (4 + 48 + + 256 + 262144), , % "Do you want to delete the configuration?`n" INI
+    IfMsgBox No
+        return
+
+    try FileRecycle, % INI
+    TrayTip, % ScriptName, Old configuration has been placed in the Recycle Bin,, 0x2
+    ResetSettings()
+}
+
 ResetSettings() {
+    ; Show "Nuke" button once after pressing "Reset" button
+    if (A_GuiControl = "&Reset")
+        global NukeSettings := true
+
     ; Roll back values and show them in settings
     Gui, Destroy
 
