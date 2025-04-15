@@ -4,19 +4,6 @@
     which allows you to display anything.
 */
 
-DestroyTooltip() {
-    ToolTip
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ShowNoPaths() {
-;─────────────────────────────────────────────────────────────────────────────
-    global WinX, WinY
-    ToolTip, No available paths, % WinX, % WinY
-    SetTimer, DestroyTooltip, -2000
-}
-
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 AddPathsMenuItems() {
@@ -72,6 +59,7 @@ ShowPathsMenu() {
 
     ; Get dialog position (also used for settings menu positon)
     WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
+    
     if Paths.Count() {
         ReadValues()
         AddPathsMenuItems()
@@ -80,8 +68,6 @@ ShowPathsMenu() {
         Menu ContextMenu, Color, %MenuColor%
         Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
         Menu ContextMenu, Delete            ; Delete previous menu
-    } else {
-        ShowNoPaths()
-    }
+    } 
 }
 
