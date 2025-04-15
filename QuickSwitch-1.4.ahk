@@ -88,24 +88,32 @@ Loop {
                     ShowPathsMenu()
                 }
             }
+            
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
+            OnClipboardChange("GetClipboardPath", 1)
 
         }   ; End of File Dialog routine
-
-        Sleep, 100
-        WinWaitNotActive
-
-        ; Clean up
-        ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
-        FromSettings := false
-        Exe          := ""
-        WinTitle     := ""
-        DialogAction := ""
-        DialogID     := ""
-
+        
     } catch GlobalError {
         LogError(GlobalError)
     }
+    
+    Sleep, 100
+    WinWaitNotActive
+    
+    if !WinExist("ahk_id " DialogID) {
+        ; Disable watchers
+        ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
+        OnClipboardChange("GetClipboardPath", 0)
+    }
+    
+    ; Clean up
+    FromSettings := false
+    Exe          := ""
+    WinTitle     := ""
+    DialogAction := ""
+    DialogID     := ""
+    
 }   ; End of continuous WinWaitActive loop
 
 LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart the app manually", "main menu", "End of continuous WinWaitActive loop in main file"))

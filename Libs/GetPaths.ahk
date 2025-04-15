@@ -10,6 +10,55 @@ SelectPath() {
     FileDialog.call(DialogID, Paths[A_ThisMenuItemPos])
 }
 
+ResolveEnvVars(ByRef path) {
+    ; Convert env. variables to real parts       
+    
+    try {
+        _path := ""
+        
+        for _i, _part in StrSplit(path, "`%") {
+            try EnvGet, _env, % _part
+            
+            if _env
+                _path .= _env        
+            else 
+                _path .= _part
+        }
+        
+    } catch _error {
+        LogError(_error)
+        return path
+    }
+    return _path
+}
+
+GetClipboardPath(_mimeType) {
+    global Paths
+    sleep, 300
+    
+    try {
+        Loop, parse, Clipboard, `n 
+        {
+            if ((_mimeType = 1) && !(A_LoopField ~= "\||\.\w{3,5}$")) {  
+                ; Skip non-text, paths from File Managers, files
+                
+                if (_matchPos := RegExMatch(A_LoopField, "(C|[A-Z]):[\/\\]+|%\w+%")) {
+                    ; Assume its a path
+                    _path := SubStr(A_LoopField, _matchPos)
+                    
+                    if InStr(_path, "%") {
+                        _path := ResolveEnvVars(_path)
+                    }
+                    Paths.InsertAt(1, _path)
+                }
+            }
+        }
+        
+    } catch _error {
+        LogError(_error)
+    }
+}
+
 GetShortPath(ByRef path) {
     /*
         _fullPath is shortened to the last N dirs (DirsCount) starting from the end of the path.
