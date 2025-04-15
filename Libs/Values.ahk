@@ -1,5 +1,6 @@
 ; These parameters are not saved in the INI
 FromSettings    := false
+NukeSettings    := false
 LastTabSettings := 1
 
 ; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
