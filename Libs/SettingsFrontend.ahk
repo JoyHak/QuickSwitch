@@ -61,7 +61,7 @@ ShowMenuSettings() {
 
     Gui, 	Add, 	Edit, 	    ys-4 %edit% Limit	    vShortNameIndicator, 						%ShortNameIndicator%
     Gui, 	Add, 	Edit, 	    y+4  %edit% Limit	    vPathSeparator, 							%PathSeparator%
-    
+
     Gui, 	Add, 	Edit, 	    y+4  %edit% Limit4
     Gui, 	Add, 	UpDown,     Range1-9999             vDirsCount, 								%DirsCount%
     Gui, 	Add, 	Edit,       y+4  %edit% Limit4
@@ -82,7 +82,7 @@ ShowMenuSettings() {
     Gui, 	Add, 	Hotkey,     y+4  %edit% w100	    vRestartKey, 							    %RestartKey%
     Gui, 	Add, 	CheckBox,   ys+4                    vMainKeyHook    checked%MainKeyHook%, 	    hook
     Gui, 	Add, 	CheckBox,   y+12	                vRestartKeyHook checked%RestartKeyHook%,    hook
-    
+
     Gui, 	Add, 	Edit, 	    xs    %edit% 	        vRestartWhere, 					            %RestartWhere%
     Gui, 	Add, 	Edit, 	    y+4   %edit% 	        vMainIcon, 						            %MainIcon%
     Gui, 	Add, 	Edit, 	    y+4   %edit% 	        vMainFont, 					                %MainFont%
@@ -91,14 +91,14 @@ ShowMenuSettings() {
 
     Gui, 	Add, 	Button, 	w74             Default  gSaveSettings, 					        &OK
     Gui, 	Add, 	Button, 	wp x+20 yp  	Cancel   gCancel, 							        &Cancel
-    
+
     if NukeSettings {
         NukeSettings := false
         Gui,  Add,    Button,     wp x+20 yp  gNukeSettings,   &Nuke
-    } else {                                                   
+    } else {
         Gui,  Add,    Button,     wp x+20 yp  gResetSettings,  &Reset
     }
-    
+
     Gui, 	Add, 	Button, 	wp xp ym-4               gShowDebugMenu, 				            &Debug
 
 

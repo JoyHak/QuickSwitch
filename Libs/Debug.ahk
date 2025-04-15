@@ -1,40 +1,40 @@
 Timer(R := 0) {
-    /* 
+    /*
         Measure script performance
         Start timer by Timer(1).
         Save result by Timer(0)
-    */   
-    
+    */
+
     static P := 0, F := 0, Q := DllCall("QueryPerformanceFrequency", "Int64P", F)
-    return !DllCall("QueryPerformanceCounter", "Int64P", Q) + (R ? (P := Q) / F : (Q - P) / F) 
+    return !DllCall("QueryPerformanceCounter", "Int64P", Q) + (R ? (P := Q) / F : (Q - P) / F)
 }
 
 DebugExport() {
     global FingerPrint
-    
+
     try {
         _fileName := A_ScriptDir "\" FingerPrint ".csv"
         _file := FileOpen(_fileName, "w")
-    
+
         if IsObject(_file) {
             ; Header
             _line := "ControlName;ID;PID;Text;X;Y;Width;Height"
             _file.WriteLine(_line)
-            
+
             ; Get content of each line
             Gui, ListView
             Loop, % LV_GetCount() {
                 _line     := ""
                 _colIndex := A_index
-                
+
                 ; Append content of each column
                 Loop, 8 {
                     LV_GetText(_text, _colIndex, A_index)
                     _line .= _text ";"
                 }
                 _file.WriteLine(_line)
-            }    
-            
+            }
+
             _file.Close()
             clipboard := _filename
             TrayTip, Successfully exported (path in clipboard), Results exported to %_filename%
@@ -43,7 +43,7 @@ DebugExport() {
         }
     } catch _error {
         LogError(_error)
-    }    
+    }
 }
 
 CancelLV() {
@@ -56,22 +56,22 @@ ShowDebugMenu() {
 
     SetFormat, Integer, D
     Gui, Add, ListView, r30 w1024, Control|ID|PID||Text|X|Y|Width|Height
-    
+
     WinGet, ActivecontrolList, ControlList, A
     Loop, Parse, ActivecontrolList, `n
     {
         ControlGet, _ctrlHandle, Hwnd, , %A_LoopField%, A
         ControlGetText _ctrlText, , ahk_id %_ctrlHandle%
         ControlGetPos _X, _Y, _Width, _Height, , ahk_id %_ctrlHandle%
-        
+
         ; Get PID
         _parentHandle := DllCall("GetParent", "Ptr", _ctrlHandle)
         ; Abs for hex to dec
         LV_Add(, A_LoopField, abs(_ctrlHandle), _parentHandle, _ctrlText, _X, _Y, _Width, _Height)
     }
-    
+
     ; Auto-size each column to fit its contents
-    LV_ModifyCol() 
+    LV_ModifyCol()
     LV_ModifyCol(2, "Integer")
     LV_ModifyCol(3, "Integer")
 

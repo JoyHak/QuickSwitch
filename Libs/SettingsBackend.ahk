@@ -38,8 +38,10 @@ RestartApp() {
     global RestartWhere
 
     if RestartWhere {
-        IfWinActive, %RestartWhere%
+        if WinActive(RestartWhere) {
             Reload
+        }
+
     } else {
         Reload
     }
@@ -76,11 +78,11 @@ ToggleShortPath() {
 ValidateAutoStartup() {
 ;─────────────────────────────────────────────────────────────────────────────
 	global AutoStartup, ScriptName, INI
-    
+
     try {
         IniRead, AutoStartup, %INI%, App, AutoStartup, %AutoStartup%
         link := A_Startup . "\" . ScriptName . ".lnk"
-    
+
         if AutoStartup {
             if !FileExist(link) {
                 FileCreateShortcut, %A_ScriptFullPath%, %link%, %A_ScriptDir%
