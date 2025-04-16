@@ -1,8 +1,10 @@
-/*
-    These options are available in the Paths Menu.
-    AutoSwitch() is called each time a dialogue is opened if it is enabled.
-    Depends on DialogAction variable, which is bound to each window's FingerPrint.
-*/
+; These functions are responsible for the Context Menu functionality and its Options
+
+SelectPath() {
+    ; The path is bound to the position of the menu item
+    global
+    FileDialog.call(DialogID, Paths[A_ThisMenuItemPos])
+}
 
 ToggleBlackList() {
     global
@@ -29,4 +31,3 @@ AutoSwitch() {
 Dummy() {
     Return
 }
-

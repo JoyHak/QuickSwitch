@@ -1,12 +1,6 @@
 ; Here are the the top-level functions for getting paths
 ; All functions add values to the global paths array.
 
-SelectPath() {
-    ; The path is bound to the position of the menu item
-    global
-    FileDialog.call(DialogID, Paths[A_ThisMenuItemPos])
-}
-
 GetShortPath(ByRef path) {
     /*
         Full path is shortened according to user-specified global parameters 
