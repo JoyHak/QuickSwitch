@@ -1,7 +1,7 @@
 /*
-    This is the context menu from which you can select the desired path.
-    Please note that the displayed and actual paths are independent of each other,
-    which allows you to display anything.
+    This is the Context Menu which allows to select the desired path.
+    Displayed and actual paths are independent of each other,
+    which allows menu to display anything (e.g. short path)
 */
 
 AddTitle(ByRef title) {
