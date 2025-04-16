@@ -343,18 +343,18 @@ GetDopusPaths(ByRef winId) {
         VarSetCapacity(_text, WINDOW_TEXT_SIZE * 2)
         
         ; Find the first address bar HWND
-        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexa
-        _previousHwnd := DllCall("FindWindowEx", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
+        _previousHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
         _startHwnd    := _previousHwnd
         _paths        := []
                 
         loop {
             ; Pass every HWND to GetWindowText() and get the content
-            ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtexta
-            if DllCall("GetWindowText", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
+            ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
+            if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
                 _paths.push(_text)
             }
-            _nextHwnd := DllCall("FindWindowEx", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
+            _nextHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
             
             ; The loop iterates through all the tabs over and over again, 
             ; so we must stop when it repeats
