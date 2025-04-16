@@ -1,12 +1,22 @@
+/* 
+    Contains functions for getting information about the app's operation and additional information. 
+    Any user notification functions should be placed here. 
+    "ErrorsLog" param must be a path to a write-accessible file (with any extension)
+    Library must be imported first!
+ */
+
 LogError(_error) {
+    ; Accepts Exception object or any custom object with similar attributes
     global ErrorsLog, ScriptName
 
-    ; generate call stack
+    ; Generate call stack
     _stack := ""
 	Loop {
-		_e := Exception(".", offset := -A_Index-1)  ; skip current func
+        ; Skip current func
+		_e    := Exception(".", offset := -A_Index-1)  
         _call := _e.What
-		if (_call == offset)
+		
+        if (_call == offset)
 			break
 
 		_stack := _call " > " _stack
