@@ -38,10 +38,15 @@ BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-
 #Include Libs\Debug.ahk
 #Include Libs\Values.ahk
 #Include Libs\FileDialogs.ahk
+
+#Include Libs\ManagerMessages.ahk
+#Include Libs\ManagerClasses.ahk
+#Include Libs\TotalCommander.ahk
 #Include Libs\GetPaths.ahk
-#Include Libs\MenuBackend.ahk
 
 #Include Libs\SettingsBackend.ahk
+#Include Libs\MenuBackend.ahk
+
 #Include Libs\SettingsFrontend.ahk
 #Include Libs\MenuFrontend.ahk
 

@@ -1,0 +1,38 @@
+; Contains file manager request senders
+
+SendXyplorerScript(ByRef winId, ByRef script) {
+    ; https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654
+    _size := StrLen(script)
+
+    VarSetCapacity(_copyData, A_PtrSize * 3, 0)
+    NumPut(4194305, _copyData, 0, "Ptr")
+    NumPut(_size * 2, _copyData, A_PtrSize, "UInt")
+    NumPut(&script, _copyData, A_PtrSize * 2, "Ptr")
+    
+    try {
+        ; WM_COPYDATA without recieve
+        SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+    } catch _error {
+        throw Exception("Unable to send a message to XYplorer", "Xyplorer script",  _error.What " " _error.Message " " _error.Extra)
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+SendTotalCommand(ByRef winId, ByRef command) {
+;─────────────────────────────────────────────────────────────────────────────
+    VarSetCapacity(_copyData, A_PtrSize * 3)
+    VarSetCapacity(_result, StrPut(command, "UTF-8"))	
+    _size := StrPut(command, &_result, "UTF-8")
+    
+    NumPut(19781, _copyData, 0)
+    NumPut(_size, _copyData, A_PtrSize)
+    NumPut(&_result , _copyData, A_PtrSize * 2)
+     
+    try {
+        ; WM_COPYDATA without recieve
+        SendMessage, 74, 0, &_copyData,, ahk_id %winId%
+    } catch _error {
+        throw Exception("Unable to execute TotalCommander user command", "TotalCommander command",  _error.What " " _error.Message " " _error.Extra)
+    }
+}
