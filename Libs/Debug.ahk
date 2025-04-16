@@ -1,8 +1,15 @@
+/* 
+    Contains functions for debugging and testing code.
+    Any functions to test the performance of the code 
+    (other than logging) should be stored here. 
+    Library must be imported first to be used in other libraries!    
+*/
+
 Timer(R := 0) {
     /*
         Measure script performance
-        Start timer by Timer(1).
-        Save result by Timer(0)
+        Start: Timer(1).
+        Save:  Timer(0)
     */
 
     static P := 0, F := 0, Q := DllCall("QueryPerformanceFrequency", "Int64P", F)
@@ -10,6 +17,7 @@ Timer(R := 0) {
 }
 
 DebugExport() {
+    ; Export dialog controls from ListView to CSV
     global FingerPrint
 
     try {
@@ -52,6 +60,7 @@ CancelLV() {
 }
 
 ShowDebugMenu() {
+    ; Displays information about the file dialog Controls
     Gui, Destroy
 
     SetFormat, Integer, D
