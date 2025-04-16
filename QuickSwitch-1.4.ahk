@@ -43,7 +43,7 @@ BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-
 
 #Include Libs\SettingsBackend.ahk
 #Include Libs\SettingsFrontend.ahk
-#Include Libs\PathsMenu.ahk
+#Include Libs\MenuFrontend.ahk
 
 ValidateLog()
 
