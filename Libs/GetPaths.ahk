@@ -190,7 +190,7 @@ GetXyplorerPaths(ByRef winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetTotalCommanderTabs(ByRef winId) {
+GetTotalcmdTabs(ByRef winId) {
 ;───────────────────────────────────────────────────────────────────────────── 
     /*     
         Creates user command (if necessary) in usercmd.ini 
@@ -279,14 +279,14 @@ GetTotalCommanderTabs(ByRef winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetTotalCommanderPaths(ByRef winId) {
+GetTotalcmdPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Requests a file with current tabs and analyzes it. 
     ; Searches for the active tab using the "activetab" parameter
     global Paths
        
     try { 
-        _tabs := GetTotalCommanderTabs(winId)
+        _tabs := GetTotalcmdTabs(winId)
         try FileDelete, % _tabs
         SendTotalCommand(winId, "EM_SaveAllTabs")
         
@@ -405,7 +405,7 @@ GetPaths() {
             case "dopus.lister":        
                 GetDopusPaths(winId)
             case "TTOTAL_CMD":          
-                GetTotalCommanderPaths(winId)
+                GetTotalcmdPaths(winId)
         }
     }
 }
