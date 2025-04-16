@@ -25,7 +25,7 @@ ResetSettings() {
 
     SetDefaultValues()
     WriteValues()
-    ShowMenuSettings()
+    ShowSettings()
 }
 
 SaveSettings() {

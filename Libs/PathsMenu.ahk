@@ -52,7 +52,7 @@ AddMenuOptions() {
     
     ; New GUI added for other settings
     Menu ContextMenu, Add,
-    Menu ContextMenu, Add, Menu &settings, ShowMenuSettings
+    Menu ContextMenu, Add, Menu &settings, ShowSettings
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

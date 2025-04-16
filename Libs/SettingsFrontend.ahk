@@ -8,7 +8,7 @@
     All entered/checked values are saved in the INI only when you click OK.
 */
 
-ShowMenuSettings() {
+ShowSettings() {
     global
     FromSettings := true
 
