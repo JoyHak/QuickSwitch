@@ -1,4 +1,5 @@
 ; These functions are responsible for the GUI Settings functionality and its Controls
+; Also contains additional out-of-category functions needed for the app
 
 NukeSettings() {
     ; Delete configuration
