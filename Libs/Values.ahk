@@ -1,14 +1,28 @@
+/* 
+    Contains all global variables necessary for the application, 
+    functions that read/write INI configuration, 
+    functions that check (validate) values for compliance 
+    with the requirements of different libraries.
+    
+    "INI" param must be a path to a write-accessible file (with any extension)
+ */
+
 ; These parameters are not saved in the INI
 FromSettings    := false
 NukeSettings    := false
 LastTabSettings := 1
+Paths           := []
 
-; The array of available paths is filled in after receiving the DialogID in QuickSwitch.ahk
-Paths := []
 
-; set defaults without overwriting existing INI
-; these values are used if the INI settings are invalid
 SetDefaultValues() {
+    /* 
+        Sets defaults without overwriting existing INI.
+        
+        These values are used if:
+        - INI settings are invalid
+        - INI doesn't exist (yet) 
+        - the values must be reset
+    */    
     global
 
     MainKeyHook := OpenMenu := ReDisplayMenu := AutoStartup := 1
@@ -33,10 +47,13 @@ SetDefaultValues() {
 WriteValues() {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        The status of the checkboxes from the settings menu is writed immediately
+        Calls validators and writes values to INI.
+        
+        The status of the checkboxes from the settings menu is writed immediately.
         Strings and colors from fields are checked before writing.
-        file, section, param name, global var and its value reference
-        are identical to those in ReadValues()
+        
+        File, section, param name, global var and its value reference
+        must be identical to ReadValues()
     */
     global
 
@@ -77,11 +94,15 @@ WriteValues() {
 ReadValues() {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        read values from INI
-        the current value of global variables is set at the top of the script
-        so it is passed to IniRead as "default value".
-        file, section, param name, global var and its value reference are identical
-        to those in WriteValues()
+        Reads values from INI.
+        
+        All global variables are updated if:
+        - the configuration exists
+        - values exist in the configuration
+        - variables have been declared
+        
+        File, section, param name, global var and its value reference 
+        must be identical to WriteValues()
     */
     global
 
