@@ -96,7 +96,7 @@ ShowSettings() {
         Gui,  Add,    Button,     wp x+20 yp  gResetSettings,  &Reset
     }
 
-    Gui, 	Add, 	Button, 	wp xp ym-4               gShowDebugMenu, 				            &Debug
+    Gui, 	Add, 	Button, 	wp xp ym-4               gShowDebug, 				                &Debug
 
 
     ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────────

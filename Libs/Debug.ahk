@@ -59,7 +59,7 @@ CancelLV() {
     Gui, Destroy
 }
 
-ShowDebugMenu() {
+ShowDebug() {
     ; Displays information about the file dialog Controls
     Gui, Destroy
 
