@@ -99,7 +99,7 @@ GetWindowsPaths(ByRef winID) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-XyplorerScript(ByRef winId, ByRef script) {
+SendXyplorerScript(ByRef winId, ByRef script) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654
     _size := StrLen(script)
@@ -170,7 +170,8 @@ GetXyplorerPaths(ByRef winId) {
             $reals = replace($reals, '|',,,1,1)`;
             copytext $reals`;
         )"
-        XyplorerScript(winId, script)
+        
+        SendXyplorerScript(winId, script)
         
         ClipWait, 3
         if ErrorLevel
