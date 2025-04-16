@@ -1,20 +1,18 @@
-; Here are the main functions for obtaining paths and interacting with them.
+; Here are the the top-level functions for getting paths
 ; All functions add values to the global paths array.
 
 SelectPath() {
-    /*
-        The path is bound to the position of the menu item
-        and MUST BE ADDED to the array in the same order as the menu item
-    */
+    ; The path is bound to the position of the menu item
     global
     FileDialog.call(DialogID, Paths[A_ThisMenuItemPos])
 }
 
 GetShortPath(ByRef path) {
     /*
-        _fullPath is shortened to the last N dirs (DirsCount) starting from the end of the path.
-        Dirs are selected as intervals between slashes, excluding them.
-        boundaries = indexes of any slashes \ / in the path: /dir/dir/
+        Full path is shortened according to user-specified global parameters 
+        by shortening directory names to the specified length starting at the beginning 
+        and separating them with the specified delimiter. 
+        Additional options may change the final view.
     */
     global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator, ShowFirstSeparator
     
@@ -143,13 +141,15 @@ TotalCommanderUserCommand(ByRef winId, ByRef command) {
 ;
 GetXyplorerPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Sends a message as an internal script.
-    ; If the second panel is enabled, gets tabs from all panels, 
-    ; otherwise gets tabs from the active panel.
-    ; The path separator is |
-    ; For each path, gets the real path (XY has special and virtual paths)
-    ; Removes the extra | from the beginning of $reals
-    ; Places $reals on the clipboard, parses it and puts all paths into the global array    
+    /*  
+        Sends a message as an internal script.
+        If the second panel is enabled, gets tabs from all panels, 
+        otherwise gets tabs from the active panel.
+        The path separator is |
+        For each path, gets the real path (XY has special and virtual paths)
+        Removes the extra | from the beginning of $reals
+        Places $reals on the clipboard, parses it and puts all paths into the global array 
+    */    
     global Paths
     
     try {
@@ -191,10 +191,12 @@ GetXyplorerPaths(ByRef winId) {
 ;
 GetTotalCommanderTabs(ByRef winId) {
 ;───────────────────────────────────────────────────────────────────────────── 
-    ; Creates user command (if necessary) in usercmd.ini 
-    ; and uses it to request the current tabs file. 
-    ; If the second panel is enabled, file contains tabs from all panels, 
-    ; otherwise file contains tabs from the active panel
+    /*     
+        Creates user command (if necessary) in usercmd.ini 
+        and uses it to request the current tabs file. 
+        If the second panel is enabled, file contains tabs from all panels, 
+        otherwise file contains tabs from the active panel 
+    */
         
     static COMMAND := "EM_SaveAllTabs"
     static REG     := "HKEY_CURRENT_USER\SOFTWARE\Ghisler\Total Commander"
@@ -382,9 +384,11 @@ GetDopusPaths(ByRef winId) {
 ;
 GetPaths() {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Requests paths from all applications whose window class 
-    ; is recognized as a known file manager class.
-    ; Updates the global array after each call
+    /*  
+        Requests paths from all applications whose window class 
+        is recognized as a known file manager class (in Z-order).
+        Updates the global array after each call 
+    */    
     global Paths := []
 
     WinGet, _allWindows, list
