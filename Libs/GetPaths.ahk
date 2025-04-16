@@ -119,7 +119,7 @@ SendXyplorerScript(ByRef winId, ByRef script) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-TotalCommanderUserCommand(ByRef winId, ByRef command) {
+SendTotalCommand(ByRef winId, ByRef command) {
 ;─────────────────────────────────────────────────────────────────────────────
     VarSetCapacity(_copyData, A_PtrSize * 3)
     VarSetCapacity(_result, StrPut(command, "UTF-8"))	
@@ -288,7 +288,7 @@ GetTotalCommanderPaths(ByRef winId) {
     try { 
         _tabs := GetTotalCommanderTabs(winId)
         try FileDelete, % _tabs
-        TotalCommanderUserCommand(winId, "EM_SaveAllTabs")
+        SendTotalCommand(winId, "EM_SaveAllTabs")
         
         loop, 600 {
             if FileExist(_tabs) {
