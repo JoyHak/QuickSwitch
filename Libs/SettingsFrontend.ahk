@@ -1,14 +1,11 @@
 /*
-    This menu allows you to change global variables through the GUI.
-    All entered/checked values are saved in the INI only when you click OK
-    References to global variables are being used.
-
-    If possible, it would be advisable to avoid using
-    references to local variables and creating new ones.
-
-    Otherwise, in order to preserve their values,
-    it may be necessary to consider the synergy of many new functions,
-    the development of which will require careful thought!
+    This GUI uses global variables because they can be changed anywhere,
+    but it doesn't update / check / read values (from INI).
+    
+    All global variables are looked again each time and update the 
+    corresponding options / checkboxes etc.
+    
+    All entered/checked values are saved in the INI only when you click OK.
 */
 
 ShowMenuSettings() {
@@ -103,10 +100,9 @@ ShowMenuSettings() {
 
 
     ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────────
-    ; current checkbox state
+    ; Current checkbox state
     ToggleShortPath()
 
-    ; These dialog coord. are obtained in ShowPathsMenu()
     local Xpos := WinX
     local Ypos := WinY + 100
     Gui, Show, AutoSize x%Xpos% y%Ypos%, Menu settings
