@@ -16,7 +16,7 @@ Timer(R := 0) {
     return !DllCall("QueryPerformanceCounter", "Int64P", Q) + (R ? (P := Q) / F : (Q - P) / F)
 }
 
-DebugExport() {
+ExportDebug() {
     ; Export dialog controls from ListView to CSV
     global FingerPrint
 
@@ -84,7 +84,7 @@ ShowDebugMenu() {
     LV_ModifyCol(2, "Integer")
     LV_ModifyCol(3, "Integer")
 
-    Gui, Add, Button, y+10 w74 gDebugExport,    &Export
+    Gui, Add, Button, y+10 w74 gExportDebug,    &Export
     Gui, Add, Button, x+10 wp  gCancelLV,       &Cancel
     Gui, Add, Button, x+10 wp  gNukeSettings,   &Nuke
     Gui, Show
