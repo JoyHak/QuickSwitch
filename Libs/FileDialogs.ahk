@@ -1,7 +1,11 @@
 /*
-    There are a few different types of possible dialogues, and each one has its own function.
-    There's also a function called GetFileDialog()
-    It returns the FuncObj to call it later and feed the current dialogue.
+    There are a few different types of possible dialogs.
+    A different chain of universal functions is used for each. 
+    Functions are divided into filling (setters) 
+    and getting information about dialogs (getters)
+    
+    "winId" param must be existing window uniq ID (window handle / HWND)
+    "path"  param must be a string valid for any dialog
 */
 
 FeedEditField(ByRef winId, ByRef path, ByRef attempts := 10) {
@@ -88,10 +92,11 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 ;
 GetFileDialog(ByRef dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Detection of a File dialog by checking specific controls existence. 
-    ; Returns FuncObj if required controls found,
-    ; otherwise returns false
-    
+    /*  
+        Detection of a File dialog by checking specific controls existence. 
+        Returns FuncObj if required controls found,
+        otherwise returns "false"
+    */   
     try {   
 
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
