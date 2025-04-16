@@ -56,7 +56,7 @@ SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
-ValidateWriteKey(MainKey, 	 "MainKey",    "ShowPathsMenu", "Off", MainKeyHook)
+ValidateWriteKey(MainKey, 	 "MainKey",    "ShowMenu", "Off", MainKeyHook)
 ValidateWriteKey(RestartKey, "RestartKey", "RestartApp",    "On",  RestartKeyHook)
 
 ; Wait for any "Open/Save as" file dialog
@@ -85,7 +85,7 @@ Loop {
                 AutoSwitch()
             } else if (DialogAction = 0) {
                 if (OpenMenu || (FromSettings && ReDisplayMenu)) {
-                    ShowPathsMenu()
+                    ShowMenu()
                 }
             }
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)

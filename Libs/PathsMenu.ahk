@@ -4,14 +4,14 @@
     which allows menu to display anything (e.g. short path)
 */
 
-AddTitle(ByRef title) {
+AddMenuTitle(ByRef title) {
     Menu ContextMenu, Add, % title, Dummy
     Menu ContextMenu, Disable, % title
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-AddPathsMenuItems() {
+AddMenuPaths() {
 ;─────────────────────────────────────────────────────────────────────────────
     global PathNumbers, ShortPath, Paths
     
@@ -31,14 +31,14 @@ AddPathsMenuItems() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-AddPathsMenuSettings() {
+AddMenuOptions() {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogAction
 
     Menu ContextMenu, Add,
     
     ; Add options to select
-    AddTitle("Settings")
+    AddMenuTitle("Settings")
 
     Menu ContextMenu, Add, &Auto switch, ToggleAutoSwitch
     Menu ContextMenu, Add, &Black list, ToggleBlackList
@@ -57,7 +57,7 @@ AddPathsMenuSettings() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ShowPathsMenu() {
+ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogID, Paths, MenuColor, WinX, WinY, WinWidth, WinHeight
 
@@ -67,12 +67,12 @@ ShowPathsMenu() {
     if Paths.count() {
         ; Add paths and options
         ReadValues()
-        AddPathsMenuItems()
-        AddPathsMenuSettings()
+        AddMenuPaths()
+        AddMenuOptions()
 
     } else {
         ; Display warning
-        AddTitle("No available paths")
+        AddMenuTitle("No available paths")
     }
     
     Menu ContextMenu, Color, %MenuColor%

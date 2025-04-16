@@ -81,7 +81,7 @@ WriteValues() {
     ValidateWriteString(PathSeparator, 		"PathSeparator")
     ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
 
-    ValidateWriteKey(MainKey, 		"MainKey",      "ShowPathsMenu",    "Off",      MainKeyHook)
+    ValidateWriteKey(MainKey, 		"MainKey",      "ShowMenu",    "Off",      MainKeyHook)
     ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On",       RestartKeyHook)
 
     ValidateWriteColor(GuiColor, 	"GuiColor")
