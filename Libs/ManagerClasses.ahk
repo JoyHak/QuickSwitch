@@ -1,4 +1,5 @@
-; Contains getters whose names correspond to classes of known file managers
+; Contains getters whose names correspond to classes of known file managers.
+; All functions add values to the global "Paths" array.
 
 GetWindowsPaths(ByRef winID) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
