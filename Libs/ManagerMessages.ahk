@@ -2,6 +2,7 @@
 
 SendXyplorerScript(ByRef winId, ByRef script) {
     ; https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654
+    ; "script" param must be one-line string (use LTrim / Join)
     _size := StrLen(script)
 
     VarSetCapacity(_copyData, A_PtrSize * 3, 0)
@@ -21,6 +22,7 @@ SendXyplorerScript(ByRef winId, ByRef script) {
 ;
 SendTotalCommand(ByRef winId, ByRef command) {
 ;─────────────────────────────────────────────────────────────────────────────
+    ; Command must be defined as "EM_..." in usercmd.ini (may be user-defined filename)
     VarSetCapacity(_copyData, A_PtrSize * 3)
     VarSetCapacity(_result, StrPut(command, "UTF-8"))	
     _size := StrPut(command, &_result, "UTF-8")
