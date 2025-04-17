@@ -1,6 +1,3 @@
-; Here are the the top-level functions for getting paths
-; All functions add values to the global paths array.
-
 GetShortPath(ByRef path) {
     /*
         Full path is shortened according to user-specified global parameters 
