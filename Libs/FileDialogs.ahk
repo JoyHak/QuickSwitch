@@ -1,8 +1,7 @@
 /*
-    There are a few different types of possible dialogs.
-    A different chain of universal functions is used for each. 
-    Functions are divided into filling (setters) 
-    and getting information about dialogs (getters)
+    Contains functions that feeds specific dialog. 
+    GetFileDialog() returns the FuncObj to call it later 
+    and feed the current dialog.
     
     "winId" param must be existing window uniq ID (window handle / HWND)
     "path"  param must be a string valid for any dialog
