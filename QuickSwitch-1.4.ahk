@@ -84,7 +84,10 @@ Loop {
             FingerPrint := Exe . "___" . WinTitle
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
-            IniRead, DialogAction, %INI%, Dialogs, %FingerPrint%, 0
+            IniRead, DialogAction, % INI, Dialogs, % FingerPrint, 0
+            
+            ; Turn on hotkey to hide / show menu later
+            ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
             if (DialogAction = 1) {
                 AutoSwitch()
