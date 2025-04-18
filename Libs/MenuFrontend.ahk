@@ -50,7 +50,6 @@ AddMenuOptions() {
     if (DialogAction = -1)
         Menu ContextMenu, Check, &Black list
     
-    ; New GUI added for other settings
     Menu ContextMenu, Add,
     Menu ContextMenu, Add, Menu &settings, ShowSettings
 }
