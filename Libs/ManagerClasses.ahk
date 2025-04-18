@@ -26,12 +26,17 @@ GetXyplorerPaths(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*  
         Sends a message as an internal script.
+        
         If the second panel is enabled, gets tabs from all panels, 
         otherwise gets tabs from the active panel.
+        All native variables are resolved.
+        
         The path separator is |
-        For each path, gets the real path (XY has special and virtual paths)
+        For each path, gets the real path (XY has special and virtual paths).
         Removes the extra | from the beginning of $reals
-        Places $reals on the clipboard, parses it and puts all paths into the global array 
+        
+        Places $reals on the clipboard.
+        Parses it and puts all paths into the global array 
     */    
     global Paths
     
