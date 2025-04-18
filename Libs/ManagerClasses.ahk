@@ -50,13 +50,13 @@ GetXyplorerPaths(ByRef winId) {
             foreach($path, $paths, '|') {
                 $reals .= '|' . pathreal($path)`;
             }
-            $reals = replace($reals, '|',,,1,1)`;
+            $reals = trim($reals, '|', 'L')`;
             copytext $reals`;
         )"
         
         SendXyplorerScript(winId, script)
         
-        ClipWait, 3
+        ClipWait, 5
         if ErrorLevel
             return
                 
