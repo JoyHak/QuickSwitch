@@ -92,6 +92,7 @@ Loop {
                 AutoSwitch()
             } else if (DialogAction = 0) {
                 if (OpenMenu || (FromSettings && ReDisplayMenu)) {
+                    FromSettings := false
                     ShowMenu()
                 }
             }
@@ -105,8 +106,7 @@ Loop {
     WinWaitNotActive
 
     ; Clean up
-    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
-    FromSettings := false
+    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)    
     Exe          := ""
     WinTitle     := ""
     DialogAction := ""
