@@ -64,19 +64,18 @@ ValidateAutoStartup()
 ValidateWriteKey(MainKey, 	 "MainKey",    "ShowMenu", "Off", MainKeyHook)
 ValidateWriteKey(RestartKey, "RestartKey", "RestartApp",    "On",  RestartKeyHook)
 
-; Wait for any "Open/Save as" file dialog
 Loop {
+    ; Wait for any "Open/Save as" file dialog
     WinWaitActive, ahk_class #32770
 
     try {
         DialogID   := WinExist("A")
         FileDialog := GetFileDialog(DialogID)
 
-        ; if there is any GUI left from previous calls....
-        Gui, Destroy
-
         if FileDialog {
             ; This is a supported dialog
+            ; If there is any GUI left from previous calls....
+            Gui, Destroy
             GetPaths()
 
             WinGet, Exe, ProcessName, ahk_id %DialogID%
