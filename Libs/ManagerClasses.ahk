@@ -42,7 +42,7 @@ GetXyplorerPaths(ByRef winId) {
 
         static script := "
         ( LTrim Join
-            ::$paths = <get tabs_sf | a>`;
+            ::$paths = <get tabs_sf | a>, 'r'`;
             if (get('#800')) { 
                 $paths .= '|' . <get tabs_sf | i>`;
             }
