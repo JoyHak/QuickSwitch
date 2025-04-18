@@ -9,8 +9,8 @@ AddMenuTitle(ByRef title) {
     Menu ContextMenu, Disable, % title
 }
 
-CheckMenuToggle(ByRef title, ByRef function, ByRef toggleIf) {
-    Menu ContextMenu, Add, % title, % function
+CheckMenuRadio(ByRef title, ByRef function, ByRef toggleIf) {
+    Menu ContextMenu, Add, % title, % function, Radio
     
     if toggleIf
         Menu ContextMenu, Check, % title
@@ -47,8 +47,8 @@ AddMenuOptions() {
     Menu ContextMenu, Add
     AddMenuTitle("Settings")
     
-    CheckMenuToggle("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
-    CheckMenuToggle("&Black list", "ToggleBlackList", DialogAction = -1)
+    CheckMenuRadio("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
+    CheckMenuRadio("&Black list", "ToggleBlackList", DialogAction = -1)
     
     Menu ContextMenu, Add
     Menu ContextMenu, Add, Menu &settings, ShowSettings
@@ -58,11 +58,8 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogID, Paths, MenuColor, WinX, WinY, WinWidth, WinHeight
-
-    ; Get dialog position (also used for settings menu positon)
-    WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
-    
+    global DialogID, Paths, MenuColor
+ 
     if Paths.count() {
         ; Add paths and options
         ReadValues()
