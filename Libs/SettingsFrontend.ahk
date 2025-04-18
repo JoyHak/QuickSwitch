@@ -103,8 +103,10 @@ ShowSettings() {
     ; Current checkbox state
     ToggleShortPath()
 
-    local Xpos := WinX
-    local Ypos := WinY + 100
-    Gui, Show, AutoSize x%Xpos% y%Ypos%, Menu settings
+    ; Get dialog position
+    if DialogID
+        WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
+    
+    Gui, Show, % "AutoSize x" WinX " y" WinY + 100, Menu settings
     return
 }

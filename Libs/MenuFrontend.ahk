@@ -70,7 +70,7 @@ ShowMenu() {
         ; Display warning
         AddMenuTitle("No available paths")
     }
- 
+    
     Menu ContextMenu, Color, % MenuColor
     Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
     Menu ContextMenu, Delete            ; Delete previous menu    
