@@ -6,14 +6,19 @@ SelectPath() {
     FileDialog.call(DialogID, Paths[A_ThisMenuItemPos])
 }
 
-ToggleBlackList() {
+AutoSwitch() {
     global
-
-    DialogAction := (DialogAction = -1) ? 0 : -1
-    IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+    FileDialog.call(DialogID, Paths[1])
 }
 
+Dummy() {
+    Return
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 ToggleAutoSwitch() {
+;─────────────────────────────────────────────────────────────────────────────
     global
 
     DialogAction := !DialogAction
@@ -23,11 +28,12 @@ ToggleAutoSwitch() {
         AutoSwitch()
 }
 
-AutoSwitch() {
+;─────────────────────────────────────────────────────────────────────────────
+;
+ToggleBlackList() {
+;─────────────────────────────────────────────────────────────────────────────
     global
-    FileDialog.call(DialogID, Paths[1])
-}
 
-Dummy() {
-    Return
+    DialogAction := (DialogAction = -1) ? 0 : -1
+    IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
 }
