@@ -9,6 +9,14 @@ AddMenuTitle(ByRef title) {
     Menu ContextMenu, Disable, % title
 }
 
+CheckMenuToggle(ByRef title, ByRef function, ByRef toggleIf) {
+    Menu ContextMenu, Add, % title, % function
+    
+    if toggleIf
+        Menu ContextMenu, Check, % title
+        
+}
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 AddMenuPaths() {
@@ -34,23 +42,15 @@ AddMenuPaths() {
 AddMenuOptions() {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogAction
-
-    Menu ContextMenu, Add,
     
     ; Add options to select
+    Menu ContextMenu, Add
     AddMenuTitle("Settings")
-
-    Menu ContextMenu, Add, &Auto switch, ToggleAutoSwitch
-    Menu ContextMenu, Add, &Black list, ToggleBlackList
     
-    ; Toggle options
-    if (DialogAction = 1)
-        Menu ContextMenu, Check, &Auto switch
+    CheckMenuToggle("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
+    CheckMenuToggle("&Black list", "ToggleBlackList", DialogAction = -1)
     
-    if (DialogAction = -1)
-        Menu ContextMenu, Check, &Black list
-    
-    Menu ContextMenu, Add,
+    Menu ContextMenu, Add
     Menu ContextMenu, Add, Menu &settings, ShowSettings
 }
 
@@ -73,8 +73,8 @@ ShowMenu() {
         ; Display warning
         AddMenuTitle("No available paths")
     }
-    
-    Menu ContextMenu, Color, %MenuColor%
+ 
+    Menu ContextMenu, Color, % MenuColor
     Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
     Menu ContextMenu, Delete            ; Delete previous menu    
 }
