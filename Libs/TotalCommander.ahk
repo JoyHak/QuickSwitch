@@ -107,8 +107,9 @@ GetTotalcmdPaths(ByRef winId) {
                 Loop, read, % _tabs
                 {
                     ; Omit the InStr key and SubStr from value position
-                    if (_pos := InStr(A_LoopReadLine, "path=")) {                
-                        _paths.push(SubStr(A_LoopReadLine, _pos + 5))
+                    if (_pos := InStr(A_LoopReadLine, "path=")) {  
+                        _path := SubStr(A_LoopReadLine, _pos + 5)
+                        _paths.push(RTrim(_path, "\"))
                     }
                     if (_num := InStr(A_LoopReadLine, "activetab=")) {
                         ; Skip next active tab by saving last

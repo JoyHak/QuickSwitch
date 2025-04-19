@@ -57,7 +57,6 @@ GetShortPath(ByRef path) {
         if (StrLen(path) < 4)
             return path    ; Just drive and slash
 
-        path  := RTrim(path, "\")
         _dirs := StrSplit(path, "\")
         _size := _dirs.count()
 
