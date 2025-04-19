@@ -6,6 +6,11 @@ GetPaths() {
     */
     global Paths := []
 
+    ; Prepare AutoSwitch
+    global DialogAction
+    _autoSwitch := (DialogAction = 1) ? true : false
+
+    ; Get manager hwnds
     WinGet, _winIdList, list, ahk_group ManagerClasses
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
@@ -26,8 +31,12 @@ GetPaths() {
                 ; Function name without dot .
                 _winClass := "Dopus"
         }
-
         Func(_winClass).call(_winId)
+
+        if (_autoSwitch && Paths[1]) {
+            _autoSwitch := false
+            SelectPath()
+        }
     }
 }
 

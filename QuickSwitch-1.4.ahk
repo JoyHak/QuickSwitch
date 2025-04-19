@@ -61,8 +61,8 @@ SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
-ValidateWriteKey(MainKey, 	 "MainKey",    "ShowMenu", "Off", MainKeyHook)
-ValidateWriteKey(RestartKey, "RestartKey", "RestartApp",    "On",  RestartKeyHook)
+ValidateWriteKey(MainKey, 	 "MainKey",    "ShowMenu",   "Off", MainKeyHook)
+ValidateWriteKey(RestartKey, "RestartKey", "RestartApp", "On",  RestartKeyHook)
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
@@ -76,7 +76,6 @@ Loop {
             ; This is a supported dialog
             ; If there is any GUI left from previous calls....
             Gui, Destroy
-            GetPaths()
 
             WinGet, Exe, ProcessName, ahk_id %DialogID%
             WinGetTitle, WinTitle, ahk_id %DialogID%
@@ -84,17 +83,14 @@ Loop {
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, 0
+            GetPaths()
 
             ; Turn on hotkey to hide / show menu later
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
-            if (DialogAction = 1) {
-                AutoSwitch()
-            } else if (DialogAction = 0) {
-                if (OpenMenu || (FromSettings && ReDisplayMenu)) {
-                    FromSettings := false
-                    ShowMenu()
-                }
+            if ((DialogAction = 0) && (OpenMenu || (FromSettings && ReDisplayMenu))) {
+                FromSettings := false
+                ShowMenu()
             }
         }
 
