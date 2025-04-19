@@ -84,7 +84,7 @@ Loop {
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, 0
-            
+
             ; Turn on hotkey to hide / show menu later
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
@@ -97,7 +97,7 @@ Loop {
                 }
             }
         }
-        
+
     } catch GlobalError {
         LogError(GlobalError)
     }
@@ -106,7 +106,7 @@ Loop {
     WinWaitNotActive
 
     ; Clean up
-    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)    
+    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
     Exe          := ""
     WinTitle     := ""
     DialogAction := ""
