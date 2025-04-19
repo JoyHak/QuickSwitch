@@ -94,6 +94,8 @@ Dopus(ByRef winId) {
     global Paths
     
     try {
+        WinGetTitle, _title, ahk_id %winId%
+        
         ; Each tab has its own address bar, so we can use it to determine the path of each tab
         static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer" 
         ; Defined in AutoHotkey source
@@ -105,12 +107,16 @@ Dopus(ByRef winId) {
         _previousHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
         _startHwnd    := _previousHwnd
         _paths        := []
+        _active       := 1
                 
         loop {
             ; Pass every HWND to GetWindowText() and get the content
             ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
             if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
                 _paths.push(_text)
+                
+                if InStr(_text, _title)
+                    _active := A_Index
             }
             _nextHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)          
             
@@ -121,17 +127,10 @@ Dopus(ByRef winId) {
             
             _previousHwnd := _nextHwnd
         }
-        
+   
         ; Push the active tab to the global array first
-        WinGetTitle, _title, ahk_id %winId%
-        for _index, _path in _paths {
-            if InStr(_path, _title) {
-                _active := _index
-                Paths.push(_path)
-            }
-        }
         ; Remove duplicate and add the remaining tabs
-        _paths.removeAt(_active)
+        Paths.push(_paths.removeAt(_active))
         Paths.push(_paths*)
   
     } catch _error {
