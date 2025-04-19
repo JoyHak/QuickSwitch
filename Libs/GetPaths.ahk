@@ -10,6 +10,22 @@ GetPaths() {
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%      
         WinGetClass, _winClass, ahk_id %_winId%
+        
+        ; Fix specific problems
+        switch _winClass {
+            case "ThunderRT6FormDC":
+                ; Exclude XYplorer child windows: 
+                ; main window have "ThunderRT6Main" owner
+                _ownerId := DllCall("GetWindow", "ptr", _winId, "uint", 4)
+                WinGetClass, _ownerClass, ahk_id %_ownerId%
+                
+                if (_ownerClass != "ThunderRT6Main")
+                    continue
+                
+            case "dopus.lister": 
+                ; Function name without dot .
+                _winClass := "Dopus"
+        }
 
         Func(_winClass).call(_winId)    
     }
