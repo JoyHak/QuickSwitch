@@ -13,8 +13,8 @@ SendXyplorerScript(ByRef winId, ByRef script) {
     try {
         ; WM_COPYDATA without recieve
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
-    } catch _error {
-        throw Exception("Unable to send a message to XYplorer", "Xyplorer script",  _error.What " " _error.Message " " _error.Extra)
+    } catch _e {
+        throw Exception("Unable to send the script", "Xyplorer script",  _e.what " " _e.message " " _e.extra)
     }
 }
 
@@ -34,7 +34,7 @@ SendTotalCommand(ByRef winId, ByRef command) {
     try {
         ; WM_COPYDATA without recieve
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
-    } catch _error {
-        throw Exception("Unable to execute TotalCommander user command", "TotalCommander command",  _error.What " " _error.Message " " _error.Extra)
+    } catch _e {
+        throw Exception("Unable to execute user command", "TotalCmd command",  _e.what " " _e.message " " _e.extra)
     }
 }

@@ -51,7 +51,7 @@ GetTotalcmdTabs(ByRef winId) {
     
     ; Config not found after 2 attempts    
     if !FileExist(_ini)
-        return LogError(Exception("Unable to find wincmd.ini", "Total Commander config", "File `'" _ini "`' not found. Change your TC configuration settings: your configuration should be in any sub-directory in the " _root))
+        return LogError(Exception("Unable to find wincmd.ini", "TotalCmd config", "File `'" _ini "`' not found. Change your TC configuration settings: your configuration should be in any sub-directory in the " _root))
     
     _ini := StrReplace(_ini, "wincmd", "usercmd")      
     TABS_RESULT := _root "\Tabs.tab"     
@@ -81,7 +81,7 @@ GetTotalcmdTabs(ByRef winId) {
         ), % _ini
         sleep, 50 * A_Index
     }
-    return LogError(Exception("Unable to create configuration", "Total Commander config", _ini " doesnt exist and cannot be created. Create it manually in the " _root))
+    return LogError(Exception("Unable to create configuration", "TotalCmd config", _ini " doesnt exist and cannot be created. Create it manually in the " _root))
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -128,7 +128,7 @@ GetTotalcmdPaths(ByRef winId) {
             }
             sleep, 20
         }
-        return LogError(Exception("Unable to access tabs", "Total Commander tabs", "Restart Total Commander and retry"))
+        return LogError(Exception("Unable to access tabs", "TotalCmd tabs", "Restart Total Commander and retry"))
         
     } catch _error {
         LogError(_error)
