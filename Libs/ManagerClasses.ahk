@@ -1,31 +1,40 @@
-; Contains getters whose names correspond to classes of known file managers.
-; All functions add values to the global "Paths" array.
+/* 
+    Contains getters whose names correspond to classes of known file managers.
+    All functions add values to the global "Paths" array.
+    "winId" param must be existing window uniq ID (window handle / HWND)
+*/
 
-GetWindowsPaths(ByRef winID) {
+GroupAdd, ManagerClasses, ahk_class CabinetWClass
+GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
+GroupAdd, ManagerClasses, ahk_class dopus.lister
+GroupAdd, ManagerClasses, ahk_class TTOTAL_CMD
+
+
+CabinetWClass(ByRef winId) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
     global Paths
     
     try {
         for _instance in ComObjCreate("Shell.Application").Windows {
-            if (winID == _instance.hwnd) {
+            if (winId == _instance.hwnd) {
                 _path := _instance.Document.Folder.Self.Path
                 if !InStr(_path, "::{") {
                     Paths.push(_path)
                 }
             }
         }
+    
     } catch _error {
         LogError(_error)
     }
-    
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetXyplorerPaths(ByRef winId) {
+ThunderRT6FormDC(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*  
-        Sends a message as an internal script.
+        Sends script to XYplorer and parses the clipboard.
         
         If the second panel is enabled, gets tabs from all panels, 
         otherwise gets tabs from the active panel.
@@ -78,7 +87,7 @@ GetXyplorerPaths(ByRef winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetDopusPaths(ByRef winId) {
+Dopus(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions. 
     ; Searches for active tab using DOpus window title    

@@ -1,4 +1,24 @@
+GetPaths() {
+    /*  
+        Requests paths from all applications whose window class 
+        is recognized as a known file manager class (in Z-order).
+        Updates the global array after each call 
+    */    
+    global Paths := []
+    
+    WinGet, _winIdList, list, ahk_group ManagerClasses		
+    Loop, % _winIdList {
+        _winId := _winIdList%A_Index%      
+        WinGetClass, _winClass, ahk_id %_winId%
+
+        Func(_winClass).call(_winId)    
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetShortPath(ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
     /*
         Full path is shortened according to user-specified global parameters 
         by shortening directory names to the specified length starting at the beginning 
@@ -64,36 +84,6 @@ GetShortPath(ByRef path) {
         return path
     }
     return _shortPath
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-GetPaths() {
-;─────────────────────────────────────────────────────────────────────────────
-    /*  
-        Requests paths from all applications whose window class 
-        is recognized as a known file manager class (in Z-order).
-        Updates the global array after each call 
-    */    
-    global Paths := []
-
-    WinGet, _allWindows, list
-    Loop, % _allWindows
-    {
-        winId := _allWindows%A_Index%
-        WinGetClass, _WinClass, ahk_id %winId%
-
-        switch _WinClass {
-            case "CabinetWClass":       
-                GetWindowsPaths(winId)
-            case "ThunderRT6FormDC":    
-                GetXyplorerPaths(winId)
-            case "dopus.lister":        
-                GetDopusPaths(winId)
-            case "TTOTAL_CMD":          
-                GetTotalcmdPaths(winId)
-        }
-    }
 }
 
 
