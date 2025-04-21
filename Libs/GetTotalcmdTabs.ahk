@@ -88,7 +88,6 @@ GetTotalTabs(ByRef tabsFile) {
     ; Searches for the active tab using the "activetab" parameter
     global Paths
 
-    try FileDelete, % tabsFile
     loop, 150 {
         if FileExist(tabsFile) {
             _paths  := []
@@ -114,7 +113,8 @@ GetTotalTabs(ByRef tabsFile) {
             ; Remove duplicate and add the remaining tabs
             Paths.push(_paths.removeAt(_active + 1))
             Paths.push(_paths*)
-
+            
+            try FileDelete, % tabsFile
             return true
         }
         sleep, 20
