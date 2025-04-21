@@ -3,31 +3,43 @@
 CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "") {
     ; Creates cmd in specified ini config.
     ; "cmd" param must start with EM_
+    
+    try {
+        loop, 4 {
+            ; Read the contents of the config until it appears or the loop ends with an error
+            IniRead, _section, % ini, % cmd
+            if (_section && _section != "ERROR") {
+                LogInfo("Created user command `'" _section "`' in `'" ini "`'")
+                return true
+            }
+            
+            if FileExist(ini) {
+                ; Set normal attributes (write access)
+                FileSetAttrib, n, % ini
+                sleep, 20 * A_Index
+                
+                FileGetAttrib, _attr, % ini
+                if InStr(_attr, "R")
+                    throw Exception("Unable to get write access", "")
+            }
+            
+            ; Create new section
+            FileAppend,
+            (LTrim
+            # Please dont add commands with the same name
+            [%cmd%]
+            cmd=%internalCmd%
+            param=%param%
+        
+            ), % ini
 
-    loop, 4 {
-        ; Read the contents of the config until it appears or the loop ends with an error
-        IniRead, _section, % ini, % cmd
-        if (_section && _section != "ERROR") {
-            LogInfo("Created user command `'" _section "`' in `'" ini "`'")
-            return true
+            sleep, 50 * A_Index
         }
-
-        ; Set normal attributes (write access)
-        FileSetAttrib, n, % ini
-        sleep, 20 * A_Index
-
-        ; Create new section
-        FileAppend,
-        (LTrim
-         # Please dont add commands with the same name
-         [%cmd%]
-         cmd=%internalCmd%
-         param=%param%
-
-        ), % ini
-        sleep, 50 * A_Index
+        throw Exception("Unable to create configuration", "")
+        
+    } catch _e {
+        throw Exception("Please create this file manually: `'" ini "`'", "TotalCmd config", _e.what " " _e.message " " _e.extra)    
     }
-    throw Exception("Unable to create configuration", "TotalCmd config", ini " doesnt exist and cannot be created. Create it manually")
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -41,8 +53,12 @@ CreateTotalUserIni(ByRef winId, ByRef cmd, ByRef internalCmd, ByRef param := "")
     ; https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
         
     WinGet, _winPid, PID, ahk_id %winId%
-    _ini := ""
     
+    ; Close the child windows of the current TC instance 
+    ; to ensure that messages are sent correctly
+    CloseChildWindows(winId, _winPid)
+
+    _ini := ""
     for _index, _func in ["GetTotalConsoleIni", "GetTotalLaunchIni", "GetTotalPathIni"] {
         ; Search for wincmd.ini and display error on each step 
         try {
@@ -52,7 +68,10 @@ CreateTotalUserIni(ByRef winId, ByRef cmd, ByRef internalCmd, ByRef param := "")
             LogError(_e)
         } 
     }
- 
+    
+    if _ini
+        _ini := RTrim(_ini, " `r`n\/")
+    
     if !FileExist(_ini)
         throw Exception("Unable to find wincmd.ini", "TotalCmd config", "File `'" _ini "`' not found. Change your TC configuration settings")
     
@@ -70,7 +89,7 @@ GetTotalTabs(ByRef tabsFile) {
     global Paths
 
     try FileDelete, % tabsFile
-    loop, 600 {
+    loop, 150 {
         if FileExist(tabsFile) {
             _paths  := []
 

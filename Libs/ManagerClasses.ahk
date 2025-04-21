@@ -149,8 +149,7 @@ TTOTAL_CMD(ByRef winId) {
         in that directory with the EM_ user command to export tabs to the file
     */
     
-    global ScriptName      
-    static USER_COMMAND     :=  "EM_" ScriptName "SaveAllTabs"
+    static USER_COMMAND     :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
     static EXPORT_COMMAND   :=  "SaveTabs2"
     static TABS_FILE        :=  A_Temp "\TotalTabs.tab"
                 
@@ -163,6 +162,7 @@ TTOTAL_CMD(ByRef winId) {
             CreateTotalUserIni(winId, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
             SendTotalCommand(winId, USER_COMMAND)
             GetTotalTabs(TABS_FILE)
+            
         } catch _error {
             LogError(_error)
         }

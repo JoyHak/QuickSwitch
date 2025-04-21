@@ -13,7 +13,7 @@ FileEncoding, UTF-8
 ScriptName    := "QuickSwitch"
 MainIcon      := ""
 INI           := ScriptName ".ini"
-ErrorsLog     := "Errors.log"
+ErrorsLog     := "C:\Configs and settings\AutoHotKey\QuickSwitch\Errors.log"
 BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 
 RestartApp() {

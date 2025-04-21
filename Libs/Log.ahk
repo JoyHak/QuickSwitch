@@ -35,11 +35,9 @@ LogError(_error) {
 
 LogInfo(_msg, silent := false) {
     global ErrorsLog, ScriptName
-    static sep := "    "
     
-    StrReplace(_msg, "`n", "`r`n" sep)
     FormatTime, _date,, dd.MM hh:mm:ss
-    FileAppend, % _date sep _msg, % ErrorsLog
+    FileAppend, % _date "    " _msg "`n", % ErrorsLog
     
     if !silent {
         TrayTip, % ScriptName " log", % _msg

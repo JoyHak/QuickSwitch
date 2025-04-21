@@ -19,12 +19,13 @@ GetTotalConsoleIni(ByRef totalPid) {
     ; Create new console and get its PID
     SendTotalMessage(totalPid, 511)
     _consolePid := GetTotalConsolePid(totalPid)
-    
+
     ; Send command to the console
-    static COMMAND   :=  "set commander_ini_path"
+    static COMMAND   :=  "echo `%commander_ini`%"
     static INI_PATH  :=  A_Temp "\ini_path.txt"
     
     SendConsoleCommand(_consolePid, COMMAND " > " INI_PATH)  ; Export
+    sleep, 150
     SendConsoleCommand(_consolePid, COMMAND " | clip")       ; Copy
 
     ClipWait, 5
@@ -43,8 +44,8 @@ GetTotalConsoleIni(ByRef totalPid) {
         if FileExist(INI_PATH) {
             FileRead, _iniPath, % INI_PATH
 
-            if (_iniPath && _pos := InStr(_iniPath, "="))
-                return SubStr(_iniPath, _pos + 1)
+            if _iniPath
+                return _iniPath
 
             _log .= " Exported file is empty."
 
@@ -53,13 +54,10 @@ GetTotalConsoleIni(ByRef totalPid) {
         }
 
     } else {
-        ; Parse Clipboard
-        if (_pos := InStr(_clip, "=")) {
-            return SubStr(_clip, _pos + 1)
-        }
-        _log .= " Copied result is empty."
+        return _clip
     }
-
+    
+    _log .= " Copied result is empty."
     throw Exception("Unable to get INI", "TotalCmd console", "The env. variable was successfully requested. " _log)
 }
 
@@ -73,11 +71,11 @@ GetTotalLaunchIni(ByRef totalPid) {
         if (_pos := InStr(_arg, "/i")) {
             ; Switch found
 
-            if (RegExMatch(_arg, """([^""]+)""|\s+(\S+)", match, _pos + 2)) {
+            if (RegExMatch(_arg, "[""`']([^""`']+)[""`']|\s+([^\/\r\n""`']+)", _match, _pos)) {
                 ; Path in quotes / after spaces found
                 return (_match1 ? _match1 : _match2)
             }
-            LogError(Exception("Total Commander /i argument is invalid"))
+            LogError(Exception("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i"))
         }    
     }
 
@@ -99,17 +97,19 @@ GetTotalRegistryIni() {
     if !_regPath
         return false
 
-    ; Resolve env. variables
-    _ini := _env := ""
-    for _i, _part in StrSplit(_regPath, "`%") {
-        try EnvGet, _env, % _part
-        if _env
-            _ini .= _env
-        else
-            _ini .= _part
+    if InStr(_regPath, "`%") {
+        ; Resolve env. variables
+        _ini := _env := ""
+        for _i, _part in StrSplit(_regPath, "`%") {
+            try EnvGet, _env, % _part
+            if _env
+                _ini .= _env
+            else
+                _ini .= _part
+        }
+        return _ini
     }
-    
-    return _ini
+    return _regPath
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -126,20 +126,21 @@ GetTotalPathIni(ByRef totalPid) {
     Loop, Files, %_winPath%\wincmd.ini, R
     {
         _ini := A_LoopFileLongPath
-
-        ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
-        IniRead, _flag, % _ini,	Configuration, UseIniInProgramDir, 0
-
-        if !(_flag & 4) {
-            _reg := GetTotalRegistryIni()
-            
-            if (_reg && FileExist(_reg))
-                return _reg
-            
-            LogInfo("Registry config key is empty, but UseIniInProgramDir=" _flag " Search in current TC directory")
-        }
         break
     }
-
-    return _ini
+    
+    _flag := 0
+    if _ini {
+        ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
+        IniRead, _flag, % _ini,	Configuration, UseIniInProgramDir, 0
+        
+        if (_flag & 4)
+            return _ini
+    }
+    
+    _reg := GetTotalRegistryIni()
+    if (_reg && FileExist(_reg))
+        return _reg
+            
+    throw Exception("Unable to find wincmd.ini", "TotalCmd config", "Config not found in current TC directory and registry, UseIniInProgramDir=" _flag)
 }

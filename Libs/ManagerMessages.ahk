@@ -41,13 +41,13 @@ SendTotalCommand(ByRef winId, ByRef command) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SendTotalMessage(ByRef winId, ByRef command) {
+SendTotalMessage(ByRef winPid, ByRef command) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Commands can be found in totalcmd.inc
     try {
-        SendMessage 1075, % command, 0, , % "ahk_pid " winId
+        SendMessage 1075, % command, 0, , % "ahk_pid " winPid
     } catch _e {
-        _extra := Format("HWND: {} Command: {}  Details: {}" winId, command, _e.what " " _e.message " " _e.extra)
+        _extra := Format("HWND: {} Command: {}  Details: {}" winPid, command, _e.what " " _e.message " " _e.extra)
         throw Exception("Unable to send internal command", "TotalCmd command",  _extra)
     }
 }
