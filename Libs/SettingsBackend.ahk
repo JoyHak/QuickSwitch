@@ -81,15 +81,15 @@ ValidateAutoStartup() {
 	global AutoStartup, ScriptName, INI
 
     try {
-        IniRead, AutoStartup, %INI%, App, AutoStartup, %AutoStartup%
+        IniRead, AutoStartup, % INI, App, AutoStartup, % AutoStartup
         link := A_Startup . "\" . ScriptName . ".lnk"
 
         if AutoStartup {
-            FileCreateShortcut, %A_ScriptFullPath%, %link%, %A_ScriptDir%
+            FileCreateShortcut, % A_ScriptFullPath, % link, % A_ScriptDir
         } else {
             if FileExist(link) {
-                FileDelete, %link%
-                TrayTip, %ScriptName%, AutoStartup disabled,, 0x2
+                FileDelete, % link
+                TrayTip, % ScriptName, AutoStartup disabled,, 0x2
             }
         }
     } catch _error {
