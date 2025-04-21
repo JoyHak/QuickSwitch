@@ -85,10 +85,7 @@ ValidateAutoStartup() {
         link := A_Startup . "\" . ScriptName . ".lnk"
 
         if AutoStartup {
-            if !FileExist(link) {
-                FileCreateShortcut, %A_ScriptFullPath%, %link%, %A_ScriptDir%
-                TrayTip, %ScriptName%, AutoStartup enabled
-            }
+            FileCreateShortcut, %A_ScriptFullPath%, %link%, %A_ScriptDir%
         } else {
             if FileExist(link) {
                 FileDelete, %link%
