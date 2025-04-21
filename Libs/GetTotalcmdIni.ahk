@@ -1,9 +1,9 @@
-/*    
-    Contains functions to find the location of the TC settings file (wincmd.ini). 
+/*
+    Contains functions to find the location of the TC settings file (wincmd.ini).
 
     Thanks to Dalai for the search steps:
     https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
-    
+
     Documentation about ini location:
     https://www.ghisler.ch/wiki/index.php?title=Finding_the_paths_of_Total_Commander_files
 */
@@ -23,7 +23,7 @@ GetTotalConsoleIni(ByRef totalPid) {
     ; Send command to the console
     static COMMAND   :=  "echo `%commander_ini`%"
     static INI_PATH  :=  A_Temp "\ini_path.txt"
-    
+
     SendConsoleCommand(_consolePid, COMMAND " > " INI_PATH)  ; Export
     sleep, 150
     SendConsoleCommand(_consolePid, COMMAND " | clip")       ; Copy
@@ -36,7 +36,7 @@ GetTotalConsoleIni(ByRef totalPid) {
 
     ; Parse the result
     _log := "PID: " totalPid "CMD PID: " _consolePid
-    
+
     if (ErrorLevel || !_clip) {
         ; Read exported file
         _log .= "Failed to copy the result to the сlipboard."
@@ -56,7 +56,7 @@ GetTotalConsoleIni(ByRef totalPid) {
     } else {
         return _clip
     }
-    
+
     _log .= " Copied result is empty."
     throw Exception("Unable to get INI", "TotalCmd console", "The env. variable was successfully requested. " _log)
 }
@@ -66,7 +66,7 @@ GetTotalConsoleIni(ByRef totalPid) {
 GetTotalLaunchIni(ByRef totalPid) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Searches the ini passed to TC via /i switch
-    
+
     if (_arg := GetProcessProperty("CommandLine", "ProcessId=" totalPid)) {
         if (_pos := InStr(_arg, "/i")) {
             ; Switch found
@@ -76,7 +76,7 @@ GetTotalLaunchIni(ByRef totalPid) {
                 return (_match1 ? _match1 : _match2)
             }
             LogError(Exception("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i"))
-        }    
+        }
     }
 
     return false
@@ -119,28 +119,28 @@ GetTotalPathIni(ByRef totalPid) {
     ; Searches the ini in the current TC directory
     WinGet, _winPath, ProcessPath, ahk_pid %totalPid%
 
-    ; Remove exe name and leading slash \
-    _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12) - 1)
-    
+    ; Remove exe name
+    _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12))
+
     _ini := ""
-    Loop, Files, %_winPath%\wincmd.ini, R
+    Loop, Files, % _winPath "wincmd.ini", R
     {
         _ini := A_LoopFileLongPath
         break
     }
-    
+
     _flag := 0
     if _ini {
         ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
         IniRead, _flag, % _ini,	Configuration, UseIniInProgramDir, 0
-        
+
         if (_flag & 4)
             return _ini
     }
-    
+
     _reg := GetTotalRegistryIni()
     if (_reg && FileExist(_reg))
         return _reg
-            
+
     throw Exception("Unable to find wincmd.ini", "TotalCmd config", "Config not found in current TC directory and registry, UseIniInProgramDir=" _flag)
 }

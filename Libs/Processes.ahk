@@ -40,11 +40,11 @@ GetTotalConsolePid(ByRef totalPid) {
 CloseChildWindows(ByRef winId, ByRef winPid) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Closes child windows of the specified process
-    
+
     WinGet, _childs, list, ahk_pid %winPid%
     Loop, % _childs {
         _winId := _childs%A_Index%
-        if (_winId != winId) {        
+        if (_winId != winId) {
             WinClose, ahk_id %_winId%
         }
     }

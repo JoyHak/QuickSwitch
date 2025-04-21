@@ -1,6 +1,6 @@
-/* 
-    Contains functions for getting information about the app's operation and additional information. 
-    Any user notification functions should be placed here. 
+/*
+    Contains functions for getting information about the app's operation and additional information.
+    Any user notification functions should be placed here.
     "ErrorsLog" param must be a path to a write-accessible file (with any extension)
     Library must be imported first!
  */
@@ -13,9 +13,9 @@ LogError(_error) {
     _stack := ""
 	Loop {
         ; Skip current func
-		_e    := Exception(".", offset := -A_Index-1)  
+		_e    := Exception(".", offset := -A_Index-1)
         _call := _e.What
-		
+
         if (_call == offset)
 			break
 
@@ -35,10 +35,10 @@ LogError(_error) {
 
 LogInfo(_msg, silent := false) {
     global ErrorsLog, ScriptName
-    
+
     FormatTime, _date,, dd.MM hh:mm:ss
     FileAppend, % _date "    " _msg "`n", % ErrorsLog
-    
+
     if !silent {
         TrayTip, % ScriptName " log", % _msg
     }
