@@ -33,6 +33,19 @@ LogError(_error) {
     Return true
 }
 
+LogInfo(_msg, silent := false) {
+    global ErrorsLog, ScriptName
+    static sep := "    "
+    
+    StrReplace(_msg, "`n", "`r`n" sep)
+    FormatTime, _date,, dd.MM hh:mm:ss
+    FileAppend, % _date sep _msg, % ErrorsLog
+    
+    if !silent {
+        TrayTip, % ScriptName " log", % _msg
+    }
+}
+
 LogHeader() {
     ; Header about log and OS
     global ErrorsLog, BugReportLink, ScriptName
@@ -45,7 +58,6 @@ LogHeader() {
 
     FileAppend,
     (LTrim
-     Contains only %ScriptName% errors!
      Report about error: %BugReportLink%
      AHK %A_AhkVersion%
      %_OSname% %_OSversion% | %_OSbuild% %_lang%
@@ -53,7 +65,7 @@ LogHeader() {
     ), % ErrorsLog
 }
 
-LogInfo() {
+LogVersion() {
     ; Info about current launched script/compiled app
     global ErrorsLog
 
@@ -82,7 +94,7 @@ ValidateLog() {
     }
     if !FileExist(ErrorsLog) {
         LogHeader()
-        LogInfo()
+        LogVersion()
         Return
     }
 
@@ -92,6 +104,6 @@ ValidateLog() {
     if (_lastPath != _curPath) {
         ; New info about the script
         IniWrite, % _curPath, % INI, App, LastPath
-        LogInfo()
+        LogVersion()
     }
 }
