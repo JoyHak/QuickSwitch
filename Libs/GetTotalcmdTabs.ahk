@@ -8,6 +8,7 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
         ; Read the contents of the config until it appears or the loop ends with an error
         IniRead, _section, % ini, % cmd
         if (_section && _section != "ERROR") {
+            LogInfo("Created user command `'" _section "`' in `'" ini "`'")
             return true
         }
 
@@ -44,15 +45,19 @@ CreateTotalUserIni(ByRef winId, ByRef cmd, ByRef internalCmd, ByRef param := "")
     
     for _index, _func in ["GetTotalConsoleIni", "GetTotalLaunchIni", "GetTotalPathIni"] {
         ; Search for wincmd.ini and display error on each step 
-        if (_ini := Func(_func).call(_winPid))
-            break
-        }
+        try {
+            if (_ini := Func(_func).call(_winPid))
+                break
+        } catch _e {
+            LogError(_e)
+        } 
     }
  
     if !FileExist(_ini)
         throw Exception("Unable to find wincmd.ini", "TotalCmd config", "File `'" _ini "`' not found. Change your TC configuration settings")
     
     _userIni := StrReplace(_ini, "wincmd", "usercmd")
+    LogInfo("Found Total Commander config: `'" _ini "`'")
     CreateTotalUserCommand(_userIni, cmd, internalCmd, param)
 }
 

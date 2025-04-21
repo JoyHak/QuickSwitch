@@ -70,13 +70,14 @@ GetTotalLaunchIni(ByRef totalPid) {
     ; Searches the ini passed to TC via /i switch
     
     if (_arg := GetProcessProperty("CommandLine", "ProcessId=" totalPid)) {
-        if (_pos := InStr(_arg, "/i") {
+        if (_pos := InStr(_arg, "/i")) {
             ; Switch found
 
             if (RegExMatch(_arg, """([^""]+)""|\s+(\S+)", match, _pos + 2)) {
                 ; Path in quotes / after spaces found
                 return (_match1 ? _match1 : _match2)
             }
+            LogError(Exception("Total Commander /i argument is invalid"))
         }    
     }
 
@@ -134,6 +135,8 @@ GetTotalPathIni(ByRef totalPid) {
             
             if (_reg && FileExist(_reg))
                 return _reg
+            
+            LogInfo("Registry config key is empty, but UseIniInProgramDir=" _flag " Search in current TC directory")
         }
         break
     }
