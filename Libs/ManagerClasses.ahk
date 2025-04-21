@@ -137,3 +137,34 @@ Dopus(ByRef winId) {
         LogError(_error)
     }
 }
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+TTOTAL_CMD(ByRef winId) {
+;─────────────────────────────────────────────────────────────────────────────
+    /* 
+        Requests tabs file.
+        
+        If unsuccessful, searches for the location of wincmd.ini to create usercmd.ini 
+        in that directory with the EM_ user command to export tabs to the file
+    */
+    
+    global ScriptName      
+    static USER_COMMAND     :=  "EM_" ScriptName "SaveAllTabs"
+    static EXPORT_COMMAND   :=  "SaveTabs2"
+    static TABS_FILE        :=  A_Temp "\TotalTabs.tab"
+                
+    try {        
+        SendTotalCommand(winId, USER_COMMAND)
+        GetTotalTabs(TABS_FILE)
+    } catch {
+        ; This TC instance isn't configured        
+        try {
+            CreateTotalUserIni(winId, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
+            SendTotalCommand(winId, USER_COMMAND)
+            GetTotalTabs(TABS_FILE)
+        } catch _error {
+            LogError(_error)
+        }
+    }
+}

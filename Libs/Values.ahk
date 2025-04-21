@@ -13,7 +13,6 @@ NukeSettings    := false
 LastTabSettings := 1
 Paths           := []
 
-
 SetDefaultValues() {
     /* 
         Sets defaults without overwriting existing INI.

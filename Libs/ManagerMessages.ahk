@@ -14,7 +14,7 @@ SendXyplorerScript(ByRef winId, ByRef script) {
         ; WM_COPYDATA without recieve
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
     } catch _e {
-        throw Exception("Unable to send the script", "Xyplorer script",  _e.what " " _e.message " " _e.extra)
+        throw Exception("Unable to send the script", "Xyplorer script", "HWND: " winId "Details: " _e.what " " _e.message " " _e.extra)
     }
 }
 
@@ -35,6 +35,32 @@ SendTotalCommand(ByRef winId, ByRef command) {
         ; WM_COPYDATA without recieve
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
     } catch _e {
-        throw Exception("Unable to execute user command", "TotalCmd command",  _e.what " " _e.message " " _e.extra)
+        throw Exception("Unable to execute user command", "TotalCmd command", "HWND: " winId "Details: " _e.what " " _e.message " " _e.extra)
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+SendTotalMessage(ByRef winId, ByRef command) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Commands can be found in totalcmd.inc
+    try {
+        SendMessage 1075, % command, 0, , % "ahk_pid " winId
+    } catch _e {
+        _extra := Format("HWND: {} Command: {}  Details: {}" winId, command, _e.what " " _e.message " " _e.extra)
+        throw Exception("Unable to send internal command", "TotalCmd command",  _extra)
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+SendConsoleCommand(ByRef consolePid, ByRef command) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Send command to external cmd.exe
+    try {
+        ControlSend,, % "{Text}" command "`n", % "ahk_pid " consolePid
+    } catch _e {
+        _extra := Format("PID: {} Command: {}  Details: {}" consolePid, command, _e.what " " _e.message " " _e.extra)
+        throw Exception("Unable to send console command", "console",  _extra)
     }
 }
