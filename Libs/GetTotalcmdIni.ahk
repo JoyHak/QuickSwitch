@@ -114,6 +114,20 @@ GetTotalRegistryIni() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+UseIniInProgramDir(ByRef ini) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; This flag affects the choice of configuration: from the registry or from the TC directory
+    ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
+    
+    _flag := 0
+    IniRead, _flag, % ini, Configuration, UseIniInProgramDir, 0
+    LogInfo("Config: UseIniInProgramDir=" _flag)
+    
+    return (_flag & 4)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetTotalPathIni(ByRef totalPid) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Searches the ini in the current TC directory
@@ -121,26 +135,32 @@ GetTotalPathIni(ByRef totalPid) {
 
     ; Remove exe name
     _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12))
-
+    
     _ini := ""
     Loop, Files, % _winPath "wincmd.ini", R
     {
         _ini := A_LoopFileLongPath
         break
     }
+    
+    ; Search in TC directory and in registry and make decisions
+    _reg := GetTotalRegistryIni()
 
-    _flag := 0
     if _ini {
-        ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
-        IniRead, _flag, % _ini,	Configuration, UseIniInProgramDir, 0
-
-        if (_flag & 4)
+        if UseIniInProgramDir(_ini)           
             return _ini
+            
+        if _reg {
+            if UseIniInProgramDir(_reg)           
+                return _ini
+                
+            return _reg
+        }        
+        return _ini
     }
 
-    _reg := GetTotalRegistryIni()
-    if (_reg && FileExist(_reg))
+    if _reg
         return _reg
 
-    throw Exception("Unable to find wincmd.ini", "TotalCmd config", "Config not found in current TC directory and registry, UseIniInProgramDir=" _flag)
+    throw Exception("Unable to find wincmd.ini", "TotalCmd config", "Config not found in current TC directory and registry is empty")
 }
