@@ -10,7 +10,12 @@
 
 GetTotalConsoleIni(ByRef totalPid) {
     ; Searches the ini through the console, throws readable error
-
+    
+    global ScriptName
+    if (ProcessIsElevated(totalPid) && !A_IsAdmin) {
+        throw Exception("Unable to open TotalCmd console", "admin permission", "`nRun " ScriptName " as admin / with UI access or run TC as not admin.`nThis will allow " ScriptName " to get the exact configuration directly from TC console.")
+    }
+    
     ; Save clipboard to restore later
     _clipSaved := ClipboardAll
     Clipboard  := ""
