@@ -103,10 +103,8 @@ ShowSettings() {
     ; Current checkbox state
     ToggleShortPath()
 
-    ; Get dialog position
-    if DialogID
-        WinGetPos, WinX, WinY, WinWidth, WinHeight, ahk_id %DialogID%
-    
+    ; Get dialog position 
+    WinGetPos, WinX, WinY, WinWidth, WinHeight, A
     Gui, Show, % "AutoSize x" WinX " y" WinY + 100, Menu settings
     return
 }
