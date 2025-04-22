@@ -9,7 +9,7 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
             ; Read the contents of the config until it appears or the loop ends with an error
             IniRead, _section, % ini, % cmd
             if (_section && _section != "ERROR") {
-                LogInfo("Created [" cmd "] command:`n " _section "`nin `'" ini "`'")
+                LogInfo("Created [" cmd "] command:`n" _section "`nin `'" ini "`'")
                 return true
             }
 
@@ -58,7 +58,7 @@ CreateTotalUserIni(ByRef winId, ByRef cmd, ByRef internalCmd, ByRef param := "")
     ; to ensure that messages are sent correctly
     CloseChildWindows(winId, _winPid)
     
-    LogInfo("Required to create TotalCmd command: " cmd)
+    LogInfo("Required to create TotalCmd command: " cmd, true)
     _ini := ""
     for _index, _func in ["GetTotalConsoleIni", "GetTotalLaunchIni", "GetTotalPathIni"] {
         try {
@@ -85,7 +85,7 @@ CreateTotalUserIni(ByRef winId, ByRef cmd, ByRef internalCmd, ByRef param := "")
         _pos := _pos
 
     _userIni := SubStr(_ini, 1, _pos) . "usercmd.ini"
-    LogInfo("Found Total Commander config: `'" _ini "`'")
+    LogInfo("Found Total Commander config: `'" _ini "`'", true)
     CreateTotalUserCommand(_userIni, cmd, internalCmd, param)
 }
 

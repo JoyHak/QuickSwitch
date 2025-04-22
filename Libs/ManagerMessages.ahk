@@ -59,7 +59,7 @@ SendConsoleCommand(ByRef consolePid, ByRef command) {
     ; Send command to external cmd.exe
     try {
         ControlSend,, % "{Text}" command "`n", % "ahk_pid " consolePid
-        LogInfo("Executed console command: " command)
+        LogInfo("Executed console command: " command, true)
     } catch _e {
         _extra := Format("PID: {} Command: {}  Details: {}" consolePid, command, _e.what " " _e.message " " _e.extra)
         throw Exception("Unable to send console command", "console",  _extra)
