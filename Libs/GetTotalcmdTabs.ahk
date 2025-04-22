@@ -9,7 +9,7 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
             ; Read the contents of the config until it appears or the loop ends with an error
             IniRead, _section, % ini, % cmd
             if (_section && _section != "ERROR") {
-                LogInfo("Created [" cmd "] command: `'" _section "`' in `'" ini "`'")
+                LogInfo("Created [" cmd "] command:`n " _section "`nin `'" ini "`'")
                 return true
             }
 
