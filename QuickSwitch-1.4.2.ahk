@@ -72,7 +72,7 @@ Loop {
     WinWaitActive, ahk_class #32770
 
     try {
-        DialogID   := WinExist("ahk_class #32770")
+        DialogID   := WinActive("ahk_class #32770")
         FileDialog := GetFileDialog(DialogID)
 
         if FileDialog {

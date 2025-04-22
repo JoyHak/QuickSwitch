@@ -59,20 +59,22 @@ AddMenuOptions() {
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogID, Paths, MenuColor
- 
-    if Paths.count() {
-        ; Add paths and options
-        ReadValues()
-        AddMenuPaths()
-        AddMenuOptions()
-
-    } else {
-        ; Display warning
-        AddMenuTitle("No available paths")
-    }
     
-    Menu ContextMenu, Color, % MenuColor
-    Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
-    Menu ContextMenu, Delete            ; Delete previous menu    
+    if WinActive("ahk_id " DialogID) {   
+        if Paths.count() {
+            ; Add paths and options
+            ReadValues()
+            AddMenuPaths()
+            AddMenuOptions()
+    
+        } else {
+            ; Display warning
+            AddMenuTitle("No available paths")
+        }
+        
+        Menu ContextMenu, Color, % MenuColor
+        Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
+        Menu ContextMenu, Delete            ; Delete previous menu    
+    }
 }
 
