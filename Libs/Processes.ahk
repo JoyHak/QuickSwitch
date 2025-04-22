@@ -50,3 +50,43 @@ CloseChildWindows(ByRef winId, ByRef winPid) {
     }
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
+ProcessIsElevated(ByRef pid) {
+;─────────────────────────────────────────────────────────────────────────────
+    ;https://www.autohotkey.com/boards/viewtopic.php?t=26700
+
+    static PROCESS_QUERY_LIMITED_INFORMATION := 0x1000
+    static TOKEN_QUERY := 0x8
+    static TOKEN_ELEVATION := 0x14
+
+    ; For debugging only
+    WinGet, _name, ProcessName, ahk_pid %pid%
+
+    ; https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
+	if !(_pid := DllCall("kernel32\OpenProcess", "UInt", PROCESS_QUERY_LIMITED_INFORMATION, "Int", 0, "UInt", pid, "Ptr"))
+		throw Exception("Unable open process " _name, "open process", pid " is passed to kernel32\OpenProcess")
+
+    ; https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
+	_tokenId := 0
+	if !(DllCall("advapi32\OpenProcessToken", "Ptr", _pid, "UInt", TOKEN_QUERY, "Ptr*", _tokenId)) {
+        ; https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
+        DllCall("kernel32\CloseHandle", "Ptr", _pid)
+
+        throw Exception("Unable get token for " _name, "process token", pid " is passed to advapi32\OpenProcessToken")
+	}
+
+	; https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation
+	_elevated := _size := 0
+	_result := DllCall("advapi32\GetTokenInformation", "Ptr", _tokenId, "Int", TOKEN_ELEVATION, "UInt*", _elevated, "UInt", 4, "UInt*", _size)
+
+
+    DllCall("kernel32\CloseHandle", "Ptr", _tokenId)
+	DllCall("kernel32\CloseHandle", "Ptr", _pid)
+
+    if _result
+        return _elevated
+
+    throw Exception("Unable to determine process privileges: " _name, "process privileges", pid " is passed to advapi32\GetTokenInformation")
+}
+
