@@ -57,10 +57,10 @@ CreateTotalUserIni(ByRef winId, ByRef cmd, ByRef internalCmd, ByRef param := "")
     ; Close the child windows of the current TC instance
     ; to ensure that messages are sent correctly
     CloseChildWindows(winId, _winPid)
-
+    
+    LogInfo("Required to create TotalCmd command: " cmd)
     _ini := ""
     for _index, _func in ["GetTotalConsoleIni", "GetTotalLaunchIni", "GetTotalPathIni"] {
-        ; Search for wincmd.ini and display error on each step
         try {
             if (_ini := Func(_func).call(_winPid)) {
                 break

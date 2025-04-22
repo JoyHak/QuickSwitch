@@ -15,11 +15,10 @@ GetTotalConsoleIni(ByRef totalPid) {
     _clipSaved := ClipboardAll
     Clipboard  := ""
 
-
-    ; Create new console and get its PID
+    ; Create new console process and get its PID
     SendTotalMessage(totalPid, 511)
     _consolePid := GetTotalConsolePid(totalPid)
-
+    
     ; Send command to the console
     static COMMAND   :=  "echo `%commander_ini`%"
     static INI_PATH  :=  A_Temp "\ini_path.txt"
@@ -30,22 +29,23 @@ GetTotalConsoleIni(ByRef totalPid) {
 
     ClipWait, 5
     _clip     := Clipboard
-    Clipboard := _clipSaved
-    Process, Close, % _consolePid
-
+    Clipboard := _clipSaved    
+    try Process, Close, % _consolePid    
 
     ; Parse the result
-    _log := "PID: " totalPid "CMD PID: " _consolePid
+    _log := "TotalCmd PID: " totalPid " Console PID: " _consolePid
 
-    if (ErrorLevel || !_clip) {
+    if !_clip {
         ; Read exported file
-        _log .= "Failed to copy the result to the сlipboard."
+        _log .= " Failed to copy the result to the clipboard."
 
         if FileExist(INI_PATH) {
             FileRead, _iniPath, % INI_PATH
 
-            if _iniPath
+            if _iniPath {
+                LogInfo(_log)
                 return _iniPath
+            }
 
             _log .= " Exported file is empty."
 
@@ -54,6 +54,7 @@ GetTotalConsoleIni(ByRef totalPid) {
         }
 
     } else {
+        LogInfo(_log " The result is copied to the clipboard.")
         return _clip
     }
 
@@ -72,7 +73,7 @@ GetTotalLaunchIni(ByRef totalPid) {
             ; Switch found
 
             if (RegExMatch(_arg, "[""`']([^""`']+)[""`']|\s+([^\/\r\n""`']+)", _match, _pos)) {
-                ; Path in quotes / after spaces found
+                LogInfo("Found /i launch argument")
                 return (_match1 ? _match1 : _match2)
             }
             LogError(Exception("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i"))
@@ -147,20 +148,30 @@ GetTotalPathIni(ByRef totalPid) {
     _reg := GetTotalRegistryIni()
 
     if _ini {
-        if UseIniInProgramDir(_ini)           
-            return _ini
-            
+        LogInfo("Found config in TotalCmd directory")
+        
+        if UseIniInProgramDir(_ini)
+            return _ini       
+        
         if _reg {
-            if UseIniInProgramDir(_reg)           
+            LogInfo("Found config in registry")            
+            
+            if UseIniInProgramDir(_reg) {
+                LogInfo("Ignored registry config key")
                 return _ini
-                
+            }          
+            
             return _reg
-        }        
+        }  
+        
+        LogInfo("Registry config key is empty")
         return _ini
     }
-
-    if _reg
+    
+    if _reg {
+        LogInfo("Сonfig not found in TotalCmd directory but found in registry")
         return _reg
+    }
 
     throw Exception("Unable to find wincmd.ini", "TotalCmd config", "Config not found in current TC directory and registry is empty")
 }
