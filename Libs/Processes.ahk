@@ -5,7 +5,7 @@ GetProcessProperty(ByRef property := "name", ByRef rules := "") {
     ; "rules" param must be a string "property=value [optional: AND, OR...]"
 
     ; Full list of allowed properties:
-    ; https://learn.microsoft.com/ru-ru/windows/win32/cimwin32prov/win32-process?redirectedfrom=MSDN
+    ; https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-process?redirectedfrom=MSDN
 
 
     for _process in ComObjGet("winmgmts:").ExecQuery("select * from Win32_Process where " rules) {
