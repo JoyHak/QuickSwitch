@@ -91,7 +91,11 @@ Loop {
             ; Turn on hotkey to hide / show menu later
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
-            if ((DialogAction = 0) && (OpenMenu || (FromSettings && ReDisplayMenu))) {
+            if (WinActive("ahk_id " DialogID) 
+                && (DialogAction = 0) 
+                && (OpenMenu 
+                    || (FromSettings && ReDisplayMenu))) {
+                
                 FromSettings := false
                 ShowMenu()
             }
