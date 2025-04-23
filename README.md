@@ -86,7 +86,7 @@ Or installed from here: `C:\Program Files\AutoHotkey\UX\install-ahk2exe.ahk`
 `7-zip` is also needed to automatically create an archive with the required files: 
 
 ```powershell
-"C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\QuickSwitch 1.0".zip -tzip -sae -- "%A_ScriptDir%\QuickSwitch.ahk" "%A_ScriptDir%\Libs" "%A_ScriptDir%\QuickSwitch.ico"
+"C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\QuickSwitch 1.0".zip -tzip -sae -- "%A_ScriptDir%\QuickSwitch.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico"
 ```
 
 For compilation, you need to select the .exe AHK v1.1.+ with Unicode support. They can be found here:
