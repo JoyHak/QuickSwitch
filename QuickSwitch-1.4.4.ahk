@@ -33,25 +33,22 @@ INI           := ScriptName ".ini"
 ErrorsLog     := "Errors.log"
 BugReportLink := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 
-#Include %A_ScriptDir%
-#Include Libs\Log.ahk
-#Include Libs\Debug.ahk
-#Include Libs\Values.ahk
-#Include Libs\FileDialogs.ahk
+#Include <Log>
+#Include <Debug>
+#Include <Values>
+#Include <FileDialogs>
 
-#Include Libs\Processes.ahk
-#Include Libs\ManagerMessages.ahk
-#Include Libs\GetTotalcmdIni.ahk
-#Include Libs\GetTotalcmdTabs.ahk
+#Include <Processes>
+#Include <ManagerMessages>
+#Include <ManagerClasses>
+#Include <TotalCommander>
+#Include <GetPaths>
 
-#Include Libs\ManagerClasses.ahk
-#Include Libs\GetPaths.ahk
+#Include <SettingsBackend>
+#Include <MenuBackend>
 
-#Include Libs\SettingsBackend.ahk
-#Include Libs\MenuBackend.ahk
-
-#Include Libs\SettingsFrontend.ahk
-#Include Libs\MenuFrontend.ahk
+#Include <SettingsFrontend>
+#Include <MenuFrontend>
 
 ValidateLog()
 

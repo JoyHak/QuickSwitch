@@ -4,11 +4,15 @@
     "winId" param must be existing window uniq ID (window handle / HWND)
 */
 
+GroupAdd, ManagerClasses, ahk_class TTOTAL_CMD
 GroupAdd, ManagerClasses, ahk_class CabinetWClass
 GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
-GroupAdd, ManagerClasses, ahk_class TTOTAL_CMD
 
+
+TTOTAL_CMD(ByRef winId) {
+    GetTotalPaths(winId)
+}
 
 CabinetWClass(ByRef winId) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
@@ -135,36 +139,5 @@ Dopus(ByRef winId) {
 
     } catch _error {
         LogError(_error)
-    }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-TTOTAL_CMD(ByRef winId) {
-;─────────────────────────────────────────────────────────────────────────────
-    /* 
-        Requests tabs file.
-        
-        If unsuccessful, searches for the location of wincmd.ini to create usercmd.ini 
-        in that directory with the EM_ user command to export tabs to the file
-    */
-    
-    static USER_COMMAND     :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
-    static EXPORT_COMMAND   :=  "SaveTabs2"
-    static TABS_FILE        :=  A_Temp "\TotalTabs.tab"
-                
-    try {        
-        SendTotalCommand(winId, USER_COMMAND)
-        GetTotalTabs(TABS_FILE)
-    } catch {
-        ; This TC instance isn't configured        
-        try {
-            CreateTotalUserIni(winId, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
-            SendTotalCommand(winId, USER_COMMAND)
-            GetTotalTabs(TABS_FILE)
-            
-        } catch _error {
-            LogError(_error)
-        }
     }
 }
