@@ -58,7 +58,8 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogID, Paths, MenuColor
+    global Paths, MenuColor
+    try Menu ContextMenu, Delete        ; Delete previous menu
         
     if Paths.count() {
         ; Add paths and options
@@ -73,6 +74,6 @@ ShowMenu() {
     
     Menu ContextMenu, Color, % MenuColor
     Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
-    Menu ContextMenu, Delete            ; Delete previous menu
+    try Menu ContextMenu, Delete        ; Hide after loosing focus
 }
 

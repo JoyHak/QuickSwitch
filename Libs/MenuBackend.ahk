@@ -1,5 +1,9 @@
 ; These functions are responsible for the Context Menu functionality and its Options
 
+Dummy() {
+    Return
+}
+
 SelectPath(_name := "", _position := 1) {
     global
 
@@ -15,8 +19,17 @@ SelectPath(_name := "", _position := 1) {
     }
 }
 
-Dummy() {
-    Return
+;─────────────────────────────────────────────────────────────────────────────
+;
+isMenuReady() {
+;─────────────────────────────────────────────────────────────────────────────
+    global
+    FromSettings := false
+    
+    return (WinActive("ahk_id " DialogID) 
+            && (DialogAction = 0) 
+            && (OpenMenu 
+                || (FromSettings && ReDisplayMenu))) 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -28,8 +41,10 @@ ToggleAutoSwitch() {
     DialogAction := !DialogAction
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
 
-    if DialogAction
+    if (DialogAction = 1)
         SelectPath()
+    else if isMenuReady()
+        ShowMenu()
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -40,4 +55,7 @@ ToggleBlackList() {
 
     DialogAction := (DialogAction = -1) ? 0 : -1
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+    
+    if isMenuReady()
+        ShowMenu()
 }
