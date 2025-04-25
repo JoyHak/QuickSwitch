@@ -34,6 +34,7 @@ ShowSettings() {
     ;				type,	  [ coordinates options	    vVARIABLE       gGOTO       Section      ],	title
     Gui,    Tab,    1       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
+    Gui, 	Add, 	CheckBox, 	                        vAutoSwitch  	checked%AutoSwitch%, 		&Always Auto Switch
     Gui, 	Add, 	CheckBox, 	                        vShowNoSwitch  	checked%ShowNoSwitch%, 		&Always open Menu if AutoSwitch disabled
     Gui, 	Add, 	CheckBox, 					        vShowAfterSettings  checked%ShowAfterSettings%, 	&Show Menu after leaving settings
     Gui, 	Add, 	CheckBox, 					        vPathNumbers	checked%PathNumbers%,		&Path numbers with shortcuts 1-0 (10)

@@ -25,7 +25,7 @@ SetDefaultValues() {
     global
 
     MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
-    RestartKeyHook := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
+    RestartKeyHook := AutoSwitch := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
 
     GuiColor := MenuColor := ""
 
@@ -63,9 +63,10 @@ WriteValues() {
         IniWrite, 	%MainKeyHook%, 			    %INI%, 		App, 	    MainKeyHook
         IniWrite, 	%RestartKeyHook%, 			%INI%, 		App, 	    RestartKeyHook
         IniWrite, 	%LastTabSettings%, 			%INI%, 		App, 	    LastTabSettings
-        IniWrite, 	%ShowNoSwitch%, 				%INI%, 		Menu, 		ShowNoSwitch
-        IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
+        IniWrite, 	%AutoSwitch%, 			    %INI%, 		Menu, 		AutoSwitch
+        IniWrite, 	%ShowNoSwitch%, 			%INI%, 		Menu, 		ShowNoSwitch
         IniWrite, 	%ShowAfterSettings%, 		%INI%, 		Menu, 		ShowAfterSettings
+        IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%ShortenEnd%, 				%INI%, 		Menu, 		ShortenEnd
@@ -115,9 +116,10 @@ ReadValues() {
     IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
     IniRead, 	LastTabSettings, 			%INI%,		App, 		LastTabSettings, 	        %LastTabSettings%
 
+    IniRead, 	AutoSwitch, 				%INI%,		Menu, 		AutoSwitch, 	            %AutoSwitch%
     IniRead, 	ShowNoSwitch, 				%INI%,		Menu, 		ShowNoSwitch, 	            %ShowNoSwitch%
-    IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	ShowAfterSettings, 			%INI%,		Menu, 		ShowAfterSettings,  	    %ShowAfterSettings%
+    IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
     IniRead, 	ShortenEnd, 				%INI%,		Menu, 		ShortenEnd, 				%ShortenEnd%
