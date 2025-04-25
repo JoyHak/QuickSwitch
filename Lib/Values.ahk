@@ -24,8 +24,8 @@ SetDefaultValues() {
     */    
     global
 
-    MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := CloseDialog := true
-    RestartKeyHook := AutoSwitch := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
+    MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
+    RestartKeyHook := CloseDialog := AutoSwitch := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
 
     GuiColor := MenuColor := ""
 

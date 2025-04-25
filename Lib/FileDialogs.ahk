@@ -65,11 +65,7 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;
 FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global CloseDialog
     WinActivate, ahk_id %winId%
-
-    ; Read the current text in the "File Name"
-    ControlGetText _editOld, Edit1, ahk_id %winId%
 
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
@@ -83,23 +79,25 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     
         } Until !_focus
     
-        if FeedEditField(winId, path) {
-            if CloseDialog {
-                ; Restore original filename
-                ; or make empty in case of previous path
-                if FocusControl(winId, "Edit1") {
-                    ControlSend Edit1, {Enter}, ahk_id %winId%
-                    FocusControl(winId, "Edit1")
-        
-                    return FeedEditField(winId, _editOld)
-                }
-            } else {
-                return true
-            }
-        }
+        return FeedDialogSYSTREEVIEW(winId, path)
     }
     return false
 }
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+FeedDialogGENERAL(ByRef winId, ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
+    global CloseDialog
+    
+    ; Always send {Enter}
+    CloseDialog  :=  true
+    _result      :=  FeedDialogSYSTREEVIEW(winId, path)
+    CloseDialog  :=  false
+    
+    return _result
+}
+
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
@@ -131,7 +129,7 @@ GetFileDialog(ByRef dialogId) {
             ; Check specific controls
             if (_f & 0x1) {
                 if (_f & 0x10 && _f & 0x20) {
-                    return Func("FeedDialogSYSTREEVIEW")
+                    return Func("FeedDialogGENERAL")
                 }
 
                 if (_f & 0x2) {
