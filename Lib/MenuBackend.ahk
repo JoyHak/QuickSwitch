@@ -27,7 +27,8 @@ isMenuReady() {
     
     return ( WinActive("ahk_id " DialogID) 
             && ( (ShowNoSwitch && (DialogAction = 0)) 
-                 || (ShowAfterSettings && FromSettings) ) ) 
+                 || (ShowAfterSettings && FromSettings) 
+                 || ShowAlways) ) 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -41,7 +42,7 @@ ToggleAutoSwitch() {
 
     if (DialogAction = 1)
         SelectPath()
-    else if isMenuReady()
+    if isMenuReady()
         ShowMenu()
 }
 
@@ -53,6 +54,7 @@ ToggleBlackList() {
 
     DialogAction := (DialogAction = -1) ? 0 : -1
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+    Menu ContextMenu, ToggleCheck, &Black list
     
     if isMenuReady()
         ShowMenu()

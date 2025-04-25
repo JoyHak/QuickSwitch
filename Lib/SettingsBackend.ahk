@@ -50,6 +50,17 @@ RestartApp() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+ToggleShowAlways() {
+;─────────────────────────────────────────────────────────────────────────────
+    global
+    
+    Gui, Submit, NoHide
+    GuiControl, Disable%ShowAlways%, ShowNoSwitch
+    GuiControl, Disable%ShowAlways%, ShowAfterSettings
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 ToggleShortPath() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Hide or display additional options

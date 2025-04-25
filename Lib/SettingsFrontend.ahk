@@ -35,6 +35,7 @@ ShowSettings() {
     Gui,    Tab,    1       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, 	Add, 	CheckBox, 	                        vAutoSwitch  	checked%AutoSwitch%, 		&Always Auto Switch
+    Gui, 	Add, 	CheckBox,   gToggleShowAlways       vShowAlways     checked%ShowAlways%, 	    &Always show Menu
     Gui, 	Add, 	CheckBox, 	                        vShowNoSwitch  	checked%ShowNoSwitch%, 		Show Menu if options &disabled
     Gui, 	Add, 	CheckBox, 					        vShowAfterSettings  checked%ShowAfterSettings%, 	Show Menu after leaving &settings
     Gui, 	Add, 	CheckBox, 					        vCloseDialog    checked%CloseDialog%, 	    &Close old dialog after selecting path
@@ -103,6 +104,7 @@ ShowSettings() {
 
     ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Current checkbox state
+    ToggleShowAlways()
     ToggleShortPath()
 
     ; Get dialog position 
