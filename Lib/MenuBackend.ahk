@@ -28,8 +28,8 @@ isMenuReady() {
     
     return (WinActive("ahk_id " DialogID) 
             && (DialogAction = 0) 
-            && (OpenMenu 
-                || (FromSettings && ReDisplayMenu))) 
+            && (ShowNoSwich 
+                || (FromSettings && ShowAfterSettings))) 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

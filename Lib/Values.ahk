@@ -24,7 +24,7 @@ SetDefaultValues() {
     */    
     global
 
-    MainKeyHook := OpenMenu := ReDisplayMenu := AutoStartup := true
+    MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
     RestartKeyHook := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
 
     GuiColor := MenuColor := ""
@@ -63,9 +63,9 @@ WriteValues() {
         IniWrite, 	%MainKeyHook%, 			    %INI%, 		App, 	    MainKeyHook
         IniWrite, 	%RestartKeyHook%, 			%INI%, 		App, 	    RestartKeyHook
         IniWrite, 	%LastTabSettings%, 			%INI%, 		App, 	    LastTabSettings
-        IniWrite, 	%OpenMenu%, 				%INI%, 		Menu, 		OpenMenu
+        IniWrite, 	%ShowNoSwitch%, 				%INI%, 		Menu, 		ShowNoSwitch
         IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
-        IniWrite, 	%ReDisplayMenu%, 			%INI%, 		Menu, 		ReDisplayMenu
+        IniWrite, 	%ShowAfterSettings%, 		%INI%, 		Menu, 		ShowAfterSettings
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
         IniWrite, 	%ShortenEnd%, 				%INI%, 		Menu, 		ShortenEnd
@@ -115,9 +115,9 @@ ReadValues() {
     IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
     IniRead, 	LastTabSettings, 			%INI%,		App, 		LastTabSettings, 	        %LastTabSettings%
 
-    IniRead, 	OpenMenu, 					%INI%,		Menu, 		OpenMenu, 	                %OpenMenu%
+    IniRead, 	ShowNoSwitch, 				%INI%,		Menu, 		ShowNoSwitch, 	            %ShowNoSwitch%
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
-    IniRead, 	ReDisplayMenu, 				%INI%,		Menu, 		ReDisplayMenu,  	        %ReDisplayMenu%
+    IniRead, 	ShowAfterSettings, 			%INI%,		Menu, 		ShowAfterSettings,  	    %ShowAfterSettings%
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
     IniRead, 	ShortenEnd, 				%INI%,		Menu, 		ShortenEnd, 				%ShortenEnd%
