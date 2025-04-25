@@ -9,8 +9,12 @@ SelectPath(_name := "", _position := 1) {
 
     loop, 3 {
         try {
-            if (!WinActive("ahk_id " DialogID) || FileDialog.call(DialogID, Paths[_position]))
+            if (!WinActive("ahk_id " DialogID) || FileDialog.call(DialogID, Paths[_position])) {
+                if (ShowAfterSelect || ShowAlways)
+                    ShowMenu()
+            
                 return
+            }
 
         } catch FeedError {
             if (A_Index = 3)
@@ -42,7 +46,7 @@ ToggleAutoSwitch() {
 
     if (DialogAction = 1)
         SelectPath()
-    if isMenuReady()
+    else if isMenuReady()
         ShowMenu()
 }
 

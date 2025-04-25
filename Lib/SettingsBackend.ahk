@@ -57,6 +57,7 @@ ToggleShowAlways() {
     Gui, Submit, NoHide
     GuiControl, Disable%ShowAlways%, ShowNoSwitch
     GuiControl, Disable%ShowAlways%, ShowAfterSettings
+    GuiControl, Disable%ShowAlways%, ShowAfterSelect
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

@@ -25,7 +25,7 @@ SetDefaultValues() {
     global
 
     MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
-    RestartKeyHook := AutoSwitch := ShowAlways := CloseDialog := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
+    RestartKeyHook := AutoSwitch := ShowAlways := ShowAfterSelect := CloseDialog := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
 
     GuiColor := MenuColor := ""
 
@@ -67,6 +67,7 @@ WriteValues() {
         IniWrite, 	%ShowAlways%, 		        %INI%, 		Menu, 		ShowAlways
         IniWrite, 	%ShowNoSwitch%, 			%INI%, 		Menu, 		ShowNoSwitch
         IniWrite, 	%ShowAfterSettings%, 		%INI%, 		Menu, 		ShowAfterSettings
+        IniWrite, 	%ShowAfterSelect%, 		    %INI%, 		Menu, 		ShowAfterSelect
         IniWrite, 	%CloseDialog%, 			    %INI%, 		Menu, 		CloseDialog
         IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
@@ -122,6 +123,7 @@ ReadValues() {
     IniRead, 	ShowAlways, 			    %INI%,		Menu, 		ShowAlways,  	            %ShowAlways%
     IniRead, 	ShowNoSwitch, 				%INI%,		Menu, 		ShowNoSwitch, 	            %ShowNoSwitch%
     IniRead, 	ShowAfterSettings, 			%INI%,		Menu, 		ShowAfterSettings,  	    %ShowAfterSettings%
+    IniRead, 	ShowAfterSelect, 			%INI%,		Menu, 		ShowAfterSelect,  	        %ShowAfterSelect%
     IniRead, 	CloseDialog, 				%INI%,		Menu, 		CloseDialog, 	            %CloseDialog%
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
