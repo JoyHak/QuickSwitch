@@ -29,9 +29,8 @@ FocusControl(ByRef winId, ByRef classNn, ByRef attempts := 10) {
         if (_focus == classNn)
             return true
         
-        Sleep, 15
+        Sleep, 20
     }  
-    
     return false
 }
 
@@ -46,12 +45,13 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 
     if FeedEditField(winId, path) {
         ; Restore original filename
-        ; or make empty in case of previous path
-        ControlFocus Edit1, ahk_id %winId%
-        ControlSend Edit1, {Enter}, ahk_id %winId%
-        ControlFocus Edit1, ahk_id %winId%
+        ; or make empty in case of previous path        
+        if FocusControl(winId, "Edit1") {
+            ControlSend Edit1, {Enter}, ahk_id %winId%
+            FocusControl(winId, "Edit1")
 
-        return FeedEditField(winId, _editOld)
+            return FeedEditField(winId, _editOld)
+        }
     }
     return false
 }
@@ -67,30 +67,26 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    Loop, 10 {
-        Sleep, 15
-        ControlFocus SysListView321, ahk_id %winId%
-        ControlGetFocus, _focus, ahk_id %winId%
+    if FocusControl(winId, "SysListView321") {
+        ControlSend SysListView321, {Home}, ahk_id %winId%
 
-    } Until (_focus == "SysListView321")
-
-    ControlSend SysListView321, {Home}, ahk_id %winId%
-
-    Loop, 10 {
-        Sleep, 15
-        ControlSend SysListView321, ^{Space}, ahk_id %winId%
-        ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
-
-    } Until !_focus
-
-    if FeedEditField(winId, path) {
-        ; Restore original filename
-        ; or make empty in case of previous path
-        ControlFocus Edit1, ahk_id %winId%
-        ControlSend Edit1, {Enter}, ahk_id %winId%
-        ControlFocus Edit1, ahk_id %winId%
-
-        return FeedEditField(winId, _editOld)
+        Loop, 10 {
+            Sleep, 15
+            ControlSend SysListView321, ^{Space}, ahk_id %winId%
+            ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
+    
+        } Until !_focus
+    
+        if FeedEditField(winId, path) {
+            ; Restore original filename
+            ; or make empty in case of previous path
+            if FocusControl(winId, "Edit1") {
+                ControlSend Edit1, {Enter}, ahk_id %winId%
+                FocusControl(winId, "Edit1")
+    
+                return FeedEditField(winId, _editOld)
+            }
+        }
     }
     return false
 }
