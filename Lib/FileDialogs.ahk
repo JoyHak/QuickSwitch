@@ -20,6 +20,23 @@ FeedEditField(ByRef winId, ByRef path, ByRef attempts := 10) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+FocusControl(ByRef winId, ByRef classNn, ByRef attempts := 10) {
+;─────────────────────────────────────────────────────────────────────────────
+    Loop, % attempts {
+        ControlFocus, % classNn, ahk_id %winId%
+        ControlGetFocus, _focus, ahk_id %winId%
+        
+        if (_focus == classNn)
+            return true
+        
+        Sleep, 15
+    }  
+    
+    return false
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     WinActivate, ahk_id %winId%
@@ -50,7 +67,7 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    Loop, 100 {
+    Loop, 10 {
         Sleep, 15
         ControlFocus SysListView321, ahk_id %winId%
         ControlGetFocus, _focus, ahk_id %winId%
@@ -59,7 +76,7 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 
     ControlSend SysListView321, {Home}, ahk_id %winId%
 
-    Loop, 100 {
+    Loop, 10 {
         Sleep, 15
         ControlSend SysListView321, ^{Space}, ahk_id %winId%
         ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
