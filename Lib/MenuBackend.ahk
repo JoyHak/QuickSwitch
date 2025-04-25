@@ -37,7 +37,7 @@ ToggleAutoSwitch() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
 
-    DialogAction := !DialogAction
+    DialogAction := (DialogAction = 1) ? 0 : 1
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
 
     if (DialogAction = 1)
