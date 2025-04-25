@@ -10,7 +10,6 @@
 FeedEditField(ByRef winId, ByRef path, ByRef attempts := 10) {
     Loop, % attempts {
         ControlSetText, Edit1, % path, ahk_id %winId%          ; set
-        sleep, 15
         ControlGetText, _editContent, Edit1, ahk_id %winId%    ; check
 
         if (_editContent == path)
@@ -31,14 +30,9 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
     if FeedEditField(winId, path) {
         ; Restore original filename
         ; or make empty in case of previous path
-        sleep, 20
         ControlFocus Edit1, ahk_id %winId%
-        sleep, 20
         ControlSend Edit1, {Enter}, ahk_id %winId%
-
-        sleep, 20
         ControlFocus Edit1, ahk_id %winId%
-        sleep, 20
 
         return FeedEditField(winId, _editOld)
     }
@@ -75,14 +69,9 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     if FeedEditField(winId, path) {
         ; Restore original filename
         ; or make empty in case of previous path
-        sleep, 20
         ControlFocus Edit1, ahk_id %winId%
-        sleep, 20
         ControlSend Edit1, {Enter}, ahk_id %winId%
-
-        sleep, 20
         ControlFocus Edit1, ahk_id %winId%
-        sleep, 20
 
         return FeedEditField(winId, _editOld)
     }
@@ -119,7 +108,6 @@ GetFileDialog(ByRef dialogId) {
             ; Check specific controls
             if (_f & 0x1) {
                 if (_f & 0x10 && _f & 0x20) {
-                    sleep 200
                     return Func("FeedDialogSYSTREEVIEW")
                 }
 

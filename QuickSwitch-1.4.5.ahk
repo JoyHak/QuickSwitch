@@ -22,7 +22,6 @@ Process, Priority, , A
 SetBatchLines, -1
 SetKeyDelay, -1, -1
 SetWinDelay, -1
-SetControlDelay, -1
 
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
