@@ -24,7 +24,6 @@ SelectPath(_name := "", _position := 1) {
 isMenuReady() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
-    FromSettings := false
     
     return ( WinActive("ahk_id " DialogID) 
             && ( (ShowNoSwitch && (DialogAction = 0)) 

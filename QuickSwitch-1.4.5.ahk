@@ -89,6 +89,8 @@ Loop {
 
             if isMenuReady()
                 ShowMenu()
+            
+            FromSettings := false
         }
 
     } catch GlobalError {
