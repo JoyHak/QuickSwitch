@@ -20,22 +20,6 @@ FeedEditField(ByRef winId, ByRef path, ByRef attempts := 10) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FocusControl(ByRef winId, ByRef classNn, ByRef attempts := 10) {
-;─────────────────────────────────────────────────────────────────────────────
-    Loop, % attempts {
-        ControlFocus, % classNn, ahk_id %winId%
-        ControlGetFocus, _focus, ahk_id %winId%
-        
-        if (_focus == classNn)
-            return true
-        
-        Sleep, 20
-    }  
-    return false
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     global CloseDialog
@@ -47,13 +31,13 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
     if FeedEditField(winId, path) {
         if CloseDialog {
             ; Restore original filename
-            ; or make empty in case of previous path        
-            if FocusControl(winId, "Edit1") {
-                ControlSend Edit1, {Enter}, ahk_id %winId%
-                FocusControl(winId, "Edit1")
-    
-                return FeedEditField(winId, _editOld)
-            }
+            ; or make empty in case of previous path
+            ControlFocus, Edit1, ahk_id %winId%
+            ControlSend Edit1, {Enter}, ahk_id %winId%
+            ControlFocus, Edit1, ahk_id %winId%
+
+            return FeedEditField(winId, _editOld)
+
         } else {
             return true
         }
@@ -69,19 +53,18 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    if FocusControl(winId, "SysListView321") {
-        ControlSend SysListView321, {Home}, ahk_id %winId%
+    ControlFocus, SysListView321, ahk_id %winId%
+    ControlSend SysListView321, {Home}, ahk_id %winId%
 
-        Loop, 10 {
-            Sleep, 15
-            ControlSend SysListView321, ^{Space}, ahk_id %winId%
-            ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
-    
-        } Until !_focus
-    
-        return FeedDialogSYSTREEVIEW(winId, path)
-    }
-    return false
+    Loop, 10 {
+        Sleep, 15
+        ControlSend SysListView321, ^{Space}, ahk_id %winId%
+        ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
+
+    } Until !_focus
+
+    return FeedDialogSYSTREEVIEW(winId, path)
+
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -89,12 +72,12 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 FeedDialogGENERAL(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     global CloseDialog
-    
+
     ; Always send {Enter}
     CloseDialog  :=  true
     _result      :=  FeedDialogSYSTREEVIEW(winId, path)
     CloseDialog  :=  false
-    
+
     return _result
 }
 
@@ -109,7 +92,7 @@ GetFileDialog(ByRef dialogId) {
         otherwise returns "false"
     */
     try {
-        ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId% 
+        ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
         if _buttonId {
             ; Dialog with buttons
             ; Get specific controls
