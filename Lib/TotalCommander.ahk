@@ -1,4 +1,4 @@
-#Include %A_ScriptDir%\Lib\TotalCommander
+#Include %A_LineFile%\..\TotalCommander
 #Include Ini.ahk
 #Include Search.ahk
 #Include Create.ahk
