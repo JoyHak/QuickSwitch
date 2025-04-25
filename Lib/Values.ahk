@@ -25,7 +25,7 @@ SetDefaultValues() {
     global
 
     MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
-    RestartKeyHook := ShowAlways := CloseDialog := AutoSwitch := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
+    RestartKeyHook := AutoSwitch := ShowAlways := CloseDialog := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
 
     GuiColor := MenuColor := ""
 
@@ -63,11 +63,11 @@ WriteValues() {
         IniWrite, 	%MainKeyHook%, 			    %INI%, 		App, 	    MainKeyHook
         IniWrite, 	%RestartKeyHook%, 			%INI%, 		App, 	    RestartKeyHook
         IniWrite, 	%LastTabSettings%, 			%INI%, 		App, 	    LastTabSettings
-        IniWrite, 	%CloseDialog%, 			    %INI%, 		Menu, 		CloseDialog
         IniWrite, 	%AutoSwitch%, 			    %INI%, 		Menu, 		AutoSwitch
+        IniWrite, 	%ShowAlways%, 		        %INI%, 		Menu, 		ShowAlways
         IniWrite, 	%ShowNoSwitch%, 			%INI%, 		Menu, 		ShowNoSwitch
         IniWrite, 	%ShowAfterSettings%, 		%INI%, 		Menu, 		ShowAfterSettings
-        IniWrite, 	%ShowAlways%, 		        %INI%, 		Menu, 		ShowAlways
+        IniWrite, 	%CloseDialog%, 			    %INI%, 		Menu, 		CloseDialog
         IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
         IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
         IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
@@ -118,11 +118,11 @@ ReadValues() {
     IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
     IniRead, 	LastTabSettings, 			%INI%,		App, 		LastTabSettings, 	        %LastTabSettings%
 
-    IniRead, 	CloseDialog, 				%INI%,		Menu, 		CloseDialog, 	            %CloseDialog%
     IniRead, 	AutoSwitch, 				%INI%,		Menu, 		AutoSwitch, 	            %AutoSwitch%
+    IniRead, 	ShowAlways, 			    %INI%,		Menu, 		ShowAlways,  	            %ShowAlways%
     IniRead, 	ShowNoSwitch, 				%INI%,		Menu, 		ShowNoSwitch, 	            %ShowNoSwitch%
     IniRead, 	ShowAfterSettings, 			%INI%,		Menu, 		ShowAfterSettings,  	    %ShowAfterSettings%
-    IniRead, 	ShowAlways, 			    %INI%,		Menu, 		ShowAlways,  	            %ShowAlways%
+    IniRead, 	CloseDialog, 				%INI%,		Menu, 		CloseDialog, 	            %CloseDialog%
     IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
     IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
     IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
