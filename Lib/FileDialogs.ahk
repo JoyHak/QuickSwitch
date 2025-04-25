@@ -99,10 +99,8 @@ GetFileDialog(ByRef dialogId) {
         otherwise returns "false"
     */
     try {
-
-        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
-        if DllCall("FindWindowExW", "ptr", dialogId, "int", 0, "str", "Button", "int", 0) {
-
+        ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId% 
+        if _buttonId {
             ; Dialog with buttons
             ; Get specific controls
             WinGet, _controlList, ControlList, ahk_id %dialogId%
