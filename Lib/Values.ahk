@@ -24,8 +24,8 @@ SetDefaultValues() {
     */    
     global
 
-    MainKeyHook := OpenMenu := ReDisplayMenu := AutoStartup := 1
-    RestartKeyHook := PathNumbers := ShortPath := ShowDriveLetter := ShowFirstSeparator := ShortenEnd := 0
+    MainKeyHook := OpenMenu := ReDisplayMenu := AutoStartup := true
+    RestartKeyHook := PathNumbers := ShortPath := ShowDriveLetter := ShowFirstSeparator := ShortenEnd := false
 
     GuiColor := MenuColor := ""
 
@@ -37,7 +37,6 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
-    RestartKeyHook := 0
     RestartWhere   := "ahk_exe notepad++.exe"
 }
 
