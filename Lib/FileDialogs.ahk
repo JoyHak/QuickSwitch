@@ -107,22 +107,14 @@ GetFileDialog(ByRef dialogId) {
 
             ; Search for...
             static classes := {Edit1: 0x1, SysListView321: 0x2, SysTreeView321: 0x4, SysHeader321: 0x8, ToolbarWindow321: 0x10, DirectUIHWND1: 0x20}
-            _classes := classes.clone()
-            _size    := classes.count()
 
             ; Find controls and set bitwise flag
             _f := 0
             Loop, Parse, _controlList, `n
             {
-                _class := _classes[A_LoopField]
-
-                if _class {
+                if (_class := classes[A_LoopField])
                     _f |= _class
-                    _classes.delete(A_LoopField)
-                    _size--
-                }
-
-            } Until !_size
+            }
 
             ; Check specific controls
             if (_f & 0x1) {
