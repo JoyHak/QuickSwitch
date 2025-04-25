@@ -25,7 +25,7 @@ SetDefaultValues() {
     global
 
     MainKeyHook := OpenMenu := ReDisplayMenu := AutoStartup := true
-    RestartKeyHook := PathNumbers := ShortPath := ShowDriveLetter := ShowFirstSeparator := ShortenEnd := false
+    RestartKeyHook := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
 
     GuiColor := MenuColor := ""
 
