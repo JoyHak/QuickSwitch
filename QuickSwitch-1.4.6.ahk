@@ -89,7 +89,7 @@ Loop {
 
             if isMenuReady()
                 ShowMenu()
-            
+
             FromSettings := false
         }
 
