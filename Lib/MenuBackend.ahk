@@ -9,10 +9,13 @@ SelectPath(_name := "", _position := 1) {
 
     loop, 3 {
         try {
-            if (!WinActive("ahk_id " DialogID) || FileDialog.call(DialogID, Paths[_position])) {
+            if !WinActive("ahk_id " DialogID)
+                return
+
+            if (FileDialog.call(DialogID, Paths[_position])) {
                 if ((ShowAfterSelect && _name) || ShowAlways)
-                    ShowMenu()
-            
+                    return ShowMenu()
+
                 return
             }
 
@@ -28,11 +31,11 @@ SelectPath(_name := "", _position := 1) {
 isMenuReady() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
-    
-    return ( WinActive("ahk_id " DialogID) 
-            && ( ((ShowNoSwitch || ShowAlways) 
-                   && (DialogAction = 0)) 
-                 || (ShowAfterSettings && FromSettings) ) ) 
+
+    return ( WinActive("ahk_id " DialogID)
+            && ( ((ShowNoSwitch || ShowAlways)
+                   && (DialogAction = 0))
+                 || (ShowAfterSettings && FromSettings) ) )
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -59,7 +62,7 @@ ToggleBlackList() {
     DialogAction := (DialogAction = -1) ? 0 : -1
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
     Menu ContextMenu, ToggleCheck, &Black list
-    
+
     if isMenuReady()
         ShowMenu()
 }
