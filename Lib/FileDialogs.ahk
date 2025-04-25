@@ -38,19 +38,24 @@ FocusControl(ByRef winId, ByRef classNn, ByRef attempts := 10) {
 ;
 FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
+    global CloseDialog
     WinActivate, ahk_id %winId%
 
     ; Read the current text in the "File Name"
     ControlGetText _editOld, Edit1, ahk_id %winId%
 
     if FeedEditField(winId, path) {
-        ; Restore original filename
-        ; or make empty in case of previous path        
-        if FocusControl(winId, "Edit1") {
-            ControlSend Edit1, {Enter}, ahk_id %winId%
-            FocusControl(winId, "Edit1")
-
-            return FeedEditField(winId, _editOld)
+        if CloseDialog {
+            ; Restore original filename
+            ; or make empty in case of previous path        
+            if FocusControl(winId, "Edit1") {
+                ControlSend Edit1, {Enter}, ahk_id %winId%
+                FocusControl(winId, "Edit1")
+    
+                return FeedEditField(winId, _editOld)
+            }
+        } else {
+            return true
         }
     }
     return false
@@ -60,6 +65,7 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
 ;
 FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
+    global CloseDialog
     WinActivate, ahk_id %winId%
 
     ; Read the current text in the "File Name"
@@ -78,13 +84,17 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
         } Until !_focus
     
         if FeedEditField(winId, path) {
-            ; Restore original filename
-            ; or make empty in case of previous path
-            if FocusControl(winId, "Edit1") {
-                ControlSend Edit1, {Enter}, ahk_id %winId%
-                FocusControl(winId, "Edit1")
-    
-                return FeedEditField(winId, _editOld)
+            if CloseDialog {
+                ; Restore original filename
+                ; or make empty in case of previous path
+                if FocusControl(winId, "Edit1") {
+                    ControlSend Edit1, {Enter}, ahk_id %winId%
+                    FocusControl(winId, "Edit1")
+        
+                    return FeedEditField(winId, _editOld)
+                }
+            } else {
+                return true
             }
         }
     }

@@ -37,6 +37,7 @@ ShowSettings() {
     Gui, 	Add, 	CheckBox, 	                        vAutoSwitch  	checked%AutoSwitch%, 		&Always Auto Switch
     Gui, 	Add, 	CheckBox, 	                        vShowNoSwitch  	checked%ShowNoSwitch%, 		Show Menu if options &disabled
     Gui, 	Add, 	CheckBox, 					        vShowAfterSettings  checked%ShowAfterSettings%, 	Show Menu after leaving &settings
+    Gui, 	Add, 	CheckBox, 					        vCloseDialog    checked%CloseDialog%, 	    &Close old dialog after selecting path
     Gui, 	Add, 	CheckBox, 					        vPathNumbers	checked%PathNumbers%,		&Path numbers with shortcuts 0-9
 
 
