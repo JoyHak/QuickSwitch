@@ -26,10 +26,9 @@ isMenuReady() {
     global
     FromSettings := false
     
-    return (WinActive("ahk_id " DialogID) 
-            && (DialogAction = 0) 
-            && (ShowNoSwich 
-                || (FromSettings && ShowAfterSettings))) 
+    return ( WinActive("ahk_id " DialogID) 
+            && ( (ShowNoSwitch && (DialogAction = 0)) 
+                 || (ShowAfterSettings && FromSettings) ) ) 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
