@@ -10,7 +10,7 @@ SelectPath(_name := "", _position := 1) {
     loop, 3 {
         try {
             if (!WinActive("ahk_id " DialogID) || FileDialog.call(DialogID, Paths[_position])) {
-                if (ShowAfterSelect || ShowAlways)
+                if ((ShowAfterSelect && _name) || ShowAlways)
                     ShowMenu()
             
                 return
@@ -30,9 +30,9 @@ isMenuReady() {
     global
     
     return ( WinActive("ahk_id " DialogID) 
-            && ( (ShowNoSwitch && (DialogAction = 0)) 
-                 || (ShowAfterSettings && FromSettings) 
-                 || ShowAlways) ) 
+            && ( ((ShowNoSwitch || ShowAlways) 
+                   && (DialogAction = 0)) 
+                 || (ShowAfterSettings && FromSettings) ) ) 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ ToggleAutoSwitch() {
 
     if (DialogAction = 1)
         SelectPath()
-    else if isMenuReady()
+    if isMenuReady()
         ShowMenu()
 }
 
