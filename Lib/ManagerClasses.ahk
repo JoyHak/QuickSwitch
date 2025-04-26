@@ -74,15 +74,14 @@ ThunderRT6FormDC(ByRef winId) {
 
         SendXyplorerScript(winId, script)
 
-        ClipWait, 5
-        if ErrorLevel
-            return
-
-        Loop, parse, Clipboard, `|
-            Paths.push(A_LoopField)
-
-        ; Restore
+        ClipWait 2
+        _clip     := Clipboard
         Clipboard := _clipSaved
+        
+        if _clip {
+            Loop, parse, _clip, `|
+                Paths.push(A_LoopField)    
+        }        
 
     } catch _error {
         LogError(_error)
