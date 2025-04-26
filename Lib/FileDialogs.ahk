@@ -92,7 +92,7 @@ GetFileDialog(ByRef dialogId) {
         otherwise returns "false"
     */
     try {
-        ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
+        try ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
         if _buttonId {
             ; Dialog with buttons
             ; Get specific controls
