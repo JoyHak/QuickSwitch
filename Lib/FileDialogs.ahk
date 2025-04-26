@@ -87,10 +87,10 @@ FeedDialogGENERAL(ByRef winId, ByRef path) {
 GetFileDialog(ByRef dialogId) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        Detection of a File dialog by checking specific controls existence.
-        Returns FuncObj if required controls found,
-        otherwise returns "false"
+        Gets all dialog controls and returns FuncObj for this dialog
+        if required controls found, otherwise returns "false"
     */
+    
     try {
         try ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
         if _buttonId {
