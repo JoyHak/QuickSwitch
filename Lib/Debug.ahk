@@ -1,8 +1,8 @@
-/* 
+/*
     Contains functions for debugging and testing code.
-    Any functions to test the performance of the code 
-    (other than logging) should be stored here. 
-    Library must be imported first to be used in other libraries!    
+    Any functions to test the performance of the code
+    (other than logging) should be stored here.
+    Library must be imported first to be used in other libraries!
 */
 
 Timer(R := 0) {
@@ -18,7 +18,7 @@ Timer(R := 0) {
 
 ExportDebug() {
     ; Export dialog controls from ListView to CSV
-    global FingerPrint
+    global FingerPrint, FileDialog
 
     try {
         _fileName := A_ScriptDir "\" FingerPrint ".csv"
@@ -26,8 +26,9 @@ ExportDebug() {
 
         if IsObject(_file) {
             ; Header
-            _line := "ControlName;ID;PID;Text;X;Y;Width;Height"
-            _file.WriteLine(_line)
+            _line := FileDialog.name "`n" FingerPrint "`n`n"
+            _line .= "ControlName;ID;PID;Text;X;Y;Width;Height"
+            _file.writeLine(_line)
 
             ; Get content of each line
             Gui, ListView
@@ -40,12 +41,12 @@ ExportDebug() {
                     LV_GetText(_text, _colIndex, A_index)
                     _line .= _text ";"
                 }
-                _file.WriteLine(_line)
+                _file.writeLine(_line)
             }
 
-            _file.Close()
+            _file.close()
             clipboard := _filename
-            TrayTip, Successfully exported (path in clipboard), Results exported to %_filename%
+            TrayTip, % "Successfully exported (path in clipboard)", % _filename
         } else {
             LogError(Exception("Cant create " _fileName,, "File closed for writing. Check the attributes of the target directory"))
         }
@@ -61,6 +62,7 @@ CancelLV() {
 
 ShowDebug() {
     ; Displays information about the file dialog Controls
+    global FileDialog
     Gui, Destroy
 
     SetFormat, Integer, D
@@ -87,5 +89,5 @@ ShowDebug() {
     Gui, Add, Button, y+10 w74 gExportDebug,    &Export
     Gui, Add, Button, x+10 wp  gCancelLV,       &Cancel
     Gui, Add, Button, x+10 wp  gNukeSettings,   &Nuke
-    Gui, Show
+    Gui, Show,, % FileDialog.name
 }
