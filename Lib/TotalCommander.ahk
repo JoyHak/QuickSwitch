@@ -5,30 +5,30 @@
 #Include Tabs.ahk
 
 GetTotalPaths(ByRef winId) {
-    /* 
+    /*
         Requests tabs file.
-        
-        If unsuccessful, searches for the location of wincmd.ini to create usercmd.ini 
+
+        If unsuccessful, searches for the location of wincmd.ini to create usercmd.ini
         in that directory with the EM_ user command to export tabs to the file
     */
-    
+
     static USER_COMMAND     :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
     static EXPORT_COMMAND   :=  "SaveTabs2"
     static TABS_FILE        :=  A_Temp "\TotalTabs.tab"
-                
-    try {        
+
+    try {
         SendTotalCommand(winId, USER_COMMAND)
         ParseTotalTabs(TABS_FILE)
-    } catch {        
+    } catch {
         try {
             LogInfo("Required to create TotalCmd command: " USER_COMMAND, true)
-            
+
             _userIni := GetTotalIni(winId)
             CreateTotalUserCommand(_userIni, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
-            
+
             SendTotalCommand(winId, USER_COMMAND)
             ParseTotalTabs(TABS_FILE)
-            
+
         } catch _error {
             LogError(_error)
         }

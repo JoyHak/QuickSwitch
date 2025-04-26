@@ -60,7 +60,7 @@ SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
-ValidateWriteKey(MainKey, 	 "MainKey",    "ShowMenu",   "Off", MainKeyHook)
+ValidateWriteKey(MainKey,    "MainKey",    "ShowMenu",   "Off", MainKeyHook)
 ValidateWriteKey(RestartKey, "RestartKey", "RestartApp", "On",  RestartKeyHook)
 
 Loop {

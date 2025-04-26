@@ -90,7 +90,7 @@ GetFileDialog(ByRef dialogId) {
         Gets all dialog controls and returns FuncObj for this dialog
         if required controls found, otherwise returns "false"
     */
-    
+
     try {
         try ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
         if _buttonId {

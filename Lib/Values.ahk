@@ -1,9 +1,9 @@
-/* 
-    Contains all global variables necessary for the application, 
-    functions that read/write INI configuration, 
-    functions that check (validate) values for compliance 
+/*
+    Contains all global variables necessary for the application,
+    functions that read/write INI configuration,
+    functions that check (validate) values for compliance
     with the requirements of different libraries.
-    
+
     "INI" param must be a path to a write-accessible file (with any extension)
  */
 
@@ -14,14 +14,14 @@ LastTabSettings := 1
 Paths           := []
 
 SetDefaultValues() {
-    /* 
+    /*
         Sets defaults without overwriting existing INI.
-        
+
         These values are used if:
         - INI settings are invalid
-        - INI doesn't exist (yet) 
+        - INI doesn't exist (yet)
         - the values must be reset
-    */    
+    */
     global
 
     MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
@@ -46,48 +46,48 @@ WriteValues() {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Calls validators and writes values to INI.
-        
+
         The status of the checkboxes from the settings menu is writed immediately.
         Strings and colors from fields are checked before writing.
-        
+
         File, section, param name, global var and its value reference
         must be identical to ReadValues()
     */
     global
 
     try {
-        ; 			value						INI name	section		param name
-        IniWrite, 	%AutoStartup%, 				%INI%, 		App, 		AutoStartup
-        IniWrite, 	%MainFont%, 			    %INI%, 		App, 	    MainFont
-        IniWrite, 	%RestartWhere%, 			%INI%, 		App, 	    RestartWhere
-        IniWrite, 	%MainKeyHook%, 			    %INI%, 		App, 	    MainKeyHook
-        IniWrite, 	%RestartKeyHook%, 			%INI%, 		App, 	    RestartKeyHook
-        IniWrite, 	%LastTabSettings%, 			%INI%, 		App, 	    LastTabSettings
-        IniWrite, 	%AutoSwitch%, 			    %INI%, 		Menu, 		AutoSwitch
-        IniWrite, 	%ShowAlways%, 		        %INI%, 		Menu, 		ShowAlways
-        IniWrite, 	%ShowNoSwitch%, 			%INI%, 		Menu, 		ShowNoSwitch
-        IniWrite, 	%ShowAfterSettings%, 		%INI%, 		Menu, 		ShowAfterSettings
-        IniWrite, 	%ShowAfterSelect%, 		    %INI%, 		Menu, 		ShowAfterSelect
-        IniWrite, 	%CloseDialog%, 			    %INI%, 		Menu, 		CloseDialog
-        IniWrite, 	%ShortPath%, 				%INI%, 		Menu, 		ShortPath
-        IniWrite, 	%PathNumbers%, 				%INI%, 		Menu, 		PathNumbers
-        IniWrite, 	%ShowDriveLetter%, 			%INI%, 		Menu, 		ShowDriveLetter
-        IniWrite, 	%ShortenEnd%, 				%INI%, 		Menu, 		ShortenEnd
-        IniWrite, 	%ShowFirstSeparator%, 		%INI%, 		Menu, 		ShowFirstSeparator
-        IniWrite, 	%DirsCount%, 		        %INI%, 		Menu, 		DirsCount
-        IniWrite, 	%DirNameLength%, 		    %INI%, 		Menu, 		DirNameLength
+        ;           value                       INI name    section     param name
+        IniWrite,   %AutoStartup%,              %INI%,      App,        AutoStartup
+        IniWrite,   %MainFont%,                 %INI%,      App,        MainFont
+        IniWrite,   %RestartWhere%,             %INI%,      App,        RestartWhere
+        IniWrite,   %MainKeyHook%,              %INI%,      App,        MainKeyHook
+        IniWrite,   %RestartKeyHook%,           %INI%,      App,        RestartKeyHook
+        IniWrite,   %LastTabSettings%,          %INI%,      App,        LastTabSettings
+        IniWrite,   %AutoSwitch%,               %INI%,      Menu,       AutoSwitch
+        IniWrite,   %ShowAlways%,               %INI%,      Menu,       ShowAlways
+        IniWrite,   %ShowNoSwitch%,             %INI%,      Menu,       ShowNoSwitch
+        IniWrite,   %ShowAfterSettings%,        %INI%,      Menu,       ShowAfterSettings
+        IniWrite,   %ShowAfterSelect%,          %INI%,      Menu,       ShowAfterSelect
+        IniWrite,   %CloseDialog%,              %INI%,      Menu,       CloseDialog
+        IniWrite,   %ShortPath%,                %INI%,      Menu,       ShortPath
+        IniWrite,   %PathNumbers%,              %INI%,      Menu,       PathNumbers
+        IniWrite,   %ShowDriveLetter%,          %INI%,      Menu,       ShowDriveLetter
+        IniWrite,   %ShortenEnd%,               %INI%,      Menu,       ShortenEnd
+        IniWrite,   %ShowFirstSeparator%,       %INI%,      Menu,       ShowFirstSeparator
+        IniWrite,   %DirsCount%,                %INI%,      Menu,       DirsCount
+        IniWrite,   %DirNameLength%,            %INI%,      Menu,       DirNameLength
     } catch {
         LogError(Exception("Failed to write values to the configuration", INI . " write", "Create INI file manually or change the INI global variable"))
     }
 
-    ValidateWriteString(PathSeparator, 		"PathSeparator")
+    ValidateWriteString(PathSeparator,      "PathSeparator")
     ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
 
-    ValidateWriteKey(MainKey, 		"MainKey",      "ShowMenu",    "Off",      MainKeyHook)
-    ValidateWriteKey(RestartKey, 	"RestartKey",   "RestartApp",       "On",       RestartKeyHook)
+    ValidateWriteKey(MainKey,       "MainKey",      "ShowMenu",    "Off",      MainKeyHook)
+    ValidateWriteKey(RestartKey,    "RestartKey",   "RestartApp",       "On",       RestartKeyHook)
 
-    ValidateWriteColor(GuiColor, 	"GuiColor")
-    ValidateWriteColor(MenuColor, 	"MenuColor")
+    ValidateWriteColor(GuiColor,    "GuiColor")
+    ValidateWriteColor(MenuColor,   "MenuColor")
     ValidateWriteTrayIcon(MainIcon, "MainIcon")
 }
 
@@ -97,49 +97,49 @@ ReadValues() {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Reads values from INI.
-        
+
         All global variables are updated if:
         - the configuration exists
         - values exist in the configuration
         - variables have been declared
-        
-        File, section, param name, global var and its value reference 
+
+        File, section, param name, global var and its value reference
         must be identical to WriteValues()
     */
     global
 
-    ;			global						INI name	section		param name					default value
-    IniRead, 	AutoStartup, 				%INI%,		App, 		AutoStartup, 	            %AutoStartup%
-    IniRead, 	MainKey, 				    %INI%,		App, 		MainKey, 	                %MainKey%
-    IniRead, 	MainFont, 				    %INI%,		App, 		MainFont, 	                %MainFont%
-    IniRead, 	RestartKey, 				%INI%,		App, 		RestartKey, 	            %RestartKey%
+    ;           global                      INI name    section     param name                  default value
+    IniRead,    AutoStartup,                %INI%,      App,        AutoStartup,                %AutoStartup%
+    IniRead,    MainKey,                    %INI%,      App,        MainKey,                    %MainKey%
+    IniRead,    MainFont,                   %INI%,      App,        MainFont,                   %MainFont%
+    IniRead,    RestartKey,                 %INI%,      App,        RestartKey,                 %RestartKey%
 
-    IniRead, 	MainKeyHook, 				%INI%,		App, 		MainKeyHook, 	            %MainKeyHook%
-    IniRead, 	RestartKeyHook, 			%INI%,		App, 		RestartKeyHook, 	        %RestartKeyHook%
-    IniRead, 	RestartWhere, 				%INI%,		App, 		RestartWhere, 	            %RestartWhere%
-    IniRead, 	LastTabSettings, 			%INI%,		App, 		LastTabSettings, 	        %LastTabSettings%
+    IniRead,    MainKeyHook,                %INI%,      App,        MainKeyHook,                %MainKeyHook%
+    IniRead,    RestartKeyHook,             %INI%,      App,        RestartKeyHook,             %RestartKeyHook%
+    IniRead,    RestartWhere,               %INI%,      App,        RestartWhere,               %RestartWhere%
+    IniRead,    LastTabSettings,            %INI%,      App,        LastTabSettings,            %LastTabSettings%
 
-    IniRead, 	AutoSwitch, 				%INI%,		Menu, 		AutoSwitch, 	            %AutoSwitch%
-    IniRead, 	ShowAlways, 			    %INI%,		Menu, 		ShowAlways,  	            %ShowAlways%
-    IniRead, 	ShowNoSwitch, 				%INI%,		Menu, 		ShowNoSwitch, 	            %ShowNoSwitch%
-    IniRead, 	ShowAfterSettings, 			%INI%,		Menu, 		ShowAfterSettings,  	    %ShowAfterSettings%
-    IniRead, 	ShowAfterSelect, 			%INI%,		Menu, 		ShowAfterSelect,  	        %ShowAfterSelect%
-    IniRead, 	CloseDialog, 				%INI%,		Menu, 		CloseDialog, 	            %CloseDialog%
-    IniRead, 	ShortPath, 					%INI%,		Menu, 		ShortPath,      	        %ShortPath%
-    IniRead, 	PathNumbers, 				%INI%,		Menu, 		PathNumbers, 			    %PathNumbers%
-    IniRead, 	ShowDriveLetter, 			%INI%,		Menu, 		ShowDriveLetter, 			%ShowDriveLetter%
-    IniRead, 	ShortenEnd, 				%INI%,		Menu, 		ShortenEnd, 				%ShortenEnd%
-    IniRead, 	ShowFirstSeparator, 		%INI%,		Menu, 		ShowFirstSeparator, 		%ShowFirstSeparator%
+    IniRead,    AutoSwitch,                 %INI%,      Menu,       AutoSwitch,                 %AutoSwitch%
+    IniRead,    ShowAlways,                 %INI%,      Menu,       ShowAlways,                 %ShowAlways%
+    IniRead,    ShowNoSwitch,               %INI%,      Menu,       ShowNoSwitch,               %ShowNoSwitch%
+    IniRead,    ShowAfterSettings,          %INI%,      Menu,       ShowAfterSettings,          %ShowAfterSettings%
+    IniRead,    ShowAfterSelect,            %INI%,      Menu,       ShowAfterSelect,            %ShowAfterSelect%
+    IniRead,    CloseDialog,                %INI%,      Menu,       CloseDialog,                %CloseDialog%
+    IniRead,    ShortPath,                  %INI%,      Menu,       ShortPath,                  %ShortPath%
+    IniRead,    PathNumbers,                %INI%,      Menu,       PathNumbers,                %PathNumbers%
+    IniRead,    ShowDriveLetter,            %INI%,      Menu,       ShowDriveLetter,            %ShowDriveLetter%
+    IniRead,    ShortenEnd,                 %INI%,      Menu,       ShortenEnd,                 %ShortenEnd%
+    IniRead,    ShowFirstSeparator,         %INI%,      Menu,       ShowFirstSeparator,         %ShowFirstSeparator%
 
-    IniRead, 	DirsCount, 				    %INI%,		Menu, 		DirsCount,      	    	%DirsCount%
-    IniRead, 	DirNameLength, 			    %INI%,		Menu, 		DirNameLength,      	    %DirNameLength%
+    IniRead,    DirsCount,                  %INI%,      Menu,       DirsCount,                  %DirsCount%
+    IniRead,    DirNameLength,              %INI%,      Menu,       DirNameLength,              %DirNameLength%
 
-    IniRead, 	PathSeparator, 				%INI%,		Menu, 		PathSeparator,      	    %PathSeparator%
-    IniRead, 	ShortNameIndicator, 	 	%INI%,		Menu, 		ShortNameIndicator,      	%ShortNameIndicator%
+    IniRead,    PathSeparator,              %INI%,      Menu,       PathSeparator,              %PathSeparator%
+    IniRead,    ShortNameIndicator,         %INI%,      Menu,       ShortNameIndicator,         %ShortNameIndicator%
 
-    IniRead, 	MainIcon, 				    %INI%,		App, 		MainIcon, 	                %A_Space%
-    IniRead, 	GuiColor, 					%INI%,		Colors, 	GuiColor, 				    %A_Space%
-    IniRead, 	MenuColor, 					%INI%,		Colors, 	MenuColor, 				    %A_Space%
+    IniRead,    MainIcon,                   %INI%,      App,        MainIcon,                   %A_Space%
+    IniRead,    GuiColor,                   %INI%,      Colors,     GuiColor,                   %A_Space%
+    IniRead,    MenuColor,                  %INI%,      Colors,     MenuColor,                  %A_Space%
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

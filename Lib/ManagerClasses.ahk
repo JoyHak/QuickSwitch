@@ -77,11 +77,11 @@ ThunderRT6FormDC(ByRef winId) {
         ClipWait 2
         _clip     := Clipboard
         Clipboard := _clipSaved
-        
+
         if _clip {
             Loop, parse, _clip, `|
-                Paths.push(A_LoopField)    
-        }        
+                Paths.push(A_LoopField)
+        }
 
     } catch _error {
         LogError(_error)

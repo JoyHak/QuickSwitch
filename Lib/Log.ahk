@@ -11,16 +11,16 @@ LogError(_error) {
 
     ; Generate call stack
     _stack := ""
-	Loop {
+    Loop {
         ; Skip current func
-		_e    := Exception(".", offset := -A_Index-1)
+        _e    := Exception(".", offset := -A_Index-1)
         _call := _e.What
 
         if (_call == offset)
-			break
+            break
 
-		_stack := _call " > " _stack
-	}
+        _stack := _call " > " _stack
+    }
 
     ; Log
     _what := _error.What

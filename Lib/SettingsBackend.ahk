@@ -53,7 +53,7 @@ RestartApp() {
 ToggleShowAlways() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
-    
+
     Gui, Submit, NoHide
     GuiControl, Disable%ShowAlways%, ShowNoSwitch
     GuiControl, Disable%ShowAlways%, ShowAfterSettings
@@ -90,7 +90,7 @@ ToggleShortPath() {
 ;
 ValidateAutoStartup() {
 ;─────────────────────────────────────────────────────────────────────────────
-	global AutoStartup, ScriptName, INI
+    global AutoStartup, ScriptName, INI
 
     try {
         IniRead, AutoStartup, % INI, App, AutoStartup, % AutoStartup
