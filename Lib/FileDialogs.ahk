@@ -7,12 +7,12 @@
     "path"  param must be a string valid for any dialog
 */
 
-FeedEditField(ByRef winId, ByRef path, ByRef attempts := 10) {
+FeedEditField(ByRef controlId, ByRef path, ByRef attempts := 10) {
     Loop, % attempts {
-        ControlSetText, Edit1, % path, ahk_id %winId%          ; set
-        ControlGetText, _editContent, Edit1, ahk_id %winId%    ; check
+        ControlSetText, , % path, ahk_id %controlId%   ; set
+        ControlGetText, _path, , ahk_id %controlId%    ; check
 
-        if (_editContent == path)
+        if (_path = path)
             return true
     }
     return false
@@ -26,17 +26,18 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
     WinActivate, ahk_id %winId%
 
     ; Read the current text in the "File Name"
-    ControlGetText _editOld, Edit1, ahk_id %winId%
+    ControlGet, _id, hwnd,, Edit1, ahk_id %winId%
+    ControlGetText, _oldPath, , ahk_id %_id%
 
-    if FeedEditField(winId, path) {
+    if FeedEditField(_id, path) {
         if CloseDialog {
             ; Restore original filename
             ; or make empty in case of previous path
-            ControlFocus, Edit1, ahk_id %winId%
-            ControlSend Edit1, {Enter}, ahk_id %winId%
-            ControlFocus, Edit1, ahk_id %winId%
+            ControlFocus, , ahk_id %_id%
+            ControlSend, , {Enter}, ahk_id %_id%
+            ControlFocus, , ahk_id %_id%
 
-            return FeedEditField(winId, _editOld)
+            return FeedEditField(_id, _oldPath)
 
         } else {
             return true
