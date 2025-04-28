@@ -49,13 +49,14 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
 
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    ControlFocus, SysListView321, ahk_id %winId%
-    ControlSend SysListView321, {Home}, ahk_id %winId%
+    ControlGet, _id, hwnd,, SysListView321, ahk_id %winId%
+    ControlFocus,, ahk_id %_id%
+    ControlSend,, {Home}, ahk_id %_id%
 
     Loop, 10 {
         Sleep, 15
-        ControlSend SysListView321, ^{Space}, ahk_id %winId%
-        ControlGet, _focus, List, Selected, SysListView321, ahk_id %winId%
+        ControlSend,, ^{Space}, ahk_id %_id%
+        ControlGet, _focus, List, Selected,, ahk_id %_id%
 
     } Until !_focus
 
