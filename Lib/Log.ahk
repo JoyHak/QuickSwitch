@@ -82,7 +82,7 @@ LogVersion() {
 ValidateLog() {
     global INI, ErrorsLog, ScriptName
 
-    if (FileExist(ErrorsLog)) {
+    if FileExist(ErrorsLog) {
         ; Clean log
         FileGetSize, _size, % ErrorsLog, K
         if (_size > 30) {
