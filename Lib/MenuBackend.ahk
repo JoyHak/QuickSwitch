@@ -12,12 +12,13 @@ SelectPath(_name := "", _position := 1) {
             if !WinActive("ahk_id " DialogID)
                 return
 
-            if (FileDialog.call(DialogID, Paths[_position])) {
-                if ((ShowAfterSelect && _name) || ShowAlways)
-                    return ShowMenu()
+            if !(FileDialog.call(DialogID, Paths[_position]))
+                continue
 
-                return
-            }
+            if ((ShowAfterSelect && _name) || ShowAlways)
+                return ShowMenu()
+
+            return
 
         } catch FeedError {
             if (A_Index = 3)
