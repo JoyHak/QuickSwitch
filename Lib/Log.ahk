@@ -13,10 +13,10 @@ LogError(_error) {
     _stack := ""
     Loop {
         ; Skip current func
-        _e    := Exception(".", offset := -A_Index-1)
+        _e    := Exception(".", _offset := -A_Index-1)
         _call := _e.What
 
-        if (_call == offset)
+        if (_call = _offset)
             break
 
         _stack := _call " > " _stack
