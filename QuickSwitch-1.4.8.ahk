@@ -109,11 +109,13 @@ Loop {
         DialogAction := ""
         FingerPrint  := ""
     }
-    Exe          := ""
-    WinTitle     := ""
-    DialogID     := ""
+    Exe       := ""
+    WinTitle  := ""
+    DialogID  := ""
 
 }   ; End of continuous WinWaitActive loop
 
-LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart the app manually", "main menu", "End of continuous WinWaitActive loop in main file"))
+LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
+                   , "main menu"
+                   , "End of continuous WinWaitActive loop in main file"))
 ExitApp
