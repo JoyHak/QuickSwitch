@@ -123,8 +123,9 @@ GetFileDialog(ByRef dialogId) {
                     }
                 }
 
-                if (_f & 0x4)
+                if (_f & 0x4) {
                     return Func("FeedDialogSYSTREEVIEW")
+                }
             }
         }
 
