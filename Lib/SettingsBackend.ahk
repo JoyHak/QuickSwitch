@@ -38,14 +38,10 @@ SaveSettings() {
 RestartApp() {
     global RestartWhere
 
-    if RestartWhere {
-        if WinActive(RestartWhere) {
-            Reload
-        }
-
-    } else {
+    if !RestartWhere
         Reload
-    }
+    if WinActive(RestartWhere)
+        Reload
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
