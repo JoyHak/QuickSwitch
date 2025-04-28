@@ -30,7 +30,9 @@ GetTotalIni(ByRef winId) {
         _ini := RTrim(_ini, " `r`n\/")
 
     if !FileExist(_ini)
-        throw Exception("Unable to find wincmd.ini", "TotalCmd config", "File `'" _ini "`' not found. Change your TC configuration settings")
+        throw Exception("Unable to find wincmd.ini"
+                        , "TotalCmd config"
+                        , "File `'" _ini "`' not found. Change your TC configuration settings")
 
     LogInfo("Found Total Commander config: `'" _ini "`'", true)
 
