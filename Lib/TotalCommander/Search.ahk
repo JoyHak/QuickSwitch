@@ -32,13 +32,9 @@ GetTotalIni(ByRef winId) {
     if !FileExist(_ini)
         throw Exception("Unable to find wincmd.ini", "TotalCmd config", "File `'" _ini "`' not found. Change your TC configuration settings")
 
+    LogInfo("Found Total Commander config: `'" _ini "`'", true)
 
     ; Remove ini name
-    if (_pos := InStr(_ini, "/",, -1))
-        _pos := _pos
-    else if (_pos := InStr(_ini, "\",, -1))
-        _pos := _pos
-
-    LogInfo("Found Total Commander config: `'" _ini "`'", true)
+    _pos := (_in := InStr(_ini, "\",, -1)) ? _in : InStr(_ini, "/",, -1)
     return (SubStr(_ini, 1, _pos) . "usercmd.ini")
 }
