@@ -77,7 +77,9 @@ WriteValues() {
         IniWrite,   %DirsCount%,                %INI%,      Menu,       DirsCount
         IniWrite,   %DirNameLength%,            %INI%,      Menu,       DirNameLength
     } catch {
-        LogError(Exception("Failed to write values to the configuration", INI . " write", "Create INI file manually or change the INI global variable"))
+        LogError(Exception("Failed to write values to the configuration"
+                            , INI . " write"
+                            , "Create INI file manually or change the INI global variable"))
     }
 
     ValidateWriteString(PathSeparator,      "PathSeparator")
