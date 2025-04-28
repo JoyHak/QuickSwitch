@@ -51,9 +51,9 @@ ToggleAutoSwitch() {
     DialogAction := (DialogAction = 1) ? 0 : 1
 
     if (DialogAction = 1)
-        return SelectPath()
+        SelectPath()
     if isMenuReady()
-        return ShowMenu()
+        ShowMenu()
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -64,5 +64,5 @@ ToggleBlackList() {
     DialogAction := (DialogAction = -1) ? 0 : -1
 
     if isMenuReady()
-        return ShowMenu()
+        ShowMenu()
 }
