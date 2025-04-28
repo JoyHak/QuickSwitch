@@ -64,10 +64,7 @@ ToggleShortPath() {
     global
 
     Gui, Submit, NoHide
-    if (ShortPath)
-        GuiControl,, ShortPath, Show short path, indicate as
-    else
-        GuiControl,, ShortPath, Show short path
+    GuiControl,, ShortPath, % "Show short path" . (ShortPath ? "indicate as" : "")
 
     GuiControl, Enable%ShortPath%, ShortenEnd
     GuiControl, Enable%ShortPath%, ShowDriveLetter
