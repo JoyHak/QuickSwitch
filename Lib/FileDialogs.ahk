@@ -7,17 +7,15 @@
     "path"  param must be a string valid for any dialog
 */
 
-FeedEditField(ByRef controlId, ByRef path, ByRef attempts := 10) {
-    ControlFocus, , ahk_id %controlId%
-
+FeedEditField(ByRef id, ByRef path, ByRef attempts := 10) {
     Loop, % attempts {
-        Control, EditPaste, % path, , ahk_id %controlId%    ; set
-        ControlGet, _path, Line, 1, , ahk_id %controlId%    ; check
+        ControlFocus, , ahk_id %id%
+        Control, EditPaste, % path, , ahk_id %id%    ; set
+        ControlGet, _path, Line, 1, , ahk_id %id%    ; check
 
         if (_path = path)
             return true
     }
-    
     return false
 }
 
@@ -28,20 +26,17 @@ FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
     global CloseDialog
     WinActivate, ahk_id %winId%
 
-    ; Read the current text in the "File Name"
-    ControlGet, _id, hwnd,, Edit1,   ahk_id %winId%
-    ControlGet, _oldPath, Line, 1, , ahk_id %_id%
-    
-    if FeedEditField(_id, path) {
-        if CloseDialog {
-            ; Restore original filename
-            ; or make empty in case of previous path
-            ControlSend, , {Enter}, ahk_id %_id%
-            return FeedEditField(_id, _oldPath)
+    ControlGet, _id, hwnd,, Edit1,    ahk_id %winId%    ; Get control handle
+    ControlGet, _fileName, Line, 1, , ahk_id %_id%      ; Read the current text in the "File Name"
 
-        } else {
+    if FeedEditField(_id, path) {
+        if !CloseDialog
             return true
-        }
+
+        ControlSend, , {Enter}, ahk_id %_id%            ; Change path
+        ControlFocus, , ahk_id %_id%
+
+        return FeedEditField(_id, _fileName)            ; Restore original filename
     }
     return false
 }
@@ -65,7 +60,6 @@ FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
     } Until !_focus
 
     return FeedDialogSYSTREEVIEW(winId, path)
-
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
