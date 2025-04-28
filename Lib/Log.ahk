@@ -33,15 +33,14 @@ LogError(_error) {
     Return true
 }
 
-LogInfo(_msg, silent := false) {
+LogInfo(_msg, _silent := false) {
     global ErrorsLog, ScriptName
 
     FormatTime, _date,, dd.MM hh:mm:ss
     FileAppend, % _date "    " _msg "`n", % ErrorsLog
 
-    if !silent {
+    if !_silent
         TrayTip, % ScriptName " log", % _msg
-    }
 }
 
 LogHeader() {
