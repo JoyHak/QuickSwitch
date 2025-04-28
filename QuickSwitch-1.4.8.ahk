@@ -68,8 +68,10 @@ Loop {
     WinWaitActive, ahk_class #32770
 
     try {
-        DialogID   := WinActive("A")
-        FileDialog := GetFileDialog(DialogID)
+        DialogAction := ""
+        FingerPrint  := ""
+        DialogID     := WinActive("A")
+        FileDialog   := GetFileDialog(DialogID)
 
         if FileDialog {
             ; This is a supported dialog
@@ -78,7 +80,7 @@ Loop {
 
             WinGet, Exe, ProcessName, ahk_id %DialogID%
             WinGetTitle, WinTitle, ahk_id %DialogID%
-            FingerPrint := Exe . "___" . WinTitle
+            FingerPrint := Exe "___" WinTitle
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, % AutoSwitch
@@ -99,12 +101,16 @@ Loop {
 
     Sleep, 100
     WinWaitNotActive
+    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
 
     ; Clean up
-    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
+    if (DialogAction != "" && FingerPrint) {
+        IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+        DialogAction := ""
+        FingerPrint  := ""
+    }
     Exe          := ""
     WinTitle     := ""
-    DialogAction := ""
     DialogID     := ""
 
 }   ; End of continuous WinWaitActive loop

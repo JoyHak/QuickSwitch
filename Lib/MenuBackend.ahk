@@ -26,7 +26,7 @@ SelectPath(_name := "", _position := 1) {
     } catch FeedError {
         _extra .= FileDialog.name ": " FeedError.what " " FeedError.message " " FeedError.extra
     }
-    
+
     local _message := _name ? "Menu selection" : "Auto Switch"
     LogError(Exception("Failed to feed the file dialog", _message, _extra))
 }
@@ -47,10 +47,8 @@ isMenuReady() {
 ;
 ToggleAutoSwitch() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global
-
+    global DialogAction
     DialogAction := (DialogAction = 1) ? 0 : 1
-    IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
 
     if (DialogAction = 1)
         SelectPath()
@@ -62,10 +60,8 @@ ToggleAutoSwitch() {
 ;
 ToggleBlackList() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global
-
+    global DialogAction
     DialogAction := (DialogAction = -1) ? 0 : -1
-    IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
 
     if isMenuReady()
         ShowMenu()
