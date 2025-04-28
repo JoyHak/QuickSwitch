@@ -11,7 +11,7 @@ NukeSettings() {
         return
 
     try FileRecycle, % INI
-    TrayTip, % ScriptName, Old configuration has been placed in the Recycle Bin,, 0x2
+    TrayTip, % ScriptName, % "Old configuration has been placed in the Recycle Bin",, 0x2
     ResetSettings()
 }
 
