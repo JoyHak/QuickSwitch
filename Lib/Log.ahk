@@ -72,7 +72,8 @@ LogVersion() {
 
     _header := "`n"
     /*@Ahk2Exe-Keep
-        FileGetVersion, _ver, % A_ScriptFullPath
+        _ver := ""
+        try FileGetVersion, _ver, % A_ScriptFullPath
         _header .= "Script is compiled. Version: " _ver "`n"
     */
     _header .= _bit " script for " _arch " system `n`n"
