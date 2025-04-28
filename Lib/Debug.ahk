@@ -24,32 +24,34 @@ ExportDebug() {
         _fileName := A_ScriptDir "\" FingerPrint ".csv"
         _file := FileOpen(_fileName, "w")
 
-        if IsObject(_file) {
-            ; Header
-            _line := FileDialog.name "`n" FingerPrint "`n`n"
-            _line .= "ControlName;ID;PID;Text;X;Y;Width;Height"
-            _file.writeLine(_line)
+        if !IsObject(_file)
+            return LogError(Exception(_fileName
+                                      , "export"
+                                      , "File closed for writing. Check the attributes of the target directory"))
 
-            ; Get content of each line
-            Gui, ListView
-            Loop, % LV_GetCount() {
-                _line     := ""
-                _colIndex := A_index
+        ; Header
+        _line := FileDialog.name "`n" FingerPrint "`n`n"
+        _line .= "ControlName;ID;PID;Text;X;Y;Width;Height"
+        _file.writeLine(_line)
 
-                ; Append content of each column
-                Loop, 8 {
-                    LV_GetText(_text, _colIndex, A_index)
-                    _line .= _text ";"
-                }
-                _file.writeLine(_line)
+        ; Get content of each line
+        Gui, ListView
+        Loop, % LV_GetCount() {
+            _line     := ""
+            _colIndex := A_index
+
+            ; Append content of each column
+            Loop, 8 {
+                LV_GetText(_text, _colIndex, A_index)
+                _line .= _text ";"
             }
-
-            _file.close()
-            clipboard := _filename
-            TrayTip, % "Successfully exported (path in clipboard)", % _filename
-        } else {
-            LogError(Exception("Cant create " _fileName,, "File closed for writing. Check the attributes of the target directory"))
+            _file.writeLine(_line)
         }
+
+        _file.close()
+        clipboard := _filename
+        TrayTip, % "Successfully exported (path in clipboard)", % _filename
+
     } catch _error {
         LogError(_error)
     }
