@@ -178,5 +178,7 @@ GetTotalPathIni(ByRef totalPid) {
         return _reg
     }
 
-    throw Exception("Unable to find wincmd.ini", "TotalCmd config", "Config not found in current TC directory and registry is empty")
+    throw Exception("Unable to find wincmd.ini"
+                    , "TotalCmd config"
+                    , "Config not found in current TC directory and registry is empty")
 }
