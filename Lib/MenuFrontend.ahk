@@ -9,10 +9,10 @@ AddMenuTitle(ByRef title) {
     Menu ContextMenu, Disable, % title
 }
 
-CheckMenuRadio(ByRef title, ByRef function, ByRef toggleIf) {
+AddMenuOption(ByRef title, ByRef function, ByRef isToggle) {
     Menu ContextMenu, Add, % title, % function, Radio
 
-    if toggleIf
+    if isToggle
         Menu ContextMenu, Check, % title
 
 }
@@ -47,8 +47,8 @@ AddMenuOptions() {
     Menu ContextMenu, Add
     AddMenuTitle("Settings")
 
-    CheckMenuRadio("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
-    CheckMenuRadio("&Black list", "ToggleBlackList", DialogAction = -1)
+    AddMenuOption("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
+    AddMenuOption("&Black list", "ToggleBlackList", DialogAction = -1)
 
     Menu ContextMenu, Add
     Menu ContextMenu, Add, Menu &settings, ShowSettings
