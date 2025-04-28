@@ -66,7 +66,6 @@ ToggleBlackList() {
 
     DialogAction := (DialogAction = -1) ? 0 : -1
     IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
-    Menu ContextMenu, ToggleCheck, &Black list
 
     if isMenuReady()
         ShowMenu()
