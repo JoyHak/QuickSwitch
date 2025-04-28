@@ -74,6 +74,6 @@ ShowMenu() {
 
     Menu ContextMenu, Color, % MenuColor
     Menu ContextMenu, Show, 0, 100        ; Show new menu and halt the thread
-    try Menu ContextMenu, Delete          ; Hide after loosing focus
+    ;try Menu ContextMenu, Delete          ; Hide after loosing focus
 }
 
