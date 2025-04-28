@@ -1,6 +1,7 @@
 *.exe
 *.log
 *.ini
+*.csv
 /old*/
 /reserv*/
 /Releas*/
