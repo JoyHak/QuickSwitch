@@ -68,8 +68,6 @@ Loop {
     WinWaitActive, ahk_class #32770
 
     try {
-        DialogAction := ""
-        FingerPrint  := ""
         DialogID     := WinActive("A")
         FileDialog   := GetFileDialog(DialogID)
 
@@ -104,7 +102,7 @@ Loop {
     ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
 
     ; Clean up
-    if (DialogAction != "" && FingerPrint) {
+    if (SaveDialogAction && FingerPrint && DialogAction != "") {
         IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
         DialogAction := ""
         FingerPrint  := ""

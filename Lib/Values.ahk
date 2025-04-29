@@ -8,10 +8,13 @@
  */
 
 ; These parameters are not saved in the INI
-FromSettings    := false
-NukeSettings    := false
-LastTabSettings := 1
-Paths           := []
+FingerPrint       :=  ""
+DialogAction      :=  ""
+SaveDialogAction  :=  false
+FromSettings      :=  false
+NukeSettings      :=  false
+LastTabSettings   :=  1
+Paths             := []
 
 SetDefaultValues() {
     /*

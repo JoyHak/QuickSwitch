@@ -48,8 +48,10 @@ isMenuReady() {
 ;
 ToggleAutoSwitch() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction
-    DialogAction := (DialogAction = 1) ? 0 : 1
+    global DialogAction, SaveDialogAction
+
+    DialogAction     := (DialogAction = 1) ? 0 : 1
+    SaveDialogAction := true
 
     if (DialogAction = 1)
         SelectPath()
@@ -61,8 +63,10 @@ ToggleAutoSwitch() {
 ;
 ToggleBlackList() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction
-    DialogAction := (DialogAction = -1) ? 0 : -1
+    global DialogAction, SaveDialogAction
+
+    DialogAction     := (DialogAction = -1) ? 0 : -1
+    SaveDialogAction := true
 
     if isMenuReady()
         ShowMenu()
