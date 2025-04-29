@@ -101,7 +101,7 @@ ValidateLog() {
     _curPath := A_ScriptFullPath
     if (_lastPath != _curPath) {
         ; New info about the script
-        IniWrite, % _curPath, % INI, App, LastPath
+        try IniWrite, % _curPath, % INI, App, LastPath
         LogVersion()
     }
 }

@@ -182,8 +182,8 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
                     Hotkey, % "~" . _old, Off
                     Hotkey, % _old, Off
                 }
+                IniWrite, % _key, % INI, App, % paramName
             }
-            IniWrite, % _key, % INI, App, % paramName
 
         } else {
             ; Set state for existing hotkey
@@ -202,21 +202,15 @@ ValidateWriteColor(ByRef color, ByRef paramName) {
     global INI
 
     if !color {
-        IniWrite, % A_Space, % INI, Colors, % paramName
+        try IniWrite, % A_Space, % INI, Colors, % paramName
         return
     }
 
-    try {
-        _matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")
-        if _matchPos {
-            _result := SubStr(color, _matchPos)
-            IniWrite, % _result, % INI, Colors, % paramName
-        } else {
-            LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
-        }
-    } catch _error {
-        LogError(_error)
-    }
+    if !(_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$"))
+        return LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+
+    _result := SubStr(color, _matchPos)
+    try IniWrite, % _result, % INI, Colors, % paramName
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -225,12 +219,8 @@ ValidateWriteString(ByRef string, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    try {
-        _result := Format("{}", string)
-        IniWrite, % _result, % INI, Menu, % paramName
-    } catch _error {
-        LogError(_error)
-    }
+    _result := Format("{}", string)
+    try IniWrite, % _result, % INI, Menu, % paramName
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -240,17 +230,13 @@ ValidateWriteTrayIcon(ByRef icon, ByRef paramName) {
     global INI, MainIcon
 
     if !icon {
-        IniWrite, % A_Space, % INI, App, % paramName
+        try IniWrite, % A_Space, % INI, App, % paramName
         return
     }
 
     if !FileExist(icon)
         return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
 
-    try {
-        Menu, Tray, Icon, %MainIcon%
-        IniWrite, % icon, % INI, App, % paramName
-    } catch _error {
-        LogError(_error)
-    }
+    Menu, Tray, Icon, %MainIcon%
+    try IniWrite, % icon, % INI, App, % paramName
 }
