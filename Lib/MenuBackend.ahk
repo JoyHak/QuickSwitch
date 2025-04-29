@@ -8,8 +8,8 @@ SelectPath(_name := "", _position := 1) {
     global
 
     local _extra := ""
-    try {
-        loop, 3 {
+    loop, 3 {
+        try {
             if !WinActive("ahk_id " DialogID)
                 return
 
@@ -20,13 +20,14 @@ SelectPath(_name := "", _position := 1) {
                 return ShowMenu()
 
             return
-        }
-        _extra .= "Timeout. "
 
-    } catch FeedError {
-        _extra .= FileDialog.name ": " FeedError.what " " FeedError.message " " FeedError.extra
+        } catch FeedError {
+            if (A_Index = 3)
+                _extra .= FileDialog.name ": " FeedError.what " " FeedError.message " " FeedError.extra
+        }
     }
 
+    _extra .= " Timeout."
     local _message := _name ? "Menu selection" : "Auto Switch"
     LogError(Exception("Failed to feed the file dialog", _message, _extra))
 }
