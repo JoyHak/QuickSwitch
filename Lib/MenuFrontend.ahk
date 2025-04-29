@@ -63,7 +63,6 @@ ShowMenu() {
 
     if Paths.count() {
         ; Add paths and options
-        ReadValues()
         AddMenuPaths()
         AddMenuOptions()
 

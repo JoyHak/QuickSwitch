@@ -10,6 +10,8 @@
 
 ShowSettings() {
     global
+    
+    ReadValues()
     FromSettings := true
 
     ; Options that affects subsequent controls
