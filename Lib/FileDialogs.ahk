@@ -10,8 +10,8 @@
 FeedEditField(ByRef id, ByRef path, ByRef attempts := 10) {
     Loop, % attempts {
         ControlFocus, , ahk_id %id%
-        Control, EditPaste, % path, , ahk_id %id%    ; set
-        ControlGet, _path, Line, 1, , ahk_id %id%    ; check
+        ControlSetText,, % path, ahk_id %id%       ; set
+        ControlGet, _path, Line, 1,, ahk_id %id%   ; check
 
         if (_path = path)
             return true
