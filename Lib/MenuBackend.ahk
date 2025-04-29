@@ -34,7 +34,7 @@ SelectPath(_name := "", _position := 1) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-isMenuReady() {
+IsMenuReady() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
 
@@ -55,7 +55,7 @@ ToggleAutoSwitch() {
 
     if (DialogAction = 1)
         SelectPath()
-    if isMenuReady()
+    if IsMenuReady()
         ShowMenu()
 }
 
@@ -68,6 +68,6 @@ ToggleBlackList() {
     DialogAction     := (DialogAction = -1) ? 0 : -1
     SaveDialogAction := true
 
-    if isMenuReady()
+    if IsMenuReady()
         ShowMenu()
 }

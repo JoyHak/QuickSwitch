@@ -87,7 +87,7 @@ Loop {
             ; Turn on hotkey to hide / show menu later
             ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
 
-            if isMenuReady()
+            if IsMenuReady()
                 ShowMenu()
 
             FromSettings := false
