@@ -70,24 +70,25 @@ WriteValues() {
 
     Values := "
     (LTrim
-        "AutoStartup="          AutoStartup
-        "AutoSwitch="           AutoSwitch
-        "ShowAlways="           ShowAlways
-        "ShowNoSwitch="         ShowNoSwitch
-        "ShowAfterSelect="      ShowAfterSelect
-        "ShowAfterSettings="    ShowAfterSettings
-        "CloseDialog="          CloseDialog
-        "PathNumbers="          PathNumbers
-        "ShortPath="            ShortPath
-        "ShortenEnd="           ShortenEnd
-        "ShowDriveLetter="      ShowDriveLetter
-        "ShowFirstSeparator="   ShowFirstSeparator
-        "DirsCount="            DirsCount
-        "DirNameLength="        DirNameLength
-        "MainFont="             MainFont
-        "RestartWhere="         RestartWhere
-        "MainKeyHook="          MainKeyHook
-        "RestartKeyHook="       RestartKeyHook "
+         AutoStartup="          AutoStartup           "
+         AutoSwitch="           AutoSwitch            "
+         ShowAlways="           ShowAlways            "
+         ShowNoSwitch="         ShowNoSwitch          "
+         ShowAfterSelect="      ShowAfterSelect       "
+         ShowAfterSettings="    ShowAfterSettings     "
+         CloseDialog="          CloseDialog           "
+         PathNumbers="          PathNumbers           "
+         ShortPath="            ShortPath             "
+         ShortenEnd="           ShortenEnd            "
+         ShowDriveLetter="      ShowDriveLetter       "
+         ShowFirstSeparator="   ShowFirstSeparator    "
+         DirsCount="            DirsCount             "
+         DirNameLength="        DirNameLength         "
+         MainFont="             MainFont              "
+         RestartWhere="         RestartWhere          "
+         MainKeyHook="          MainKeyHook           "
+         RestartKeyHook="       RestartKeyHook        "
+         
     )"
 
     Values .= ValidateAutoStartup()
@@ -98,8 +99,8 @@ WriteValues() {
             . ValidateString(   ShortNameIndicator,   "ShortNameIndicator")
             . ValidateKey(      MainKey,              "MainKey",            "ShowMenu",     "Off",    MainKeyHook)
             . ValidateKey(      RestartKey,           "RestartKey",         "RestartApp",   "On",     RestartKeyHook)
-
-     try {
+    
+    try {
         IniWrite, % Values, % INI, Global
     } catch {
         LogError(Exception("Failed to write values to the configuration"

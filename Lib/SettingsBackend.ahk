@@ -32,7 +32,6 @@ SaveSettings() {
     ; Read current GUI (global) values
     Gui, Submit
     WriteValues()
-    ValidateWriteValues()
     ReadValues()
 }
 
