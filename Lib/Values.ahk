@@ -92,7 +92,7 @@ WriteValues() {
             MainKeyHook         =  %MainKeyHook%
             RestartKeyHook      =  %RestartKeyHook%
         ), % INI, Global
-    
+
     } catch {
         LogError(Exception("Failed to write values to the configuration"
                             , INI . " write"
@@ -128,20 +128,21 @@ ReadValues() {
         must be identical to WriteValues()
     */
     global
-    
+
     if !FileExist(INI)
         return LogError(Exception("Failed to read values to the configuration"
                                   , INI . " read"
                                   , "Create INI file manually or change the INI global variable"))
-    
+
     IniRead, Values, % INI, Global
     Loop, Parse, % Values, `n
-    { 
-        for Variable, Value in StrSplit(A_LoopField, "=") {
-            if (Variable && Value)
-                %Variable% := Value
-        }
-    
+    {
+        Data     := StrSplit(A_LoopField, "=")
+        Variable := Data[1]
+        Value    := Data[2]
+
+        if (Variable && Value)
+            %Variable% := Value
     }
 }
 
