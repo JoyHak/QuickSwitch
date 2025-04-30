@@ -27,8 +27,21 @@ SetDefaultValues() {
     */
     global
 
-    MainKeyHook := ShowNoSwitch := ShowAfterSettings := AutoStartup := true
-    RestartKeyHook := AutoSwitch := ShowAlways := ShowAfterSelect := CloseDialog := PathNumbers := ShortPath := ShortenEnd := ShowDriveLetter := ShowFirstSeparator := false
+    MainKeyHook         :=  true
+    ShowNoSwitch        :=  true
+    ShowAfterSettings   :=  true
+    AutoStartup         :=  true
+
+    RestartKeyHook      :=  false
+    AutoSwitch          :=  false
+    ShowAlways          :=  false
+    ShowAfterSelect     :=  false
+    CloseDialog         :=  false
+    PathNumbers         :=  false
+    ShortPath           :=  false
+    ShortenEnd          :=  false
+    ShowDriveLetter     :=  false
+    ShowFirstSeparator  :=  false
 
     GuiColor := MenuColor := ""
 
@@ -50,35 +63,38 @@ WriteValues() {
     /*
         Calls validators and writes values to INI.
 
-        The status of the checkboxes from the settings menu is writed immediately.
-        Strings and colors from fields are checked before writing.
+        The boolean (checkbox) values is writed immediately.
+        The individual special values are checked before writing.
 
-        File, section, param name, global var and its value reference
-        must be identical to ReadValues()
+        Global var and its value must be identical to ReadValues()
     */
     global
 
     try {
-        ;           value                       INI name    section     param name
-        IniWrite,   %AutoStartup%,              %INI%,      App,        AutoStartup
-        IniWrite,   %MainFont%,                 %INI%,      App,        MainFont
-        IniWrite,   %RestartWhere%,             %INI%,      App,        RestartWhere
-        IniWrite,   %MainKeyHook%,              %INI%,      App,        MainKeyHook
-        IniWrite,   %RestartKeyHook%,           %INI%,      App,        RestartKeyHook
-        IniWrite,   %LastTabSettings%,          %INI%,      App,        LastTabSettings
-        IniWrite,   %AutoSwitch%,               %INI%,      Menu,       AutoSwitch
-        IniWrite,   %ShowAlways%,               %INI%,      Menu,       ShowAlways
-        IniWrite,   %ShowNoSwitch%,             %INI%,      Menu,       ShowNoSwitch
-        IniWrite,   %ShowAfterSettings%,        %INI%,      Menu,       ShowAfterSettings
-        IniWrite,   %ShowAfterSelect%,          %INI%,      Menu,       ShowAfterSelect
-        IniWrite,   %CloseDialog%,              %INI%,      Menu,       CloseDialog
-        IniWrite,   %ShortPath%,                %INI%,      Menu,       ShortPath
-        IniWrite,   %PathNumbers%,              %INI%,      Menu,       PathNumbers
-        IniWrite,   %ShowDriveLetter%,          %INI%,      Menu,       ShowDriveLetter
-        IniWrite,   %ShortenEnd%,               %INI%,      Menu,       ShortenEnd
-        IniWrite,   %ShowFirstSeparator%,       %INI%,      Menu,       ShowFirstSeparator
-        IniWrite,   %DirsCount%,                %INI%,      Menu,       DirsCount
-        IniWrite,   %DirNameLength%,            %INI%,      Menu,       DirNameLength
+        IniWrite,
+        (LTrim
+            MainKeyHook         =  %MainKeyHook%
+            ShowNoSwitch        =  %ShowNoSwitch%
+            ShowAfterSettings   =  %ShowAfterSettings%
+            AutoStartup         =  %AutoStartup%
+
+            RestartKeyHook      =  %RestartKeyHook%
+            AutoSwitch          =  %AutoSwitch%
+            ShowAlways          =  %ShowAlways%
+            ShowAfterSelect     =  %ShowAfterSelect%
+            CloseDialog         =  %CloseDialog%
+            PathNumbers         =  %PathNumbers%
+            ShortPath           =  %ShortPath%
+            ShortenEnd          =  %ShortenEnd%
+            ShowDriveLetter     =  %ShowDriveLetter%
+            ShowFirstSeparator  =  %ShowFirstSeparator%
+
+            DirsCount           =  %DirsCount%
+            DirNameLength       =  %DirNameLength%
+
+            MainFont            =  %MainFont%
+            RestartWhere        =  %RestartWhere%
+        ), % INI, Global
     } catch {
         LogError(Exception("Failed to write values to the configuration"
                             , INI . " write"
