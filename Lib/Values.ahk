@@ -135,11 +135,14 @@ ReadValues() {
     IniRead, Values, % INI, Global
     Loop, Parse, % Values, `n
     {
-        Data     := StrSplit(A_LoopField, "=")
-        Variable := Data[1]
-        Value    := Data[2]
-        %Variable% := Value
+        Data        :=  StrSplit(A_LoopField, "=")
+        Variable    :=  Data[1]
+        Value       :=  Data[2]
+        %Variable%  :=  Value
     }
+    
+    Values := ""
+    Data   := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
