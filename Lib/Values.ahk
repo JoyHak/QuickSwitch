@@ -130,9 +130,7 @@ ReadValues() {
     global
 
     if !FileExist(INI)
-        return LogError(Exception("Failed to read values to the configuration"
-                                  , INI . " read"
-                                  , "Create INI file manually or change the INI global variable"))
+        return
 
     IniRead, Values, % INI, Global
     Loop, Parse, % Values, `n
@@ -140,9 +138,7 @@ ReadValues() {
         Data     := StrSplit(A_LoopField, "=")
         Variable := Data[1]
         Value    := Data[2]
-
-        if (Variable && Value)
-            %Variable% := Value
+        %Variable% := Value
     }
 }
 
@@ -200,10 +196,8 @@ ValidateWriteColor(ByRef color, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
-    if !color {
-        try IniWrite, % A_Space, % INI, Colors, % paramName
+    if !color
         return
-    }
 
     if !(_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$"))
         return LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
@@ -218,6 +212,9 @@ ValidateWriteString(ByRef string, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI
 
+    if !string
+        return
+
     _result := Format("{}", string)
     try IniWrite, % _result, % INI, Menu, % paramName
 }
@@ -228,10 +225,8 @@ ValidateWriteTrayIcon(ByRef icon, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
     global INI, MainIcon
 
-    if !icon {
-        try IniWrite, % A_Space, % INI, App, % paramName
+    if !icon
         return
-    }
 
     if !FileExist(icon)
         return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
