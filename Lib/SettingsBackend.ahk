@@ -32,6 +32,7 @@ SaveSettings() {
     ; Read current GUI (global) values
     Gui, Submit
     WriteValues()
+    ReadValues()
     ValidateAutoStartup()
 }
 
