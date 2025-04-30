@@ -60,56 +60,53 @@ SetDefaultValues() {
 ;
 WriteValues() {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Writes values to INI
+      /*
+          Calls validators and writes values to INI.
+
+          The boolean (checkbox) values is writed immediately.
+          The individual special values are checked before writing.
+      */
     global
 
-    try {
-        IniWrite,
-        (LTrim
-            AutoStartup         =  %AutoStartup%
-            AutoSwitch          =  %AutoSwitch%
-            ShowAlways          =  %ShowAlways%
-            ShowNoSwitch        =  %ShowNoSwitch%
-            ShowAfterSelect     =  %ShowAfterSelect%
-            ShowAfterSettings   =  %ShowAfterSettings%
-            CloseDialog         =  %CloseDialog%
-            PathNumbers         =  %PathNumbers%
-            ShortPath           =  %ShortPath%
-            ShortenEnd          =  %ShortenEnd%
-            ShowDriveLetter     =  %ShowDriveLetter%
-            ShowFirstSeparator  =  %ShowFirstSeparator%
-            DirsCount           =  %DirsCount%
-            DirNameLength       =  %DirNameLength%
-            MainFont            =  %MainFont%
-            RestartWhere        =  %RestartWhere%
-            MainKeyHook         =  %MainKeyHook%
-            RestartKeyHook      =  %RestartKeyHook%
-        ), % INI, Global
+    Values := "
+    (LTrim
+        "AutoStartup="          AutoStartup
+        "AutoSwitch="           AutoSwitch
+        "ShowAlways="           ShowAlways
+        "ShowNoSwitch="         ShowNoSwitch
+        "ShowAfterSelect="      ShowAfterSelect
+        "ShowAfterSettings="    ShowAfterSettings
+        "CloseDialog="          CloseDialog
+        "PathNumbers="          PathNumbers
+        "ShortPath="            ShortPath
+        "ShortenEnd="           ShortenEnd
+        "ShowDriveLetter="      ShowDriveLetter
+        "ShowFirstSeparator="   ShowFirstSeparator
+        "DirsCount="            DirsCount
+        "DirNameLength="        DirNameLength
+        "MainFont="             MainFont
+        "RestartWhere="         RestartWhere
+        "MainKeyHook="          MainKeyHook
+        "RestartKeyHook="       RestartKeyHook "
+    )"
 
+    Values .= ValidateAutoStartup()
+            . ValidateTrayIcon( MainIcon,             "MainIcon")
+            . ValidateColor(    GuiColor,             "GuiColor")
+            . ValidateColor(    MenuColor,            "MenuColor")
+            . ValidateString(   PathSeparator,        "PathSeparator")
+            . ValidateString(   ShortNameIndicator,   "ShortNameIndicator")
+            . ValidateKey(      MainKey,              "MainKey",            "ShowMenu",     "Off",    MainKeyHook)
+            . ValidateKey(      RestartKey,           "RestartKey",         "RestartApp",   "On",     RestartKeyHook)
+
+     try {
+        IniWrite, % Values, % INI, Global
     } catch {
         LogError(Exception("Failed to write values to the configuration"
-                            , INI . " write"
-                            , "Create INI file manually or change the INI global variable"))
+                          , INI . " write"
+                          , "Create INI file manually or change the INI global variable"))
     }
-}
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateWriteValues() {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Calls validators and writes all valid values to the INI
-    global
-
-    Values := ValidateAutoStartup()
-              . ValidateColor(GuiColor,             "GuiColor")
-              . ValidateColor(MenuColor,            "MenuColor")
-              . ValidateString(PathSeparator,       "PathSeparator")
-              . ValidateString(ShortNameIndicator,  "ShortNameIndicator")
-              . ValidateTrayIcon(MainIcon,          "MainIcon")
-              . ValidateKey(MainKey,                "MainKey",    "ShowMenu",   "Off",  MainKeyHook)
-              . ValidateKey(RestartKey,             "RestartKey", "RestartApp", "On",   RestartKeyHook)
-                   
-    IniWrite, % Values, % INI, Global
     Values := ""
 }
 
@@ -158,6 +155,8 @@ ValidateKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef state :
         If converted, returns the string of the form "paramName=result",
         otherwise returns empty string
     */
+    global INI
+    
     try {
         if (sequence ~= "i)sc[a-f0-9]+") {
             _key := sequence
