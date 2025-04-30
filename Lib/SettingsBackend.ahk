@@ -86,7 +86,7 @@ ValidateAutoStartup() {
     global AutoStartup, ScriptName, INI
 
     try {
-        IniRead, AutoStartup, % INI, App, AutoStartup, % AutoStartup
+        IniRead, AutoStartup, % INI, Global, AutoStartup, % AutoStartup
         link := A_Startup . "\" . ScriptName . ".lnk"
 
         if AutoStartup {

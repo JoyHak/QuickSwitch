@@ -97,11 +97,11 @@ ValidateLog() {
     }
 
     ; does the cur. dir. match the dir. of the script that previously created this log?
-    IniRead, _lastPath, % INI, App, LastPath
+    IniRead, _lastPath, % INI, Global, LastPath
     _curPath := A_ScriptFullPath
     if (_lastPath != _curPath) {
         ; New info about the script
-        try IniWrite, % _curPath, % INI, App, LastPath
+        try IniWrite, % _curPath, % INI, Global, LastPath
         LogVersion()
     }
 }

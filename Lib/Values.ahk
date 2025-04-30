@@ -65,8 +65,6 @@ WriteValues() {
 
         The boolean (checkbox) values is writed immediately.
         The individual special values are checked before writing.
-
-        Global var and its value must be identical to ReadValues()
     */
     global
 
@@ -175,12 +173,12 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
 
             try {
                 ; Remove old if exist
-                IniRead, _old, % INI, App, % paramName, % _key
+                IniRead, _old, % INI, Global, % paramName, % _key
                 if (_old != _key) {
                     Hotkey, % "~" . _old, Off
                     Hotkey, % _old, Off
                 }
-                IniWrite, % _key, % INI, App, % paramName
+                IniWrite, % _key, % INI, Global, % paramName
             }
 
         } else {
@@ -206,7 +204,7 @@ ValidateWriteColor(ByRef color, ByRef paramName) {
         return LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
 
     _result := SubStr(color, _matchPos)
-    try IniWrite, % _result, % INI, Colors, % paramName
+    try IniWrite, % _result, % INI, Global, % paramName
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -219,7 +217,7 @@ ValidateWriteString(ByRef string, ByRef paramName) {
         return
 
     _result := Format("{}", string)
-    try IniWrite, % _result, % INI, Menu, % paramName
+    try IniWrite, % _result, % INI, Global, % paramName
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -235,5 +233,5 @@ ValidateWriteTrayIcon(ByRef icon, ByRef paramName) {
         return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
 
     Menu, Tray, Icon, %MainIcon%
-    try IniWrite, % icon, % INI, App, % paramName
+    try IniWrite, % icon, % INI, Global, % paramName
 }
