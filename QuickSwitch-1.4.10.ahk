@@ -53,15 +53,15 @@ ValidateLog()
 
 ;@Ahk2Exe-IgnoreBegin
 MainIcon := "QuickSwitch.ico"
-ValidateWriteTrayIcon(MainIcon, "MainIcon")
+ValidateTrayIcon(MainIcon, "MainIcon")
 ;@Ahk2Exe-IgnoreEnd
 
 SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
-ValidateWriteKey(MainKey,    "MainKey",    "ShowMenu",   "Off", MainKeyHook)
-ValidateWriteKey(RestartKey, "RestartKey", "RestartApp", "On",  RestartKeyHook)
+ValidateKey(MainKey,    "MainKey",    "ShowMenu",   "Off", MainKeyHook)
+ValidateKey(RestartKey, "RestartKey", "RestartApp", "On",  RestartKeyHook)
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
@@ -85,7 +85,7 @@ Loop {
             GetPaths()
 
             ; Turn on hotkey to hide / show menu later
-            ValidateWriteKey(MainKey, "MainKey",, "On", MainKeyHook)
+            ValidateKey(MainKey, "MainKey",, "On", MainKeyHook)
 
             if IsMenuReady()
                 ShowMenu()
@@ -99,7 +99,7 @@ Loop {
 
     Sleep, 100
     WinWaitNotActive
-    ValidateWriteKey(MainKey, "MainKey",, "Off", MainKeyHook)
+    ValidateKey(MainKey, "MainKey",, "Off", MainKeyHook)
 
     ; Clean up
     if (SaveDialogAction && FingerPrint && DialogAction != "") {

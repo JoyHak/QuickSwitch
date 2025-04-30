@@ -60,12 +60,7 @@ SetDefaultValues() {
 ;
 WriteValues() {
 ;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Calls validators and writes values to INI.
-
-        The boolean (checkbox) values is writed immediately.
-        The individual special values are checked before writing.
-    */
+    ; Writes values to INI
     global
 
     try {
@@ -96,18 +91,26 @@ WriteValues() {
                             , INI . " write"
                             , "Create INI file manually or change the INI global variable"))
     }
+}
 
-    ValidateWriteColor(GuiColor,    "GuiColor")
-    ValidateWriteColor(MenuColor,   "MenuColor")
-    ValidateWriteTrayIcon(MainIcon, "MainIcon")
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateWriteValues() {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Calls validators and writes all valid values to the INI
+    global
 
-    ValidateWriteString(PathSeparator,      "PathSeparator")
-    ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
-
-    ValidateWriteKey(MainKey,    "MainKey",    "ShowMenu",   "Off",  MainKeyHook)
-    ValidateWriteKey(RestartKey, "RestartKey", "RestartApp", "On",   RestartKeyHook)
-
-
+    Values := ValidateAutoStartup()
+              . ValidateColor(GuiColor,             "GuiColor")
+              . ValidateColor(MenuColor,            "MenuColor")
+              . ValidateString(PathSeparator,       "PathSeparator")
+              . ValidateString(ShortNameIndicator,  "ShortNameIndicator")
+              . ValidateTrayIcon(MainIcon,          "MainIcon")
+              . ValidateKey(MainKey,                "MainKey",    "ShowMenu",   "Off",  MainKeyHook)
+              . ValidateKey(RestartKey,             "RestartKey", "RestartApp", "On",   RestartKeyHook)
+                   
+    IniWrite, % Values, % INI, Global
+    Values := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -138,37 +141,45 @@ ReadValues() {
         Value       :=  Data[2]
         %Variable%  :=  Value
     }
-    
+
     Values := ""
     Data   := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef state := "On", ByRef useHook := false) {
+ValidateKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef state := "On", ByRef useHook := false) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global INI
+    /*
+        Replaces chars / letters in sequence with
+        standard modifiers ! ^ + #
+        and SC codes, e.g. Q -> sc10
 
+        If converted, returns the string of the form "paramName=result",
+        otherwise returns empty string
+    */
     try {
-        ; Convert sequence to Scan Codes (if not converted)
-        if !(sequence ~= "i)sc[a-f0-9]+") {
+        if (sequence ~= "i)sc[a-f0-9]+") {
+            _key := sequence
+        } else {
+            ; Convert sequence to Scan Codes (if not converted)
             _key := ""
             Loop, parse, sequence
             {
                 if (!(A_LoopField ~= "[\!\^\+\#<>]")
                     && _scCode := GetKeySC(A_LoopField)) {
+                    ; Not a modifier, found scancode
                     _key .= Format("sc{:x}", _scCode)
                 } else {
+                    ; Don't change
                     _key .= A_LoopField
                 }
             }
-        } else {
-            _key := sequence
         }
 
         _prefix := useHook ? "" : "~"
         if funcName {
-            ; Create new hotkey
+            ; Register new hotkey
             Hotkey, % _prefix . _key, % funcName, % state
 
             try {
@@ -178,60 +189,100 @@ ValidateWriteKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef st
                     Hotkey, % "~" . _old, Off
                     Hotkey, % _old, Off
                 }
-                IniWrite, % _key, % INI, Global, % paramName
             }
 
         } else {
             ; Set state for existing hotkey
             Hotkey, % _prefix . _key, % state
         }
+        return paramName "=" _key "`n"
 
     } catch _error {
         LogError(_error)
     }
+    return ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteColor(ByRef color, ByRef paramName) {
+ValidateColor(ByRef color, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global INI
+    /*
+        Searches for a HEX number in any form, e.g. 0x, #, h
+
+        If found, returns the string of the form "paramName=result",
+        otherwise returns empty string
+    */
 
     if !color
-        return
+        return ""
 
-    if !(_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$"))
-        return LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+    if !(_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
+        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+        return ""
+    }
 
-    _result := SubStr(color, _matchPos)
-    try IniWrite, % _result, % INI, Global, % paramName
+    return (paramName . "=" . SubStr(color, _matchPos) . "`n")
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteString(ByRef string, ByRef paramName) {
+ValidateString(ByRef string, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global INI
+    /*
+        Converts input value to string
+
+        If not empty, returns the string of the form "paramName=result",
+        otherwise returns empty string
+    */
 
     if !string
-        return
+        return ""
 
-    _result := Format("{}", string)
-    try IniWrite, % _result, % INI, Global, % paramName
+    return (paramName . "=" . Format("{}", string) . "`n")
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateWriteTrayIcon(ByRef icon, ByRef paramName) {
+ValidateTrayIcon(ByRef icon, ByRef paramName) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global INI, MainIcon
+    /*
+        If the file exists, changes the tray icon
+        and returns a string of the form "paramName=result",
+        otherwise returns empty string
+    */
 
     if !icon
-        return
+        return ""
 
-    if !FileExist(icon)
-        return LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
+    if !FileExist(icon) {
+        LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
+        return ""
+    }
 
-    Menu, Tray, Icon, %MainIcon%
-    try IniWrite, % icon, % INI, Global, % paramName
+    Menu, Tray, Icon, % icon
+    return paramName "=" icon "`n"
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateAutoStartup() {
+;─────────────────────────────────────────────────────────────────────────────
+    global AutoStartup, ScriptName
+
+    try {
+        _link := A_Startup . "\" . ScriptName . ".lnk"
+
+        if AutoStartup {
+            FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
+        } else {
+            if FileExist(_link) {
+                FileDelete, % _link
+                TrayTip, % ScriptName, AutoStartup disabled,, 0x2
+            }
+        }
+    } catch _error {
+        LogError(_error)
+    }
+    return ""
 }
