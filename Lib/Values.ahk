@@ -27,15 +27,15 @@ SetDefaultValues() {
     */
     global
 
+    AutoStartup         :=  true
     MainKeyHook         :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
-    AutoStartup         :=  true
 
-    RestartKeyHook      :=  false
     AutoSwitch          :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
+    RestartKeyHook      :=  false
     CloseDialog         :=  false
     PathNumbers         :=  false
     ShortPath           :=  false
@@ -77,7 +77,6 @@ WriteValues() {
             ShowNoSwitch        =  %ShowNoSwitch%
             ShowAfterSettings   =  %ShowAfterSettings%
             AutoStartup         =  %AutoStartup%
-
             RestartKeyHook      =  %RestartKeyHook%
             AutoSwitch          =  %AutoSwitch%
             ShowAlways          =  %ShowAlways%
@@ -88,13 +87,12 @@ WriteValues() {
             ShortenEnd          =  %ShortenEnd%
             ShowDriveLetter     =  %ShowDriveLetter%
             ShowFirstSeparator  =  %ShowFirstSeparator%
-
             DirsCount           =  %DirsCount%
             DirNameLength       =  %DirNameLength%
-
             MainFont            =  %MainFont%
             RestartWhere        =  %RestartWhere%
         ), % INI, Global
+    
     } catch {
         LogError(Exception("Failed to write values to the configuration"
                             , INI . " write"
@@ -128,39 +126,21 @@ ReadValues() {
         must be identical to WriteValues()
     */
     global
-
-    ;           global                      INI name    section     param name                  default value
-    IniRead,    AutoStartup,                %INI%,      App,        AutoStartup,                %AutoStartup%
-    IniRead,    MainKey,                    %INI%,      App,        MainKey,                    %MainKey%
-    IniRead,    MainFont,                   %INI%,      App,        MainFont,                   %MainFont%
-    IniRead,    RestartKey,                 %INI%,      App,        RestartKey,                 %RestartKey%
-
-    IniRead,    MainKeyHook,                %INI%,      App,        MainKeyHook,                %MainKeyHook%
-    IniRead,    RestartKeyHook,             %INI%,      App,        RestartKeyHook,             %RestartKeyHook%
-    IniRead,    RestartWhere,               %INI%,      App,        RestartWhere,               %RestartWhere%
-    IniRead,    LastTabSettings,            %INI%,      App,        LastTabSettings,            %LastTabSettings%
-
-    IniRead,    AutoSwitch,                 %INI%,      Menu,       AutoSwitch,                 %AutoSwitch%
-    IniRead,    ShowAlways,                 %INI%,      Menu,       ShowAlways,                 %ShowAlways%
-    IniRead,    ShowNoSwitch,               %INI%,      Menu,       ShowNoSwitch,               %ShowNoSwitch%
-    IniRead,    ShowAfterSettings,          %INI%,      Menu,       ShowAfterSettings,          %ShowAfterSettings%
-    IniRead,    ShowAfterSelect,            %INI%,      Menu,       ShowAfterSelect,            %ShowAfterSelect%
-    IniRead,    CloseDialog,                %INI%,      Menu,       CloseDialog,                %CloseDialog%
-    IniRead,    ShortPath,                  %INI%,      Menu,       ShortPath,                  %ShortPath%
-    IniRead,    PathNumbers,                %INI%,      Menu,       PathNumbers,                %PathNumbers%
-    IniRead,    ShowDriveLetter,            %INI%,      Menu,       ShowDriveLetter,            %ShowDriveLetter%
-    IniRead,    ShortenEnd,                 %INI%,      Menu,       ShortenEnd,                 %ShortenEnd%
-    IniRead,    ShowFirstSeparator,         %INI%,      Menu,       ShowFirstSeparator,         %ShowFirstSeparator%
-
-    IniRead,    DirsCount,                  %INI%,      Menu,       DirsCount,                  %DirsCount%
-    IniRead,    DirNameLength,              %INI%,      Menu,       DirNameLength,              %DirNameLength%
-
-    IniRead,    PathSeparator,              %INI%,      Menu,       PathSeparator,              %PathSeparator%
-    IniRead,    ShortNameIndicator,         %INI%,      Menu,       ShortNameIndicator,         %ShortNameIndicator%
-
-    IniRead,    MainIcon,                   %INI%,      App,        MainIcon,                   %A_Space%
-    IniRead,    GuiColor,                   %INI%,      Colors,     GuiColor,                   %A_Space%
-    IniRead,    MenuColor,                  %INI%,      Colors,     MenuColor,                  %A_Space%
+    
+    if !FileExist(INI)
+        return LogError(Exception("Failed to read values to the configuration"
+                                  , INI . " read"
+                                  , "Create INI file manually or change the INI global variable"))
+    
+    IniRead, Values, % INI, Global
+    Loop, Parse, % Values, `n
+    { 
+        for Variable, Value in StrSplit(A_LoopField, "=") {
+            if (Variable && Value)
+                %Variable% := Value
+        }
+    
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
