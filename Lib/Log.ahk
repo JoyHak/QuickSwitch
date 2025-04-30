@@ -45,17 +45,19 @@ LogInfo(ByRef msg, _silent := false) {
 
 LogHeader() {
     ; Header about log and OS
-    global ErrorsLog, BugReportLink, ScriptName
-
-    static reg := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
-    RegRead, _OSname, % reg, ProductName
-    RegRead, _OSversion, % reg, DisplayVersion
-    RegRead, _OSbuild, % reg, CurrentBuild
+    global ErrorsLog, ScriptName
+    
+    static REPORT_LINK  :=  "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
+    static LEAF         :=  "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+    
+    RegRead, _OSname, % LEAF, ProductName
+    RegRead, _OSversion, % LEAF, DisplayVersion
+    RegRead, _OSbuild, % LEAF, CurrentBuild
     RegRead, _lang, HKEY_CURRENT_USER\Control Panel\International, LocaleName
 
     FileAppend,
     (LTrim
-     Report about error: %BugReportLink%
+     Report about error: %REPORT_LINK%
      AHK %A_AhkVersion%
      %_OSname% %_OSversion% | %_OSbuild% %_lang%
 
