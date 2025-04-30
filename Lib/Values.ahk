@@ -73,14 +73,12 @@ WriteValues() {
     try {
         IniWrite,
         (LTrim
-            MainKeyHook         =  %MainKeyHook%
-            ShowNoSwitch        =  %ShowNoSwitch%
-            ShowAfterSettings   =  %ShowAfterSettings%
             AutoStartup         =  %AutoStartup%
-            RestartKeyHook      =  %RestartKeyHook%
             AutoSwitch          =  %AutoSwitch%
             ShowAlways          =  %ShowAlways%
+            ShowNoSwitch        =  %ShowNoSwitch%
             ShowAfterSelect     =  %ShowAfterSelect%
+            ShowAfterSettings   =  %ShowAfterSettings%
             CloseDialog         =  %CloseDialog%
             PathNumbers         =  %PathNumbers%
             ShortPath           =  %ShortPath%
@@ -91,6 +89,8 @@ WriteValues() {
             DirNameLength       =  %DirNameLength%
             MainFont            =  %MainFont%
             RestartWhere        =  %RestartWhere%
+            MainKeyHook         =  %MainKeyHook%
+            RestartKeyHook      =  %RestartKeyHook%
         ), % INI, Global
     
     } catch {
@@ -99,15 +99,17 @@ WriteValues() {
                             , "Create INI file manually or change the INI global variable"))
     }
 
-    ValidateWriteString(PathSeparator,      "PathSeparator")
-    ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
-
-    ValidateWriteKey(MainKey,       "MainKey",    "ShowMenu",   "Off",  MainKeyHook)
-    ValidateWriteKey(RestartKey,    "RestartKey", "RestartApp", "On",   RestartKeyHook)
-
     ValidateWriteColor(GuiColor,    "GuiColor")
     ValidateWriteColor(MenuColor,   "MenuColor")
     ValidateWriteTrayIcon(MainIcon, "MainIcon")
+
+    ValidateWriteString(PathSeparator,      "PathSeparator")
+    ValidateWriteString(ShortNameIndicator, "ShortNameIndicator")
+
+    ValidateWriteKey(MainKey,    "MainKey",    "ShowMenu",   "Off",  MainKeyHook)
+    ValidateWriteKey(RestartKey, "RestartKey", "RestartApp", "On",   RestartKeyHook)
+
+
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
