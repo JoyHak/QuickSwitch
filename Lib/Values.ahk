@@ -200,15 +200,14 @@ ValidateColor(ByRef paramName, ByRef color) {
         otherwise returns empty string
     */
 
-    if !color
-        return ""
-
-    if !(_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
+    if color {
+        if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
+            return paramName . "=" . SubStr(color, _matchPos) . "`n"
+        }
         LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
-        return ""
     }
-
-    return paramName . "=" . SubStr(color, _matchPos) . "`n"
+    
+    return paramName "=" A_Space "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
