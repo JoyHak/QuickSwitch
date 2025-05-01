@@ -50,10 +50,10 @@ SetDefaultValues() {
     DirNameLength  := 20
     PathSeparator  := "\"
 
+    RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
-    RestartWhere   := "ahk_exe notepad++.exe"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ SetDefaultValues() {
 WriteValues() {
 ;─────────────────────────────────────────────────────────────────────────────
       /*
-          Calls validators and writes values to INI.
+          Calls validators and writes values to INI
 
           The boolean (checkbox) values is writed immediately.
           The individual special values are checked before writing.
@@ -103,10 +103,9 @@ WriteValues() {
         IniWrite, % Values, % INI, Global
     } catch {
         LogError(Exception("Failed to write values to the configuration"
-                          , INI . " write"
-                          , "Create INI file manually or change the INI global variable"))
+                          , INI " write"
+                          , "Create INI file with UTF-16 LE BOM encoding manually or change the INI global variable"))
     }
-
     Values := ""
 }
 
@@ -114,26 +113,17 @@ WriteValues() {
 ;
 ReadValues() {
 ;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Reads values from INI.
-
-        All global variables are updated if:
-        - the configuration exists
-        - values exist in the configuration
-        - variables have been declared
-
-        File, section, param name, global var and its value reference
-        must be identical to WriteValues()
-    */
+    ; Reads values from INI
     global
 
     if !FileExist(INI)
         return
 
-    IniRead, Values, % INI, Global
-    for Variable, Value in Object(StrSplit(Values, ["`n", "="]))
-        %Variable% := Value
-
+    try {
+        IniRead, Values, % INI, Global
+        for Variable, Value in Object(StrSplit(Values, ["`n", "="]))
+            %Variable% := Value
+    }
     Values := ""
 }
 
