@@ -29,6 +29,21 @@ CabinetWClass(ByRef winId) {
         }
 
     } catch _error {
+        if InStr(_error.message, "0x80004005") {
+            RegExMatch(_error.message, "([^`r`n]+)", _message)
+
+            if MsgWarn("
+                (LTrim
+                    System error occurred while retrieving Explorer paths: " _message "
+
+                    Restart all Explorer instances to fix?
+                )") {
+                CloseProcess("explorer.exe")
+                Run ::{20D04FE0-3AEA-1069-A2D8-08002B30309D}
+                return
+            }
+        }
+
         LogError(_error)
     }
 }
