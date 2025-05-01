@@ -88,15 +88,14 @@ WriteValues() {
          RestartWhere="         RestartWhere          "
          MainKeyHook="          MainKeyHook           "
          RestartKeyHook="       RestartKeyHook        "
-         
     )"
 
-    Values .= ValidateAutoStartup()
-            . ValidateTrayIcon( MainIcon,               "MainIcon")
-            . ValidateColor(    GuiColor,               "GuiColor")
-            . ValidateColor(    MenuColor,              "MenuColor")
-            . ValidateString(   PathSeparator,          "PathSeparator")
-            . ValidateString(   ShortNameIndicator,     "ShortNameIndicator")
+    Values .= "`n"
+            . ValidateTrayIcon( "MainIcon",             MainIcon)
+            . ValidateColor(    "GuiColor",             GuiColor)
+            . ValidateColor(    "MenuColor",            MenuColor)
+            . ValidateString(   "PathSeparator",        PathSeparator)
+            . ValidateString(   "ShortNameIndicator",   ShortNameIndicator)
             . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "ShowMenu")
             . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
 
@@ -157,7 +156,7 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
         otherwise returns empty string
     */
     global INI
-    
+
     try {
         if (sequence ~= "i)sc[a-f0-9]+") {
             _key := sequence
@@ -205,7 +204,7 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateColor(ByRef color, ByRef paramName) {
+ValidateColor(ByRef paramName, ByRef color) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Searches for a HEX number in any form, e.g. 0x, #, h
@@ -222,12 +221,12 @@ ValidateColor(ByRef color, ByRef paramName) {
         return ""
     }
 
-    return (paramName . "=" . SubStr(color, _matchPos) . "`n")
+    return paramName . "=" . SubStr(color, _matchPos) . "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateString(ByRef string, ByRef paramName) {
+ValidateString(ByRef paramName, ByRef string) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Converts input value to string
@@ -239,12 +238,12 @@ ValidateString(ByRef string, ByRef paramName) {
     if !string
         return ""
 
-    return (paramName . "=" . Format("{}", string) . "`n")
+    return paramName . "=" . Format("{}", string) . "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateTrayIcon(ByRef icon, ByRef paramName) {
+ValidateTrayIcon(ByRef paramName, ByRef icon) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         If the file exists, changes the tray icon
@@ -262,27 +261,4 @@ ValidateTrayIcon(ByRef icon, ByRef paramName) {
 
     Menu, Tray, Icon, % icon
     return paramName "=" icon "`n"
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateAutoStartup() {
-;─────────────────────────────────────────────────────────────────────────────
-    global AutoStartup, ScriptName
-
-    try {
-        _link := A_Startup . "\" . ScriptName . ".lnk"
-
-        if AutoStartup {
-            FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
-        } else {
-            if FileExist(_link) {
-                FileDelete, % _link
-                TrayTip, % ScriptName, AutoStartup disabled,, 0x2
-            }
-        }
-    } catch _error {
-        LogError(_error)
-    }
-    return ""
 }

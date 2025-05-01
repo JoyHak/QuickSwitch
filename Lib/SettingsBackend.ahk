@@ -33,6 +33,7 @@ SaveSettings() {
     Gui, Submit
     WriteValues()
     ReadValues()
+    ValidateAutoStartup()
 }
 
 RestartApp() {
@@ -77,4 +78,26 @@ ToggleShortPath() {
     GuiControl, Enable%ShortPath%, ShowFirstSeparator
     GuiControl, Show%ShortPath%,   ShortNameIndicator
     GuiControl, Show%ShortPath%,   ShortNameIndicatorText
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateAutoStartup() {
+;─────────────────────────────────────────────────────────────────────────────
+    global AutoStartup, ScriptName
+
+    try {
+        _link := A_Startup . "\" . ScriptName . ".lnk"
+
+        if AutoStartup {
+            FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
+        } else {
+            if FileExist(_link) {
+                FileDelete, % _link
+                TrayTip, % ScriptName, AutoStartup disabled,, 0x2
+            }
+        }
+    } catch _error {
+        LogError(_error)
+    }
 }

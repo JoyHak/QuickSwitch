@@ -52,7 +52,7 @@ ValidateLog()
 
 ;@Ahk2Exe-IgnoreBegin
 MainIcon := "QuickSwitch.ico"
-ValidateTrayIcon(MainIcon, "MainIcon")
+ValidateTrayIcon("MainIcon", MainIcon)
 ;@Ahk2Exe-IgnoreEnd
 
 SetDefaultValues()
