@@ -19,9 +19,9 @@ CabinetWClass(ByRef winId) {
     global Paths
 
     try {
-        for _instance in ComObjCreate("Shell.Application").Windows {
-            if (winId == _instance.hwnd) {
-                _path := _instance.Document.Folder.Self.Path
+        for _win in ComObjCreate("Shell.Application").windows {
+            if (winId = _win.hwnd) {
+                _path := _win.document.folder.self.path
                 if !InStr(_path, "::{") {
                     Paths.push(_path)
                 }
