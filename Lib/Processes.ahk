@@ -52,6 +52,18 @@ CloseChildWindows(ByRef winId, ByRef winPid) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+CloseProcess(ByRef name) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Closes the process tree with the specified name
+
+    Loop, 100 {
+        Process, Close, % name
+        Process, Exist, % name
+    } Until !ErrorLevel
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 IsProcessElevated(winPid) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; https://www.autohotkey.com/boards/viewtopic.php?t=26700
