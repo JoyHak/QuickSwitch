@@ -3,11 +3,11 @@
     GetFileDialog() returns the FuncObj to call it later
     and feed the current dialog.
 
-    "winId" param must be existing window uniq ID (window handle / HWND)
-    "path"  param must be a string valid for any dialog
+    "editId" param must be existing Edit control uniq ID (handle)
+    "path"   param must be a string valid for any dialog
 */
 
-FeedEditField(ByRef id, ByRef path, ByRef attempts := 10) {
+FeedControl(ByRef id, ByRef path, ByRef attempts := 10) {
     Loop, % attempts {
         ControlFocus, , ahk_id %id%
         ControlSetText,, % path, ahk_id %id%       ; set
@@ -21,51 +21,57 @@ FeedEditField(ByRef id, ByRef path, ByRef attempts := 10) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSTREEVIEW(ByRef winId, ByRef path) {
+FeedDialogSYSTREEVIEW(ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     global CloseDialog
-    WinActivate, ahk_id %winId%
 
-    ControlGet, _id, hwnd,, Edit1,    ahk_id %winId%    ; Get control handle
-    ControlGet, _fileName, Line, 1, , ahk_id %_id%      ; Read the current text in the "File Name"
+    ; Read the current text in the "File Name"
+    ControlGet, _fileName, Line, 1, , ahk_id %editId%
 
-    if FeedEditField(_id, path) {
+    if FeedControl(editId, path) {
         if !CloseDialog
             return true
 
-        ControlSend, , {Enter}, ahk_id %_id%            ; Change path
-        ControlFocus, , ahk_id %_id%
+        ; Change path
+        ControlSend, , {Enter}, ahk_id %editId%
+        if !_fileName
+            return true
 
-        return FeedEditField(_id, _fileName)            ; Restore original filename
+        ; Restore original filename
+        ControlFocus, , ahk_id %editId%
+        return FeedControl(editId, _fileName)
     }
     return false
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSLISTVIEW(ByRef winId, ByRef path) {
+FeedDialogSYSLISTVIEW(ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    WinActivate, ahk_id %winId%
-
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    ControlGet, _id, hwnd,, SysListView321, ahk_id %winId%
-    ControlFocus,, ahk_id %_id%
-    ControlSend,, {Home}, ahk_id %_id%
-
     Loop, 10 {
         Sleep, 15
-        ControlSend,, ^{Space}, ahk_id %_id%
-        ControlGet, _focus, List, Selected,, ahk_id %_id%
+        ControlFocus     SysListView321, ahk_class #32770
+        ControlGetFocus, _focus,         ahk_class #32770
+
+    } Until (_focus = "SysListView321")
+
+    ControlSend SysListView321, {Home},  ahk_class #32770
+    
+    Loop, 10 {
+        Sleep, 15
+        ControlSend SysListView321, ^{Space}, ahk_class #32770
+        ControlGet, _focus, List, Selected, SysListView321, ahk_class #32770
 
     } Until !_focus
 
-    return FeedDialogSYSTREEVIEW(winId, path)
+    return FeedDialogSYSTREEVIEW(editId, path)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogGENERAL(ByRef winId, ByRef path) {
+FeedDialogGENERAL(ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     global CloseDialog
 
@@ -73,7 +79,7 @@ FeedDialogGENERAL(ByRef winId, ByRef path) {
     _closeDialog :=  CloseDialog
     CloseDialog  :=  true
 
-    _result      :=  FeedDialogSYSTREEVIEW(winId, path)
+    _result      :=  FeedDialogSYSTREEVIEW(editId, path)
     CloseDialog  :=  _closeDialog
 
     return _result
