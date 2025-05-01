@@ -38,11 +38,11 @@ ShowSettings() {
 
     Gui,    Add,    CheckBox,                           vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
     Gui,    Add,    CheckBox,   gToggleShowAlways       vShowAlways     checked%ShowAlways%,        Always &show Menu
-    Gui,    Add,    CheckBox,                           vShowNoSwitch   checked%ShowNoSwitch%,      Show Menu if options &disabled
+    Gui,    Add,    CheckBox,                           vShowNoSwitch   checked%ShowNoSwitch%,      Show Menu if Menu options &disabled
     Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after &leaving settings
     Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
-    Gui,    Add,    CheckBox,                           vCloseDialog    checked%CloseDialog%,       &Close old dialog after selecting path
     Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       &Path numbers with shortcuts 0-9
+    Gui,    Add,    CheckBox,                           vCloseDialog    checked%CloseDialog%,       &Close old-style file dialog after selecting path
 
 
     Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
