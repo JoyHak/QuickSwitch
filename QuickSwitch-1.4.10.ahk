@@ -59,8 +59,8 @@ SetDefaultValues()
 ReadValues()
 ValidateAutoStartup()
 
-ValidateKey(MainKey,    "MainKey",    "ShowMenu",   "Off", MainKeyHook)
-ValidateKey(RestartKey, "RestartKey", "RestartApp", "On",  RestartKeyHook)
+ValidateKey("MainKey",    MainKey,    MainKeyHook,    "Off", "ShowMenu")
+ValidateKey("RestartKey", RestartKey, RestartKeyHook, "On",  "RestartApp")
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
@@ -84,7 +84,7 @@ Loop {
             GetPaths()
 
             ; Turn on hotkey to hide / show menu later
-            ValidateKey(MainKey, "MainKey",, "On", MainKeyHook)
+            ValidateKey("MainKey", MainKey, MainKeyHook, "On")
 
             if IsMenuReady()
                 ShowMenu()
@@ -98,7 +98,7 @@ Loop {
 
     Sleep, 100
     WinWaitNotActive
-    ValidateKey(MainKey, "MainKey",, "Off", MainKeyHook)
+    ValidateKey("MainKey", MainKey, MainKeyHook, "Off")
 
     ; Clean up
     if (SaveDialogAction && FingerPrint && DialogAction != "") {

@@ -92,14 +92,14 @@ WriteValues() {
     )"
 
     Values .= ValidateAutoStartup()
-            . ValidateTrayIcon( MainIcon,             "MainIcon")
-            . ValidateColor(    GuiColor,             "GuiColor")
-            . ValidateColor(    MenuColor,            "MenuColor")
-            . ValidateString(   PathSeparator,        "PathSeparator")
-            . ValidateString(   ShortNameIndicator,   "ShortNameIndicator")
-            . ValidateKey(      MainKey,              "MainKey",            "ShowMenu",     "Off",    MainKeyHook)
-            . ValidateKey(      RestartKey,           "RestartKey",         "RestartApp",   "On",     RestartKeyHook)
-    
+            . ValidateTrayIcon( MainIcon,               "MainIcon")
+            . ValidateColor(    GuiColor,               "GuiColor")
+            . ValidateColor(    MenuColor,              "MenuColor")
+            . ValidateString(   PathSeparator,          "PathSeparator")
+            . ValidateString(   ShortNameIndicator,     "ShortNameIndicator")
+            . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "ShowMenu")
+            . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
+
     try {
         IniWrite, % Values, % INI, Global
     } catch {
@@ -146,7 +146,7 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateKey(ByRef sequence, ByRef paramName, ByRef funcName := "", ByRef state := "On", ByRef useHook := false) {
+ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On", ByRef funcName := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Replaces chars / letters in sequence with
