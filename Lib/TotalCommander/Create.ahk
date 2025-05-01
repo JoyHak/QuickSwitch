@@ -22,14 +22,14 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
             }
 
             ; Create new section
-            FileAppend,
+            FileAppend, % "
             (LTrim
-            # Please dont add commands with the same name
-            [%cmd%]
-            cmd=%internalCmd%
-            param=%param%
+                # Please dont add commands with the same name
+                [" cmd "]
+                cmd="   internalCmd  "
+                param=" param        "
 
-            ), % ini
+            )", % ini
 
             sleep, 50 * A_Index
         }

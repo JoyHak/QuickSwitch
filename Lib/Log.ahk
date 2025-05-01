@@ -55,13 +55,13 @@ LogHeader() {
     RegRead, _OSbuild, % LEAF, CurrentBuild
     RegRead, _lang, HKEY_CURRENT_USER\Control Panel\International, LocaleName
 
-    FileAppend,
+    FileAppend, % "
     (LTrim
-     Report about error: %REPORT_LINK%
-     AHK %A_AhkVersion%
-     %_OSname% %_OSversion% | %_OSbuild% %_lang%
+        Report about error: " REPORT_LINK "
+        AHK " A_AhkVersion "
+        " _OSname " " _OSversion " | " _OSbuild " " _lang "
 
-    ), % ErrorsLog
+    )", % ErrorsLog
 }
 
 LogVersion() {
