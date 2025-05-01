@@ -91,7 +91,7 @@ InitAutoStartup() {
         } else {
             if FileExist(_link) {
                 FileDelete, % _link
-                TrayTip, % ScriptName, AutoStartup disabled,, 0x2
+                LogInfo("Auto Startup disabled")
             }
         }
     } catch _error {

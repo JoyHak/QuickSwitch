@@ -50,7 +50,7 @@ ExportDebug() {
 
         _file.close()
         clipboard := _filename
-        TrayTip, % "Successfully exported (path in clipboard)", % _filename
+        LogInfo("Successfully exported and copied path to the clipboard")
 
     } catch _error {
         LogError(_error)
