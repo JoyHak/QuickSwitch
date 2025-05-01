@@ -70,9 +70,11 @@ FeedDialogGENERAL(ByRef winId, ByRef path) {
     global CloseDialog
 
     ; Always send {Enter}
+    _closeDialog :=  CloseDialog
     CloseDialog  :=  true
+
     _result      :=  FeedDialogSYSTREEVIEW(winId, path)
-    CloseDialog  :=  false
+    CloseDialog  :=  _closeDialog
 
     return _result
 }
