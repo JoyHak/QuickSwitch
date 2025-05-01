@@ -4,6 +4,15 @@
     "ErrorsLog" param must be a path to a write-accessible file (with any extension)
     Library must be imported first!
  */
+ 
+MsgWarn(ByRef message) {
+    ; Yes/No, Warn icon, default is "No", always on top without title bar
+    MsgBox, % (4 + 48 + + 256 + 262144), , % message
+    IfMsgBox Yes
+        return true
+    
+    return false
+}
 
 LogError(_error) {
     ; Accepts Exception object or any custom object with similar attributes

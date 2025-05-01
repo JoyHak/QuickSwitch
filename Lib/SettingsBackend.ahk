@@ -5,14 +5,11 @@ NukeSettings() {
     ; Delete configuration
     global INI, ScriptName
 
-    ; Yes/No, Warn icon, default is "No", always on top without title bar
-    MsgBox, % (4 + 48 + + 256 + 262144), , % "Do you want to delete the configuration?`n" INI
-    IfMsgBox No
-        return
-
-    try FileRecycle, % INI
-    TrayTip, % ScriptName, % "Old configuration has been placed in the Recycle Bin",, 0x2
-    ResetSettings()
+    if MsgWarn("Do you want to delete the configuration?`n" INI) {
+        try FileRecycle, % INI
+        LogInfo("Old configuration has been placed in the Recycle Bin")
+        ResetSettings()
+    }
 }
 
 ResetSettings() {
