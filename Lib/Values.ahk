@@ -68,7 +68,7 @@ WriteValues() {
       */
     global
 
-    Values := "
+    local _values := "
     (LTrim
          AutoStartup="          AutoStartup           "
          AutoSwitch="           AutoSwitch            "
@@ -90,7 +90,7 @@ WriteValues() {
          RestartKeyHook="       RestartKeyHook        "
     )"
 
-    Values .= "`n"
+    _values .= "`n"
             . ValidateTrayIcon( "MainIcon",             MainIcon)
             . ValidateColor(    "GuiColor",             GuiColor)
             . ValidateColor(    "MenuColor",            MenuColor)
@@ -100,13 +100,12 @@ WriteValues() {
             . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
 
     try {
-        IniWrite, % Values, % INI, Global
+        IniWrite, % _values, % INI, Global
     } catch {
         LogError(Exception("Please create this file with UTF-16 LE BOM encoding manually: `'" INI "`'"
                            , "config"
                            , ValidateFile(INI)))
     }
-    Values := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -118,13 +117,17 @@ ReadValues() {
 
     if !FileExist(INI)
         return
-
-    try {
-        IniRead, Values, % INI, Global
-        for Variable, Value in Object(StrSplit(Values, ["`n", "="]))
-            %Variable% := Value
+    
+    local _values, _array, _variable, _value
+    IniRead, _values, % INI, Global
+    
+    Loop, Parse, % _values, `n
+    {
+          _array       :=  StrSplit(A_LoopField, "=")
+          _variable    :=  _array[1]
+          _value       :=  _array[2]
+          %_variable%  :=  _value
     }
-    Values := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
