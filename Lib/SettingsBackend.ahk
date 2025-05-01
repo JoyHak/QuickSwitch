@@ -33,7 +33,7 @@ SaveSettings() {
     Gui, Submit
     WriteValues()
     ReadValues()
-    ValidateAutoStartup()
+    InitAutoStartup()
 }
 
 RestartApp() {
@@ -82,7 +82,7 @@ ToggleShortPath() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateAutoStartup() {
+InitAutoStartup() {
 ;─────────────────────────────────────────────────────────────────────────────
     global AutoStartup, ScriptName
 

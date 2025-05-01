@@ -1,7 +1,7 @@
 CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "") {
     ; Creates cmd in specified ini config.
     ; "cmd" param must start with EM_
-    
+
     try {
         loop, 4 {
             ; Read the contents of the config until it appears or the loop ends with an error

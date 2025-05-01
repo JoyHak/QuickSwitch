@@ -48,7 +48,7 @@ ErrorsLog     := "Errors.log"
 #Include <SettingsFrontend>
 #Include <MenuFrontend>
 
-ValidateLog()
+InitLog()
 
 ;@Ahk2Exe-IgnoreBegin
 MainIcon := "QuickSwitch.ico"
@@ -57,7 +57,7 @@ ValidateTrayIcon("MainIcon", MainIcon)
 
 SetDefaultValues()
 ReadValues()
-ValidateAutoStartup()
+InitAutoStartup()
 
 ValidateKey("MainKey",    MainKey,    MainKeyHook,    "Off", "ShowMenu")
 ValidateKey("RestartKey", RestartKey, RestartKeyHook, "On",  "RestartApp")

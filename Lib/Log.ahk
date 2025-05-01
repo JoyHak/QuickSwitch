@@ -46,10 +46,10 @@ LogInfo(ByRef msg, _silent := false) {
 LogHeader() {
     ; Header about log and OS
     global ErrorsLog, ScriptName
-    
+
     static REPORT_LINK  :=  "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
     static LEAF         :=  "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
-    
+
     RegRead, _OSname, % LEAF, ProductName
     RegRead, _OSversion, % LEAF, DisplayVersion
     RegRead, _OSbuild, % LEAF, CurrentBuild
@@ -81,7 +81,7 @@ LogVersion() {
     FileAppend, % _header, % ErrorsLog
 }
 
-ValidateLog() {
+InitLog() {
     global INI, ErrorsLog, ScriptName
 
     if FileExist(ErrorsLog) {
