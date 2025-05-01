@@ -36,6 +36,9 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
         throw Exception("Unable to create configuration", "")
 
     } catch _e {
-        throw Exception("Please create this file manually: `'" ini "`'", "TotalCmd config", _e.what " " _e.message " " _e.extra)
+        throw Exception("Please create this file manually: `'" ini "`'"
+                        , "TotalCmd config"
+                        , _e.what " " _e.message " " _e.extra "`n"
+                        . ValidateFile(ini))
     }
 }

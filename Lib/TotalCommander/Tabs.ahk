@@ -34,5 +34,8 @@ ParseTotalTabs(ByRef tabsFile) {
         }
         sleep, 20
     }
-    throw Exception("Unable to access tabs", "TotalCmd tabs", "Restart Total Commander and retry")
+    throw Exception("Unable to access tabs"
+                    , "TotalCmd tabs"
+                    , "Restart Total Commander and retry`n"
+                    . ValidateFile(tabsFile))
 }

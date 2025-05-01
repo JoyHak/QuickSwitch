@@ -252,31 +252,31 @@ ValidateTrayIcon(ByRef paramName, ByRef icon) {
 ValidateFile(ByRef filePath) {
 ;─────────────────────────────────────────────────────────────────────────────
     _extra := "Cant write data to the file"
-    
+
     if !filePath {
         _extra := "File path is empty: `'" filePath "`'"
     } else if !FileExist(filePath) {
         _extra := "Unable to create file"
     } else {
         _file := FileOpen(filePath, "r")
-        
+
         if !IsObject(_file) {
-            FileGetAttrib, _attr, % filePath            
-            _extra := "Unable to get access to the file" 
+            FileGetAttrib, _attr, % filePath
+            _extra := "Unable to get access to the file"
         } else {
             _extra     := "`nRead existing `'" filePath "`'`n"
-            
+
             _firstLine := RTrim(_file.readLine(), " `r`n")
             _extra     .= Format("Encoding: {} First line: {}, Size in bytes: {} HWND: {}`n"
                                  , _file.encoding, _firstLine, _file.length, _file.handle)
         }
-        _file.Close() 
-        
+        _file.Close()
+
         try {
-            FileGetAttrib, _attr, % filePath            
+            FileGetAttrib, _attr, % filePath
             _extra .= "File attributes: " _attr
         }
     }
-    
+
     return _extra "`n"
 }
