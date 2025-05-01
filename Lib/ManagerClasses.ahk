@@ -37,20 +37,7 @@ CabinetWClass(ByRef winId) {
 ;
 ThunderRT6FormDC(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Sends script to XYplorer and parses the clipboard.
-
-        If the second panel is enabled, gets tabs from all panels,
-        otherwise gets tabs from the active panel.
-        All native variables are resolved.
-
-        The path separator is |
-        For each path, gets the real path (XY has special and virtual paths).
-        Removes the extra | from the beginning of $reals
-
-        Places $reals on the clipboard.
-        Parses it and puts all paths into the global array
-    */
+    ; Sends script to XYplorer and parses the clipboard.
     global Paths
 
     try {
@@ -59,17 +46,17 @@ ThunderRT6FormDC(ByRef winId) {
         Clipboard  := ""
 
         static script := "
-        ( LTrim Join
-            ::$paths = <get tabs_sf | a>, 'r'`;
-            if (get('#800')) {
-                $paths .= '|' . <get tabs_sf | i>`;
+        ( LTrim Join Comments
+            ::$paths = <get tabs_sf | a>, 'r'`;         ; Get tabs from the active panel, resolve native variables
+            if (get('#800')) {                          ; Second panel is enabled
+                $paths .= '|' . <get tabs_sf | i>`;     ; Get tabs from second panels
             }
             $reals = ''`;
-            foreach($path, $paths, '|') {
-                $reals .= '|' . pathreal($path)`;
+            foreach($path, $paths, '|') {               ; Path separator is |
+                $reals .= '|' . pathreal($path)`;       ; Get the real path (XY has special and virtual paths)
             }
-            $reals = trim($reals, '|', 'L')`;
-            copytext $reals`;
+            $reals = trim($reals, '|', 'L')`;           ; Remove the extra  | from the beginning of $reals
+            copytext $reals`;                           ; Place $reals to the clipboard, faster then copydata
         )"
 
         SendXyplorerScript(winId, script)
