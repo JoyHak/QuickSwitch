@@ -32,13 +32,10 @@ FeedDialogSYSTREEVIEW(ByRef editId, ByRef path) {
         if !CloseDialog
             return true
 
-        ; Change path
-        ControlSend, , {Enter}, ahk_id %editId%
-        if !_fileName
-            return true
+        ControlSend,, {Enter}, ahk_id %editId%
 
-        ; Restore original filename
-        ControlFocus, , ahk_id %editId%
+        ; Restore filename
+        ControlFocus,, ahk_id %editId%
         return FeedControl(editId, _fileName)
     }
     return false
@@ -58,7 +55,7 @@ FeedDialogSYSLISTVIEW(ByRef editId, ByRef path) {
     } Until (_focus = "SysListView321")
 
     ControlSend SysListView321, {Home},  ahk_class #32770
-    
+
     Loop, 10 {
         Sleep, 15
         ControlSend SysListView321, ^{Space}, ahk_class #32770
