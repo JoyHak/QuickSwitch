@@ -26,10 +26,10 @@ SetWinDelay, -1
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
-ScriptName    := "QuickSwitch"
-MainIcon      := ""
-INI           := ScriptName ".ini"
-ErrorsLog     := "Errors.log"
+ScriptName := "QuickSwitch"
+MainIcon   := ""
+INI        := ScriptName ".ini"
+ErrorsLog  := "Errors.log"
 
 #Include <Log>
 #Include <Debug>
@@ -67,26 +67,27 @@ Loop {
     WinWaitActive, ahk_class #32770
 
     try {
-        DialogID     := WinActive("A")
-        FileDialog   := GetFileDialog(DialogID)
+        DialogID   := WinActive("A")
+        FileDialog := GetFileDialog(DialogID)
 
         if FileDialog {
             ; This is a supported dialog
-            ; If there is any GUI left from previous calls....
+            ; If there is any GUI left from previous calls...
             Gui, Destroy
 
-            try ControlGet, EditId,     hwnd,, Edit1,   ahk_id %DialogID%
             WinGet,         Exe,        ProcessName,    ahk_id %DialogID%
             WinGetTitle,    WinTitle,                   ahk_id %DialogID%
+            try ControlGet, EditId,     hwnd,, Edit1,   ahk_id %DialogID%
 
-            FingerPrint := Exe "___" WinTitle
-            FileDialog  := FileDialog.bind(SendEnter, EditId)
+            FingerPrint  := Exe "___" WinTitle
+            FileDialog   := FileDialog.bind(SendEnter, EditId)
 
-            ; Check if FingerPrint entry is already in INI, so we know what to do.
+            ; Get current dialog settings or use default mode (AutoSwitch flag)
+            ; Current settings override "Always AutoSwitch" mode (if they exist)
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, % AutoSwitch
-            GetPaths()
+            GetPaths() ; and activate AutoSwitch if needed
 
-            ; Turn on hotkey to hide / show menu later
+            ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey, MainKeyHook, "On")
 
             if IsMenuReady()
@@ -102,16 +103,20 @@ Loop {
     Sleep, 100
     WinWaitNotActive
     ValidateKey("MainKey", MainKey, MainKeyHook, "Off")
-
-    ; Clean up
+    
+    ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
+        SaveDialogAction := false
         IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+
+        ; Clean up
         DialogAction := ""
         FingerPrint  := ""
     }
     Exe       := ""
     WinTitle  := ""
     DialogID  := ""
+    EditId    := ""
 
 }   ; End of continuous WinWaitActive loop
 
