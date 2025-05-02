@@ -34,7 +34,7 @@ GetTotalIni(ByRef winId) {
                         , "TotalCmd config"
                         , "File `'" _ini "`' not found. Change your TC configuration settings")
 
-    LogInfo("Found Total Commander config: `'" _ini "`'", true)
+    LogInfo("Found Total Commander config: `'" _ini "`'", "NoTraytip")
 
     ; Remove ini name
     _pos := (_in := InStr(_ini, "\",, -1)) ? _in : InStr(_ini, "/",, -1)

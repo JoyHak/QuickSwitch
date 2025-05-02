@@ -50,7 +50,7 @@ GetTotalConsoleIni(ByRef totalPid) {
             FileRead, _iniPath, % INI_PATH
 
             if _iniPath {
-                LogInfo(_log, true)
+                LogInfo(_log, "NoTraytip")
                 return _iniPath
             }
 
@@ -61,7 +61,7 @@ GetTotalConsoleIni(ByRef totalPid) {
         }
 
     } else {
-        LogInfo(_log " The result is copied to the clipboard.", true)
+        LogInfo(_log " The result is copied to the clipboard.", "NoTraytip")
         return _clip
     }
 
@@ -80,7 +80,7 @@ GetTotalLaunchIni(ByRef totalPid) {
             ; Switch found
 
             if (RegExMatch(_arg, "[""`']([^""`']+)[""`']|\s+([^\/\r\n""`']+)", _match, _pos)) {
-                LogInfo("Found /i launch argument", true)
+                LogInfo("Found /i launch argument", "NoTraytip")
                 return (_match1 ? _match1 : _match2)
             }
             LogError(Exception("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i"))
@@ -129,7 +129,7 @@ UseIniInProgramDir(ByRef ini) {
     
     _flag := 0
     IniRead, _flag, % ini, Configuration, UseIniInProgramDir, 0
-    LogInfo("Config: UseIniInProgramDir=" _flag, true)
+    LogInfo("Config: UseIniInProgramDir=" _flag, "NoTraytip")
     
     return (_flag & 4)
 }
@@ -155,28 +155,28 @@ GetTotalPathIni(ByRef totalPid) {
     _reg := GetTotalRegistryIni()
 
     if _ini {
-        LogInfo("Found config in TotalCmd directory", true)
+        LogInfo("Found config in TotalCmd directory", "NoTraytip")
         
         if UseIniInProgramDir(_ini)
             return _ini       
         
         if _reg {
-            LogInfo("Found config in registry", true)            
+            LogInfo("Found config in registry", "NoTraytip")            
             
             if UseIniInProgramDir(_reg) {
-                LogInfo("Ignored registry config key", true)
+                LogInfo("Ignored registry config key", "NoTraytip")
                 return _ini
             }          
             
             return _reg
         }  
         
-        LogInfo("Registry config key is empty", true)
+        LogInfo("Registry config key is empty", "NoTraytip")
         return _ini
     }
     
     if _reg {
-        LogInfo("Сonfig not found in TotalCmd directory but found in registry", true)
+        LogInfo("Сonfig not found in TotalCmd directory but found in registry", "NoTraytip")
         return _reg
     }
 
