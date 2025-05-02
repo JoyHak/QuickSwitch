@@ -21,15 +21,13 @@ FeedControl(ByRef id, ByRef path, ByRef attempts := 10) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSTREEVIEW(ByRef editId, ByRef path) {
+FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global SendEnter
-
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, ahk_id %editId%
 
     if FeedControl(editId, path) {
-        if !SendEnter
+        if !sendEnter
             return true
 
         ControlSend,, {Enter}, ahk_id %editId%
@@ -43,7 +41,7 @@ FeedDialogSYSTREEVIEW(ByRef editId, ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSLISTVIEW(ByRef editId, ByRef path) {
+FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
@@ -63,23 +61,15 @@ FeedDialogSYSLISTVIEW(ByRef editId, ByRef path) {
 
     } Until !_focus
 
-    return FeedDialogSYSTREEVIEW(editId, path)
+    return FeedDialogSYSTREEVIEW(sendEnter, editId, path)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogGENERAL(ByRef editId, ByRef path) {
+FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global SendEnter
-
     ; Always send {Enter}
-    _closeDialog :=  SendEnter
-    SendEnter  :=  true
-
-    _result      :=  FeedDialogSYSTREEVIEW(editId, path)
-    SendEnter  :=  _closeDialog
-
-    return _result
+    return FeedDialogSYSTREEVIEW("ForceEnter", editId, path)
 }
 
 
