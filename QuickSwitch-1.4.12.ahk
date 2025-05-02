@@ -80,6 +80,7 @@ Loop {
             WinGetTitle,    WinTitle,                   ahk_id %DialogID%
 
             FingerPrint := Exe "___" WinTitle
+            FileDialog  := FileDialog.bind(SendEnter, EditId)
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, % AutoSwitch

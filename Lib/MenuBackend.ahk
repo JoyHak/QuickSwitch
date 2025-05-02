@@ -10,11 +10,11 @@ SelectPath(_name := "", _position := 1) {
     local _extra := ""
     loop, 3 {
         try {
-            WinActivate, ahk_id %DialogID%
+            WinActivate % "ahk_id " DialogID
             if !WinActive("ahk_id " DialogID)
                 return
 
-            if !(FileDialog.call(EditId, Paths[_position]))
+            if !(FileDialog.call(Paths[_position]))
                 continue
 
             if ((ShowAfterSelect && _name) || ShowAlways)
