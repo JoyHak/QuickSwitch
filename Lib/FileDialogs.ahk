@@ -113,6 +113,7 @@ GetFileDialog(ByRef dialogId) {
             ; Check specific controls
             if (_f & 0x1) {
                 if (_f & 0x10 && _f & 0x20) {
+                    sleep 200
                     return Func("FeedDialogGENERAL")
                 }
 
