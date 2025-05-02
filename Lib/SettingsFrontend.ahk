@@ -42,7 +42,7 @@ ShowSettings() {
     Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after &leaving settings
     Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
     Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       &Path numbers with shortcuts 0-9
-    Gui,    Add,    CheckBox,                           vCloseDialog    checked%CloseDialog%,       &Close old-style file dialog after selecting path
+    Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
 
 
     Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
