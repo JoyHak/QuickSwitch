@@ -74,11 +74,11 @@ Loop {
             ; This is a supported dialog
             ; If there is any GUI left from previous calls....
             Gui, Destroy
-            
-            ControlGet,     EditId,     hwnd,, Edit1,   ahk_id %DialogID%
+
+            try ControlGet, EditId,     hwnd,, Edit1,   ahk_id %DialogID%
             WinGet,         Exe,        ProcessName,    ahk_id %DialogID%
             WinGetTitle,    WinTitle,                   ahk_id %DialogID%
-           
+
             FingerPrint := Exe "___" WinTitle
 
             ; Check if FingerPrint entry is already in INI, so we know what to do.
