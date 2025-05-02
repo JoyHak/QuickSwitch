@@ -111,6 +111,12 @@ ShowSettings() {
     ToggleShortPath()
 
     ; Get dialog position
-    WinGetPos, WinX, WinY, WinWidth, WinHeight, A
-    Gui, Show, % "AutoSize x" WinX " y" WinY + 100, Menu settings
+    local _winX, _winY, _pos := ""    
+    WinGetPos, _winX, _winY,,, A
+    
+    if (_winX && _winY) 
+        _pos := " x" _winX " y" _winY + 100
+        
+    Gui, Show, % "AutoSize" _pos, Menu settings
+        
 }
