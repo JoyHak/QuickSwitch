@@ -9,9 +9,9 @@
 
 FeedControl(ByRef id, ByRef path, ByRef attempts := 10) {
     Loop, % attempts {
-        ControlFocus, , ahk_id %id%
-        ControlSetText,, % path, ahk_id %id%       ; set
-        ControlGet, _path, Line, 1,, ahk_id %id%   ; check
+        ControlFocus,, ahk_id %id%
+        ControlSetText,, % path, ahk_id %id%   ; set
+        ControlGetText, _path,,  ahk_id %id%   ; check
 
         if (_path = path)
             return true
@@ -26,7 +26,7 @@ FeedDialogSYSTREEVIEW(ByRef editId, ByRef path) {
     global CloseDialog
 
     ; Read the current text in the "File Name"
-    ControlGet, _fileName, Line, 1, , ahk_id %editId%
+    ControlGetText, _fileName,, ahk_id %editId%
 
     if FeedControl(editId, path) {
         if !CloseDialog
