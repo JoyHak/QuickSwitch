@@ -28,9 +28,10 @@ CabinetWClass(ByRef winId) {
             }
         }
 
-    } catch _error {
-        if InStr(_error.message, "0x80004005") {
-            RegExMatch(_error.message, "([^`r`n]+)", _message)
+    } catch _e {
+        _msg := _e.message
+        if InStr(_msg, "0x") {
+            _message := SubStr(_msg, 1, InStr(_msg, "`n") - 1) 
 
             if MsgWarn("
                 (LTrim
@@ -44,7 +45,7 @@ CabinetWClass(ByRef winId) {
             }
         }
 
-        LogError(_error)
+        LogError(_e)
     }
 }
 
