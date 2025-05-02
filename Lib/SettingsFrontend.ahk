@@ -117,6 +117,6 @@ ShowSettings() {
     if (_winX && _winY) 
         _pos := " x" _winX " y" _winY + 100
         
-    Gui, Show, % "AutoSize" _pos, Menu settings
+    Gui, Show, % "AutoSize" _pos, Settings
         
 }
