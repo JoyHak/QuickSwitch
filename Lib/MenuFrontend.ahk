@@ -45,13 +45,13 @@ AddMenuOptions() {
 
     ; Add options to select
     Menu ContextMenu, Add
-    AddMenuTitle("Settings")
+    AddMenuTitle("Options")
 
     AddMenuOption("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
     AddMenuOption("&Black list", "ToggleBlackList", DialogAction = -1)
 
     Menu ContextMenu, Add
-    Menu ContextMenu, Add, Menu &settings, ShowSettings
+    Menu ContextMenu, Add, &Settings, ShowSettings
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
