@@ -23,13 +23,13 @@ FeedControl(ByRef id, ByRef path, ByRef attempts := 10) {
 ;
 FeedDialogSYSTREEVIEW(ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global CloseDialog
+    global SendEnter
 
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, ahk_id %editId%
 
     if FeedControl(editId, path) {
-        if !CloseDialog
+        if !SendEnter
             return true
 
         ControlSend,, {Enter}, ahk_id %editId%
@@ -70,14 +70,14 @@ FeedDialogSYSLISTVIEW(ByRef editId, ByRef path) {
 ;
 FeedDialogGENERAL(ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global CloseDialog
+    global SendEnter
 
     ; Always send {Enter}
-    _closeDialog :=  CloseDialog
-    CloseDialog  :=  true
+    _closeDialog :=  SendEnter
+    SendEnter  :=  true
 
     _result      :=  FeedDialogSYSTREEVIEW(editId, path)
-    CloseDialog  :=  _closeDialog
+    SendEnter  :=  _closeDialog
 
     return _result
 }

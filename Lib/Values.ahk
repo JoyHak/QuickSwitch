@@ -36,7 +36,7 @@ SetDefaultValues() {
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     RestartKeyHook      :=  false
-    CloseDialog         :=  false
+    SendEnter           :=  false
     PathNumbers         :=  false
     ShortPath           :=  false
     ShortenEnd          :=  false
@@ -76,7 +76,7 @@ WriteValues() {
          ShowNoSwitch="         ShowNoSwitch          "
          ShowAfterSelect="      ShowAfterSelect       "
          ShowAfterSettings="    ShowAfterSettings     "
-         CloseDialog="          CloseDialog           "
+         SendEnter="            SendEnter             "
          PathNumbers="          PathNumbers           "
          ShortPath="            ShortPath             "
          ShortenEnd="           ShortenEnd            "
