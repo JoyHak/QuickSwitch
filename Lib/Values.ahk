@@ -33,6 +33,7 @@ SetDefaultValues() {
     ShowAfterSettings   :=  true
 
     AutoSwitch          :=  false
+    DeleteDialogs       :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     RestartKeyHook      :=  false
@@ -72,6 +73,7 @@ WriteValues() {
     (LTrim
          AutoStartup="          AutoStartup           "
          AutoSwitch="           AutoSwitch            "
+         DeleteDialogs="        DeleteDialogs         "
          ShowAlways="           ShowAlways            "
          ShowNoSwitch="         ShowNoSwitch          "
          ShowAfterSelect="      ShowAfterSelect       "

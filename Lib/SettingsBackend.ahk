@@ -30,6 +30,7 @@ SaveSettings() {
     Gui, Submit
     WriteValues()
     ReadValues()
+    DeleteDialogs()
     InitAutoStartup()
 }
 
@@ -40,6 +41,37 @@ RestartApp() {
         Reload
     if WinActive(RestartWhere)
         Reload
+}
+
+DeleteDialogs() {
+    global DeleteDialogs, INI
+    
+    if !DeleteDialogs
+        return
+    
+    IniDelete, % INI, Dialogs
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+InitAutoStartup() {
+;─────────────────────────────────────────────────────────────────────────────
+    global AutoStartup, ScriptName
+
+    try {
+        _link := A_Startup . "\" . ScriptName . ".lnk"
+
+        if AutoStartup {
+            FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
+        } else {
+            if FileExist(_link) {
+                FileDelete, % _link
+                LogInfo("Auto Startup disabled")
+            }
+        }
+    } catch _error {
+        LogError(_error)
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -75,26 +107,4 @@ ToggleShortPath() {
     GuiControl, Enable%ShortPath%, ShowFirstSeparator
     GuiControl, Show%ShortPath%,   ShortNameIndicator
     GuiControl, Show%ShortPath%,   ShortNameIndicatorText
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-InitAutoStartup() {
-;─────────────────────────────────────────────────────────────────────────────
-    global AutoStartup, ScriptName
-
-    try {
-        _link := A_Startup . "\" . ScriptName . ".lnk"
-
-        if AutoStartup {
-            FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
-        } else {
-            if FileExist(_link) {
-                FileDelete, % _link
-                LogInfo("Auto Startup disabled")
-            }
-        }
-    } catch _error {
-        LogError(_error)
-    }
 }

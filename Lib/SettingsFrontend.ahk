@@ -36,8 +36,9 @@ ShowSettings() {
     ;               type,     [ coordinates options     vVARIABLE       gGOTO       Section      ], title
     Gui,    Tab,    1       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    CheckBox,                           vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
-    Gui,    Add,    CheckBox,   gToggleShowAlways       vShowAlways     checked%ShowAlways%,        Always &show Menu
+    Gui,    Add,    CheckBox,   Section                 vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
+    Gui,    Add,    CheckBox,   x+8 yp                  vDeleteDialogs,                             &del dialogs config
+    Gui,    Add,    CheckBox,   xs gToggleShowAlways    vShowAlways     checked%ShowAlways%,        Always &show Menu
     Gui,    Add,    CheckBox,                           vShowNoSwitch   checked%ShowNoSwitch%,      Show Menu if Menu options &disabled
     Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after &leaving settings
     Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
