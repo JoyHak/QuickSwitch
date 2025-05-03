@@ -27,9 +27,13 @@ FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "QuickSwitch"
-MainIcon   := ""
 INI        := ScriptName ".ini"
 ErrorsLog  := "Errors.log"
+MainIcon   := ""
+
+;@Ahk2Exe-IgnoreBegin
+MainIcon   := "QuickSwitch.ico"
+;@Ahk2Exe-IgnoreEnd
 
 #Include <Log>
 #Include <Debug>
@@ -50,17 +54,13 @@ ErrorsLog  := "Errors.log"
 
 InitLog()
 
-;@Ahk2Exe-IgnoreBegin
-MainIcon := "QuickSwitch.ico"
-ValidateTrayIcon("MainIcon", MainIcon)
-;@Ahk2Exe-IgnoreEnd
-
 SetDefaultValues()
 ReadValues()
 InitAutoStartup()
 
-ValidateKey("MainKey",    MainKey,    MainKeyHook,    "Off", "ShowMenu")
-ValidateKey("RestartKey", RestartKey, RestartKeyHook, "On",  "RestartApp")
+ValidateTrayIcon("MainIcon",    MainIcon)
+ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "ShowMenu")
+ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
