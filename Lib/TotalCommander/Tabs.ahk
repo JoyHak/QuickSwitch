@@ -28,9 +28,16 @@ ParseTotalTabs(ByRef tabsFile) {
             ; Remove duplicate and add the remaining tabs
             Paths.push(_paths.removeAt(_active + 1))
             Paths.push(_paths*)
-
-            try FileDelete, % tabsFile
-            return true
+            
+            try {
+                Loop, 10 {
+                    FileDelete, % tabsFile
+                    sleep 100
+                    if !FileExist(tabsFile)
+                        return
+                }
+            }
+            return
         }
         sleep, 20
     }
