@@ -199,7 +199,7 @@ ValidateColor(ByRef paramName, ByRef color) {
         Searches for a HEX number in any form, e.g. 0x, #, h
 
         If found, returns the string of the form "paramName=result",
-        otherwise returns empty string
+        otherwise returns "paramName= " (empty color)
     */
 
     if color {
