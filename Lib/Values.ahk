@@ -135,9 +135,11 @@ ReadValues() {
 ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On", ByRef funcName := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        Replaces chars / letters in sequence with
+        Replaces modifier names with
         standard modifiers ! ^ + #
-        and SC codes, e.g. Q -> sc10
+        
+        Replaces chars / letters in sequence with
+        scan codes, e.g. Q -> sc10
 
         If converted, returns the string of the form "paramName=result",
         otherwise returns empty string
