@@ -27,8 +27,8 @@ FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "QuickSwitch"
-INI        := ScriptName ".ini"
 ErrorsLog  := "Errors.log"
+INI        := ScriptName ".ini"
 MainIcon   := ""
 
 ;@Ahk2Exe-IgnoreBegin
