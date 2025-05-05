@@ -21,7 +21,7 @@ AddMenuOption(ByRef title, ByRef function, ByRef isToggle) {
 ;
 AddMenuPaths() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global PathNumbers, ShortPath, Paths
+    global PathNumbers, ShortPath, Paths, SelectMenuPath
 
     for _index, _path in Paths {
         _display := ""
@@ -33,7 +33,7 @@ AddMenuPaths() {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, % _display, SelectPath
+        Menu, ContextMenu, Insert,, % _display, % SelectMenuPath
     }
 }
 
@@ -72,7 +72,6 @@ ShowMenu() {
     }
 
     Menu ContextMenu, Color, % MenuColor
-    Menu ContextMenu, Show, 0, 100        ; Show new menu and halt the thread
-    ;try Menu ContextMenu, Delete          ; Hide after loosing focus
+    Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
 }
 

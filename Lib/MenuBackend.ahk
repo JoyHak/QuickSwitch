@@ -4,32 +4,28 @@ Dummy() {
     Return
 }
 
-SelectPath(_name := "", _position := 1) {
-    global
-
-    local _extra := ""
+SelectPath(_showMenu := false, _name := "", _position := 1) {
+    global DialogID, FileDialog, Paths
+    
+    _extra := ""
     loop, 3 {
         try {
             WinActivate % "ahk_id " DialogID
             if !WinActive("ahk_id " DialogID)
                 return
 
-            if !(FileDialog.call(Paths[_position]))
-                continue
+            if (FileDialog.call(Paths[_position]))                    
+                return _showMenu ? ShowMenu() : 0
 
-            if ((ShowAfterSelect && _name) || ShowAlways)
-                return ShowMenu()
-
-            return
-
-        } catch FeedError {
+        } catch _e {
             if (A_Index = 3)
-                _extra .= FileDialog.name ": " FeedError.what " " FeedError.message " " FeedError.extra
+                _extra .= _e.name ": " _e.what " " _e.message " " _e.extra
         }
     }
 
-    _extra .= " Timeout."
-    local _message := _name ? "Menu selection" : "Auto Switch"
+    _extra   .= " Timeout."
+    _message := _name ? "Menu selection" : "Auto Switch"
+    
     LogError(Exception("Failed to feed the file dialog", _message, _extra))
 }
 
@@ -40,9 +36,9 @@ IsMenuReady() {
     global
 
     return ( WinActive("ahk_id " DialogID)
-        && ( ((ShowNoSwitch || ShowAlways)
-            && (DialogAction = 0))
-            || (ShowAfterSettings && FromSettings) ) )
+        && ( ShowAlways
+         || (ShowNoSwitch && (DialogAction = 0))
+         || (ShowAfterSettings && FromSettings) ) )
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

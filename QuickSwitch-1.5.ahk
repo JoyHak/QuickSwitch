@@ -75,12 +75,14 @@ Loop {
             ; If there is any GUI left from previous calls...
             Gui, Destroy
 
-            WinGet,         Exe,        ProcessName,    ahk_id %DialogID%
-            WinGetTitle,    WinTitle,                   ahk_id %DialogID%
-            try ControlGet, EditId,     hwnd,, Edit1,   ahk_id %DialogID%
+            WinGet,          Exe,        ProcessName,    ahk_id %DialogID%
+            WinGetTitle,     WinTitle,                   ahk_id %DialogID%
+            try ControlGet,  EditId,     hwnd,, Edit1,   ahk_id %DialogID%
 
-            FingerPrint  := Exe "___" WinTitle
-            FileDialog   := FileDialog.bind(SendEnter, EditId)
+            FingerPrint   := Exe "___" WinTitle
+            FileDialog    := FileDialog.bind(SendEnter, EditId)
+            
+            SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways)
 
             ; Get current dialog settings or use default mode (AutoSwitch flag)
             ; Current settings override "Always AutoSwitch" mode (if they exist)
