@@ -1,16 +1,13 @@
 /*
-    This GUI uses global variables because they can be changed anywhere,
-    but it doesn't update / check / read values (from INI).
+    GUI updates global variables after user actions
+    and displays their values as checkboxes, options, etc.
 
-    All global variables are looked again each time and update the
-    corresponding options / checkboxes etc.
-
-    All entered/checked values are saved in the INI only when you click OK.
+    All values are saved to the INI only after clicking OK
 */
 
 ShowSettings() {
     global
-    
+
     ReadValues()
     FromSettings := true
 
@@ -112,12 +109,12 @@ ShowSettings() {
     ToggleShortPath()
 
     ; Get dialog position
-    local _winX, _winY, _pos := ""    
+    local _winX, _winY, _pos := ""
     WinGetPos, _winX, _winY,,, A
-    
-    if (_winX && _winY) 
+
+    if (_winX && _winY)
         _pos := " x" _winX " y" _winY + 100
-        
+
     Gui, Show, % "AutoSize" _pos, Settings
-        
+
 }

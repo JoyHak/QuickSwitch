@@ -26,7 +26,7 @@ ResetSettings() {
 }
 
 SaveSettings() {
-    ; Read current GUI (global) values
+    ; Write current GUI (global) values
     Gui, Submit
     WriteValues()
     ReadValues()
@@ -45,10 +45,10 @@ RestartApp() {
 
 DeleteDialogs() {
     global DeleteDialogs, INI
-    
+
     if !DeleteDialogs
         return
-    
+
     IniDelete, % INI, Dialogs
 }
 

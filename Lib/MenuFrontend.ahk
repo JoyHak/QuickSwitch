@@ -59,19 +59,16 @@ AddMenuOptions() {
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global Paths, SelectMenuPath, MenuColor
-    try Menu ContextMenu, Delete        ; Delete previous menu
+    try Menu ContextMenu, Delete     ; Delete previous menu
 
     if Paths.count() {
-        ; Add paths and options
         AddMenuPaths(Paths, SelectMenuPath)
         AddMenuOptions()
-
     } else {
-        ; Display warning
         AddMenuTitle("No available paths")
     }
 
     Menu ContextMenu, Color, % MenuColor
-    Menu ContextMenu, Show, 0, 100      ; Show new menu and halt the thread
+    Menu ContextMenu, Show, 0, 100   ; Show new menu and halt the thread
 }
 
