@@ -95,11 +95,12 @@ GetShortPath(ByRef path) {
         if ((_index != _size) && (_length <= DirNameLength))
             _shortPath .= ShortNameIndicator
 
+        return _shortPath
+
     } catch _error {
         LogError(_error)
-        return path
     }
-    return _shortPath
+    return path
 }
 
 
