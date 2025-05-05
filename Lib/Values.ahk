@@ -236,16 +236,14 @@ ValidateTrayIcon(ByRef paramName, ByRef icon) {
         otherwise returns empty string
     */
 
-    if !icon
-        return ""
-
-    if !FileExist(icon) {
+    if icon {
+        if FileExist(icon) {    
+            Menu, Tray, Icon, % icon
+            return paramName "=" icon "`n"
+        }
         LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
-        return ""
     }
-
-    Menu, Tray, Icon, % icon
-    return paramName "=" icon "`n"
+    return ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
