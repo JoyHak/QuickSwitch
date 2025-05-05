@@ -210,9 +210,9 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
             Loop, parse, sequence
             {
                 if (!(A_LoopField ~= "[\!\^\+\#<>]")
-                    && _scCode := GetKeySC(A_LoopField)) {
+                    && _code := GetKeySC(A_LoopField)) {
                     ; Not a modifier, found scancode
-                    _key .= Format("sc{:x}", _scCode)
+                    _key .= Format("sc{:x}", _code)
                 } else {
                     ; Don't change
                     _key .= A_LoopField
