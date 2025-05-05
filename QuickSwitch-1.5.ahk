@@ -110,16 +110,7 @@ Loop {
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false
         IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
-
-        ; Clean up
-        DialogAction := ""
-        FingerPrint  := ""
     }
-    Exe       := ""
-    WinTitle  := ""
-    DialogID  := ""
-    EditId    := ""
-
 }   ; End of continuous WinWaitActive loop
 
 LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
