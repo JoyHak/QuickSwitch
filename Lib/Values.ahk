@@ -118,10 +118,10 @@ ReadValues() {
 
     if !FileExist(INI)
         return
-    
+
     local _values, _array, _variable, _value
     IniRead, _values, % INI, Global
-    
+
     Loop, Parse, % _values, `n
     {
           _array       :=  StrSplit(A_LoopField, "=")
@@ -133,12 +133,66 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+ValidateTrayIcon(ByRef paramName, ByRef icon) {
+;─────────────────────────────────────────────────────────────────────────────
+    /*
+        If the file exists, changes the tray icon
+        and returns a string of the form "paramName=result",
+        otherwise returns empty string
+    */
+
+    if icon {
+        if FileExist(icon) {
+            Menu, Tray, Icon, % icon
+            return paramName "=" icon "`n"
+        }
+        LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
+    }
+    return ""
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateColor(ByRef paramName, ByRef color) {
+;─────────────────────────────────────────────────────────────────────────────
+    /*
+        Searches for a HEX number in any form, e.g. 0x, #, h
+
+        If found, returns the string of the form "paramName=result",
+        otherwise returns "paramName= " (empty color)
+    */
+
+    if color {
+        if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
+            return paramName . "=" . SubStr(color, _matchPos) . "`n"
+        }
+        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+    }
+
+    return paramName "=" A_Space "`n"
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateString(ByRef paramName, ByRef string) {
+;─────────────────────────────────────────────────────────────────────────────
+    /*
+        Converts input value to string
+
+        If not empty, returns the string of the form "paramName=result",
+        otherwise returns empty string
+    */
+    return string ? paramName . "=" . Format("{}", string) . "`n" : ""
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On", ByRef funcName := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Replaces modifier names with
         standard modifiers ! ^ + #
-        
+
         Replaces chars / letters in sequence with
         scan codes, e.g. Q -> sc10
 
@@ -188,60 +242,6 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
 
     } catch _error {
         LogError(_error)
-    }
-    return ""
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateColor(ByRef paramName, ByRef color) {
-;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Searches for a HEX number in any form, e.g. 0x, #, h
-
-        If found, returns the string of the form "paramName=result",
-        otherwise returns "paramName= " (empty color)
-    */
-
-    if color {
-        if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
-            return paramName . "=" . SubStr(color, _matchPos) . "`n"
-        }
-        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
-    }
-    
-    return paramName "=" A_Space "`n"
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateString(ByRef paramName, ByRef string) {
-;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Converts input value to string
-
-        If not empty, returns the string of the form "paramName=result",
-        otherwise returns empty string
-    */
-    return string ? paramName . "=" . Format("{}", string) . "`n" : ""
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateTrayIcon(ByRef paramName, ByRef icon) {
-;─────────────────────────────────────────────────────────────────────────────
-    /*
-        If the file exists, changes the tray icon
-        and returns a string of the form "paramName=result",
-        otherwise returns empty string
-    */
-
-    if icon {
-        if FileExist(icon) {    
-            Menu, Tray, Icon, % icon
-            return paramName "=" icon "`n"
-        }
-        LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
     }
     return ""
 }
