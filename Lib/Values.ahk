@@ -124,10 +124,10 @@ ReadValues() {
 
     Loop, Parse, % _values, `n
     {
-          _array       :=  StrSplit(A_LoopField, "=")
-          _variable    :=  _array[1]
-          _value       :=  _array[2]
-          %_variable%  :=  _value
+        _array      := StrSplit(A_LoopField, "=")
+        _variable   := _array[1]
+        _value      := _array[2]
+        %_variable% := _value
     }
 }
 
