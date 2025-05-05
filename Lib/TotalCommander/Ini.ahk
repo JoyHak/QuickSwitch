@@ -10,14 +10,14 @@
 
 GetTotalConsoleIni(ByRef totalPid) {
     ; Searches the ini through the console, throws readable error
-    
+
     global ScriptName
-    if (IsProcessElevated(totalPid) && !A_IsAdmin)
+    if (!A_IsAdmin && IsProcessElevated(totalPid))
         throw Exception("Unable to open TotalCmd console"
                         , "admin permission"
                         , "`nRun " ScriptName " as admin / with UI access or run TC as not admin.`n"
                         . "This will allow " ScriptName " to get the exact configuration directly from TC console.`n")
-    
+
     ; Save clipboard to restore later
     _clipSaved := ClipboardAll
     Clipboard  := ""
@@ -25,7 +25,7 @@ GetTotalConsoleIni(ByRef totalPid) {
     ; Create new console process and get its PID
     SendTotalMessage(totalPid, 511)
     _consolePid := GetTotalConsolePid(totalPid)
-    
+
     ; Send command to the console
     static COMMAND   :=  "echo `%commander_ini`%"
     static INI_PATH  :=  A_Temp "\ini_path.txt"
@@ -36,8 +36,8 @@ GetTotalConsoleIni(ByRef totalPid) {
 
     ClipWait, 5
     _clip     := Clipboard
-    Clipboard := _clipSaved    
-    try Process, Close, % _consolePid    
+    Clipboard := _clipSaved
+    try Process, Close, % _consolePid
 
     ; Parse the result
     _log := "TotalCmd PID: " totalPid " Console PID: " _consolePid
@@ -126,11 +126,11 @@ UseIniInProgramDir(ByRef ini) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; This flag affects the choice of configuration: from the registry or from the TC directory
     ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
-    
+
     _flag := 0
     IniRead, _flag, % ini, Configuration, UseIniInProgramDir, 0
     LogInfo("Config: UseIniInProgramDir=" _flag, "NoTraytip")
-    
+
     return (_flag & 4)
 }
 
@@ -143,38 +143,38 @@ GetTotalPathIni(ByRef totalPid) {
 
     ; Remove exe name
     _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12))
-    
+
     _ini := ""
     Loop, Files, % _winPath "wincmd.ini", R
     {
         _ini := A_LoopFileLongPath
         break
     }
-    
+
     ; Search in TC directory and in registry and make decisions
     _reg := GetTotalRegistryIni()
 
     if _ini {
         LogInfo("Found config in TotalCmd directory", "NoTraytip")
-        
+
         if UseIniInProgramDir(_ini)
-            return _ini       
-        
+            return _ini
+
         if _reg {
-            LogInfo("Found config in registry", "NoTraytip")            
-            
+            LogInfo("Found config in registry", "NoTraytip")
+
             if UseIniInProgramDir(_reg) {
                 LogInfo("Ignored registry config key", "NoTraytip")
                 return _ini
-            }          
-            
+            }
+
             return _reg
-        }  
-        
+        }
+
         LogInfo("Registry config key is empty", "NoTraytip")
         return _ini
     }
-    
+
     if _reg {
         LogInfo("Сonfig not found in TotalCmd directory but found in registry", "NoTraytip")
         return _reg
