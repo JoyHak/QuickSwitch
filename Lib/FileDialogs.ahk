@@ -82,51 +82,46 @@ GetFileDialog(ByRef dialogId) {
         if required controls found, otherwise returns "false"
     */
 
-    try {
-        try ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
-        if _buttonId {
-            ; Dialog with buttons
-            ; Get specific controls
-            WinGet, _controlList, ControlList, ahk_id %dialogId%
+    try ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
+    if _buttonId {
+        ; Dialog with buttons
+        ; Get specific controls
+        WinGet, _controlList, ControlList, ahk_id %dialogId%
 
-            ; Search for...
-            static classes := {Edit1: 0x1, SysListView321: 0x2, SysTreeView321: 0x4, SysHeader321: 0x8, ToolbarWindow321: 0x10, DirectUIHWND1: 0x20}
+        ; Search for...
+        static classes := {Edit1: 0x1, SysListView321: 0x2, SysTreeView321: 0x4, SysHeader321: 0x8, ToolbarWindow321: 0x10, DirectUIHWND1: 0x20}
 
-            ; Find controls and set bitwise flag
-            _f := 0
-            Loop, Parse, _controlList, `n
-            {
-                if (_class := classes[A_LoopField])
-                    _f |= _class
-            }
-
-            ; Check specific controls
-            if (_f & 0x1) {
-                if (_f & 0x10 && _f & 0x20) {
-                    sleep 200
-                    return Func("FeedDialogGENERAL")
-                }
-
-                if (_f & 0x2) {
-                    if (_f & 0x8) {
-                        if (_f & 0x10) {
-                            return Func("FeedDialogSYSTREEVIEW")
-                        }
-                        return Func("FeedDialogSYSLISTVIEW")
-                    }
-                    if (_f & 0x10) {
-                        return Func("FeedDialogSYSLISTVIEW")
-                    }
-                }
-
-                if (_f & 0x4) {
-                    return Func("FeedDialogSYSTREEVIEW")
-                }
-            }
+        ; Find controls and set bitwise flag
+        _f := 0
+        Loop, Parse, _controlList, `n
+        {
+            if (_class := classes[A_LoopField])
+                _f |= _class
         }
 
-    } catch _error {
-        LogError(_error)
+        ; Check specific controls
+        if (_f & 0x1) {
+            if (_f & 0x10 && _f & 0x20) {
+                sleep 200
+                return Func("FeedDialogGENERAL")
+            }
+
+            if (_f & 0x2) {
+                if (_f & 0x8) {
+                    if (_f & 0x10) {
+                        return Func("FeedDialogSYSTREEVIEW")
+                    }
+                    return Func("FeedDialogSYSLISTVIEW")
+                }
+                if (_f & 0x10) {
+                    return Func("FeedDialogSYSLISTVIEW")
+                }
+            }
+
+            if (_f & 0x4) {
+                return Func("FeedDialogSYSTREEVIEW")
+            }
+        }
     }
     return false
 }
