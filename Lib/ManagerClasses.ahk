@@ -27,26 +27,8 @@ CabinetWClass(ByRef winId) {
                 }
             }
         }
-
-    } catch _e {
-        _msg := _e.message
-        if InStr(_msg, "0x") {
-            _message := SubStr(_msg, 1, InStr(_msg, "`n") - 1) 
-
-            if MsgWarn("
-                (LTrim
-                    System error occurred while retrieving Explorer paths: " _message "
-
-                    Restart all Explorer instances to fix?
-                )") {
-                CloseProcess("explorer.exe")
-                Run ::{20D04FE0-3AEA-1069-A2D8-08002B30309D}
-                return
-            }
-        }
-
-        LogError(_e)
-    }
+        _win := ""
+    } 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
