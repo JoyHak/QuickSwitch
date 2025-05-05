@@ -223,11 +223,7 @@ ValidateString(ByRef paramName, ByRef string) {
         If not empty, returns the string of the form "paramName=result",
         otherwise returns empty string
     */
-
-    if !string
-        return ""
-
-    return paramName . "=" . Format("{}", string) . "`n"
+    return string ? paramName . "=" . Format("{}", string) . "`n" : ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
