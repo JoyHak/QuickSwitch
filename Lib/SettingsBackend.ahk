@@ -46,10 +46,9 @@ RestartApp() {
 DeleteDialogs() {
     global DeleteDialogs, INI
 
-    if !DeleteDialogs
-        return
-
-    IniDelete, % INI, Dialogs
+    if DeleteDialogs {
+        IniDelete, % INI, Dialogs
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
