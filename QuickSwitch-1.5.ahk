@@ -29,11 +29,6 @@ SetWorkingDir %A_ScriptDir%
 ScriptName := "QuickSwitch"
 INI        := ScriptName ".ini"
 ErrorsLog  := "Errors.log"
-MainIcon   := ""
-
-;@Ahk2Exe-IgnoreBegin
-MainIcon   := "QuickSwitch.ico"
-;@Ahk2Exe-IgnoreEnd
 
 #Include <Log>
 #Include <Debug>

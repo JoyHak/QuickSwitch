@@ -54,6 +54,11 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
+    MainIcon       := ""
+
+    ;@Ahk2Exe-IgnoreBegin
+    MainIcon := "QuickSwitch.ico"
+    ;@Ahk2Exe-IgnoreEnd
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
