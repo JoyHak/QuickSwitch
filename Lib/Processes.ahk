@@ -8,12 +8,13 @@ GetProcessProperty(ByRef property := "name", ByRef rules := "") {
     ; https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-process?redirectedfrom=MSDN
 
 
-    for _process in ComObjGet("winmgmts:").ExecQuery("select * from Win32_Process where " rules) {
+    for _process in ComObjGet("winmgmts:").ExecQuery("select * from Win32_Process where " _rules) {
         try {
-            return _process[property]
+            return _process[_property]
         } catch _e {
-            _extra := Format("Property: {} Rules: {}  Details: {}" property, rules,  _e.what " " _e.message " " _e.extra)
-            throw Exception(_process.name " cant return property", "process property",  _extra)
+            _extra := Format("Property: {} Rules: {} " _property, _rules)
+            _extra .= "Details: " _e.what " " _e.message " " _e.extra
+            throw Exception(_process.name " cant return property", "process property", _extra)
         }
     }
 }

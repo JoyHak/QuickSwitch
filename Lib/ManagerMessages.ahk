@@ -14,7 +14,9 @@ SendXyplorerScript(ByRef winId, ByRef script) {
         ; WM_COPYDATA without recieve
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
     } catch _e {
-        throw Exception("Unable to send the script", "Xyplorer script", "HWND: " winId "Details: " _e.what " " _e.message " " _e.extra)
+        _extra := Format("HWND: {} Size: {} " winId, _size)
+        _extra .= "Details: " _e.what " " _e.message " " _e.extra
+        throw Exception("Unable to send the script", "Xyplorer script", _extra)
     }
 }
 
@@ -35,33 +37,37 @@ SendTotalCommand(ByRef winId, ByRef command) {
         ; WM_COPYDATA without recieve
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
     } catch _e {
-        throw Exception("Unable to execute user command", "TotalCmd command", "HWND: " winId "Details: " _e.what " " _e.message " " _e.extra)
+        _extra := Format("HWND: {} Command: {} " winId, command)
+        _extra .= "Details: " _e.what " " _e.message " " _e.extra
+        throw Exception("Unable to execute user command", "TotalCmd command", _extra)
     }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SendTotalMessage(ByRef winPid, ByRef command) {
+SendTotalMessage(ByRef winPid, _command) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Commands can be found in totalcmd.inc
     try {
-        SendMessage 1075, % command, 0, , % "ahk_pid " winPid
+        SendMessage 1075, % _command, 0, , % "ahk_pid " winPid
     } catch _e {
-        _extra := Format("HWND: {} Command: {}  Details: {}" winPid, command, _e.what " " _e.message " " _e.extra)
-        throw Exception("Unable to send internal command", "TotalCmd command",  _extra)
+        _extra := Format("HWND: {} Command: {} " winPid, _command)
+        _extra .= "Details: " _e.what " " _e.message " " _e.extra
+        throw Exception("Unable to send internal command", "TotalCmd command", _extra)
     }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SendConsoleCommand(ByRef consolePid, ByRef command) {
+SendConsoleCommand(ByRef consolePid, _command) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send command to external cmd.exe
     try {
         ControlSend,, % "{Text}" command "`n", % "ahk_pid " consolePid
-        LogInfo("Executed console command: " command, "NoTraytip")
+        LogInfo("Executed console command: " _command, "NoTraytip")
     } catch _e {
-        _extra := Format("PID: {} Command: {}  Details: {}" consolePid, command, _e.what " " _e.message " " _e.extra)
-        throw Exception("Unable to send console command", "console",  _extra)
+        _extra := Format("HWND: {} Command: {} " consolePid, _command)
+        _extra .= "Details: " _e.what " " _e.message " " _e.extra
+        throw Exception("Unable to send console command", "console", _extra)
     }
 }
