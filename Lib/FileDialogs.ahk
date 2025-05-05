@@ -19,6 +19,10 @@ FeedControl(ByRef id, ByRef path, ByRef attempts := 10) {
     return false
 }
 
+FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path) {
+    return FeedDialogSYSTREEVIEW("ForceEnter", editId, path)
+}
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
@@ -63,15 +67,6 @@ FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 
     return FeedDialogSYSTREEVIEW(sendEnter, editId, path)
 }
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Always send {Enter}
-    return FeedDialogSYSTREEVIEW("ForceEnter", editId, path)
-}
-
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
