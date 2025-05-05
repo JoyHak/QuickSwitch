@@ -4,7 +4,7 @@
 #Include Create.ahk
 #Include Tabs.ahk
 
-GetTotalPaths(ByRef winId) {
+GetTotalPaths(ByRef winId, ByRef array) {
     /*
         Requests tabs file.
 
@@ -18,7 +18,7 @@ GetTotalPaths(ByRef winId) {
 
     try {
         SendTotalCommand(winId, USER_COMMAND)
-        ParseTotalTabs(TABS_FILE)
+        ParseTotalTabs(TABS_FILE, array)
     } catch {
         try {
             LogInfo("Required to create TotalCmd command: " USER_COMMAND, true)
@@ -27,7 +27,7 @@ GetTotalPaths(ByRef winId) {
             CreateTotalUserCommand(_userIni, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
 
             SendTotalCommand(winId, USER_COMMAND)
-            ParseTotalTabs(TABS_FILE)
+            ParseTotalTabs(TABS_FILE, array)
 
         } catch _error {
             LogError(_error)

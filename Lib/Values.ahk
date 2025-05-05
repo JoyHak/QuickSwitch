@@ -14,7 +14,6 @@ SaveDialogAction  :=  false
 FromSettings      :=  false
 NukeSettings      :=  false
 LastTabSettings   :=  1
-Paths             := []
 
 SetDefaultValues() {
     /*

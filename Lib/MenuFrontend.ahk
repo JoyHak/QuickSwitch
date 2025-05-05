@@ -19,11 +19,11 @@ AddMenuOption(ByRef title, ByRef function, ByRef isToggle) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-AddMenuPaths() {
+AddMenuPaths(ByRef array, _function) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global PathNumbers, ShortPath, Paths, SelectMenuPath
+    global PathNumbers, ShortPath
 
-    for _index, _path in Paths {
+    for _index, _path in array {
         _display := ""
 
         if PathNumbers
@@ -33,7 +33,7 @@ AddMenuPaths() {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, % _display, % SelectMenuPath
+        Menu, ContextMenu, Insert,, % _display, % _function
     }
 }
 
@@ -58,12 +58,12 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global Paths, MenuColor
+    global Paths, SelectMenuPath, MenuColor
     try Menu ContextMenu, Delete        ; Delete previous menu
 
     if Paths.count() {
         ; Add paths and options
-        AddMenuPaths()
+        AddMenuPaths(Paths, SelectMenuPath)
         AddMenuOptions()
 
     } else {

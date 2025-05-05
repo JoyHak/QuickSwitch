@@ -1,14 +1,6 @@
-GetPaths() {
-    /*
-        Requests paths from all applications whose window class
-        is recognized as a known file manager class (in Z-order).
-        Updates the global array after each call
-    */
-    global Paths := []
-
-    ; Prepare AutoSwitch
-    global DialogAction
-    _autoSwitch := (DialogAction = 1) ? true : false
+GetPaths(ByRef array, _autoSwitch := false) {
+    ; Requests paths from all applications whose window class
+    ; is recognized as a known file manager class (in Z-order).
 
     ; Get manager hwnds
     WinGet, _winIdList, list, ahk_group ManagerClasses
@@ -31,9 +23,9 @@ GetPaths() {
                 ; Function name without dot .
                 _winClass := "Dopus"
         }
-        Func(_winClass).call(_winId)
+        Func(_winClass).call(_winId, array)
 
-        if (_autoSwitch && Paths[1]) {
+        if (_autoSwitch && array[1]) {
             _autoSwitch := false
             SelectPath()
         }

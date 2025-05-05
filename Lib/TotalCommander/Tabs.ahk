@@ -1,7 +1,6 @@
-ParseTotalTabs(ByRef tabsFile) {
+ParseTotalTabs(ByRef tabsFile, ByRef array) {
     ; Parses tabsFile.
     ; Searches for the active tab using the "activetab" parameter
-    global Paths
 
     loop, 150 {
         if FileExist(tabsFile) {
@@ -26,8 +25,8 @@ ParseTotalTabs(ByRef tabsFile) {
 
             ; Push the active tab to the global array first
             ; Remove duplicate and add the remaining tabs
-            Paths.push(_paths.removeAt(_active + 1))
-            Paths.push(_paths*)
+            array.push(_paths.removeAt(_active + 1))
+            array.push(_paths*)
             
             try {
                 Loop, 10 {

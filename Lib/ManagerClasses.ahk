@@ -1,6 +1,6 @@
 /*
     Contains getters whose names correspond to classes of known file managers.
-    All functions add values to the global "Paths" array.
+    All functions add values to the array by reference.
     "winId" param must be existing window uniq ID (window handle / HWND)
 */
 
@@ -10,33 +10,31 @@ GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
 
 
-TTOTAL_CMD(ByRef winId) {
-    GetTotalPaths(winId)
+TTOTAL_CMD(ByRef winId, ByRef array) {
+    return GetTotalPaths(winId, array)
 }
 
-CabinetWClass(ByRef winId) {
+CabinetWClass(ByRef winId, ByRef array) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
-    global Paths
 
     try {
         for _win in ComObjCreate("Shell.Application").windows {
             if (winId = _win.hwnd) {
                 _path := _win.document.folder.self.path
                 if !InStr(_path, "::{") {
-                    Paths.push(_path)
+                    array.push(_path)
                 }
             }
         }
         _win := ""
-    } 
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ThunderRT6FormDC(ByRef winId) {
+ThunderRT6FormDC(ByRef winId, ByRef array) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
-    global Paths
 
     try {
         ; Save clipboard to restore later
@@ -65,7 +63,7 @@ ThunderRT6FormDC(ByRef winId) {
 
         if _clip {
             Loop, parse, _clip, `|
-                Paths.push(A_LoopField)
+                array.push(A_LoopField)
         }
 
     } catch _error {
@@ -75,11 +73,10 @@ ThunderRT6FormDC(ByRef winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-Dopus(ByRef winId) {
+Dopus(ByRef winId, ByRef array) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions.
     ; Searches for active tab using DOpus window title
-    global Paths
 
     try {
         WinGetTitle, _title, ahk_id %winId%
@@ -118,8 +115,8 @@ Dopus(ByRef winId) {
 
         ; Push the active tab to the global array first
         ; Remove duplicate and add the remaining tabs
-        Paths.push(_paths.removeAt(_active))
-        Paths.push(_paths*)
+        array.push(_paths.removeAt(_active))
+        array.push(_paths*)
 
     } catch _error {
         LogError(_error)
