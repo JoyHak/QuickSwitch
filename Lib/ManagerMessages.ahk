@@ -63,7 +63,7 @@ SendConsoleCommand(ByRef consolePid, _command) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send command to external cmd.exe
     try {
-        ControlSend,, % "{Text}" command "`n", % "ahk_pid " consolePid
+        ControlSend,, % "{Text}" _command "`n", % "ahk_pid " consolePid
         LogInfo("Executed console command: " _command, "NoTraytip")
     } catch _e {
         _extra := Format("HWND: {} Command: {} " consolePid, _command)

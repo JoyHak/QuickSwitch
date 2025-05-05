@@ -122,7 +122,7 @@ ReadValues() {
     local _values, _array, _variable, _value
     IniRead, _values, % INI, Global
 
-    Loop, Parse, % _values, `n
+    Loop, Parse, _values, `n
     {
         _array      := StrSplit(A_LoopField, "=")
         _variable   := _array[1]
@@ -133,7 +133,7 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateTrayIcon(ByRef paramName, ByRef icon) {
+ValidateTrayIcon(_paramName, ByRef icon) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         If the file exists, changes the tray icon
@@ -144,7 +144,7 @@ ValidateTrayIcon(ByRef paramName, ByRef icon) {
     if icon {
         if FileExist(icon) {
             Menu, Tray, Icon, % icon
-            return paramName "=" icon "`n"
+            return _paramName "=" icon "`n"
         }
         LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
     }
@@ -153,7 +153,7 @@ ValidateTrayIcon(ByRef paramName, ByRef icon) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateColor(ByRef paramName, ByRef color) {
+ValidateColor(_paramName, ByRef color) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Searches for a HEX number in any form, e.g. 0x, #, h
@@ -164,17 +164,17 @@ ValidateColor(ByRef paramName, ByRef color) {
 
     if color {
         if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
-            return paramName . "=" . SubStr(color, _matchPos) . "`n"
+            return _paramName . "=" . SubStr(color, _matchPos) . "`n"
         }
-        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", paramName))
+        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", _paramName))
     }
 
-    return paramName "=" A_Space "`n"
+    return _paramName "=" A_Space "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateString(ByRef paramName, ByRef string) {
+ValidateString(_paramName, ByRef string) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Converts input value to string
@@ -182,12 +182,12 @@ ValidateString(ByRef paramName, ByRef string) {
         If not empty, returns the string of the form "paramName=result",
         otherwise returns empty string
     */
-    return string ? paramName . "=" . Format("{}", string) . "`n" : ""
+    return string ? _paramName . "=" . Format("{}", string) . "`n" : ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On", ByRef funcName := "") {
+ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Replaces modifier names with
@@ -202,12 +202,12 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
     global INI
 
     try {
-        if (sequence ~= "i)sc[a-f0-9]+") {
-            _key := sequence
+        if (_sequence ~= "i)sc[a-f0-9]+") {
+            _key := _sequence
         } else {
             ; Convert sequence to Scan Codes (if not converted)
             _key := ""
-            Loop, parse, sequence
+            Loop, parse, _sequence
             {
                 if (!(A_LoopField ~= "[\!\^\+\#<>]")
                     && _code := GetKeySC(A_LoopField)) {
@@ -220,14 +220,14 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
             }
         }
 
-        _prefix := useHook ? "" : "~"
-        if funcName {
+        _prefix := _isHook ? "" : "~"
+        if _function {
             ; Register new hotkey
-            Hotkey, % _prefix . _key, % funcName, % state
+            Hotkey, % _prefix . _key, % _function, % _state
 
             try {
                 ; Remove old if exist
-                IniRead, _old, % INI, Global, % paramName, % _key
+                IniRead, _old, % INI, Global, % _paramName, % _key
                 if (_old != _key) {
                     Hotkey, % "~" . _old, Off
                     Hotkey, % _old, Off
@@ -236,9 +236,9 @@ ValidateKey(ByRef paramName, ByRef sequence, ByRef useHook, ByRef state := "On",
 
         } else {
             ; Set state for existing hotkey
-            Hotkey, % _prefix . _key, % state
+            Hotkey, % _prefix . _key, % _state
         }
-        return paramName "=" _key "`n"
+        return _paramName "=" _key "`n"
 
     } catch _error {
         LogError(_error)

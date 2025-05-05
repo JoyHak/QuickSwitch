@@ -4,13 +4,13 @@
     "ErrorsLog" param must be a path to a write-accessible file (with any extension)
     Library must be imported first!
  */
- 
-MsgWarn(ByRef message) {
+
+MsgWarn(_text) {
     ; Yes/No, Warn icon, default is "No", always on top without title bar
-    MsgBox, % (4 + 48 + + 256 + 262144), , % message
+    MsgBox, % (4 + 48 + + 256 + 262144), , % _text
     IfMsgBox Yes
         return true
-    
+
     return false
 }
 
@@ -39,17 +39,16 @@ LogError(_error) {
     FileAppend, % _date "    [" _stack _what "]    " _msg "    " _error.Extra "`n", % ErrorsLog
 
     TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
-    Return true
 }
 
-LogInfo(ByRef msg, _silent := false) {
+LogInfo(_text, _silent := false) {
     global ErrorsLog, ScriptName
 
     FormatTime, _date,, dd.MM hh:mm:ss
-    FileAppend, % _date "    " msg "`n", % ErrorsLog
+    FileAppend, % _date "    " _text "`n", % ErrorsLog
 
     if !_silent
-        TrayTip, % ScriptName " log", % msg
+        TrayTip, % ScriptName " log", % _text
 }
 
 LogHeader() {

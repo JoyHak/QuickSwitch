@@ -1,6 +1,6 @@
 ; Contains functions for interacting with processes and their windows
 
-GetProcessProperty(ByRef property := "name", ByRef rules := "") {
+GetProcessProperty(_property := "name", _rules := "") {
     ; Gets the process property using "winmgmts".
     ; "rules" param must be a string "property=value [optional: AND, OR...]"
 
@@ -53,13 +53,13 @@ CloseChildWindows(ByRef winId, ByRef winPid) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-CloseProcess(ByRef name) {
+CloseProcess(_name) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Closes the process tree with the specified name
 
     Loop, 100 {
-        Process, Close, % name
-        Process, Exist, % name
+        Process, Close, % _name
+        Process, Exist, % _name
     } Until !ErrorLevel
 }
 

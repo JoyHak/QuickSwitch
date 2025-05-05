@@ -4,16 +4,16 @@
     which allows menu to display anything (e.g. short path)
 */
 
-AddMenuTitle(ByRef title) {
-    Menu ContextMenu, Add, % title, Dummy
-    Menu ContextMenu, Disable, % title
+AddMenuTitle(_title) {
+    Menu ContextMenu, Add, % _title, Dummy
+    Menu ContextMenu, Disable, % _title
 }
 
-AddMenuOption(ByRef title, ByRef function, ByRef isToggle) {
-    Menu ContextMenu, Add, % title, % function, Radio
+AddMenuOption(_title, _function, _isToggle := false) {
+    Menu ContextMenu, Add, % _title, % _function, Radio
 
-    if isToggle
-        Menu ContextMenu, Check, % title
+    if _isToggle
+        Menu ContextMenu, Check, % _title
 
 }
 

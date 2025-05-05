@@ -7,8 +7,8 @@
     "path"   param must be a string valid for any dialog
 */
 
-FeedControl(ByRef id, ByRef path, ByRef attempts := 10) {
-    Loop, % attempts {
+FeedControl(ByRef id, ByRef path, _attempts := 10) {
+    Loop, % _attempts {
         ControlFocus,, ahk_id %id%
         ControlSetText,, % path, ahk_id %id%   ; set
         ControlGetText, _path,,  ahk_id %id%   ; check
