@@ -70,21 +70,23 @@ FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetFileDialog(ByRef dialogId) {
+GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Gets all dialog controls and returns FuncObj for this dialog
-        if required controls found, otherwise returns "false"
-    */
+    ; Gets all dialog controls and returns FuncObj for this dialog
+    ; if required controls found, otherwise returns "false"
 
-    try ControlGet, _buttonId, hwnd,, Button1, ahk_id %dialogId%
-    if _buttonId {
+    try {
+        ControlGet, buttonId, hwnd,, Button1, ahk_id %dialogId%
+        ControlGet, editId,   hwnd,, Edit1,   ahk_id %dialogId%
+    }
+
+    if buttonId && editId {
         ; Dialog with buttons
         ; Get specific controls
         WinGet, _controlList, ControlList, ahk_id %dialogId%
 
         ; Search for...
-        static classes := {Edit1: 0x1, SysListView321: 0x2, SysTreeView321: 0x4, SysHeader321: 0x8, ToolbarWindow321: 0x10, DirectUIHWND1: 0x20}
+        static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16}
 
         ; Find controls and set bitwise flag
         _f := 0
@@ -95,27 +97,25 @@ GetFileDialog(ByRef dialogId) {
         }
 
         ; Check specific controls
-        if (_f & 0x1) {
-            if (_f & 0x10 && _f & 0x20) {
-                sleep 200
-                return Func("FeedDialogGENERAL")
-            }
+        if (_f & 8 && _f & 16) {
+            sleep 200
+            return Func("FeedDialogGENERAL")
+        }
 
-            if (_f & 0x2) {
-                if (_f & 0x8) {
-                    if (_f & 0x10) {
-                        return Func("FeedDialogSYSTREEVIEW")
-                    }
-                    return Func("FeedDialogSYSLISTVIEW")
+        if (_f & 1) {
+            if (_f & 4) {
+                if (_f & 8) {
+                    return Func("FeedDialogSYSTREEVIEW")
                 }
-                if (_f & 0x10) {
-                    return Func("FeedDialogSYSLISTVIEW")
-                }
+                return Func("FeedDialogSYSLISTVIEW")
             }
+            if (_f & 8) {
+                return Func("FeedDialogSYSLISTVIEW")
+            }
+        }
 
-            if (_f & 0x4) {
-                return Func("FeedDialogSYSTREEVIEW")
-            }
+        if (_f & 2) {
+            return Func("FeedDialogSYSTREEVIEW")
         }
     }
     return false

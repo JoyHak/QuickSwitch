@@ -1,5 +1,4 @@
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\beta 1.5.1\%A_ScriptName~\.ahk%-x64.exe
 
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 ;@Ahk2Exe-SetMainIcon QuickSwitch.ico
@@ -9,7 +8,7 @@
 ;@Ahk2Exe-SetCompanyName ToYu studio
 
 ;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
-;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
+;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\beta 1.5.1\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
 
 #Requires AutoHotkey v1.1+
 #Warn
@@ -62,17 +61,16 @@ Loop {
     WinWaitActive, ahk_class #32770
 
     try {
-        DialogID   := WinActive("A")
-        FileDialog := GetFileDialog(DialogID)
+        DialogId   := WinActive("A")
+        FileDialog := GetFileDialog(DialogId, EditId)
 
         if FileDialog {
             ; This is a supported dialog
             ; If there is any GUI left from previous calls...
             Gui, Destroy
 
-            WinGet,          Exe,        ProcessName,    ahk_id %DialogID%
-            WinGetTitle,     WinTitle,                   ahk_id %DialogID%
-            try ControlGet,  EditId,     hwnd,, Edit1,   ahk_id %DialogID%
+            WinGet,          Exe,        ProcessName,    ahk_id %DialogId%
+            WinGetTitle,     WinTitle,                   ahk_id %DialogId%
 
             FingerPrint   := Exe "___" WinTitle
             FileDialog    := FileDialog.bind(SendEnter, EditId)

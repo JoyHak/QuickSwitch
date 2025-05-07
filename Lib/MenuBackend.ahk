@@ -5,13 +5,13 @@ Dummy() {
 }
 
 SelectPath(_showMenu := false, _name := "", _position := 1) {
-    global DialogID, FileDialog, Paths
+    global DialogId, FileDialog, Paths
     
     _extra := ""
     loop, 3 {
         try {
-            WinActivate % "ahk_id " DialogID
-            if !WinActive("ahk_id " DialogID)
+            WinActivate % "ahk_id " DialogId
+            if !WinActive("ahk_id " DialogId)
                 return
 
             if (FileDialog.call(Paths[_position]))                    
@@ -19,7 +19,7 @@ SelectPath(_showMenu := false, _name := "", _position := 1) {
 
         } catch _e {
             if (A_Index = 3)
-                _extra .= _e.name ": " _e.what " " _e.message " " _e.extra
+                _extra .= FileDialog.name ": " _e.what " " _e.message " " _e.extra
         }
     }
 
@@ -35,7 +35,7 @@ IsMenuReady() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
 
-    return ( WinActive("ahk_id " DialogID)
+    return ( WinActive("ahk_id " DialogId)
         && ( ShowAlways
          || (ShowNoSwitch && (DialogAction = 0))
          || (ShowAfterSettings && FromSettings) ) )
