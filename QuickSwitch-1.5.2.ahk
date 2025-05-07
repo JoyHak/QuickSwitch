@@ -10,7 +10,7 @@
 ;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
 ;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\beta 1.5.1\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
 
-#Requires AutoHotkey v1.1+
+#Requires AutoHotkey v1.1.37.02 Unicode
 #Warn
 #NoEnv
 #Persistent
