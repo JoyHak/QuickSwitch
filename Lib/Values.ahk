@@ -85,11 +85,13 @@ WriteValues() {
          SendEnter="            SendEnter             "
          PathNumbers="          PathNumbers           "
          ShortPath="            ShortPath             "
+         PathSeparator="        PathSeparator         "
+         ShortNameIndicator="   ShortNameIndicator    "
+         DirsCount="            DirsCount             "
+         DirNameLength="        DirNameLength         "
          ShortenEnd="           ShortenEnd            "
          ShowDriveLetter="      ShowDriveLetter       "
          ShowFirstSeparator="   ShowFirstSeparator    "
-         DirsCount="            DirsCount             "
-         DirNameLength="        DirNameLength         "
          MainFont="             MainFont              "
          RestartWhere="         RestartWhere          "
          MainKeyHook="          MainKeyHook           "
@@ -100,8 +102,6 @@ WriteValues() {
             . ValidateTrayIcon( "MainIcon",             MainIcon)
             . ValidateColor(    "GuiColor",             GuiColor)
             . ValidateColor(    "MenuColor",            MenuColor)
-            . ValidateString(   "PathSeparator",        PathSeparator)
-            . ValidateString(   "ShortNameIndicator",   ShortNameIndicator)
             . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "ShowMenu")
             . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
 
@@ -174,20 +174,7 @@ ValidateColor(_paramName, ByRef color) {
         LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", _paramName))
     }
 
-    return _paramName "=" A_Space "`n"
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidateString(_paramName, ByRef string) {
-;─────────────────────────────────────────────────────────────────────────────
-    /*
-        Converts input value to string
-
-        If not empty, returns the string of the form "paramName=result",
-        otherwise returns empty string
-    */
-    return string ? _paramName . "=" . Format("{}", string) . "`n" : ""
+    return _paramName "=`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
