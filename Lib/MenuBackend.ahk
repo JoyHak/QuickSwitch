@@ -5,27 +5,35 @@ Dummy() {
 }
 
 SelectPath(_showMenu := false, _name := "", _position := 1) {
-    global DialogId, FileDialog, Paths
-    
-    _extra := ""
+    global DialogId, FileDialog, Paths, ElevatedApps
+
+    _extra := FileDialog.name ": "
     loop, 3 {
         try {
             WinActivate % "ahk_id " DialogId
             if !WinActive("ahk_id " DialogId)
                 return
 
-            if (FileDialog.call(Paths[_position]))                    
+            if (FileDialog.call(Paths[_position]))
                 return _showMenu ? ShowMenu() : 0
 
         } catch _e {
             if (A_Index = 3)
-                _extra .= FileDialog.name ": " _e.what " " _e.message " " _e.extra
+                _extra .= _e.what " " _e.message " " _e.extra
         }
+    }
+
+    ; If dialog owner is elevated, show error in Main
+    WinGet, _winPid, pid, % "ahk_id " DialogId
+
+    if (IsAppElevated(_winPid, ElevatedApps)
+     || AddElevatedName(_winPid, ElevatedApps)) {
+        return
     }
 
     _extra   .= " Timeout."
     _message := _name ? "Menu selection" : "Auto Switch"
-    
+
     LogError(Exception("Failed to feed the file dialog", _message, _extra))
 }
 

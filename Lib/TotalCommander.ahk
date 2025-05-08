@@ -20,17 +20,16 @@ GetTotalPaths(ByRef winId, ByRef array) {
         SendTotalCommand(winId, USER_COMMAND)
         ParseTotalTabs(TABS_FILE, array)
     } catch {
-        try {
-            LogInfo("Required to create TotalCmd command: " USER_COMMAND, true)
+        WinGet, _winPid, pid, % "ahk_id " winId
+        if (!A_IsAdmin && IsProcessElevated(_winPid))
+            throw Exception("Unable to obtain TotalCmd paths", "admin permission")
 
-            _userIni := GetTotalIni(winId)
-            CreateTotalUserCommand(_userIni, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
+        LogInfo("Required to create TotalCmd command: " USER_COMMAND, true)
 
-            SendTotalCommand(winId, USER_COMMAND)
-            ParseTotalTabs(TABS_FILE, array)
+        _userIni := GetTotalIni(winId)
+        CreateTotalUserCommand(_userIni, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
 
-        } catch _error {
-            LogError(_error)
-        }
+        SendTotalCommand(winId, USER_COMMAND)
+        ParseTotalTabs(TABS_FILE, array)
     }
 }

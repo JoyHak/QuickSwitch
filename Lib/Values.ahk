@@ -14,6 +14,7 @@ SaveDialogAction  :=  false
 FromSettings      :=  false
 NukeSettings      :=  false
 LastTabSettings   :=  1
+ElevatedApps      := {updated: false}
 
 SetDefaultValues() {
     /*

@@ -1,4 +1,4 @@
-GetPaths(ByRef array, _autoSwitch := false) {
+GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
 
@@ -6,9 +6,13 @@ GetPaths(ByRef array, _autoSwitch := false) {
     WinGet, _winIdList, list, ahk_group ManagerClasses
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
-        WinGetClass, _winClass, ahk_id %_winId%
+        WinGet, _winPid, pid, ahk_id %_winId%
+    
+        if IsAppElevated(_winPid, elevatedDict)
+            continue
 
         ; Fix specific problems
+        WinGetClass, _winClass, ahk_id %_winId%
         switch _winClass {
             case "ThunderRT6FormDC":
                 ; Exclude XYplorer child windows:
@@ -23,7 +27,21 @@ GetPaths(ByRef array, _autoSwitch := false) {
                 ; Function name without dot .
                 _winClass := "Dopus"
         }
-        Func(_winClass).call(_winId, array)
+
+        _count := array.count()
+        try {
+            Func(_winClass).call(_winId, array)
+        } catch _error {
+            ; Assume that the file manager is elevated
+            if AddElevatedName(_winPid, elevatedDict)
+                continue
+
+            LogError(_error)
+        }
+
+        if (_count = array.count()) {
+            AddElevatedName(_winPid, elevatedDict)
+        }
 
         if (_autoSwitch && array[1]) {
             _autoSwitch := false

@@ -35,39 +35,33 @@ CabinetWClass(ByRef winId, ByRef array) {
 ThunderRT6FormDC(ByRef winId, ByRef array) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
+    ; Save clipboard to restore later
+    _clipSaved := ClipboardAll
+    Clipboard  := ""
 
-    try {
-        ; Save clipboard to restore later
-        _clipSaved := ClipboardAll
-        Clipboard  := ""
-
-        static script := "
-        ( LTrim Join Comments
-            ::$paths = <get tabs_sf | a>, 'r'`;         ; Get tabs from the active panel, resolve native variables
-            if (get('#800')) {                          ; Second panel is enabled
-                $paths .= '|' . <get tabs_sf | i>`;     ; Get tabs from second panels
-            }
-            $reals = ''`;
-            foreach($path, $paths, '|') {               ; Path separator is |
-                $reals .= '|' . pathreal($path)`;       ; Get the real path (XY has special and virtual paths)
-            }
-            $reals = trim($reals, '|', 'L')`;           ; Remove the extra  | from the beginning of $reals
-            copytext $reals`;                           ; Place $reals to the clipboard, faster then copydata
-        )"
-
-        SendXyplorerScript(winId, script)
-
-        ClipWait 2
-        _clip     := Clipboard
-        Clipboard := _clipSaved
-
-        if _clip {
-            Loop, parse, _clip, `|
-                array.push(A_LoopField)
+    static script := "
+    ( LTrim Join Comments
+        ::$paths = <get tabs_sf | a>, 'r'`;         ; Get tabs from the active panel, resolve native variables
+        if (get('#800')) {                          ; Second panel is enabled
+            $paths .= '|' . <get tabs_sf | i>`;     ; Get tabs from second panels
         }
+        $reals = ''`;
+        foreach($path, $paths, '|') {               ; Path separator is |
+            $reals .= '|' . pathreal($path)`;       ; Get the real path (XY has special and virtual paths)
+        }
+        $reals = trim($reals, '|', 'L')`;           ; Remove the extra  | from the beginning of $reals
+        copytext $reals`;                           ; Place $reals to the clipboard, faster then copydata
+    )"
 
-    } catch _error {
-        LogError(_error)
+    SendXyplorerScript(winId, script)
+
+    ClipWait 2
+    _clip     := Clipboard
+    Clipboard := _clipSaved
+
+    if _clip {
+        Loop, parse, _clip, `|
+            array.push(A_LoopField)
     }
 }
 
@@ -78,47 +72,42 @@ Dopus(ByRef winId, ByRef array) {
     ; Analyzes the text of address bars of each tab using MS C++ functions.
     ; Searches for active tab using DOpus window title
 
-    try {
-        WinGetTitle, _title, ahk_id %winId%
+    WinGetTitle, _title, ahk_id %winId%
 
-        ; Each tab has its own address bar, so we can use it to determine the path of each tab
-        static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer"
-        ; Defined in AutoHotkey source
-        static WINDOW_TEXT_SIZE := 32767
-        VarSetCapacity(_text, WINDOW_TEXT_SIZE * 2)
+    ; Each tab has its own address bar, so we can use it to determine the path of each tab
+    static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer"
+    ; Defined in AutoHotkey source
+    static WINDOW_TEXT_SIZE := 32767
+    VarSetCapacity(_text, WINDOW_TEXT_SIZE * 2)
 
-        ; Find the first address bar HWND
-        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
-        _previousHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
-        _startHwnd    := _previousHwnd
-        _paths        := []
-        _active       := 1
+    ; Find the first address bar HWND
+    ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
+    _previousHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+    _startHwnd    := _previousHwnd
+    _paths        := []
+    _active       := 1
 
-        loop {
-            ; Pass every HWND to GetWindowText() and get the content
-            ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
-            if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
-                _paths.push(_text)
+    loop {
+        ; Pass every HWND to GetWindowText() and get the content
+        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
+        if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
+            _paths.push(_text)
 
-                if InStr(_text, _title)
-                    _active := A_Index
-            }
-            _nextHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)
-
-            ; The loop iterates through all the tabs over and over again,
-            ; so we must stop when it repeats
-            if (_nextHwnd = _startHwnd)
-                break
-
-            _previousHwnd := _nextHwnd
+            if InStr(_text, _title)
+                _active := A_Index
         }
+        _nextHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)
 
-        ; Push the active tab to the global array first
-        ; Remove duplicate and add the remaining tabs
-        array.push(_paths.removeAt(_active))
-        array.push(_paths*)
+        ; The loop iterates through all the tabs over and over again,
+        ; so we must stop when it repeats
+        if (_nextHwnd = _startHwnd)
+            break
 
-    } catch _error {
-        LogError(_error)
+        _previousHwnd := _nextHwnd
     }
+
+    ; Push the active tab to the global array first
+    ; Remove duplicate and add the remaining tabs
+    array.push(_paths.removeAt(_active))
+    array.push(_paths*)
 }

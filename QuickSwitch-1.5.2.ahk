@@ -34,6 +34,7 @@ ErrorsLog  := "Errors.log"
 #Include <Values>
 #Include <FileDialogs>
 
+#Include <Elevated>
 #Include <Processes>
 #Include <ManagerMessages>
 #Include <ManagerClasses>
@@ -80,7 +81,7 @@ Loop {
             ; Get current dialog settings or use default mode (AutoSwitch flag)
             ; Current settings override "Always AutoSwitch" mode (if they exist)
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, % AutoSwitch
-            GetPaths(Paths := [], DialogAction = 1)
+            GetPaths(Paths := [], ElevatedApps, DialogAction = 1)
 
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey, MainKeyHook, "On")
@@ -89,6 +90,19 @@ Loop {
                 ShowMenu()
 
             FromSettings := false
+            
+            if ElevatedApps["updated"] {
+                if (Names := GetElevatedNames(ElevatedApps)) {
+                    LogError(Exception("Unable to obtain paths", "admin permission", "
+                        (LTrim
+    
+                            Ñant send messages to these processes: " Names "
+                            Run these processes as non-admin or run " ScriptName " as admin | with UI access
+    
+                        )"))
+                }
+                ElevatedApps["updated"] := false
+            }
         }
 
     } catch GlobalError {
