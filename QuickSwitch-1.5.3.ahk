@@ -93,10 +93,10 @@ Loop {
             
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
-                    LogError(Exception("Unable to obtain paths", "admin permission", "
+                    LogError(Exception("Unable to obtain paths: " Names, "admin permission", "
                         (LTrim
     
-                            Ñant send messages to these processes: " Names "
+                            Cant send messages to these processes: " Names "
                             Run these processes as non-admin or run " ScriptName " as admin | with UI access
     
                         )"))
