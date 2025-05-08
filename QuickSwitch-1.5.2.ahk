@@ -54,7 +54,7 @@ ReadValues()
 InitAutoStartup()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
-ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "ShowMenu")
+ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "~^+!Numpad0")
 ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
 
 Loop {
@@ -124,3 +124,5 @@ LogError(Exception("An error occurred while waiting for the file dialog to appea
                    , "main menu"
                    , "End of continuous WinWaitActive loop in main file"))
 ExitApp
+
+~^+!Numpad0::ShowMenu()

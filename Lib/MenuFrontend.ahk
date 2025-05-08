@@ -48,7 +48,7 @@ AddMenuOptions() {
     AddMenuTitle("Options")
 
     AddMenuOption("&Auto switch", "ToggleAutoSwitch", DialogAction = 1)
-    AddMenuOption("&Black list", "ToggleBlackList", DialogAction = -1)
+    AddMenuOption("&Black list",  "ToggleBlackList",  DialogAction = -1)
 
     Menu ContextMenu, Add
     Menu ContextMenu, Add, &Settings, ShowSettings
@@ -58,8 +58,8 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global Paths, SelectMenuPath, MenuColor
-    try Menu ContextMenu, Delete     ; Delete previous menu
+    global Paths, SelectMenuPath, MenuColor, DialogId
+    try Menu ContextMenu, Delete            ; Delete previous menu
 
     if Paths.count() {
         AddMenuPaths(Paths, SelectMenuPath)
@@ -67,8 +67,9 @@ ShowMenu() {
     } else {
         AddMenuTitle("No available paths")
     }
-
+    
+    WinActivate % "ahk_id " DialogId        ; Activate dialog in case of menu flickering
     Menu ContextMenu, Color, % MenuColor
-    Menu ContextMenu, Show, 0, 100   ; Show new menu and halt the thread
+    Menu ContextMenu, Show, 0, 100          ; Show new menu and halt the thread
 }
 

@@ -10,7 +10,6 @@ SelectPath(_showMenu := false, _name := "", _position := 1) {
     _extra := FileDialog.name ": "
     loop, 3 {
         try {
-            WinActivate % "ahk_id " DialogId
             if !WinActive("ahk_id " DialogId)
                 return
 
