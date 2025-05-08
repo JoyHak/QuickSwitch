@@ -1,5 +1,5 @@
 AddElevatedName(ByRef winPid, ByRef elevatedDict) {
-    ; Adds {PID: name} to the dictionary by "winPid" key.
+    ; Updates the dictionary by "winPid" key.
     ; Returns true if script isn't elevated and value is aadded
 
     if (A_IsAdmin || elevatedDict.hasKey(winPid))
