@@ -47,7 +47,7 @@ DeleteDialogs() {
     global DeleteDialogs, INI
 
     if DeleteDialogs {
-        IniDelete, % INI, Dialogs
+        try IniDelete, % INI, Dialogs
     }
 }
 
