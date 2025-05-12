@@ -28,7 +28,7 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
                 _winClass := "Dopus"
         }
 
-        _count := array.count()
+        _count := array.length()
         try {
             Func(_winClass).call(_winId, array)
         } catch _error {
@@ -39,7 +39,7 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
             LogError(_error)
         }
 
-        if (_count = array.count()) {
+        if (_count = array.length()) {
             AddElevatedName(_winPid, elevatedDict)
         }
 
@@ -68,7 +68,7 @@ GetShortPath(ByRef path) {
             return path    ; Just drive and slash
 
         _dirs := StrSplit(path, "\")
-        _size := _dirs.count()
+        _size := _dirs.length()
 
         if (_size = 1)
             return path

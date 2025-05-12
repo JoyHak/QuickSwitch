@@ -61,7 +61,7 @@ ShowMenu() {
     global Paths, SelectMenuPath, MenuColor, DialogId
     try Menu ContextMenu, Delete            ; Delete previous menu
 
-    if Paths.count() {
+    if Paths.length() {
         AddMenuPaths(Paths, SelectMenuPath)
         AddMenuOptions()
     } else {
