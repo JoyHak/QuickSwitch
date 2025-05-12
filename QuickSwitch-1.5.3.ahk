@@ -48,14 +48,13 @@ ErrorsLog  := "Errors.log"
 #Include <MenuFrontend>
 
 InitLog()
-
 SetDefaultValues()
 ReadValues()
-InitAutoStartup()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "~^+!Numpad0")
 ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
+InitAutoStartup()
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
