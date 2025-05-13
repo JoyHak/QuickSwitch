@@ -61,7 +61,7 @@ ToggleAutoSwitch() {
     if (DialogAction = 1)
         SelectPath()
     if IsMenuReady()
-        ShowMenu()
+        GoSub ^+!0
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -74,5 +74,5 @@ ToggleBlackList() {
     SaveDialogAction := true
 
     if IsMenuReady()
-        ShowMenu()
+        GoSub ^+!0
 }

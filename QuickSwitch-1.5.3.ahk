@@ -52,7 +52,7 @@ SetDefaultValues()
 ReadValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
-ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "~^+!Numpad0")
+ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "^+!0")
 ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
 InitAutoStartup()
 
@@ -86,7 +86,7 @@ Loop {
             ValidateKey("MainKey", MainKey, MainKeyHook, "On")
 
             if IsMenuReady()
-                ShowMenu()
+                GoSub ^+!0 
 
             FromSettings := false
 
@@ -125,4 +125,4 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 
 ExitApp
 
-~^+!Numpad0::ShowMenu()
+^+!0::ShowMenu()

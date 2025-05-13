@@ -103,7 +103,7 @@ WriteValues() {
             . ValidateTrayIcon( "MainIcon",             MainIcon)
             . ValidateColor(    "GuiColor",             GuiColor)
             . ValidateColor(    "MenuColor",            MenuColor)
-            . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "~^+!Numpad0")
+            . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "^+!0")
             . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
 
     try {
