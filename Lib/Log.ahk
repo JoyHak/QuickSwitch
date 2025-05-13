@@ -14,38 +14,43 @@ MsgWarn(_text) {
     return false
 }
 
-LogError(_error) {
-    ; Accepts Exception object or any custom object with similar attributes
+LogError(_message := "Unknown error", _what := "LogError", _extra := "") {
+    return LogException(Exception(_message, _what, _extra), 2)
+}
+
+LogException(_ex, _offset := 1) {
+    ; Accepts Exception / any custom object with similar attributes
     global ErrorsLog, ScriptName
 
     ; Generate call stack
     _stack := ""
     Loop {
-        ; Skip current func
-        _e    := Exception(".", _offset := -A_Index-1)
-        _call := _e.What
+        ; Skip functions from stack using the offset
+        _e    := Exception(".", _index := - A_Index - _offset)
+        _func := _e.what
 
-        if (_call = _offset)
+        if (_func = _index)
             break
 
-        _stack := _call " > " _stack
+        _stack := _func " > " _stack
     }
 
     ; Log
-    _what := _error.What
-    _msg  := _error.Message
+    _what := _ex.what
+    _msg  := _ex.message
 
-    FormatTime, _date,, dd.MM hh:mm:ss
-    FileAppend, % _date "    [" _stack _what "]    " _msg "    " _error.Extra "`n", % ErrorsLog
+    FormatTime, _date,, dd.MM HH:mm:ss
+    try FileAppend, % _date "    [" _stack _what "]    " _msg "    " _ex.extra "`n", % ErrorsLog
 
     TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
+    return false
 }
 
 LogInfo(_text, _silent := false) {
     global ErrorsLog, ScriptName
 
-    FormatTime, _date,, dd.MM hh:mm:ss
-    FileAppend, % _date "    " _text "`n", % ErrorsLog
+    FormatTime, _date,, dd.MM HH:mm:ss
+    try FileAppend, % _date "    " _text "`n", % ErrorsLog
 
     if !_silent
         TrayTip, % ScriptName " log", % _text
@@ -63,7 +68,7 @@ LogHeader() {
     RegRead, _OSbuild, % LEAF, CurrentBuild
     RegRead, _lang, HKEY_CURRENT_USER\Control Panel\International, LocaleName
 
-    FileAppend, % "
+    try FileAppend, % "
     (LTrim
         Report about error: " REPORT_LINK "
         AHK " A_AhkVersion "
@@ -73,7 +78,7 @@ LogHeader() {
 }
 
 LogVersion() {
-    ; Info about current launched script/compiled app
+    ; Info about current launched script / compiled app
     global ErrorsLog
 
     _bit  := (A_PtrSize * 8) . "-bit"
@@ -86,30 +91,33 @@ LogVersion() {
         _header .= "Script is compiled. Version: " _ver "`n"
     */
     _header .= _bit " script for " _arch " system `n`n"
-    FileAppend, % _header, % ErrorsLog
+    try FileAppend, % _header, % ErrorsLog
 }
 
 InitLog() {
     global INI, ErrorsLog, ScriptName
 
+    ; Clean log
     if FileExist(ErrorsLog) {
-        ; Clean log
         FileGetSize, _size, % ErrorsLog, K
-        if (_size > 30) {
-            FileDelete, % ErrorsLog
+        if (_size > 8) {
+            FileRecycle, % ErrorsLog
             Sleep, 500
         }
     }
+
+    ; Create again after cleanup / first launch
     if !FileExist(ErrorsLog) {
         LogHeader()
         LogVersion()
         return
     }
 
-    ; does the cur. dir. match the dir. of the script that previously created this log?
-    IniRead, _lastPath, % INI, App, LastPath
+    ; does the cur. dir. match the dir. of the script
+    ; that previously created this log?
     _curPath := A_ScriptFullPath
-    if (_lastPath != _curPath) {
+    IniRead, _lastPath, % INI, App, LastPath
+    if ((_lastPath != "ERROR") && (_lastPath != _curPath)) {
         ; New info about the script
         try IniWrite, % _curPath, % INI, App, LastPath
         LogVersion()

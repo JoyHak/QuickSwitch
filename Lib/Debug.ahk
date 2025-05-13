@@ -72,9 +72,9 @@ ExportDebug() {
         _fileName := A_ScriptDir "\" FingerPrint ".csv"
         _file := FileOpen(_fileName, "w")
         if !IsObject(_file) {
-            return LogError(Exception(_fileName
-                                    , "export"
-                                    , "File closed for writing. Check the attributes of the target directory"))
+            return LogError(_fileName
+                         , "export"
+                         , "File closed for writing. Check the attributes of the target directory")
         }
 
         ; Align ListView contents vertically to write readable table
@@ -93,8 +93,8 @@ ExportDebug() {
         clipboard := _fileName
         LogInfo("Export completed. Path copied to clipboard.")
     
-    } catch _error {
-        LogError(_error)
+    } catch _ex {
+        LogException(_ex)
     }
 }
 

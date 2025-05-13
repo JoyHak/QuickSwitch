@@ -15,9 +15,9 @@ SendXyplorerScript(ByRef winId, ByRef script) {
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
     } catch _e {
         throw Exception("Unable to send the script"
-                        , "Xyplorer script"
-                        , Format("HWND: {:d}  Size: {}  Details: {}`n"
-                        , winId, _size, _e.what " " _e.message " " _e.extra))
+                      , "Xyplorer script"
+                      , Format("HWND: {:d}  Size: {}  Details: {}`n"
+                      , winId, _size, _e.what " " _e.message " " _e.extra))
     }
 }
 
@@ -39,9 +39,9 @@ SendTotalCommand(ByRef winId, ByRef command) {
         SendMessage, 74, 0, &_copyData,, ahk_id %winId%
     } catch _e {
         throw Exception("Unable to execute user command"
-                        , "TotalCmd command"
-                        , Format("`nCommand: [{}] HWND: {:d}  Details: {}`n"
-                        , command, winId, _e.what " " _e.message " " _e.extra))
+                      , "TotalCmd command"
+                      , Format("`nCommand: [{}] HWND: {:d}  Details: {}`n"
+                      , command, winId, _e.what " " _e.message " " _e.extra))
     }
 }
 
@@ -52,11 +52,11 @@ SendTotalMessage(ByRef winPid, _command) {
     ; Commands can be found in totalcmd.inc
     try {
         SendMessage 1075, % _command, 0, , % "ahk_pid " winPid
-    } catch _e {                       
+    } catch _e {
         throw Exception("Unable to send internal command"
-                        , "TotalCmd command"
-                        , Format("`nCommand: {}  HWND: {:d}  Details: {}`n"
-                        , _command, winPid, _e.what " " _e.message " " _e.extra))
+                      , "TotalCmd command"
+                      , Format("`nCommand: {}  HWND: {:d}  Details: {}`n"
+                      , _command, winPid, _e.what " " _e.message " " _e.extra))
     }
 }
 
@@ -68,10 +68,10 @@ SendConsoleCommand(ByRef consolePid, _command) {
     try {
         ControlSend,, % "{Text}" _command "`n", % "ahk_pid " consolePid
         LogInfo("Executed console command: " _command, "NoTraytip")
-    } catch _e {                        
+    } catch _e {
         throw Exception("Unable to send console command"
-                        , "console"
-                        , Format("`nCommand: [{}]  HWND: {:d}  Details: {}`n"
-                        , _command, consolePid, _e.what " " _e.message " " _e.extra))
+                      , "console"
+                      , Format("`nCommand: [{}]  HWND: {:d}  Details: {}`n"
+                      , _command, consolePid, _e.what " " _e.message " " _e.extra))
     }
 }

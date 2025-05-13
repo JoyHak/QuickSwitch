@@ -89,23 +89,23 @@ Loop {
                 ShowMenu()
 
             FromSettings := false
-            
+
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
-                    LogError(Exception("Unable to obtain paths: " Names, "admin permission", "
+                    LogError("Unable to obtain paths: " Names, "admin permission", "
                         (LTrim
-    
+
                             Cant send messages to these processes: " Names "
                             Run these processes as non-admin or run " ScriptName " as admin | with UI access
-    
-                        )"))
+
+                        )")
                 }
                 ElevatedApps["updated"] := false
             }
         }
 
-    } catch GlobalError {
-        LogError(GlobalError)
+    } catch GlobalEx {
+        LogException(GlobalEx)
     }
 
     Sleep, 100
@@ -115,13 +115,14 @@ Loop {
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false
-        IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+        try IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
     }
 }   ; End of continuous WinWaitActive loop
 
-LogError(Exception("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
-                   , "main menu"
-                   , "End of continuous WinWaitActive loop in main file"))
+LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
+       , "main menu"
+       , "End of continuous WinWaitActive loop in main file")
+
 ExitApp
 
 ~^+!Numpad0::ShowMenu()

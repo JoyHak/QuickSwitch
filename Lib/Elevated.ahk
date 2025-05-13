@@ -27,8 +27,8 @@ GetElevatedNames(ByRef elevatedDict) {
             if _info["elevated"]
                 _names .= _info["name"] . ", "
 
-        } catch _error {
-            LogError(_error)
+        } catch _ex {
+            LogException(_ex)
         }
     }
 

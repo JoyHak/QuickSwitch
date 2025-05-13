@@ -37,8 +37,8 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
 
     } catch _e {
         throw Exception("Please create this file manually: `'" ini "`'"
-                        , "TotalCmd config"
-                        , _e.what " " _e.message " " _e.extra "`n"
-                        . ValidateFile(ini))
+                      , "TotalCmd config"
+                      , _e.what " " _e.message " " _e.extra "`n"
+                      . ValidateFile(ini))
     }
 }

@@ -75,7 +75,7 @@ GetTotalLaunchIni(ByRef totalPid) {
                 LogInfo("Found /i launch argument", "NoTraytip")
                 return (_match1 ? _match1 : _match2)
             }
-            LogError(Exception("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i"))
+            LogError("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i")
         }
     }
 

@@ -109,9 +109,9 @@ WriteValues() {
     try {
         IniWrite, % _values, % INI, Global
     } catch {
-        LogError(Exception("Please create this file with UTF-16 LE BOM encoding manually: `'" INI "`'"
-                           , "config"
-                           , ValidateFile(INI)))
+        LogError("Please create this file with UTF-16 LE BOM encoding manually: `'" INI "`'"
+               , "config"
+               , ValidateFile(INI))
     }
 }
 
@@ -152,7 +152,7 @@ ValidateTrayIcon(_paramName, ByRef icon) {
             Menu, Tray, Icon, % icon
             return _paramName "=" icon "`n"
         }
-        LogError(Exception("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file"))
+        LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
     }
     return ""
 }
@@ -172,7 +172,7 @@ ValidateColor(_paramName, ByRef color) {
         if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
             return _paramName . "=" . SubStr(color, _matchPos) . "`n"
         }
-        LogError(Exception("`'" color "`' is wrong color! Enter the HEX value", _paramName))
+        LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
     }
 
     return _paramName "=`n"
@@ -233,8 +233,8 @@ ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function :
         }
         return _paramName "=" _key "`n"
 
-    } catch _error {
-        LogError(_error)
+    } catch _ex {
+        LogException(_ex)
     }
     return ""
 }

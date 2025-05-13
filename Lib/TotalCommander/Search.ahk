@@ -22,7 +22,7 @@ GetTotalIni(ByRef winId) {
             }
 
         } catch _e {
-            LogError(_e)
+            LogException(_e)
         }
     }
 

@@ -28,18 +28,18 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
                 _winClass := "Dopus"
         }
 
-        _count := array.length()
+        _length := array.length()
         try {
             Func(_winClass).call(_winId, array)
-        } catch _error {
+        } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid, elevatedDict)
                 continue
 
-            LogError(_error)
+            LogException(_ex)
         }
 
-        if (_count = array.length()) {
+        if (_length = array.length()) {
             AddElevatedName(_winPid, elevatedDict)
         }
 
@@ -115,8 +115,8 @@ GetShortPath(ByRef path) {
 
         return _shortPath
 
-    } catch _error {
-        LogError(_error)
+    } catch _ex {
+        LogException(_ex)
     }
     return path
 }

@@ -71,8 +71,8 @@ InitAutoStartup() {
                 LogInfo("Auto Startup disabled")
             }
         }
-    } catch _error {
-        LogError(_error)
+    } catch _ex {
+        LogException(_ex)
     }
 }
 
