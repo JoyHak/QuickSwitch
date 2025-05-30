@@ -89,8 +89,6 @@ Loop {
             if IsMenuReady()
                 GoSub ^+!0 
 
-            FromSettings := false
-
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
                     LogError("Unable to obtain paths: " Names, "admin permission", "

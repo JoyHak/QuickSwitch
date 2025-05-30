@@ -59,6 +59,8 @@ AddMenuOptions() {
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global Paths, SelectMenuPath, MenuColor, DialogId
+    global FromSettings := false
+    
     try Menu ContextMenu, Delete            ; Delete previous menu
 
     if Paths.length() {
