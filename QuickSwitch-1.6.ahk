@@ -1,4 +1,5 @@
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\beta 1.5.1\%A_ScriptName~\.ahk%-x64.exe
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe
+;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe
 
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 ;@Ahk2Exe-SetMainIcon QuickSwitch.ico
@@ -8,7 +9,7 @@
 ;@Ahk2Exe-SetCompanyName ToYu studio
 
 ;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
-;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\beta 1.5.1\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
+;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
 
 #Requires AutoHotkey v1.1.37.02 Unicode
 #Warn
