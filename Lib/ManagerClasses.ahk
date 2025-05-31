@@ -36,8 +36,8 @@ ThunderRT6FormDC(ByRef winId, ByRef array) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
     ; Save clipboard to restore later
-    _clipSaved := ClipboardAll
-    Clipboard  := ""
+    _clipSaved   := ClipboardAll
+    A_Clipboard  := ""
 
     static script := "
     ( LTrim Join Comments
@@ -56,8 +56,8 @@ ThunderRT6FormDC(ByRef winId, ByRef array) {
     SendXyplorerScript(winId, script)
 
     ClipWait 2
-    _clip     := Clipboard
-    Clipboard := _clipSaved
+    _clip       := A_Clipboard
+    A_Clipboard := _clipSaved
 
     if _clip {
         Loop, parse, _clip, `|
