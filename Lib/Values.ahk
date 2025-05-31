@@ -13,8 +13,10 @@ DialogAction      :=  ""
 SaveDialogAction  :=  false
 FromSettings      :=  false
 NukeSettings      :=  false
+LastDialogId      :=  0
 LastTabSettings   :=  1
 ElevatedApps      := {updated: false}
+Clips             := []
 
 SetDefaultValues() {
     /*

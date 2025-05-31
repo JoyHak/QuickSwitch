@@ -57,6 +57,7 @@ InitAutoStartup()
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
+InitClipboardCallback()
     WinWaitActive, ahk_class #32770
 
     try {
@@ -75,18 +76,25 @@ Loop {
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
             SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways)
-
+            
             ; Get current dialog settings or use default mode (AutoSwitch flag)
             ; Current settings override "Always AutoSwitch" mode (if they exist)
             IniRead, DialogAction, % INI, Dialogs, % FingerPrint, % AutoSwitch
-            GetPaths(Paths := [], ElevatedApps, DialogAction = 1)
+            
+            ; Display paths from clipboard first
+            Paths := []
+            Paths.push(Clips*)
+            
+            InitClipboardCallback(0)
+            GetPaths(Paths, ElevatedApps, DialogAction = 1)
+            InitClipboardCallback(1)
 
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey, MainKeyHook, "On")
 
             if IsMenuReady()
-                GoSub ^+!0 
-
+                GoSub ^+!0             
+            
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
                     LogError("Unable to obtain paths: " Names, "admin permission", "
@@ -108,12 +116,18 @@ Loop {
     Sleep, 100
     WinWaitNotActive
     ValidateKey("MainKey", MainKey, MainKeyHook, "Off")
-
+    
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false
         try IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
     }
+    
+    ; Clean-up paths from clipboard in new dialog
+    if (LastDialogId != DialogId)
+        Clips := []
+
+    LastDialogId := DialogId    
 }   ; End of continuous WinWaitActive loop
 
 LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"

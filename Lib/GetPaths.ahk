@@ -121,4 +121,43 @@ GetShortPath(ByRef path) {
     return path
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetClipboardPath(_array, _dataType) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Adds the clipboard contents to the array 
+    ; if its text and an existing path
+    sleep 100
+    _clip := A_Clipboard
+    MsgBox got %_clip%
+    if ((_dataType != 1) || !_clip)
+        return
 
+    _array.push(_clip)
+}
+
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetClipboardFile(_array, _dataType) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; If the clipboard contents is text, cuts the path where the file is stored. 
+    ; If the path is valid, adds to the array
+    
+    _clip := A_Clipboard
+    if ((_dataType != 1) || !_clip)
+        return
+    
+    _clip  := StrReplace(_clip, "/" , "\")
+    _index := 1
+    
+    while (pos := InStr(_clip, "\",, -1, _index)) {
+        _path  := SubStr(_clip, 1 , pos)
+        
+        if DllCall("Shlwapi\PathIsDirectoryW", "str", _clip) {
+            _array.push(_clip)
+            break
+        }
+        _index++
+    }    
+}

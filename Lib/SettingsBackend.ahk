@@ -32,6 +32,7 @@ SaveSettings() {
     ReadValues()
     DeleteDialogs()
     InitAutoStartup()
+    InitClipboardCallback()
 }
 
 RestartApp() {
@@ -74,6 +75,15 @@ InitAutoStartup() {
     } catch _ex {
         LogException(_ex)
     }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+InitClipboardCallback(_state := 1) {
+;─────────────────────────────────────────────────────────────────────────────
+    ;global AutoStartup, ScriptName
+    global Clips
+    OnClipboardChange(Func("GetClipboardPath").bind(Clips), _state)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
