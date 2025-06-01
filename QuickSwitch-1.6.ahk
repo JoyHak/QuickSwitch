@@ -20,6 +20,7 @@
 ListLines Off
 Process, Priority, , A
 SetBatchLines, -1
+SendLevel 2
 
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
@@ -85,7 +86,7 @@ Loop {
             ValidateKey("MainKey", MainKey, MainKeyHook, "On")
 
             if IsMenuReady()
-                GoSub ^+!0 
+                SendInput ^+!0
 
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
