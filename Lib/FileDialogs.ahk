@@ -98,8 +98,11 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 
         ; Check specific controls
         if (_f & 8 && _f & 16) {
+            ; Wait until the dialog is fully rendered
             sleep 200
-            WinActivate ahk_id %dialogId%
+            WinActivate,   ahk_class #32770
+            WinWaitActive, ahk_class #32770
+            
             return Func("FeedDialogGENERAL")
         }
 
