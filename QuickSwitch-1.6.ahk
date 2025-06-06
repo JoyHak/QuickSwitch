@@ -54,7 +54,7 @@ SetDefaultValues()
 ReadValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
-ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "^+!0")
+ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
 InitAutoStartup()
 
@@ -88,7 +88,7 @@ Loop {
             ValidateKey("MainKey", MainKey, MainKeyHook, "On")
 
             if IsMenuReady()
-                SendInput ^+!0
+                SendEvent ^#+0
 
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
@@ -125,4 +125,4 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 
 ExitApp
 
-^+!0::ShowMenu()
+^#+0::ShowMenu()

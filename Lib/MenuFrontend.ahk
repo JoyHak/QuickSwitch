@@ -70,8 +70,8 @@ ShowMenu() {
         AddMenuTitle("No available paths")
     }
     
-    WinActivate % "ahk_id " DialogId        ; Activate dialog in case of menu flickering
     Menu ContextMenu, Color, % MenuColor
+    WinActivate % "ahk_id " DialogId        ; Activate dialog in case of menu flickering
     Menu ContextMenu, Show, 0, 100          ; Show new menu and halt the thread
 }
 

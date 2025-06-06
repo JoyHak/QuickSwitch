@@ -14,7 +14,9 @@ SaveDialogAction  :=  false
 FromSettings      :=  false
 NukeSettings      :=  false
 LastTabSettings   :=  1
-ElevatedApps      := {updated: false}
+DialogId          :=  0
+Paths             :=  []
+ElevatedApps      :=  {updated: false}
 
 SetDefaultValues() {
     /*
@@ -103,7 +105,7 @@ WriteValues() {
             . ValidateTrayIcon( "MainIcon",             MainIcon)
             . ValidateColor(    "GuiColor",             GuiColor)
             . ValidateColor(    "MenuColor",            MenuColor)
-            . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "^+!0")
+            . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "^#+0")
             . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
 
     try {
