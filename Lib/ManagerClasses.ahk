@@ -54,15 +54,23 @@ ThunderRT6FormDC(ByRef winId, ByRef array) {
     )"
 
     SendXyplorerScript(winId, script)
-
-    ClipWait 2
+    
+    ; Try to fetch clipboard data
+    ClipWait 1
     _clip     := Clipboard
     Clipboard := _clipSaved
-
-    if _clip {
-        Loop, parse, _clip, `|
-            array.push(A_LoopField)
+    
+    ; Retry if empty
+    static attempts := 0
+    if !(_clip || (attempts = 4)) {
+        attempts++
+        return ThunderRT6FormDC(winId, array)
     }
+    
+    attempts := 0
+    Loop, parse, _clip, `|
+        array.push(A_LoopField)
+    
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
