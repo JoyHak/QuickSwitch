@@ -7,6 +7,14 @@
     "path"   param must be a string valid for any dialog
 */
 
+WaitControl(ByRef id) {
+    ; Wait until the control is fully rendered
+    sleep 100
+    Control, hide,,, ahk_id %id%
+    sleep 100
+    Control, show,,, ahk_id %id%
+}
+
 FeedControl(ByRef id, ByRef path, _attempts := 10) {
     Loop, % _attempts {
         ControlFocus,, ahk_id %id%
@@ -98,11 +106,7 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 
         ; Check specific controls
         if (_f & 8 && _f & 16) {
-            ; Wait until the dialog is fully rendered
-            sleep 200
-            WinActivate,   ahk_class #32770
-            WinWaitActive, ahk_class #32770
-            
+            WaitControl(editId)
             return Func("FeedDialogGENERAL")
         }
 

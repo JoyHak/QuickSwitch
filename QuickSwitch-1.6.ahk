@@ -21,6 +21,8 @@ ListLines Off
 Process, Priority, , A
 SetBatchLines, -1
 SendLevel 2
+SetWinDelay, -1
+SetKeyDelay, -1
 
 FileEncoding, UTF-8
 SetWorkingDir %A_ScriptDir%
