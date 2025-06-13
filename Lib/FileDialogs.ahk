@@ -106,8 +106,10 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 
         ; Check specific controls
         if (_f & 8 && _f & 16) {
-            WaitControl(editId)
-            return Func("FeedDialogGENERAL")
+            try {
+                WaitControl(editId)
+                return Func("FeedDialogGENERAL")
+            }
         }
 
         if (_f & 1) {
