@@ -26,7 +26,7 @@ AddMenuPaths(ByRef array, _function) {
     for _index, _path in array {
         _display := ""
 
-        if PathNumbers
+        if (PathNumbers && (_index < 10))
             _display .= "&" . _index . " "
         if ShortPath
             _display .= GetShortPath(_path)
