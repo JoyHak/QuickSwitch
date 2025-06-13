@@ -21,7 +21,7 @@ AddMenuOption(_title, _function, _isToggle := false) {
 ;
 AddMenuPaths(ByRef array, _function) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global PathNumbers, ShortPath
+    global PathNumbers, ShortPath, PathLimit
 
     for _index, _path in array {
         _display := ""
@@ -33,7 +33,9 @@ AddMenuPaths(ByRef array, _function) {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, % _display, % _function
+        Menu, ContextMenu, Insert,, % _display, % _function        
+        if (_index = PathLimit)
+            return
     }
 }
 

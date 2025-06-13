@@ -39,14 +39,16 @@ ShowSettings() {
     Gui,    Add,    CheckBox,                           vShowNoSwitch   checked%ShowNoSwitch%,      Show Menu if Menu options &disabled
     Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after &leaving settings
     Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
-    Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       &Path numbers with shortcuts 0-9
     Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
+    Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       &Path numbers with shortcuts 0-9
 
-
-    Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
+    Gui,    Add,    Text,       y+20                                                  Section,      &Limit of displayed paths:
+    Gui,    Add,    Text,       y+20,                                                               &Menu backgroud color (HEX)
     Gui,    Add,    Text,       y+13,                                                               &Dialogs background color (HEX)
 
-    Gui,    Add,    Edit,       ys-4 %edit% Limit8      vMenuColor,                                 %MenuColor%
+    Gui,    Add,    Edit,       ys-4 %edit% Limit4
+    Gui,    Add,    UpDown,     Range1-9999             vPathLimit,                                 %PathLimit%
+    Gui,    Add,    Edit,       y+13 %edit% Limit8      vMenuColor,                                 %MenuColor%
     Gui,    Add,    Edit,       y+4  %edit% Limit8      vGuiColor,                                  %GuiColor%
 
     Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────

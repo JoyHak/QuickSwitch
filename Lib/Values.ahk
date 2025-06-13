@@ -51,6 +51,7 @@ SetDefaultValues() {
     ShortNameIndicator := ".."
     DirsCount      := 3
     DirNameLength  := 20
+    PathLimit      := 9
     PathSeparator  := "\"
 
     RestartWhere   := "ahk_exe notepad++.exe"
@@ -92,6 +93,7 @@ WriteValues() {
          ShortNameIndicator="   ShortNameIndicator    "
          DirsCount="            DirsCount             "
          DirNameLength="        DirNameLength         "
+         PathLimit="            PathLimit             "
          ShortenEnd="           ShortenEnd            "
          ShowDriveLetter="      ShowDriveLetter       "
          ShowFirstSeparator="   ShowFirstSeparator    "
