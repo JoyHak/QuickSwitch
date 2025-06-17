@@ -34,6 +34,7 @@ SetDefaultValues() {
     MainKeyHook         :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
+    PathNumbers         :=  true
 
     AutoSwitch          :=  false
     DeleteDialogs       :=  false
@@ -41,7 +42,6 @@ SetDefaultValues() {
     ShowAfterSelect     :=  false
     RestartKeyHook      :=  false
     SendEnter           :=  false
-    PathNumbers         :=  false
     ShortPath           :=  false
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
