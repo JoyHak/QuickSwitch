@@ -7,18 +7,6 @@
     "path"   param must be a string valid for any dialog
 */
 
-FeedControl(ByRef id, ByRef path, _attempts := 10) {
-    Loop, % _attempts {
-        ControlFocus,, ahk_id %id%
-        ControlSetText,, % path, ahk_id %id%   ; set
-        ControlGetText, _path,,  ahk_id %id%   ; check
-
-        if (_path = path)
-            return true
-    }
-    return false
-}
-
 FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path) {
     ; Always send "Enter" key to the General dialog
     static SEND_ENTER := true
@@ -31,16 +19,25 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, ahk_id %editId%
-
-    if FeedControl(editId, path) {
-        if !sendEnter
-            return true
-
-        ControlSend,, {Enter}, ahk_id %editId%
-
-        ; Restore filename
+    
+    Loop, 10 {
+        ; Change current path
         ControlFocus,, ahk_id %editId%
-        return FeedControl(editId, _fileName)
+        ControlSetText,, % path, ahk_id %editId%
+        ControlGetText, _path,,  ahk_id %editId%
+
+        if (_path = path) {
+            ; Successfully changed
+            if !sendEnter
+                return true
+                
+            ControlSend,, {Enter}, ahk_id %editId%
+
+            ; Restore filename
+            ControlFocus,, ahk_id %editId%
+            ControlSetText,, % _fileName, ahk_id %editId%
+            return true
+        }
     }
     return false
 }
