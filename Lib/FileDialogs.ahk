@@ -57,21 +57,23 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 ;
 FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
+    global DialogId
+        
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
     Loop, 10 {
         Sleep, 15
-        ControlFocus     SysListView321, ahk_class #32770
-        ControlGetFocus, _focus,         ahk_class #32770
+        ControlFocus     SysListView321, ahk_id %DialogId%
+        ControlGetFocus, _focus,         ahk_id %DialogId%
 
     } Until (_focus = "SysListView321")
 
-    ControlSend SysListView321, {Home},  ahk_class #32770
+    ControlSend SysListView321, {Home},  ahk_id %DialogId%
 
     Loop, 10 {
         Sleep, 15
-        ControlSend SysListView321, ^{Space}, ahk_class #32770
-        ControlGet, _focus, List, Selected, SysListView321, ahk_class #32770
+        ControlSend SysListView321, ^{Space}, ahk_id %DialogId%
+        ControlGet, _focus, List, Selected, SysListView321, ahk_id %DialogId%
 
     } Until !_focus
 
