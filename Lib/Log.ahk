@@ -56,44 +56,6 @@ LogInfo(_text, _silent := false) {
         TrayTip, % ScriptName " log", % _text
 }
 
-LogHeader() {
-    ; Header about log and OS
-    global ErrorsLog, ScriptName
-
-    static REPORT_LINK  :=  "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
-    static LEAF         :=  "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
-
-    RegRead, _OSname, % LEAF, ProductName
-    RegRead, _OSversion, % LEAF, DisplayVersion
-    RegRead, _OSbuild, % LEAF, CurrentBuild
-    RegRead, _lang, HKEY_CURRENT_USER\Control Panel\International, LocaleName
-
-    try FileAppend, % "
-    (LTrim
-        Report about error: " REPORT_LINK "
-        AHK " A_AhkVersion "
-        " _OSname " " _OSversion " | " _OSbuild " " _lang "
-
-    )", % ErrorsLog
-}
-
-LogVersion() {
-    ; Info about current launched script / compiled app
-    global ErrorsLog
-
-    _bit  := (A_PtrSize * 8) . "-bit"
-    _arch := A_Is64bitOS ? "64-bit" : "32-bit"
-
-    _header := "`n"
-    /*@Ahk2Exe-Keep
-        _ver := ""
-        try FileGetVersion, _ver, % A_ScriptFullPath
-        _header .= "Script is compiled. Version: " _ver "`n"
-    */
-    _header .= _bit " script for " _arch " system `n`n"
-    try FileAppend, % _header, % ErrorsLog
-}
-
 InitLog() {
     global INI, ErrorsLog, ScriptName
 
@@ -108,18 +70,28 @@ InitLog() {
 
     ; Create again after cleanup / first launch
     if !FileExist(ErrorsLog) {
-        LogHeader()
-        LogVersion()
+        try FileAppend, % "
+        (LTrim
+            Report about error: https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml
+            AHK " A_AhkVersion "
+            " A_ScriptName "
+            
+        )", % ErrorsLog
+        
         return
     }
 
-    ; does the cur. dir. match the dir. of the script
-    ; that previously created this log?
+    ; Does the cur. dir. match the dir. of the script
+    ; That previously created this log?
     _curPath := A_ScriptFullPath
     IniRead, _lastPath, % INI, App, LastPath
-    if ((_lastPath != "ERROR") && (_lastPath != _curPath)) {
-        ; New info about the script
-        try IniWrite, % _curPath, % INI, App, LastPath
-        LogVersion()
+    switch (_lastPath) {
+        case _curPath:
+        case "ERROR": 
+            return
+        default:
+            ; New info about the script
+            try IniWrite, % _curPath, % INI, App, LastPath
+            try FileAppend, % "`n`n`n" A_ScriptName "`n`n", % ErrorsLog
     }
 }
