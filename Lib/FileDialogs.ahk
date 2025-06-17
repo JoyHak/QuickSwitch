@@ -28,7 +28,9 @@ FeedControl(ByRef id, ByRef path, _attempts := 10) {
 }
 
 FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path) {
-    return FeedDialogSYSTREEVIEW("ForceEnter", editId, path)
+    ; Always send "Enter" key to the General dialog
+    static SEND_ENTER := true
+    return FeedDialogSYSTREEVIEW(SEND_ENTER, editId, path)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
