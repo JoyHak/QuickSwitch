@@ -54,23 +54,23 @@ ThunderRT6FormDC(ByRef winId, ByRef array) {
     )"
 
     SendXyplorerScript(winId, script)
-    
+
     ; Try to fetch clipboard data
     ClipWait 1
     _clip     := Clipboard
     Clipboard := _clipSaved
-    
+
     ; Retry if empty
     static attempts := 0
-    if !(_clip || (attempts = 4)) {
+    if !(_clip || (attempts = 3)) {
         attempts++
         return ThunderRT6FormDC(winId, array)
     }
-    
+
     attempts := 0
     Loop, parse, _clip, `|
         array.push(A_LoopField)
-    
+
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ Dopus(ByRef winId, ByRef array) {
     _paths        := []
     _active       := 1
 
-    loop {
+    loop, 100 {
         ; Pass every HWND to GetWindowText() and get the content
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
         if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {

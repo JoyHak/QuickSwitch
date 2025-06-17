@@ -26,7 +26,7 @@ GetTotalConsolePid(ByRef totalPid) {
     ; Gets TC console prompt PID, throws readable error
 
     _pid := 0
-    loop, 5 {
+    loop, 3 {
         sleep 1000
 
         if (_pid := GetProcessProperty("ProcessId", "Name='cmd.exe' and ParentProcessId=" totalPid))
