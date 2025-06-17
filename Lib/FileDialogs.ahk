@@ -83,6 +83,10 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 
     if buttonId && editId {
         ; Dialog with buttons
+        ; Switch focus to non-buttons to prevent accidental closing
+        try ControlFocus ToolbarWindow321, ahk_id %dialogId%
+        Sleep 100
+        
         ; Get specific controls
         WinGet, _controlList, ControlList, ahk_id %dialogId%
 
