@@ -7,8 +7,8 @@
 
 MsgWarn(_text) {
     ; Yes/No, Warn icon, default is "No", always on top without title bar
-    MsgBox, % (4 + 48 + + 256 + 262144), , % _text
-    IfMsgBox Yes
+    MsgBox, % (4 + 48 + 256 + 262144),, % _text
+    IfMsgBox yes
         return true
 
     return false

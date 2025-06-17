@@ -20,7 +20,7 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, ahk_id %editId%
     
-    Loop, 10 {
+    Loop, 3 {
         ; Change current path
         ControlFocus,, ahk_id %editId%
         ControlSetText,, % path, ahk_id %editId%
@@ -50,7 +50,7 @@ FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
         
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    Loop, 10 {
+    Loop, 3 {
         Sleep, 15
         ControlFocus     SysListView321, ahk_id %DialogId%
         ControlGetFocus, _focus,         ahk_id %DialogId%
@@ -59,7 +59,7 @@ FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 
     ControlSend SysListView321, {Home},  ahk_id %DialogId%
 
-    Loop, 10 {
+    Loop, 3 {
         Sleep, 15
         ControlSend SysListView321, ^{Space}, ahk_id %DialogId%
         ControlGet, _focus, List, Selected, SysListView321, ahk_id %DialogId%
