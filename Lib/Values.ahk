@@ -8,15 +8,16 @@
  */
 
 ; These parameters are not saved in the INI
-FingerPrint       :=  ""
-DialogAction      :=  ""
-SaveDialogAction  :=  false
-FromSettings      :=  false
-NukeSettings      :=  false
-LastTabSettings   :=  1
-DialogId          :=  0
-Paths             :=  []
-ElevatedApps      :=  {updated: false}
+SelectPathAttempts :=  3
+DialogId           :=  0
+FingerPrint        :=  ""
+DialogAction       :=  ""
+SaveDialogAction   :=  false
+FromSettings       :=  false
+NukeSettings       :=  false
+LastTabSettings    :=  1
+Paths              :=  []
+ElevatedApps       :=  {updated: false}
 
 SetDefaultValues() {
     /*

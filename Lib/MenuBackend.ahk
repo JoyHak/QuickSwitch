@@ -4,20 +4,20 @@ Dummy() {
     Return
 }
 
-SelectPath(_showMenu := false, _name := "", _position := 1) {
+SelectPath(_showMenu := false, _attempts := 3, _name := "", _position := 1) {
     global DialogId, FileDialog, Paths, ElevatedApps
 
     _log := ""
-    loop, 3 {
+    loop, % _attempts {
         try {
             if !WinActive("ahk_id " DialogId)
                 return
 
-            if (FileDialog.call(Paths[_position]))
+            if (FileDialog.call(Paths[_position]), _attempts)
                 return _showMenu ? ShowMenu() : 0
 
         } catch _ex {
-            if (A_Index = 3)
+            if (A_Index = _attempts)
                 _log := _ex.what " " _ex.message " " _ex.extra
         }
     }

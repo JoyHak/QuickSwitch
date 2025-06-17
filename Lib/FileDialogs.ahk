@@ -7,20 +7,20 @@
     "path"   param must be a string valid for any dialog
 */
 
-FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path) {
+FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
     ; Always send "Enter" key to the General dialog
     static SEND_ENTER := true
-    return FeedDialogSYSTREEVIEW(SEND_ENTER, editId, path)
+    return FeedDialogSYSTREEVIEW(SEND_ENTER, editId, path, attempts)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
+FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, ahk_id %editId%
     
-    Loop, 3 {
+    Loop, % attempts {
         ; Change current path
         ControlFocus,, ahk_id %editId%
         ControlSetText,, % path, ahk_id %editId%
@@ -44,13 +44,13 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
+FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogId
         
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
-    Loop, 3 {
+    Loop, % attempts {
         Sleep, 15
         ControlFocus     SysListView321, ahk_id %DialogId%
         ControlGetFocus, _focus,         ahk_id %DialogId%
@@ -59,14 +59,14 @@ FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path) {
 
     ControlSend SysListView321, {Home},  ahk_id %DialogId%
 
-    Loop, 3 {
+    Loop, % attempts {
         Sleep, 15
         ControlSend SysListView321, ^{Space}, ahk_id %DialogId%
         ControlGet, _focus, List, Selected, SysListView321, ahk_id %DialogId%
 
     } Until !_focus
 
-    return FeedDialogSYSTREEVIEW(sendEnter, editId, path)
+    return FeedDialogSYSTREEVIEW(sendEnter, editId, path, attempts)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

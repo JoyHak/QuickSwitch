@@ -61,7 +61,7 @@ InitAutoStartup()
 Loop {
     ; Wait for any "Open/Save as" file dialog
     WinWaitActive, ahk_class #32770
-  
+
     try {
         DialogId   := WinActive("A")
         FileDialog := GetFileDialog(DialogId, EditId)
@@ -77,7 +77,7 @@ Loop {
             FingerPrint   := Exe "___" WinTitle
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
-            SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways)
+            SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways, SelectPathAttempts)
 
             ; Get current dialog settings or use default mode (AutoSwitch flag)
             ; Current settings override "Always AutoSwitch" mode (if they exist)
