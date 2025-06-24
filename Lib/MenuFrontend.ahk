@@ -33,7 +33,7 @@ AddMenuPaths(ByRef array, _function) {
         else
             _display .= _path
 
-        Menu, ContextMenu, Insert,, % _display, % _function        
+        Menu, ContextMenu, Insert,, % _display, % _function
         if (_index = PathLimit)
             return
     }
@@ -60,9 +60,9 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global Paths, SelectMenuPath, MenuColor, DialogId
+    global Paths, SelectMenuPath, MenuColor
     global FromSettings := false
-    
+
     try Menu ContextMenu, Delete            ; Delete previous menu
 
     if Paths.length() {
@@ -71,9 +71,8 @@ ShowMenu() {
     } else {
         AddMenuTitle("No available paths")
     }
-    
+
     Menu ContextMenu, Color, % MenuColor
-    WinActivate % "ahk_id " DialogId        ; Activate dialog in case of menu flickering
     Menu ContextMenu, Show, 0, 100          ; Show new menu and halt the thread
 }
 
