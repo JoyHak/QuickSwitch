@@ -18,6 +18,18 @@ SendTotalMessage(ByRef winPid, _message) {
     SendMessage(_winId, _message, 1075)
 }
 
+SendExplorerPath(ByRef winId, ByRef path) {    
+    try {
+        for _win in ComObjCreate("Shell.Application").windows {
+            if (winId = _win.hwnd) {
+                _win.Navigate(path)
+                break
+            }
+        }
+        _win := ""        
+    }
+}
+
 SendTotalCommand(ByRef winId, ByRef command) {
     ; Command must be defined as "EM_..." in usercmd.ini (may be user-defined filename)
     VarSetCapacity(_copyData, A_PtrSize * 3)
