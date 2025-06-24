@@ -5,10 +5,9 @@ AddElevatedName(ByRef winPid, ByRef elevatedDict) {
     if (A_IsAdmin || elevatedDict.hasKey(winPid))
         return false
 
-    WinGet, _name, ProcessName, ahk_pid %winPid%
     elevatedDict["updated"] := true
     elevatedDict[winPid]    := {elevated:  IsProcessElevated(winPid)
-                              , name:      Format("{} ({})", SubStr(_name, 1, -4), winPid)}
+                              , name:      Format("{} ({})", GetProcessName(winPid), winPid)}
     return true
 }
 
@@ -53,7 +52,7 @@ IsProcessElevated(ByRef winPid) {
     static TOKEN_ELEVATION                   := 20
 
     ; For debugging only
-    WinGet, _name, ProcessName, ahk_pid %winPid%
+    _name := GetProcessName(winPid)
 
     ; https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
     _winPid := DllCall("OpenProcess", "UInt", PROCESS_QUERY_INFORMATION, "Int", False, "UInt", winPid, "Ptr")
