@@ -13,7 +13,6 @@ DialogId           :=  0
 EditId             :=  0
 FingerPrint        :=  ""
 DialogAction       :=  ""
-LightTheme         :=  false
 SaveDialogAction   :=  false
 FromSettings       :=  false
 NukeSettings       :=  false
@@ -42,6 +41,7 @@ SetDefaultValues() {
     DeleteDialogs       :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
+    DarkTheme           :=  false
     RestartKeyHook      :=  false
     SendEnter           :=  false
     ShortPath           :=  false
@@ -104,6 +104,7 @@ WriteValues() {
          RestartWhere="         RestartWhere          "
          MainKeyHook="          MainKeyHook           "
          RestartKeyHook="       RestartKeyHook        "
+         DarkTheme="            DarkTheme             "
     )"
 
     _values .= "`n"
