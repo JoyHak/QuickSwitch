@@ -12,10 +12,14 @@ ShowSettings() {
     FromSettings := true
 
     ; Options that affects subsequent controls
-    Gui, -E0x200 -SysMenu +AlwaysOnTop  ; hide window border and header
-    Gui, Font, q5, %MainFont%           ; clean quality
-    Gui, Color, %GuiColor%, %GuiColor%
-
+    ; Hide window border and header
+    Gui, -E0x200 -SysMenu +AlwaysOnTop -DPIScale +HwndGuiId 	
+    Gui, Color, % GuiColor, % GuiColor
+    Gui, Font, q5, % MainFont           ; Clean quality
+    
+    if !LightTheme
+        Gui, Font, % "q5 c" InvertColor(GuiColor), % MainFont
+    
     ; Edit fields: fixed width, one row, max 6 symbols, no multi-line word wrap and vertical scrollbar
     local edit := "w63 r1 -Wrap -vscroll"
 
@@ -109,6 +113,10 @@ ShowSettings() {
     ; Current checkbox state
     ToggleShowAlways()
     ToggleShortPath()
+    
+    if !LightTheme {
+        SetDarkTheme("OkButton|CancelButton|NukeButton|ResetButton|DebugButton|msctls_hotkey321")
+    }
 
     ; Get dialog position
     local _winX, _winY, _pos := ""

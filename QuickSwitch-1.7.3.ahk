@@ -56,7 +56,9 @@ ReadValues()
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
+
 InitAutoStartup()
+InitDarkTheme()
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
