@@ -68,6 +68,13 @@ Loop {
 
         if FileDialog {
             ; This is a supported dialog
+            ; Switch focus to non-buttons to prevent accidental closing
+            try {
+                ControlFocus ToolbarWindow321, ahk_id %DialogId%
+                ControlSend,, {end}{space}, ahk_id %EditId%
+                Sleep 100
+            }
+
             ; If there is any GUI left from previous calls...
             Gui, Destroy
 

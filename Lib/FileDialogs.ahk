@@ -19,7 +19,7 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
 ;─────────────────────────────────────────────────────────────────────────────
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, ahk_id %editId%
-    
+
     Loop, % attempts {
         ; Change current path
         ControlFocus,, ahk_id %editId%
@@ -30,7 +30,7 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
             ; Successfully changed
             if !sendEnter
                 return true
-                
+
             ControlSend,, {Enter}, ahk_id %editId%
 
             ; Restore filename
@@ -47,7 +47,7 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
 FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
 ;─────────────────────────────────────────────────────────────────────────────
     global DialogId
-        
+
     ; Make sure no element is preselected in listview,
     ; it would always be used later on if you continue with {Enter}!
     Loop, % attempts {
@@ -81,46 +81,44 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
         ControlGet, editId,   hwnd,, Edit1,   ahk_id %dialogId%
     }
 
-    if buttonId && editId {
-        ; Dialog with buttons
-        ; Switch focus to non-buttons to prevent accidental closing
-        try ControlFocus ToolbarWindow321, ahk_id %dialogId%
-        Sleep 100
-        
-        ; Get specific controls
-        WinGet, _controlList, ControlList, ahk_id %dialogId%
+    if !(buttonId || editId)
+        return false
 
-        ; Search for...
-        static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16}
+    ; Dialog with buttons
+    ; Get specific controls
+    WinGet, _controlList, ControlList, ahk_id %dialogId%
 
-        ; Find controls and set bitwise flag
-        _f := 0
-        Loop, Parse, _controlList, `n
-        {
-            if (_class := classes[A_LoopField])
-                _f |= _class
-        }
+    ; Search for...
+    static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16}
 
-        ; Check specific controls
-        if (_f & 8 && _f & 16) {
-            return Func("FeedDialogGENERAL")
-        }
+    ; Find controls and set bitwise flag
+    _f := 0
+    Loop, Parse, _controlList, `n
+    {
+        if (_class := classes[A_LoopField])
+            _f |= _class
+    }
 
-        if (_f & 1) {
-            if (_f & 4) {
-                if (_f & 8) {
-                    return Func("FeedDialogSYSTREEVIEW")
-                }
-                return Func("FeedDialogSYSLISTVIEW")
-            }
+    ; Check specific controls
+    if (_f & 8 && _f & 16) {
+        return Func("FeedDialogGENERAL")
+    }
+
+    if (_f & 1) {
+        if (_f & 4) {
             if (_f & 8) {
-                return Func("FeedDialogSYSLISTVIEW")
+                return Func("FeedDialogSYSTREEVIEW")
             }
+            return Func("FeedDialogSYSLISTVIEW")
         }
-
-        if (_f & 2) {
-            return Func("FeedDialogSYSTREEVIEW")
+        if (_f & 8) {
+            return Func("FeedDialogSYSLISTVIEW")
         }
     }
+
+    if (_f & 2) {
+        return Func("FeedDialogSYSTREEVIEW")
+    }
+
     return false
 }
