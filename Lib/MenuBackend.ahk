@@ -11,7 +11,7 @@ SelectPath(_showMenu := false, _attempts := 3, _name := "", _position := 1) {
     loop, % _attempts {
         try {
             if !WinActive("ahk_id " DialogId)
-                return
+                return SendPath(Paths[_position])
 
             if (FileDialog.call(Paths[_position]), _attempts)
                 return _showMenu ? ShowMenu() : 0
@@ -35,6 +35,29 @@ SelectPath(_showMenu := false, _attempts := 3, _name := "", _position := 1) {
     _msg  :=  _name ? "Menu selection" : "Auto Switch"
 
     LogError("Failed to feed the file dialog", _msg, _log)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+SendPath(ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Send path to the current file manager / active window
+    WinGet, _id, id, A
+    WinGet, _exe, ProcessPath, A
+    WinGetClass, _class, A
+
+    switch (_class) {
+        case "CabinetWClass":
+            SendExplorerPath(_id, path)
+        case "ThunderRT6FormDC":
+            Run, % _exe " /script=::goto """ path """"
+        case "dopus.lister":
+            Run, % _exe "\..\dopusrt.exe /cmd go """ path """"
+        case "TTOTAL_CMD":
+            Run, % _exe " /O /L=""" path """"
+        default:
+            Run, % _exe " """ path """"
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

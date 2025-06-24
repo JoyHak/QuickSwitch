@@ -10,6 +10,7 @@
 ; These parameters are not saved in the INI
 SelectPathAttempts :=  3
 DialogId           :=  0
+EditId             :=  0
 FingerPrint        :=  ""
 DialogAction       :=  ""
 SaveDialogAction   :=  false
