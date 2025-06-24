@@ -22,6 +22,9 @@ ResetSettings() {
 
     SetDefaultValues()
     WriteValues()
+    
+    InitAutoStartup()
+    InitDarkTheme()
     ShowSettings()
 }
 
@@ -31,7 +34,9 @@ SaveSettings() {
     WriteValues()
     ReadValues()
     DeleteDialogs()
+    
     InitAutoStartup()
+    InitDarkTheme()
 }
 
 RestartApp() {
@@ -82,16 +87,15 @@ InitDarkTheme() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Noticz: sets dark UI colors if Windows dark mode is enabled
 	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
-    ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
-    
-	global GuiColor, LightTheme
+    ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017    
+	global DarkTheme
 	
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
 	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
-	
-    RegRead, LightTheme, % "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize", % "AppsUseLightTheme" 
-	DllCall(SetPreferredAppMode, "int", !LightTheme)
+    
+    ; 0 = Light theme, 1 = Dark theme
+	DllCall(SetPreferredAppMode, "int", DarkTheme)
 	DllCall(FlushThemes)
 }
 
