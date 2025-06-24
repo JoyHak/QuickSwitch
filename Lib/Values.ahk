@@ -13,6 +13,7 @@ DialogId           :=  0
 EditId             :=  0
 FingerPrint        :=  ""
 DialogAction       :=  ""
+LightTheme         :=  false
 SaveDialogAction   :=  false
 FromSettings       :=  false
 NukeSettings       :=  false
