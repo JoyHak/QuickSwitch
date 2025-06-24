@@ -34,6 +34,18 @@ And of course you can customize the display of paths in the Menu:
 
 As an addition I recommend the [BigSur](https://www.deviantart.com/niivu/art/Big-Sur-2-Windows-10-Themes-861727886) or [CakeOS](https://www.deviantart.com/niivu/art/cakeOS-2-0-for-Windows-11-953541433) themes from Niivu and [XYplorer](https://www.xyplorer.com/index.php) file manager.
 
+## Keyboard
+
+Each option and button in the settings has a corresponding key.
+Take a closer look: each name has an u̲n̲d̲e̲r̲l̲i̲n̲e̲d̲ l̲e̲t̲t̲e̲r̲. Press this letter on the keyboard to jump to the option. For example:
+ _C̲ancel_ – `C`; _Path s̲eparator_  – `S`.
+
+Here is a short list of the main keys:
+- Path: `0-9`.
+- Auto switch: `A`
+- Black list: `B`
+- Settings: `S`
+- Hide menu: `Esc` / `click` anywhere
 
 ## Feedback
 
