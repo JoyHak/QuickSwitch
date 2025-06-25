@@ -99,7 +99,7 @@ Loop {
             GetPaths(Paths := [], ElevatedApps, DialogAction = 1)
 
             ; Turn on registered hotkey to show menu later
-            ValidateKey("MainKey", MainKey, MainKeyHook, "On")
+            ValidateKey("MainKey", MainKey,, "On")
 
             if IsMenuReady()
                 SendEvent ^#+0
@@ -124,7 +124,7 @@ Loop {
 
     Sleep, 100
     WinWaitNotActive
-    ValidateKey("MainKey", MainKey, MainKeyHook, "Off")
+    ValidateKey("MainKey", MainKey,, "off")
 
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
