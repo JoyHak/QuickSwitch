@@ -92,42 +92,37 @@ ShowSettings() {
     Gui,    Add,    Text,       y+13,                                                               Icon (&tray)
     Gui,    Add,    Text,       y+13,                                                               Font (&GUI)
 
-    edit := "w160 r1 -Wrap -vscroll"
+    edit := "w120 r1 -Wrap -vscroll"
     
     ; Keyboard input controls
-    Gui,    Add,    Hotkey,     ys-6  %edit% w120       vMainKey                        Section,    %MainKey%
-    Gui,    Add,    Hotkey,     y+8   %edit% w120       vRestartKey,                                %RestartKey%
+    Gui,    Add,    Hotkey,     ys-6  %edit%            vMainKey                        Section,    %MainKey%
+    Gui,    Add,    Hotkey,     y+8   %edit%            vRestartKey,                                %RestartKey%
     
     ; Toggles between keyboard and mouse input modes
-    Gui,    Add,    Button,     w22 ys                  gToggleMainMouse vMainMouseButton,          mouse
-    Gui,    Add,    Button,     w22                     gToggleRestartMouse vRestartMouseButton,    mouse
+    Gui,    Add,    Button,     ys w22                  gToggleMainMouse    vMainMouseButton,       mouse
+    Gui,    Add,    Button,        wp                   gToggleRestartMouse vRestartMouseButton,    mouse
 
     Gui,    Add,    Edit,       xs    %edit% w185       vRestartWhere,                              %RestartWhere%
-    Gui,    Add,    Edit,       y+4   %edit% w185       vMainIcon,                                  %MainIcon%
-    Gui,    Add,    Edit,       y+4   %edit% w185       vMainFont,                                  %MainFont%
+    Gui,    Add,    Edit,       y+4   %edit% wp         vMainIcon,                                  %MainIcon%
+    Gui,    Add,    Edit,       y+4   %edit% wp         vMainFont,                                  %MainFont%
     
     ; Mouse input controls
     local mouse := GetMouseList("list")
     
-    Gui,    Add,    ListBox,    xs ys+25 w120 h45       gGetMouseKey vMainMouse,                    %mouse%
-    Gui,    Add,    ListBox,    xs ys+60 w120 h45        gGetMouseKey vRestartMouse,                 %mouse%
+    Gui,    Add,    ListBox,    xs ys+25 w120 h45       gGetMouseKey vMain,                         %mouse%
+    Gui,    Add,    ListBox,    xs ys+60 wp hp          gGetMouseKey vRestart,                      %mouse%
     
-    Gui,    Add,    Edit,       xs ys %edit% w120 ReadOnly      vMainKeyPlaceholder
-    Gui,    Add,    Edit,       y+8   %edit% w120 ReadOnly      vRestartKeyPlaceholder
+    Gui,    Add,    Edit,       xs ys %edit%            ReadOnly  vMainMouse,                       %MainMouse%
+    Gui,    Add,    Edit,       y+8   %edit%            ReadOnly  vRestartMouse,                    %RestartMouse%
 
     Gui,    Tab     ; BUTTONS   ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    Button,     w74  xm+40      Default  gSaveSettings,                             &OK
-    Gui,    Add,    Button,     wp x+20 yp      Cancel   gCancel,                                   &Cancel
+    Gui,    Add,    Button,     xm+40   w74   Default   gSaveSettings,                              &OK
+    Gui,    Add,    Button,     x+20 yp wp    Cancel    gCancel,                                    &Cancel
 
-    if NukeSettings {
-        NukeSettings := false
-        Gui,  Add,    Button,     wp x+20 yp  gNukeSettings,   &Nuke
-    } else {
-        Gui,  Add,    Button,     wp x+20 yp  gResetSettings,  &Reset
-    }
-
-    Gui,    Add,    Button,     wp xp+25 ym-4            gShowDebug,                                &Debug
+    local button := NukeSettings ? "Nuke" : "Reset"
+    Gui,    Add,    Button,     x+20 yp wp           g%button%Settings,                             &%button%
+    NukeSettings := false
 
 
     ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -135,8 +130,9 @@ ShowSettings() {
     ToggleShowAlways()
     ToggleShortPath()
     
-    InitMouseMode("MainMouseButton",    MainMice    != "",  MainMice)
-    InitMouseMode("RestartMouseButton", RestartMice != "",  RestartMice)
+    ; Toggle between mouse and keyboard input mode
+    InitMouseMode("Main",    MainMouse)
+    InitMouseMode("Restart", RestartMouse)
     
     if DarkTheme {
         SetDarkTheme("OkButton|CancelButton|NukeButton|ResetButton|DebugButton|msctls_hotkey321")

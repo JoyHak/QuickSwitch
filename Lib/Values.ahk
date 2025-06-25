@@ -62,8 +62,8 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
-    RestartMice    := ""
-    MainMice       := ""
+    RestartMouse   := ""
+    MainMouse      := ""
     MainIcon       := ""
 
     ;@Ahk2Exe-IgnoreBegin
@@ -106,13 +106,13 @@ WriteValues() {
          ShowFirstSeparator="   ShowFirstSeparator      "
          MainFont="             MainFont                "
          RestartWhere="         RestartWhere            "
-         RestartMice="          RestartMice             "
-         MainMice="             MainMice                "
+         RestartMouse="          RestartMouse             "
+         MainMouse="             MainMouse                "
          MainKeyHook="          MainKeyHook             "
          RestartKeyHook="       RestartKeyHook          "
          DarkTheme="            DarkTheme               "
     )"
-    
+
     _values .= "`n"
             . ValidateTrayIcon( "MainIcon",    MainIcon)
             . ValidateColor(    "GuiColor",    GuiColor)
