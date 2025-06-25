@@ -39,14 +39,14 @@ ShowSettings() {
 
     Gui,    Add,    CheckBox,   gToggleShowAlways       vShowAlways     checked%ShowAlways%,        Always &show Menu
     Gui,    Add,    CheckBox,                           vShowNoSwitch   checked%ShowNoSwitch%,      Show Menu if Menu options &disabled
-    Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after &leaving settings
+    Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after leaving &settings
     Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
 
     Gui,    Add,    CheckBox,   y+20 Section            vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
     Gui,    Add,    CheckBox,   x+8 yp                  vDeleteDialogs,                             &del dialogs config
     Gui,    Add,    CheckBox,   xs                      vBlackListExe   checked%BlackListExe%,      &Black list: always add process, not the title
     Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
-    Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       &Path numbers with shortcuts 0-9
+    Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       Path numbers &with shortcuts 0-9
 
     Gui,    Add,    Text,       y+20                                                  Section,      &Limit of displayed paths:
 
@@ -55,7 +55,7 @@ ShowSettings() {
 
     Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    CheckBox,                           vDarkTheme      checked%DarkTheme%,         Enable dark theme
+    Gui,    Add,    CheckBox,                           vDarkTheme      checked%DarkTheme%,         Enable &dark theme
 
     Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
     Gui,    Add,    Text,       y+13,                                                               &Dialogs background color (HEX)
@@ -65,7 +65,7 @@ ShowSettings() {
 
     Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    Checkbox,   gToggleShortPath        vShortPath checked%ShortPath%  Section,     Show short path, indicate as
+    Gui,    Add,    Checkbox,   gToggleShortPath        vShortPath checked%ShortPath%  Section,     &Show short path, indicate as
 
     Gui,    Add,    Text,       y+13                    vPathSeparatorText,                         Path &separator
     Gui,    Add,    Text,       y+13                    vDirsCountText,                             Number of &dirs displayed
@@ -86,11 +86,11 @@ ShowSettings() {
 
     Gui,    Add,    CheckBox,                           vAutoStartup checked%AutoStartup%,          Launch at &system startup
 
-    Gui,    Add,    Text,       y+20                                                    Section,    Open &menu by
-    Gui,    Add,    Text,       y+13,                                                               App &restart by
-    Gui,    Add,    Text,       y+21,                                                               Restart only &in
-    Gui,    Add,    Text,       y+13,                                                               Icon (&tray)
-    Gui,    Add,    Text,       y+13,                                                               Font (&GUI)
+    Gui,    Add,    Text,       y+20                                                    Section,    &Show menu by
+    Gui,    Add,    Text,       y+13,                                                               &Restart app by
+    Gui,    Add,    Text,       y+21,                                                               R&estart only in
+    Gui,    Add,    Text,       y+13,                                                               I&con (tray)
+    Gui,    Add,    Text,       y+13,                                                               &Font (GUI)
 
     edit := "w120 r1 -Wrap -vscroll"
 

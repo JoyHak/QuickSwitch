@@ -101,7 +101,7 @@ ToggleShortPath() {
     ; Hide or display additional options
     global ShortPath
     Gui, Submit, NoHide
-    GuiControl,, ShortPath, % "Show short path" . (ShortPath ? " indicate as" : "")
+    GuiControl,, ShortPath, % "&Show short path" . (ShortPath ? " indicate as" : "")
 
     GuiControl, % "Enable" ShortPath,   % "ShortenEnd"
     GuiControl, % "Enable" ShortPath,   % "ShowDriveLetter"
