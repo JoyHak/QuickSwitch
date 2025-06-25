@@ -205,7 +205,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 
     try {
         if !(_sequence)
-            return false
+            return _paramName "=`n"
             
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
