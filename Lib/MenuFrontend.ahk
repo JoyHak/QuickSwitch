@@ -60,7 +60,7 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global Paths, SelectMenuPath, MenuColor
+    global Paths, SelectMenuPath, MenuColor, DialogId
     global FromSettings := false
 
     try Menu ContextMenu, Delete            ; Delete previous menu
@@ -71,8 +71,9 @@ ShowMenu() {
     } else {
         AddMenuTitle("No available paths")
     }
-
+    
     Menu ContextMenu, Color, % MenuColor
+    WinActivate, ahk_id %DialogId%          ; Activate dialog to prevent Menu flickering
     Menu ContextMenu, Show, 0, 100          ; Show new menu and halt the thread
 }
 

@@ -44,7 +44,9 @@ ErrorsLog  := "Errors.log"
 #Include <GetPaths>
 
 #Include <SettingsBackend>
+#Include <SettingsMouse>
 #Include <MenuBackend>
+#Include <DarkTheme>
 
 #Include <SettingsFrontend>
 #Include <MenuFrontend>

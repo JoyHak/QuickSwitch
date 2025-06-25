@@ -61,6 +61,8 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
+    RestartMice    := ""
+    MainMice       := ""
     MainIcon       := ""
 
     ;@Ahk2Exe-IgnoreBegin
@@ -82,37 +84,40 @@ WriteValues() {
 
     local _values := "
     (LTrim
-         AutoStartup="          AutoStartup           "
-         AutoSwitch="           AutoSwitch            "
-         DeleteDialogs="        DeleteDialogs         "
-         ShowAlways="           ShowAlways            "
-         ShowNoSwitch="         ShowNoSwitch          "
-         ShowAfterSelect="      ShowAfterSelect       "
-         ShowAfterSettings="    ShowAfterSettings     "
-         SendEnter="            SendEnter             "
-         PathNumbers="          PathNumbers           "
-         ShortPath="            ShortPath             "
-         PathSeparator="        PathSeparator         "
-         ShortNameIndicator="   ShortNameIndicator    "
-         DirsCount="            DirsCount             "
-         DirNameLength="        DirNameLength         "
-         PathLimit="            PathLimit             "
-         ShortenEnd="           ShortenEnd            "
-         ShowDriveLetter="      ShowDriveLetter       "
-         ShowFirstSeparator="   ShowFirstSeparator    "
-         MainFont="             MainFont              "
-         RestartWhere="         RestartWhere          "
-         MainKeyHook="          MainKeyHook           "
-         RestartKeyHook="       RestartKeyHook        "
-         DarkTheme="            DarkTheme             "
+         AutoStartup="          AutoStartup             "
+         AutoSwitch="           AutoSwitch              "
+         BlackListExe="         BlackListExe            "
+         DeleteDialogs="        DeleteDialogs           "
+         ShowAlways="           ShowAlways              "
+         ShowNoSwitch="         ShowNoSwitch            "
+         ShowAfterSelect="      ShowAfterSelect         "
+         ShowAfterSettings="    ShowAfterSettings       "
+         SendEnter="            SendEnter               "
+         PathNumbers="          PathNumbers             "
+         ShortPath="            ShortPath               "
+         PathSeparator="        PathSeparator           "
+         ShortNameIndicator="   ShortNameIndicator      "
+         DirsCount="            DirsCount               "
+         DirNameLength="        DirNameLength           "
+         PathLimit="            PathLimit               "
+         ShortenEnd="           ShortenEnd              "
+         ShowDriveLetter="      ShowDriveLetter         "
+         ShowFirstSeparator="   ShowFirstSeparator      "
+         MainFont="             MainFont                "
+         RestartWhere="         RestartWhere            "
+         RestartMice="          RestartMice             "
+         MainMice="             MainMice                "
+         MainKeyHook="          MainKeyHook             "
+         RestartKeyHook="       RestartKeyHook          "
+         DarkTheme="            DarkTheme               "
     )"
-
+    
     _values .= "`n"
-            . ValidateTrayIcon( "MainIcon",             MainIcon)
-            . ValidateColor(    "GuiColor",             GuiColor)
-            . ValidateColor(    "MenuColor",            MenuColor)
-            . ValidateKey(      "MainKey",              MainKey,            MainKeyHook,        "Off",      "^#+0")
-            . ValidateKey(      "RestartKey",           RestartKey,         RestartKeyHook,     "On",       "RestartApp")
+            . ValidateTrayIcon( "MainIcon",    MainIcon)
+            . ValidateColor(    "GuiColor",    GuiColor)
+            . ValidateColor(    "MenuColor",   MenuColor)
+            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          MainKeyHook,    "Off", "^#+0")
+            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, RestartKeyHook, "On",  "RestartApp")
 
     try {
         IniWrite, % _values, % INI, Global
@@ -204,7 +209,11 @@ ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function :
 
     try {
         if (_sequence ~= "i)sc[a-f0-9]+") {
+            ; Already converted
             _key := _sequence
+        } else if (GetMouseList("isMouse", _sequence)) {
+            ; Convert to mouse buttons
+            _key := GetMouseList("convert", _sequence)
         } else {
             ; Convert sequence to Scan Codes (if not converted)
             _key := ""
@@ -225,7 +234,6 @@ ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function :
         if _function {
             ; Register new hotkey
             Hotkey, % _prefix . _key, % _function, % _state
-
             try {
                 ; Remove old if exist
                 IniRead, _old, % INI, Global, % _paramName, % _key

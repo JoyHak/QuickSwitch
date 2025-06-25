@@ -13,7 +13,7 @@ ShowSettings() {
 
     ; Options that affects subsequent controls
     ; Hide window border and header
-    Gui, -E0x200 -SysMenu +AlwaysOnTop -DPIScale +HwndGuiId 	
+    Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop 	
     Gui, Color, % GuiColor, % GuiColor
     Gui, Font, q5, % MainFont           ; Clean quality
     
@@ -44,7 +44,8 @@ ShowSettings() {
 
     Gui,    Add,    CheckBox,   y+20 Section            vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
     Gui,    Add,    CheckBox,   x+8 yp                  vDeleteDialogs,                             &del dialogs config
-    Gui,    Add,    CheckBox,   xs                      vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
+    Gui,    Add,    CheckBox,   xs                      vBlackListExe   checked%BlackListExe%,      &Black list: always add process, not the title
+    Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
     Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       &Path numbers with shortcuts 0-9
 
     Gui,    Add,    Text,       y+20                                                  Section,      &Limit of displayed paths:
@@ -59,8 +60,8 @@ ShowSettings() {
     Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
     Gui,    Add,    Text,       y+13,                                                               &Dialogs background color (HEX)
 
-    Gui,    Add,    Edit,       ys-4 %edit% w90 Limit8      vMenuColor,                            %MenuColor%
-    Gui,    Add,    Edit,       y+4  %edit% w90 Limit8      vGuiColor,                             %GuiColor%    
+    Gui,    Add,    Edit,       ys-4 %edit% w90 Limit8      vMenuColor,                             %MenuColor%
+    Gui,    Add,    Edit,       y+4  %edit% w90 Limit8      vGuiColor,                              %GuiColor%    
     
     Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -87,23 +88,36 @@ ShowSettings() {
 
     Gui,    Add,    Text,       y+20                                                    Section,    Open &menu by
     Gui,    Add,    Text,       y+13,                                                               App &restart by
-    Gui,    Add,    Text,       y+13,                                                               Restart only &in
+    Gui,    Add,    Text,       y+21,                                                               Restart only &in
     Gui,    Add,    Text,       y+13,                                                               Icon (&tray)
     Gui,    Add,    Text,       y+13,                                                               Font (&GUI)
 
     edit := "w160 r1 -Wrap -vscroll"
-    Gui,    Add,    Hotkey,     ys-4  %edit% w120       vMainKey                        Section,    %MainKey%
-    Gui,    Add,    Hotkey,     y+4   %edit% w120       vRestartKey,                                %RestartKey%
-    Gui,    Add,    CheckBox,   ys+4                    vMainKeyHook    checked%MainKeyHook%,       hook
-    Gui,    Add,    CheckBox,   y+12                    vRestartKeyHook checked%RestartKeyHook%,    hook
+    
+    ; Keyboard input controls
+    Gui,    Add,    Hotkey,     ys-6  %edit% w120       vMainKey                        Section,    %MainKey%
+    Gui,    Add,    Hotkey,     y+8   %edit% w120       vRestartKey,                                %RestartKey%
+    
+    ; Toggles between keyboard and mouse input modes
+    Gui,    Add,    Button,     w22 ys                  gToggleMainMouse vMainMouseButton,          mouse
+    Gui,    Add,    Button,     w22                     gToggleRestartMouse vRestartMouseButton,    mouse
 
-    Gui,    Add,    Edit,       xs    %edit%            vRestartWhere,                              %RestartWhere%
-    Gui,    Add,    Edit,       y+4   %edit%            vMainIcon,                                  %MainIcon%
-    Gui,    Add,    Edit,       y+4   %edit%            vMainFont,                                  %MainFont%
+    Gui,    Add,    Edit,       xs    %edit% w185       vRestartWhere,                              %RestartWhere%
+    Gui,    Add,    Edit,       y+4   %edit% w185       vMainIcon,                                  %MainIcon%
+    Gui,    Add,    Edit,       y+4   %edit% w185       vMainFont,                                  %MainFont%
+    
+    ; Mouse input controls
+    local mouse := GetMouseList("list")
+    
+    Gui,    Add,    ListBox,    xs ys+25 w120 h45       gGetMouseKey vMainMouse,                    %mouse%
+    Gui,    Add,    ListBox,    xs ys+60 w120 h45        gGetMouseKey vRestartMouse,                 %mouse%
+    
+    Gui,    Add,    Edit,       xs ys %edit% w120 ReadOnly      vMainKeyPlaceholder
+    Gui,    Add,    Edit,       y+8   %edit% w120 ReadOnly      vRestartKeyPlaceholder
 
     Gui,    Tab     ; BUTTONS   ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    Button,     w74  xm+30      Default  gSaveSettings,                             &OK
+    Gui,    Add,    Button,     w74  xm+40      Default  gSaveSettings,                             &OK
     Gui,    Add,    Button,     wp x+20 yp      Cancel   gCancel,                                   &Cancel
 
     if NukeSettings {
@@ -121,6 +135,9 @@ ShowSettings() {
     ToggleShowAlways()
     ToggleShortPath()
     
+    InitMouseMode("MainMouseButton",    MainMice    != "",  MainMice)
+    InitMouseMode("RestartMouseButton", RestartMice != "",  RestartMice)
+    
     if DarkTheme {
         SetDarkTheme("OkButton|CancelButton|NukeButton|ResetButton|DebugButton|msctls_hotkey321")
     }
@@ -133,5 +150,4 @@ ShowSettings() {
         _pos := " x" _winX " y" _winY + 100
 
     Gui, Show, % "AutoSize" _pos, Settings
-
 }
