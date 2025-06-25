@@ -21,6 +21,7 @@ ToggleMainMouse(_control := 0) {
     ; Set visibility
     GuiControl, Show%toggle%, MainMouse     ; Mouse keys placeholder
     GuiControl, Hide%toggle%, MainKey       ; Hotkey control
+    GuiControl, Show%toggle%, Main          ; Drop-down list
     
     ; Hide controls below to select mouse key from drop-down list
     GuiControl, Hide%toggle%, RestartKey
@@ -33,6 +34,7 @@ ToggleRestartMouse(_control := 0) {
     
     InitMouseMode("Restart", toggle)
     GuiControl, Show%toggle%, RestartMouse  ; Mouse keys placeholder
+    GuiControl, Show%toggle%, Restart       ; Drop-down list
     
     ; Hide controls below to select mouse key from drop-down list
     GuiControl, Hide%toggle%, RestartKey

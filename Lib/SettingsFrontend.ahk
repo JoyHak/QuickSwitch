@@ -131,8 +131,8 @@ ShowSettings() {
     ToggleShortPath()
     
     ; Toggle between mouse and keyboard input mode
-    InitMouseMode("Main",    MainMouse)
-    InitMouseMode("Restart", RestartMouse)
+    InitMouseMode("Main",    MainMouse    != "")
+    InitMouseMode("Restart", RestartMouse != "")
     
     if DarkTheme {
         SetDarkTheme("OkButton|CancelButton|NukeButton|ResetButton|DebugButton|msctls_hotkey321")
