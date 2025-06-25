@@ -54,7 +54,7 @@ ToggleRestartMouse(_control := 0) {
 
     ; Toggle mouse input controls and set button caption
     toggle := !toggle
-    InitMouseMode("Main", toggle)
+    InitMouseMode("Restart", toggle)
 
     ; Set button caption
     GuiControl,, % "RestartMouseButton", % (toggle ? "keybd" : "mouse")

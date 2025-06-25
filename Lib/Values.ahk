@@ -101,19 +101,19 @@ WriteValues() {
          ShortenEnd="           ShortenEnd              "
          ShowDriveLetter="      ShowDriveLetter         "
          ShowFirstSeparator="   ShowFirstSeparator      "
+         DarkTheme="            DarkTheme               "
          MainFont="             MainFont                "
          RestartWhere="         RestartWhere            "
-         RestartMouse="         RestartMouse            "
          MainMouse="            MainMouse               "
-         DarkTheme="            DarkTheme               "
+         RestartMouse="         RestartMouse            "
     )"
 
     _values .= "`n"
+            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
+            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
             . ValidateTrayIcon( "MainIcon",    MainIcon)
             . ValidateColor(    "GuiColor",    GuiColor)
             . ValidateColor(    "MenuColor",   MenuColor)
-            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
-            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
 
     try {
         IniWrite, % _values, % INI, Global
