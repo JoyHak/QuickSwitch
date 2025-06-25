@@ -22,7 +22,7 @@ ResetSettings() {
 
     SetDefaultValues()
     WriteValues()
-    
+
     InitAutoStartup()
     InitDarkTheme()
     ShowSettings()
@@ -34,7 +34,7 @@ SaveSettings() {
     WriteValues()
     ReadValues()
     DeleteDialogs()
-    
+
     InitAutoStartup()
     InitDarkTheme()
 }
@@ -87,9 +87,11 @@ ToggleShowAlways() {
 ;─────────────────────────────────────────────────────────────────────────────
     global ShowAlways
     Gui, Submit, NoHide
-    GuiControl, Disable%ShowAlways%, ShowNoSwitch
-    GuiControl, Disable%ShowAlways%, ShowAfterSettings
-    GuiControl, Disable%ShowAlways%, ShowAfterSelect
+
+    GuiControl, % "Disable" ShowAlways, % "ShowNoSwitch"
+    GuiControl, % "Disable" ShowAlways, % "ShowNoSwitch"
+    GuiControl, % "Disable" ShowAlways, % "ShowAfterSettings"
+    GuiControl, % "Disable" ShowAlways, % "ShowAfterSelect"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -99,17 +101,18 @@ ToggleShortPath() {
     ; Hide or display additional options
     global ShortPath
     Gui, Submit, NoHide
-    GuiControl,, ShortPath, % "Show short path" . (ShortPath ? " indicate as" : "")
+    GuiControl,, ShortPath, % "&Show short path" . (ShortPath ? " indicate as" : "")
 
-    GuiControl, Enable%ShortPath%, ShortenEnd
-    GuiControl, Enable%ShortPath%, ShowDriveLetter
-    GuiControl, Enable%ShortPath%, DirsCount
-    GuiControl, Enable%ShortPath%, DirsCountText
-    GuiControl, Enable%ShortPath%, DirNameLength
-    GuiControl, Enable%ShortPath%, DirNameLengthText
-    GuiControl, Enable%ShortPath%, PathSeparator
-    GuiControl, Enable%ShortPath%, PathSeparatorText
-    GuiControl, Enable%ShortPath%, ShowFirstSeparator
-    GuiControl, Show%ShortPath%,   ShortNameIndicator
-    GuiControl, Show%ShortPath%,   ShortNameIndicatorText
+    GuiControl, % "Enable" ShortPath,   % "ShortenEnd"
+    GuiControl, % "Enable" ShortPath,   % "ShowDriveLetter"
+    GuiControl, % "Enable" ShortPath,   % "DirsCount"
+    GuiControl, % "Enable" ShortPath,   % "DirsCountText"
+    GuiControl, % "Enable" ShortPath,   % "DirNameLength"
+    GuiControl, % "Enable" ShortPath,   % "DirNameLengthText"
+    GuiControl, % "Enable" ShortPath,   % "PathSeparator"
+    GuiControl, % "Enable" ShortPath,   % "PathSeparatorText"
+    GuiControl, % "Enable" ShortPath,   % "ShowFirstSeparator"
+
+    GuiControl, % "Show" ShortPath,     % "ShortNameIndicator"
+    GuiControl, % "Show" ShortPath,     % "ShortNameIndicatorText"
 }

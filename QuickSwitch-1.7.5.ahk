@@ -56,8 +56,8 @@ SetDefaultValues()
 ReadValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
-ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "^#+0")
-ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
+ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
+ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
 InitAutoStartup()
 InitDarkTheme()
@@ -89,17 +89,17 @@ Loop {
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
             SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways, SelectPathAttempts)
-            
+
             ; Get current dialog settings or use default mode (AutoSwitch flag)
             ; Current settings override "Always AutoSwitch" mode (if they exist)
             IniRead, BlackList, % INI, Dialogs, % Exe, 0
             IniRead, Switch, % INI, Dialogs, % FingerPrint, % AutoSwitch
-            
+
             DialogAction := Max(BlackList, Switch)
             GetPaths(Paths := [], ElevatedApps, DialogAction = 1)
 
             ; Turn on registered hotkey to show menu later
-            ValidateKey("MainKey", MainKey, MainKeyHook, "On")
+            ValidateKey("MainKey", MainKey,, "On")
 
             if IsMenuReady()
                 SendEvent ^#+0
@@ -124,7 +124,7 @@ Loop {
 
     Sleep, 100
     WinWaitNotActive
-    ValidateKey("MainKey", MainKey, MainKeyHook, "Off")
+    ValidateKey("MainKey", MainKey,, "off")
 
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
