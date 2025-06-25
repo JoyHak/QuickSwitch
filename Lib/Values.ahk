@@ -38,6 +38,7 @@ SetDefaultValues() {
     PathNumbers         :=  true
 
     AutoSwitch          :=  false
+    BlackListExe        :=  false
     DeleteDialogs       :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false

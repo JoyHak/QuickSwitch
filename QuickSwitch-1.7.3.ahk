@@ -89,10 +89,13 @@ Loop {
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
             SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways, SelectPathAttempts)
-
+            
             ; Get current dialog settings or use default mode (AutoSwitch flag)
             ; Current settings override "Always AutoSwitch" mode (if they exist)
-            IniRead, DialogAction, % INI, Dialogs, % FingerPrint, % AutoSwitch
+            IniRead, BlackList, % INI, Dialogs, % Exe, 0
+            IniRead, Switch, % INI, Dialogs, % FingerPrint, % AutoSwitch
+            
+            DialogAction := Max(BlackList, Switch)
             GetPaths(Paths := [], ElevatedApps, DialogAction = 1)
 
             ; Turn on registered hotkey to show menu later
