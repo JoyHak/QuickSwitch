@@ -13,7 +13,11 @@ The application is divided into many files that interact closely. It is not safe
 | TotalCommander   | Get paths from TC                        | Contains setters to prepare TC to receive the desired requests and getters to receive paths. |
 | GetPaths         | Get all paths                            | Top-level getters. Starts `Auto Switch` as soon as at least 1 path is found. |
 | SettingsBackend  | Save and change settings values          | Contains functions that are bound to GUI Settings and out-of-category functions needed for the app. |
+| SettingsMouse    | Select mouse buttons                     | Contains functions for selecting mouse buttons in the GUI, togglers for keyboard input and mouse button selection controls, getter for converting mouse buttons into a readable view. |
+| MenuBackend      | Change Menu behavior                     | Contains functions that are bound to Menu options and responsible for the Menu functionality. |
+| DarkTheme        | Change Menu and GUI theme                | Contains functions for switching Menu and GUI to dark / light mode |
 | SettingsFrontend | Change global variables                  | GUI: shows app settings. Uses global variables.              |
-| MenuBackend      | Change menu behavior                     | Contains functions that are bound to Menu options and responsible for the Menu functionality. |
 | MenuFrontend     | Select paths and options                 | Menu: shows paths and options. Displayed and actual paths are independent of each other,    which allows Menu to display anything *(e.g. short path)* |
+
+
 
