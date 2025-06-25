@@ -91,10 +91,14 @@ ToggleAutoSwitch() {
 ;
 ToggleBlackList() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction, SaveDialogAction
+    global
 
     DialogAction     := (DialogAction = -1) ? 0 : -1
     SaveDialogAction := true
+    
+    if BlackListExe {
+        FingerPrint := Exe
+    }
 
     if IsMenuReady()
        SendEvent ^#+0
