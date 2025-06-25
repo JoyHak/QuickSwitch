@@ -50,6 +50,7 @@ IsProcessElevated(ByRef winPid) {
     static TOKEN_QUERY                       := 0x0008
     static TOKEN_QUERY_SOURCE                := 0x0010
     static TOKEN_ELEVATION                   := 20
+    static advapi := DllCall("LoadLibrary", "str", "advapi32.dll", "ptr")
 
     ; For debugging only
     _name := GetProcessName(winPid)
@@ -62,9 +63,8 @@ IsProcessElevated(ByRef winPid) {
         if ((_winPid = 0) || (_winPid = -1))
             throw Exception("Unable open process " _name, "open process", _winPid " is passed to kernel32\OpenProcess")
     }
-    
+
     ; https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
-    DllCall("LoadLibrary", "str", "advapi32.dll", "ptr")
     if !(DllCall("advapi32\OpenProcessToken", "Ptr", _winPid, "UInt", TOKEN_QUERY | TOKEN_QUERY_SOURCE, "Ptr*", _tokenId := 0)) {
         DllCall("CloseHandle", "Ptr", _winPid)
 

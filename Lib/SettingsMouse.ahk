@@ -1,23 +1,23 @@
 ; Contains functions for selecting mouse buttons in the GUI.
 
-InitKeybdMode(_type := "Main", _toggle := true) { 
+InitKeybdMode(_type := "Main", _toggle := true) {
     ; Switches the key input mode
     ; Show hotkey control
-    InitMouseMode(_type, !_toggle)      
-    
-    if _toggle {    
+    InitMouseMode(_type, !_toggle)
+
+    if _toggle {
         ; Reset global mouse
         ; Focus hotkey control
-        GuiControl,, %_type%Mouse, % ""
-        GuiControl, Focus, %_type%Key   
+        GuiControl,, % _type "Mouse", % ""
+        GuiControl, % "Focus", % _type "Key"
     }
 }
 
 InitMouseMode(_type := "Main", _toggle := false) {
     ; Switches the visibility of mouse buttons selection controls
-    GuiControl, Show%_toggle%, %_type%Mouse ; Mouse keys placeholder
-    GuiControl, Hide,          %_type%      ; Drop-down list
-    GuiControl, Hide%_toggle%, %_type%Key   ; Hotkey control
+    GuiControl, % "Show" _toggle, % _type "Mouse" ; Mouse keys placeholder
+    GuiControl, % "Hide" _toggle, % _type "Key"   ; Hotkey control
+    GuiControl, % "Hide",         % _type         ; Drop-down list
 }
 
 
@@ -25,39 +25,50 @@ InitMouseMode(_type := "Main", _toggle := false) {
 ;
 ToggleMainMouse(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
-    static toggle := false    
-    
+    static toggle := false
+
     ; Toggle mouse input controls and set button caption
     toggle := !toggle
     InitMouseMode("Main", toggle)
-    
+
     ; Set button caption
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
-    
+
     ; Hide controls below to select mouse key from drop-down list
-    GuiControl, Hide%toggle%, RestartKey
-    GuiControl, Hide%toggle%, RestartMouse
+    GuiControl, % "Hide" toggle, % "RestartKey"
+    GuiControl, % "Hide" toggle, % "RestartMouse"
     if !toggle
         return InitKeybdMode("Main")
 
     ; Set visibility
-    GuiControl, Show%toggle%, MainMouse     ; Mouse buttons placeholder
-    GuiControl, Show%toggle%, Main          ; Drop-down list
-    GuiControl, Hide%toggle%, MainKey       ; Hotkey control
+    GuiControl, % "Show" toggle, % "MainMouse"    ; Mouse buttons placeholder
+    GuiControl, % "Show" toggle, % "Main"         ; Drop-down list
+    GuiControl, % "Hide" toggle, % "MainKey"      ; Hotkey control
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
 ToggleRestartMouse(_control := 0) {
+;─────────────────────────────────────────────────────────────────────────────
     static toggle := false
+
+    ; Toggle mouse input controls and set button caption
     toggle := !toggle
-    InitMouseMode("Restart", toggle)
-    
-    ; Set visibility
-    GuiControl, Show%toggle%, RestartMouse  ; Mouse buttons placeholder
-    GuiControl, Show%toggle%, Restart       ; Drop-down list
-    
+    InitMouseMode("Main", toggle)
+
+    ; Set button caption
+    GuiControl,, % "RestartMouseButton", % (toggle ? "keybd" : "mouse")
+
     ; Hide controls below to select mouse key from drop-down list
-    GuiControl, Hide%toggle%, RestartKey
-    GuiControl, Hide%toggle%, RestartWhere
+    GuiControl, % "Hide" toggle, % "RestartKey"
+    GuiControl, % "Hide" toggle, % "RestartWhere"
+
+    if !toggle
+        return InitKeybdMode("Restart")
+
+    ; Set visibility
+    GuiControl, % "Show" toggle, % "RestartMouse" ; Mouse buttons placeholder
+    GuiControl, % "Show" toggle, % "Restart"      ; Drop-down list
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -67,14 +78,14 @@ GetMouseKey(_control := 0) {
     ; Gets value from the mouse input mode (drop-down list)
     ; Get value and mouse button name
     GuiControlGet, _key,, % _control
-    GuiControlGet, name, Name, % _control
-    
+    GuiControlGet, _type, % "Name", % _control
+
     ; Hide drop-down list
-    Toggle%name%Mouse()
-    
+    Toggle%_type%Mouse()
+
     ; Set placeholder to the selected mouse button
-    GuiControl,, %name%Mouse, % _key
-    GuiControl, Show, %name%Mouse
+    GuiControl,, % _type "Mouse", % _key
+    GuiControl, % "Show", % _type "Mouse"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

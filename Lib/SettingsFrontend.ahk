@@ -13,13 +13,13 @@ ShowSettings() {
 
     ; Options that affects subsequent controls
     ; Hide window border and header
-    Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop 	
+    Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop
     Gui, Color, % GuiColor, % GuiColor
     Gui, Font, q5, % MainFont           ; Clean quality
-    
+
     if DarkTheme
         Gui, Font, % "q5 c" InvertColor(GuiColor), % MainFont
-    
+
     ; Edit fields: fixed width, one row, max 6 symbols, no multi-line word wrap and vertical scrollbar
     local edit := "w63 r1 -Wrap -vscroll"
 
@@ -54,15 +54,15 @@ ShowSettings() {
     Gui,    Add,    UpDown,     Range1-9999             vPathLimit,                                 %PathLimit%
 
     Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
-    
+
     Gui,    Add,    CheckBox,                           vDarkTheme      checked%DarkTheme%,         Enable dark theme
-    
+
     Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
     Gui,    Add,    Text,       y+13,                                                               &Dialogs background color (HEX)
 
     Gui,    Add,    Edit,       ys-4 %edit% w90 Limit8      vMenuColor,                             %MenuColor%
-    Gui,    Add,    Edit,       y+4  %edit% w90 Limit8      vGuiColor,                              %GuiColor%    
-    
+    Gui,    Add,    Edit,       y+4  %edit% w90 Limit8      vGuiColor,                              %GuiColor%
+
     Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui,    Add,    Checkbox,   gToggleShortPath        vShortPath checked%ShortPath%  Section,     Show short path, indicate as
@@ -93,11 +93,11 @@ ShowSettings() {
     Gui,    Add,    Text,       y+13,                                                               Font (&GUI)
 
     edit := "w120 r1 -Wrap -vscroll"
-    
+
     ; Keyboard input controls
     Gui,    Add,    Hotkey,     ys-6  %edit%            vMainKey                        Section,    %MainKey%
     Gui,    Add,    Hotkey,     y+8   %edit%            vRestartKey,                                %RestartKey%
-    
+
     ; Toggles between keyboard and mouse input modes
     Gui,    Add,    Button,     ys w22                  gToggleMainMouse    vMainMouseButton,       mouse
     Gui,    Add,    Button,        wp                   gToggleRestartMouse vRestartMouseButton,    mouse
@@ -105,13 +105,13 @@ ShowSettings() {
     Gui,    Add,    Edit,       xs    %edit% w185       vRestartWhere,                              %RestartWhere%
     Gui,    Add,    Edit,       y+4   %edit% wp         vMainIcon,                                  %MainIcon%
     Gui,    Add,    Edit,       y+4   %edit% wp         vMainFont,                                  %MainFont%
-    
+
     ; Mouse input controls
     local mouse := GetMouseList("list")
-    
+
     Gui,    Add,    ListBox,    xs ys+25 w120 h45       gGetMouseKey vMain,                         %mouse%
     Gui,    Add,    ListBox,    xs ys+60 wp hp          gGetMouseKey vRestart,                      %mouse%
-    
+
     Gui,    Add,    Edit,       xs ys %edit%            ReadOnly  vMainMouse,                       %MainMouse%
     Gui,    Add,    Edit,       y+8   %edit%            ReadOnly  vRestartMouse,                    %RestartMouse%
 
@@ -129,11 +129,11 @@ ShowSettings() {
     ; Current checkbox state
     ToggleShowAlways()
     ToggleShortPath()
-    
+
     ; Toggle between mouse and keyboard input mode
     InitMouseMode("Main",    MainMouse    != "")
     InitMouseMode("Restart", RestartMouse != "")
-    
+
     if DarkTheme {
         SetDarkTheme("OkButton|CancelButton|NukeButton|ResetButton|DebugButton|msctls_hotkey321")
     }
