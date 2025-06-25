@@ -32,7 +32,6 @@ SetDefaultValues() {
     global
 
     AutoStartup         :=  true
-    MainKeyHook         :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
     PathNumbers         :=  true
@@ -43,7 +42,6 @@ SetDefaultValues() {
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     DarkTheme           :=  false
-    RestartKeyHook      :=  false
     SendEnter           :=  false
     ShortPath           :=  false
     ShortenEnd          :=  false
@@ -51,6 +49,7 @@ SetDefaultValues() {
     ShowFirstSeparator  :=  false
 
     GuiColor := MenuColor := ""
+    RestartMouse := MainMouse := ""
 
     ShortNameIndicator := ".."
     DirsCount      := 3
@@ -62,8 +61,6 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
-    RestartMouse   := ""
-    MainMouse      := ""
     MainIcon       := ""
 
     ;@Ahk2Exe-IgnoreBegin
@@ -106,10 +103,8 @@ WriteValues() {
          ShowFirstSeparator="   ShowFirstSeparator      "
          MainFont="             MainFont                "
          RestartWhere="         RestartWhere            "
-         RestartMouse="          RestartMouse             "
-         MainMouse="             MainMouse                "
-         MainKeyHook="          MainKeyHook             "
-         RestartKeyHook="       RestartKeyHook          "
+         RestartMouse="         RestartMouse            "
+         MainMouse="            MainMouse               "
          DarkTheme="            DarkTheme               "
     )"
 
@@ -117,8 +112,8 @@ WriteValues() {
             . ValidateTrayIcon( "MainIcon",    MainIcon)
             . ValidateColor(    "GuiColor",    GuiColor)
             . ValidateColor(    "MenuColor",   MenuColor)
-            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          MainKeyHook,    "Off", "^#+0")
-            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, RestartKeyHook, "On",  "RestartApp")
+            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
+            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
 
     try {
         IniWrite, % _values, % INI, Global
@@ -194,7 +189,7 @@ ValidateColor(_paramName, ByRef color) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function := "") {
+ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
         Replaces modifier names with
@@ -234,7 +229,6 @@ ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function :
             }
         }
 
-        _prefix := _isHook ? "" : "~"
         if _function {
             ; Register new hotkey
             Hotkey, % _prefix . _key, % _function, % _state
@@ -242,8 +236,8 @@ ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function :
                 ; Remove old if exist
                 IniRead, _old, % INI, Global, % _paramName, % _key
                 if (_old != _key) {
-                    Hotkey, % "~" . _old, Off
-                    Hotkey, % _old, Off
+                    Hotkey, % _prefix . _old, % "Off"
+                    Hotkey, % _old, % "Off"
                 }
             }
 

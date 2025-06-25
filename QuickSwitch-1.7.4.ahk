@@ -56,8 +56,8 @@ SetDefaultValues()
 ReadValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
-ValidateKey(     "MainKey",     MainKey,     MainKeyHook,     "Off",  "^#+0")
-ValidateKey(     "RestartKey",  RestartKey,  RestartKeyHook,  "On",   "RestartApp")
+ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
+ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
 InitAutoStartup()
 InitDarkTheme()
