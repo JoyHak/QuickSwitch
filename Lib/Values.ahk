@@ -209,6 +209,9 @@ ValidateKey(_paramName, _sequence, _isHook := false, _state := "On", _function :
     global INI
 
     try {
+        if !(_sequence)
+            return false
+            
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
             _key := _sequence
