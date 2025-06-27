@@ -90,13 +90,16 @@ Loop {
 
             SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways, SelectPathAttempts)
 
-            ; Get current dialog settings or use default mode (AutoSwitch flag)
-            ; Current settings override "Always AutoSwitch" mode (if they exist)
+            /* 
+                Get current dialog settings or use default mode (AutoSwitch flag).
+                Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
+                If .exe or FingerPrint == -1 then DialogAction will be -1 (window in BlackList)
+            */
             IniRead, BlackList, % INI, Dialogs, % Exe, 0
             IniRead, Switch, % INI, Dialogs, % FingerPrint, % AutoSwitch
 
-            DialogAction := Max(BlackList, Switch)
-            GetPaths(Paths := [], ElevatedApps, DialogAction = 1)
+            DialogAction := Switch | BlackList
+            GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
 
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey,, "On")
