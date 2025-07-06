@@ -135,7 +135,7 @@ ShowSettings() {
     InitMouseMode("Restart", RestartMouse != "")
 
     if DarkTheme {
-        SetDarkTheme("OkButton|CancelButton|NukeButton|ResetButton|DebugButton|msctls_hotkey321")
+        SetDarkTheme("&OK|&Cancel|&Nuke|&Debug|&Reset|msctls_hotkey321")
     }
 
     ; Get dialog position
