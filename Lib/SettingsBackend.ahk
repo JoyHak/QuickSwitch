@@ -32,10 +32,10 @@ SaveSettings() {
     ; Write current GUI (global) values
     Gui, Submit
     SetDefaultColor()
+    DeleteValues()
     
     WriteValues()
     ReadValues()
-    DeleteDialogs()
 
     InitAutoStartup()
     InitDarkTheme()
@@ -50,12 +50,8 @@ RestartApp() {
         Reload
 }
 
-DeleteDialogs() {
-    global DeleteDialogs, INI
-
-    if DeleteDialogs {
-        try IniDelete, % INI, Dialogs
-    }
+GuiEscape() {
+    Gui, Destroy
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
