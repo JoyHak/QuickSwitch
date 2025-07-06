@@ -18,16 +18,16 @@ AddMenuOption(_title, _function, _isToggle := false) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-AddMenuPaths(ByRef array, _function, _limit := 20, _showNumbers := true) {
+AddMenuPaths(ByRef array, _function) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Array must be array of arrays: [path, iconName]
-    global IconsDir, IconsSize, ShortPath
+    global IconsDir, IconsSize, ShortPath, PathLimit, PathNumbers, LastPathIndex
 
-    for _index, _options in array {
+    for _, _options in array {
         _display := ""
 
-        if (_showNumbers && (_index < 10))
-            _display .= "&" _index " "
+        if (PathNumbers && (LastPathIndex < 10))
+            _display .= "&" LastPathIndex++ " "
         if ShortPath
             _display .= GetShortPath(_options[1])
         else
@@ -35,8 +35,8 @@ AddMenuPaths(ByRef array, _function, _limit := 20, _showNumbers := true) {
 
         Menu, ContextMenu, Insert,, % _display, % _function
         Menu, ContextMenu, Icon, % _display, % IconsDir "\" _options[2],, % IconsSize
-
-        if (_index = _limit)
+        
+        if (LastPathIndex = PathLimit)
             return
     }
 }
@@ -66,8 +66,10 @@ ShowMenu() {
     FromSettings := false
     try Menu ContextMenu, Delete            ; Delete previous menu
 
-    AddMenuPaths(Paths, Func("SelectPath").bind(Paths), PathLimit, PathNumbers)
-
+    AddMenuPaths(Paths, Func("SelectPath").bind(Paths))
+    
+    LastPathIndex := 1
+    
     if (DllCall("GetMenuItemCount", "ptr", MenuGetHandle("ContextMenu")) = -1) {
         AddMenuTitle("No available paths")
     } else {

@@ -21,6 +21,7 @@ DeleteFavorites    :=  false
 DeleteKeys         :=  false
 NukeSettings       :=  false
 LastTabSettings    :=  1
+LastPathIndex      :=  1
 Paths              :=  []
 ElevatedApps       :=  {updated: false}
 
