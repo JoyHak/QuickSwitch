@@ -2,7 +2,7 @@
 ;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe
 
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
-;@Ahk2Exe-SetMainIcon QuickSwitch.ico
+;@Ahk2Exe-SetMainIcon Icons\QuickSwitch.ico
 ;@Ahk2Exe-SetDescription https://github.com/JoyHak/QuickSwitch
 ;@Ahk2Exe-SetCopyright Rafaello
 ;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license

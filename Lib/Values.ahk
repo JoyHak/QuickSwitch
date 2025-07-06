@@ -59,6 +59,7 @@ SetDefaultValues() {
     PathLimit      := 9
     PathSeparator  := "\"
 
+    IconsDir       := A_WorkingDir "\Icons"
     RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
@@ -73,7 +74,7 @@ SetDefaultValues() {
     SetDefaultColor()
 
     ;@Ahk2Exe-IgnoreBegin
-    MainIcon := "QuickSwitch.ico"
+    MainIcon := IconsDir "\QuickSwitch.ico"
     ;@Ahk2Exe-IgnoreEnd
 }
 
@@ -126,6 +127,7 @@ WriteValues() {
     _values .= "`n"
             . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
             . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
+            . ValidateDirectory("IconsDir",    IconsDir)
             . ValidateTrayIcon( "MainIcon",    MainIcon)
             . ValidateColor(    "GuiColor",    GuiColor)
             . ValidateColor(    "MenuColor",   MenuColor)
@@ -182,6 +184,30 @@ DeleteValues() {
 
     if DeleteKeys
         MainKey := RestartKey := RestartMouse := MainMouse := ""
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateDirectory(_paramName, _dir) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; If the dir exists, returns a string of the form "paramName=result",
+    ; otherwise returns empty string
+    
+    if (_attr := FileExist(_dir)) {
+        if (InStr(_attr, "D")) {
+            return _paramName "=" _dir "`n"
+        }
+        
+        LogError("The path is not a directory: `'" _dir "`'", "directory", "Specify the full path to the directory. Current file attributes: " _attr)        
+        return ""
+    }
+    
+    if (_parent := SubStr(_dir, 1 , InStr(_dir, "\",, -1))) {
+        return ValidateDirectory(_paramName, _parent)
+    } 
+    
+    LogError("Directory not found: `'" _dir "`'", "directory", "Specify the full path to the directory")
+    return ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
