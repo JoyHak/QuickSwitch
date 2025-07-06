@@ -47,27 +47,29 @@ ShowSettings() {
     Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
     Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       Path numbers &with shortcuts 0-9
 
-    Gui,    Add,    Text,       y+20                                                    Section,    &Limit of displayed paths:
-
-    Gui,    Add,    Edit,       ys-4 %edit% Limit4
+    Gui,    Add,    Text,       y+13                                                    Section,    &Limit of displayed paths
+    Gui,    Add,    Edit,       ys-4  %edit% Limit4
     Gui,    Add,    UpDown,     Range1-9999             vPathLimit,                                 %PathLimit%
 
     Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Gui,    Add,    Text,,                                                                          Backgroud color (HEX):
-    Gui,    Add,    Text,       y+13                                                    Section,    &Menu
-    Gui,    Add,    Text,       y+13,                                                               &Settings
     
-    Gui,    Add,    CheckBox,   y+20     gToggleIcons   vShowIcons      checked%ShowIcons%,         &Show icons:
-    Gui,    Add,    Text,       y+13                    vIconsDirText,                              &Directory
-    Gui,    Add,    Text,       y+16                    vIconsSizeText,                             Si&ze
+    Gui,    Add,    CheckBox,   y+20  gToggleDarkTheme  vDarkTheme      checked%DarkTheme%,         Apply &dark theme
+    Gui,    Add,    Text,       y+13                                                    Section,    &Menu back color (HEX)
+    Gui,    Add,    Text,       y+13,                                                               &Settings back color (HEX)
+    Gui,    Add,    CheckBox,   y+20  gToggleIcons      vShowIcons      checked%ShowIcons%,         &Show icons from
     
-    Gui,    Add,    Edit,       ys-4 %edit% w160 Limit8 vMenuColor,                                 %MenuColor%
+    Gui,    Add,    Edit,       ys-6 %edit% w153 Limit8 vMenuColor,                                 %MenuColor%
     Gui,    Add,    Edit,       y+4  %edit% wp   Limit8 vGuiColor,                                  %GuiColor%
-    Gui,    Add,    Edit,       y+40 %edit% wp          vIconsDir,                                  %IconsDir%
-            
-    Gui,    Add,    Edit,       y+4  %edit% wp   Limit3 vIconsSizePlaceholder
+    Gui,    Add,    Edit,       y+11 %edit% w100        vIconsDir                       Section,    %IconsDir%  
+    
+    Gui,    Add,    Edit,       ys %edit% w40    Limit3 vIconsSizePlaceholder
     Gui,    Add,    UpDown,     Range1-200              vIconsSize,                                 %IconsSize%
+    Gui,    Add,    Edit,       xs y+16  %edit%  w153   vFavoritesDir                   Section,    %FavoritesDir%  
+    
+    Gui,    Add,    CheckBox,   ys+4 xm+15           vFavoritePaths checked%FavoritePaths% Section, Show &favorites from
+    Gui,    Add,    CheckBox,                           vPinnedPaths    checked%PinnedPaths%,       Show &pinned paths
+    Gui,    Add,    CheckBox,                           vClipPaths      checked%ClipPaths%,         Show paths from &clipboard
+    Gui,    Add,    CheckBox,                           vDragPaths      checked%DragPaths%,         &Drag and drop paths
 
     Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -146,6 +148,7 @@ ShowSettings() {
     ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Current checkbox state
     ToggleShowAlways()
+    ToggleIcons()
     ToggleShortPath()
 
     ; Toggle between mouse and keyboard input mode

@@ -25,6 +25,8 @@ LastPathIndex      :=  1
 
 Paths              :=  []
 Clips              :=  []
+Pins               :=  []
+Favs               :=  []
 ElevatedApps       :=  {updated: false}
 
 SetDefaultValues() {
@@ -46,10 +48,16 @@ SetDefaultValues() {
 
     AutoSwitch          :=  false
     BlackListExe        :=  false
-    DeleteDialogs       :=  false
+
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     SendEnter           :=  false
+    
+    FavoritePaths       :=  false
+    PinnedPaths         :=  false
+    ClipPaths           :=  false
+    DragPaths           :=  false
+    
     ShortPath           :=  false
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
@@ -63,6 +71,7 @@ SetDefaultValues() {
     IconsSize      := 25
     
     IconsDir       := A_WorkingDir "\Icons"
+    FavoritesDir   := A_WorkingDir "\Favorites"
     RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
@@ -105,6 +114,10 @@ WriteValues() {
          ShowNoSwitch="         ShowNoSwitch            "
          ShowAfterSelect="      ShowAfterSelect         "
          ShowAfterSettings="    ShowAfterSettings       "
+         FavoritePaths="        FavoritePaths           " 
+         PinnedPaths="          PinnedPaths             "   
+         ClipPaths="            ClipPaths               "     
+         DragPaths="            DragPaths               "     
          SendEnter="            SendEnter               "
          PathNumbers="          PathNumbers             "
          ShortPath="            ShortPath               "

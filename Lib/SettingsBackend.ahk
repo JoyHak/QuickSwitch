@@ -122,11 +122,10 @@ ToggleIcons() {
     ; Hide or display additional options
     global ShowIcons
     Gui, Submit, NoHide
+    GuiControl,, ShowIcons, % "&Show icons" . (ShowIcons ? " from" : "")
 
-    GuiControl, % "Enable" ShowIcons,   % "IconsDir"
-    GuiControl, % "Enable" ShowIcons,   % "IconsDirText"
-    GuiControl, % "Enable" ShowIcons,   % "IconsSize"
-    GuiControl, % "Enable" ShowIcons,   % "IconsSizeText"
-    GuiControl, % "Enable" ShowIcons,   % "IconsSizePlaceholder"
+    GuiControl, % "Show" ShowIcons,   % "IconsDir"
+    GuiControl, % "Show" ShowIcons,   % "IconsSize"
+    GuiControl, % "Show" ShowIcons,   % "IconsSizePlaceholder"
 
 }
