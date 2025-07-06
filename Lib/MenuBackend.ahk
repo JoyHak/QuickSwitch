@@ -39,24 +39,25 @@ SelectPath(_showMenu := false, _attempts := 3, _name := "", _position := 1) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SendPath(ByRef path) {
+SendPath(path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send path to the current file manager / active window
     WinGet, _id, id, A
     WinGet, _exe, ProcessPath, A
     WinGetClass, _class, A
+    path := """" . path . """"
 
     switch (_class) {
         case "CabinetWClass":
             SendExplorerPath(_id, path)
         case "ThunderRT6FormDC":
-            Run, % _exe " /script=::goto """ path """"
+            Run, % _exe " /feed=|::goto " path ";|"
         case "dopus.lister":
-            Run, % _exe "\..\dopusrt.exe /cmd go """ path """"
+            Run, % _exe "\..\dopusrt.exe /acmd go " path
         case "TTOTAL_CMD":
-            Run, % _exe " /O /L=""" path """"
+            Run, % _exe " /O /S /L=" path
         default:
-            Run, % _exe " """ path """"
+            Run, % _exe " " path
     }
 }
 

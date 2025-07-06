@@ -22,7 +22,7 @@ SendExplorerPath(ByRef winId, ByRef path) {
     try {
         for _win in ComObjCreate("Shell.Application").windows {
             if (winId = _win.hwnd) {
-                _win.Navigate(path)
+                _win.Navigate(Trim(path, " ""\/"))
                 break
             }
         }
