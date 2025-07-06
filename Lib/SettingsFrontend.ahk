@@ -87,10 +87,11 @@ ShowSettings() {
 
     Gui,    Add,    Text,       y+20                                                    Section,    &Show menu by
     Gui,    Add,    Text,       y+13,                                                               &Restart app by
-    Gui,    Add,    Text,       y+21,                                                               R&estart only in
-    Gui,    Add,    Text,       y+13,                                                               Icons directory
-    Gui,    Add,    Text,       y+13,                                                               Icon (t&ray)
+    Gui,    Add,    Text,       y+23,                                                               R&estart only in
     Gui,    Add,    Text,       y+13,                                                               &Font (GUI)
+    Gui,    Add,    Text,       y+13,                                                               Icon (t&ray)
+    Gui,    Add,    Text,       y+13,                                                               Icons directory
+    Gui,    Add,    Text,       y+16,                                                               Icons size
 
     edit := "w120 r1 -Wrap -vscroll"
 
@@ -103,9 +104,12 @@ ShowSettings() {
     Gui,    Add,    Button,        wp                   gToggleRestartMouse vRestartMouseButton,    mouse
 
     Gui,    Add,    Edit,       xs    %edit% w185       vRestartWhere,                              %RestartWhere%
-    Gui,    Add,    Edit,       y+4   %edit% wp         vIconsDir,                                  %IconsDir%
-    Gui,    Add,    Edit,       y+4   %edit% wp         vMainIcon,                                  %MainIcon%
     Gui,    Add,    Edit,       y+4   %edit% wp         vMainFont,                                  %MainFont%
+    Gui,    Add,    Edit,       y+4   %edit% wp         vMainIcon,                                  %MainIcon%
+    Gui,    Add,    Edit,       y+4   %edit% wp         vIconsDir,                                  %IconsDir%
+    
+    Gui,    Add,    Edit,       y+4   %edit% Limit3
+    Gui,    Add,    UpDown,     Range1-200              vIconsSize,                                 %IconsSize%
 
     ; Mouse input controls
     local mouse := GetMouseList("list")

@@ -13,8 +13,8 @@ ParseTotalTabs(ByRef tabsFile, ByRef array) {
             {
                 ; Omit the InStr key and SubStr from value position
                 if (_pos := InStr(A_LoopReadLine, "path=")) {
-                    _path := SubStr(A_LoopReadLine, _pos + 5)
-                    _paths.push(RTrim(_path, "\"))
+                    _path := RTrim(SubStr(A_LoopReadLine, _pos + 5), "\")
+                    _paths.push([_path, "TotalCmd.ico"])
                 }
                 if (_num := InStr(A_LoopReadLine, "activetab=")) {
                     ; Skip next active tab by saving last

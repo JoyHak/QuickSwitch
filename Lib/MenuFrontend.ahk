@@ -14,27 +14,29 @@ AddMenuOption(_title, _function, _isToggle := false) {
 
     if _isToggle
         Menu ContextMenu, Check, % _title
-
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-AddMenuPaths(ByRef array, _function) {
+AddMenuPaths(ByRef array, _function, _limit := 20, _showNumbers := true) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global PathNumbers, ShortPath, PathLimit
+    ; Array must be array of arrays: [path, iconName]
+    global IconsDir, IconsSize, ShortPath
 
-    for _index, _path in array {
+    for _index, _options in array {
         _display := ""
 
-        if (PathNumbers && (_index < 10))
-            _display .= "&" . _index . " "
+        if (_showNumbers && (_index < 10))
+            _display .= "&" _index " "
         if ShortPath
-            _display .= GetShortPath(_path)
+            _display .= GetShortPath(_options[1])
         else
-            _display .= _path
+            _display .= _options[1]
 
         Menu, ContextMenu, Insert,, % _display, % _function
-        if (_index = PathLimit)
+        Menu, ContextMenu, Icon, % _display, % IconsDir "\" _options[2],, % IconsSize
+
+        if (_index = _limit)
             return
     }
 }
@@ -60,16 +62,16 @@ AddMenuOptions() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global Paths, SelectMenuPath, MenuColor, DialogId
-    global FromSettings := false
-
+    global
+    FromSettings := false
     try Menu ContextMenu, Delete            ; Delete previous menu
 
-    if Paths.length() {
-        AddMenuPaths(Paths, SelectMenuPath)
-        AddMenuOptions()
-    } else {
+    AddMenuPaths(Paths, Func("SelectPath").bind(Paths), PathLimit, PathNumbers)
+
+    if (DllCall("GetMenuItemCount", "ptr", MenuGetHandle("ContextMenu")) = -1) {
         AddMenuTitle("No available paths")
+    } else {
+        AddMenuOptions()
     }
 
     Menu ContextMenu, Color, % MenuColor

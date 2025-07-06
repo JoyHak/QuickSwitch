@@ -1,6 +1,6 @@
 /*
     Contains getters whose names correspond to classes of known file managers.
-    All functions add values to the array by reference.
+    All functions add options to the array: [path, iconName]
     "winId" param must be existing window uniq ID (window handle / HWND)
 */
 
@@ -22,7 +22,7 @@ CabinetWClass(ByRef winId, ByRef array) {
             if (winId = _win.hwnd) {
                 _path := _win.document.folder.self.path
                 if !InStr(_path, "::{") {
-                    array.push(_path)
+                    array.push([_path, "Explorer.ico"])
                 }
             }
         }
@@ -69,7 +69,7 @@ ThunderRT6FormDC(ByRef winId, ByRef array) {
 
     attempts := 0
     Loop, parse, _clip, `|
-        array.push(A_LoopField)
+        array.push([A_LoopField, "Xyplorer.ico"])
 
 }
 
@@ -99,7 +99,7 @@ Dopus(ByRef winId, ByRef array) {
         ; Pass every HWND to GetWindowText() and get the content
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
         if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
-            _paths.push(_text)
+            _paths.push([_text, "Dopus.ico"])
 
             if InStr(_text, _title)
                 _active := A_Index

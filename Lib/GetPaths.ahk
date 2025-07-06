@@ -45,7 +45,7 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
 
         if (_autoSwitch && array[1]) {
             _autoSwitch := false
-            SelectPath()
+            SelectPath(array)
         }
     }
 }

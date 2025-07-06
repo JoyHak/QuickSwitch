@@ -52,11 +52,12 @@ SetDefaultValues() {
     ShowFirstSeparator  :=  false
 
     ShortNameIndicator := ".."
+    PathSeparator  := "\"
     DirsCount      := 3
     DirNameLength  := 20
     PathLimit      := 9
-    PathSeparator  := "\"
-
+    IconsSize      := 25
+    
     IconsDir       := A_WorkingDir "\Icons"
     RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"

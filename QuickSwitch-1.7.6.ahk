@@ -88,8 +88,6 @@ Loop {
             FingerPrint   := Exe "___" WinTitle
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
-            SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways, SelectPathAttempts)
-
             /* 
                 Get current dialog settings or use default mode (AutoSwitch flag).
                 Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
