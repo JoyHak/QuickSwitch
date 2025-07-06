@@ -22,7 +22,9 @@ DeleteKeys         :=  false
 NukeSettings       :=  false
 LastTabSettings    :=  1
 LastPathIndex      :=  1
+
 Paths              :=  []
+Clips              :=  []
 ElevatedApps       :=  {updated: false}
 
 SetDefaultValues() {
@@ -40,6 +42,7 @@ SetDefaultValues() {
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
     PathNumbers         :=  true
+    ShowIcons           :=  true
 
     AutoSwitch          :=  false
     BlackListExe        :=  false
@@ -97,6 +100,7 @@ WriteValues() {
          AutoSwitch="           AutoSwitch              "
          BlackListExe="         BlackListExe            "
          DeleteDialogs="        DeleteDialogs           "
+         ShowIcons="            ShowIcons               "
          ShowAlways="           ShowAlways              "
          ShowNoSwitch="         ShowNoSwitch            "
          ShowAfterSelect="      ShowAfterSelect         "
@@ -109,6 +113,7 @@ WriteValues() {
          DirsCount="            DirsCount               "
          DirNameLength="        DirNameLength           "
          PathLimit="            PathLimit               "
+         IconsSize="            IconsSize               "
          ShortenEnd="           ShortenEnd              "
          ShowDriveLetter="      ShowDriveLetter         "
          ShowFirstSeparator="   ShowFirstSeparator      "

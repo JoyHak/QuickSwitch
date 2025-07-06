@@ -114,3 +114,19 @@ ToggleShortPath() {
     GuiControl, % "Show" ShortPath,     % "ShortNameIndicator"
     GuiControl, % "Show" ShortPath,     % "ShortNameIndicatorText"
 }
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ToggleIcons() {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Hide or display additional options
+    global ShowIcons
+    Gui, Submit, NoHide
+
+    GuiControl, % "Enable" ShowIcons,   % "IconsDir"
+    GuiControl, % "Enable" ShowIcons,   % "IconsDirText"
+    GuiControl, % "Enable" ShowIcons,   % "IconsSize"
+    GuiControl, % "Enable" ShowIcons,   % "IconsSizeText"
+    GuiControl, % "Enable" ShowIcons,   % "IconsSizePlaceholder"
+
+}

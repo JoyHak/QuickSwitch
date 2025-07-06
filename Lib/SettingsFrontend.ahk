@@ -47,20 +47,27 @@ ShowSettings() {
     Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
     Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       Path numbers &with shortcuts 0-9
 
-    Gui,    Add,    Text,       y+20                                                  Section,      &Limit of displayed paths:
+    Gui,    Add,    Text,       y+20                                                    Section,    &Limit of displayed paths:
 
     Gui,    Add,    Edit,       ys-4 %edit% Limit4
     Gui,    Add,    UpDown,     Range1-9999             vPathLimit,                                 %PathLimit%
 
     Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    CheckBox,                       vDarkTheme gToggleDarkTheme checked%DarkTheme%, Enable &dark theme
-
-    Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
-    Gui,    Add,    Text,       y+13,                                                               &Dialogs background color (HEX)
-
-    Gui,    Add,    Edit,       ys-4 %edit% w90 Limit8      vMenuColor,                             %MenuColor%
-    Gui,    Add,    Edit,       y+4  %edit% w90 Limit8      vGuiColor,                              %GuiColor%
+    Gui,    Add,    Text,,                                                                          Backgroud color (HEX):
+    Gui,    Add,    Text,       y+13                                                    Section,    &Menu
+    Gui,    Add,    Text,       y+13,                                                               &Settings
+    
+    Gui,    Add,    CheckBox,   y+20     gToggleIcons   vShowIcons      checked%ShowIcons%,         &Show icons:
+    Gui,    Add,    Text,       y+13                    vIconsDirText,                              &Directory
+    Gui,    Add,    Text,       y+16                    vIconsSizeText,                             Si&ze
+    
+    Gui,    Add,    Edit,       ys-4 %edit% w160 Limit8 vMenuColor,                                 %MenuColor%
+    Gui,    Add,    Edit,       y+4  %edit% wp   Limit8 vGuiColor,                                  %GuiColor%
+    Gui,    Add,    Edit,       y+40 %edit% wp          vIconsDir,                                  %IconsDir%
+            
+    Gui,    Add,    Edit,       y+4  %edit% wp   Limit3 vIconsSizePlaceholder
+    Gui,    Add,    UpDown,     Range1-200              vIconsSize,                                 %IconsSize%
 
     Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -90,8 +97,6 @@ ShowSettings() {
     Gui,    Add,    Text,       y+23,                                                               R&estart only in
     Gui,    Add,    Text,       y+13,                                                               &Font (GUI)
     Gui,    Add,    Text,       y+13,                                                               Icon (t&ray)
-    Gui,    Add,    Text,       y+13,                                                               Icons directory
-    Gui,    Add,    Text,       y+16,                                                               Icons size
 
     edit := "w120 r1 -Wrap -vscroll"
 
@@ -106,10 +111,6 @@ ShowSettings() {
     Gui,    Add,    Edit,       xs    %edit% w185       vRestartWhere,                              %RestartWhere%
     Gui,    Add,    Edit,       y+4   %edit% wp         vMainFont,                                  %MainFont%
     Gui,    Add,    Edit,       y+4   %edit% wp         vMainIcon,                                  %MainIcon%
-    Gui,    Add,    Edit,       y+4   %edit% wp         vIconsDir,                                  %IconsDir%
-    
-    Gui,    Add,    Edit,       y+4   %edit% Limit3
-    Gui,    Add,    UpDown,     Range1-200              vIconsSize,                                 %IconsSize%
 
     ; Mouse input controls
     local mouse := GetMouseList("list")
