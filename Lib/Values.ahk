@@ -20,8 +20,6 @@ DeletePinned       :=  false
 DeleteFavorites    :=  false
 DeleteKeys         :=  false
 NukeSettings       :=  false
-
-
 LastTabSettings    :=  1
 Paths              :=  []
 ElevatedApps       :=  {updated: false}
@@ -71,17 +69,12 @@ SetDefaultValues() {
     GuiColor       := ""
 
     DarkTheme      := IsDarkTheme()
-    SetDefaultColor()
+    DarkColors     := true
+    SetDefaultColors()
 
     ;@Ahk2Exe-IgnoreBegin
     MainIcon := IconsDir "\QuickSwitch.ico"
     ;@Ahk2Exe-IgnoreEnd
-}
-
-SetDefaultColor() {
-    global
-    MenuColor := DarkTheme ? 202020 : ""
-    GuiColor  := MenuColor
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

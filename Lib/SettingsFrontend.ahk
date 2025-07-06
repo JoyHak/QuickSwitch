@@ -54,7 +54,7 @@ ShowSettings() {
 
     Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    CheckBox,                           vDarkTheme      checked%DarkTheme%,         Enable &dark theme
+    Gui,    Add,    CheckBox,                       vDarkTheme gToggleDarkTheme checked%DarkTheme%, Enable &dark theme
 
     Gui,    Add,    Text,       y+20                                                  Section,      &Menu backgroud color (HEX)
     Gui,    Add,    Text,       y+13,                                                               &Dialogs background color (HEX)
