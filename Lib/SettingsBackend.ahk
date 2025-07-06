@@ -31,6 +31,8 @@ ResetSettings() {
 SaveSettings() {
     ; Write current GUI (global) values
     Gui, Submit
+    SetDefaultColor()
+    
     WriteValues()
     ReadValues()
     DeleteDialogs()

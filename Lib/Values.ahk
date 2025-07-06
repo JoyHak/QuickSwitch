@@ -41,16 +41,12 @@ SetDefaultValues() {
     DeleteDialogs       :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
-    DarkTheme           :=  false
     SendEnter           :=  false
     ShortPath           :=  false
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
-
-    GuiColor := MenuColor := ""
-    RestartMouse := MainMouse := ""
-
+    
     ShortNameIndicator := ".."
     DirsCount      := 3
     DirNameLength  := 20
@@ -61,11 +57,24 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
+    RestartMouse   := ""
+    MainMouse      := ""
     MainIcon       := ""
+    MenuColor      := ""
+    GuiColor       := ""
 
+    DarkTheme      := IsDarkTheme()
+    SetDefaultColor()
+    
     ;@Ahk2Exe-IgnoreBegin
     MainIcon := "QuickSwitch.ico"
     ;@Ahk2Exe-IgnoreEnd
+}
+
+SetDefaultColor() {
+    global
+    MenuColor := DarkTheme ? 202020 : ""
+    GuiColor  := MenuColor
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
