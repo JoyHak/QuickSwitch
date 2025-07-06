@@ -142,4 +142,10 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 
 ExitApp
 
-^#+0::ShowMenu()
+^#+0::
+    ; Popup main Menu
+    ShowMenu()
+    
+    ; Release all keys to prevent holding
+    SendEvent {Ctrl up}{Win up}{Shift up}
+Return
