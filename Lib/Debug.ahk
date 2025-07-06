@@ -103,8 +103,15 @@ ExportDebug() {
 ShowDebug() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Displays information about the file dialog Controls
-    global FileDialog, DialogId
+    global FileDialog, DialogId, MainFont, GuiColor, DarkTheme
+    
     Gui, Destroy
+    Gui, -DPIScale
+    Gui, Color, % GuiColor, % GuiColor
+    Gui, Font, q5, % MainFont           ; Clean quality
+
+    if DarkTheme
+        Gui, Font, % "q5 c" InvertColor(GuiColor), % MainFont
 
     SetFormat, Integer, D
     Gui, Add, ListView, r30 w1024, Control||Text|ID|PID|X|Y|Width|Height
@@ -126,8 +133,12 @@ ShowDebug() {
     LV_ModifyCol(3, "Integer")
     LV_ModifyCol(4, "Integer")
 
-    Gui, Add, Button, y+10 w74 gExportDebug,    &Export
-    Gui, Add, Button, x+10 wp  gCancelLV,       &Cancel
-    Gui, Add, Button, x+10 wp  gNukeSettings,   &Nuke
+    Gui, Add, Button, x438 y+20 w74 gExportDebug,    &Export
+    Gui, Add, Button, x+20 wp       gCancelLV,       &Cancel
+    
+    if DarkTheme {
+        SetDarkTheme("&Export|&Cancel|SysListView321")
+    }
+    
     Gui, Show,, % FileDialog.name
 }

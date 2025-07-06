@@ -24,7 +24,7 @@ ShowSettings() {
     local edit := "w63 r1 -Wrap -vscroll"
 
     ; Split settings to the tabs
-    Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App
+    Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
 
     /*
         To align "Edit" fields to the right after the "Text" fields,
@@ -42,9 +42,8 @@ ShowSettings() {
     Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after leaving &settings
     Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
 
-    Gui,    Add,    CheckBox,   y+20 Section            vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
-    Gui,    Add,    CheckBox,   x+8 yp                  vDeleteDialogs,                             &del dialogs config
-    Gui,    Add,    CheckBox,   xs                      vBlackListExe   checked%BlackListExe%,      &Black list: always add process, not the title
+    Gui,    Add,    CheckBox,   y+20                    vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
+    Gui,    Add,    CheckBox,                           vBlackListExe   checked%BlackListExe%,      &Black list: always add process, not the title
     Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
     Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       Path numbers &with shortcuts 0-9
 
@@ -115,17 +114,29 @@ ShowSettings() {
     Gui,    Add,    Edit,       xs ys %edit%            ReadOnly  vMainMouse,                       %MainMouse%
     Gui,    Add,    Edit,       y+8   %edit%            ReadOnly  vRestartMouse,                    %RestartMouse%
 
-    Gui,    Tab     ; BUTTONS   ────────────────────────────────────────────────────────────────────────────────────────────────────────
+    Gui,    Tab,    5       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    Button,     xm+40   w74   Default   gSaveSettings,                              &OK
-    Gui,    Add,    Button,     x+20 yp wp    Cancel    gCancel,                                    &Cancel
+    Gui,    Add,    Text,,                                                                          Delete from configuration:
+    Gui,    Add,    CheckBox,  y+20                     vDeleteDialogs,                             &Black List and Auto Switch
+    Gui,    Add,    CheckBox,                           vDeletePinned,                              &Pinned paths
+    Gui,    Add,    CheckBox,                           vDeleteFavorites,                           &Favorite paths
+    Gui,    Add,    CheckBox,                           vDeleteKeys,                                &Hotkeys and mouse buttons
+    Gui,    Add,    CheckBox,  y+20                     vNukeSettings,                              &Nuke configration
 
+    Gui,    Tab     ; BUTTONS   ────────────────────────────────────────────────────────────────────────────────────────────────────
+
+    GuiControlGet, pos, Pos, SendEnter
+    local posX   := posW / 2 - 10
     local button := NukeSettings ? "Nuke" : "Reset"
-    Gui,    Add,    Button,     x+20 yp wp           g%button%Settings,                             &%button%
     NukeSettings := false
 
+    Gui,    Add,    Button,    x%posX% w74 Cancel       gGuiEscape                      Section,    &Cancel
+    Gui,    Add,    Button,    x+20 yp wp               g%button%Settings,                          &%button%
+    Gui,    Add,    Button,    xs-94 yp wp Default      gSaveSettings,                              &OK
+    Gui,    Add,    Button,    x%posW% ym-4             gShowDebug,                                 Debu&g
 
-    ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+    ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Current checkbox state
     ToggleShowAlways()
     ToggleShortPath()

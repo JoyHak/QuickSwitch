@@ -15,7 +15,13 @@ FingerPrint        :=  ""
 DialogAction       :=  ""
 SaveDialogAction   :=  false
 FromSettings       :=  false
+DeleteDialogs      :=  false
+DeletePinned       :=  false
+DeleteFavorites    :=  false
+DeleteKeys         :=  false
 NukeSettings       :=  false
+
+
 LastTabSettings    :=  1
 Paths              :=  []
 ElevatedApps       :=  {updated: false}
@@ -46,7 +52,7 @@ SetDefaultValues() {
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
-    
+
     ShortNameIndicator := ".."
     DirsCount      := 3
     DirNameLength  := 20
@@ -65,7 +71,7 @@ SetDefaultValues() {
 
     DarkTheme      := IsDarkTheme()
     SetDefaultColor()
-    
+
     ;@Ahk2Exe-IgnoreBegin
     MainIcon := "QuickSwitch.ico"
     ;@Ahk2Exe-IgnoreEnd
@@ -157,6 +163,29 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+DeleteValues() {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Deletes sections from INI
+    global
+    
+    if NukeSettings
+        return NukeSettings()
+
+    if DeleteDialogs
+        try IniDelete, % INI, Dialogs
+
+    if DeletePinned
+        try IniDelete, % INI, Pinned
+
+    if DeleteFavorites
+        try IniDelete, % INI, Favorites
+
+    if DeleteKeys
+        MainKey := RestartKey := RestartMouse := MainMouse := ""
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 ValidateTrayIcon(_paramName, ByRef icon) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
@@ -215,7 +244,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
     try {
         if !(_sequence)
             return _paramName "=`n"
-            
+
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
             _key := _sequence
