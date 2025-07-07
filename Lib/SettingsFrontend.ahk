@@ -70,6 +70,7 @@ ShowSettings() {
     Gui, Add, Text,         ys-20 xm+15,                                                                            Show sections in Menu:    
     Gui, Add, CheckBox,     y+10  gToggleFavorites          vFavoritePaths        checked%FavoritePaths%,           &Favorites from
     Gui, Add, CheckBox,                                     vPinnedPaths          checked%PinnedPaths%,             &Pinned paths
+    Gui, Add, CheckBox,                                     vMainPaths            checked%MainPaths%,               &File managers paths
     Gui, Add, CheckBox,                                     vClipPaths            checked%ClipPaths%,               Paths from &Clipboard
     Gui, Add, CheckBox,                                     vDragPaths            checked%DragPaths%,               &Drag and drop paths
 
@@ -128,8 +129,9 @@ ShowSettings() {
 
     Gui, Add, Text,,                                                                                                Delete from configuration:
     Gui, Add, CheckBox,     y+20                            vDeleteDialogs,                                         &Black List and Auto Switch
-    Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
     Gui, Add, CheckBox,                                     vDeleteFavorites,                                       &Favorite paths
+    Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
+    Gui, Add, CheckBox,                                     vDeleteClips,                                           &Clipboard paths
     Gui, Add, CheckBox,                                     vDeleteKeys,                                            &Hotkeys and mouse buttons
     Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 

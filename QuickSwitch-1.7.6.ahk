@@ -55,6 +55,7 @@ InitLog()
 SetDefaultValues()
 ReadValues()
 
+OnClipboardChange("GetClipboardPath")
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
@@ -65,6 +66,7 @@ InitDarkTheme()
 Loop {
     ; Wait for any "Open/Save as" file dialog
     WinWaitActive, ahk_class #32770
+    ToolTip % ClipboardAll
 
     try {
         DialogId   := WinActive("A")
@@ -95,9 +97,17 @@ Loop {
             */
             IniRead, BlackList, % INI, Dialogs, % Exe, 0
             IniRead, Switch, % INI, Dialogs, % FingerPrint, % AutoSwitch
-
             DialogAction := Switch | BlackList
-            GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
+            
+            if MainPaths {
+                ; Disable clipboard analysis while file managers transfer data through it
+                _ClipPaths := ClipPaths
+                ClipPaths  := false
+                
+                ; Get paths from file managers
+                GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
+                ClipPaths := _ClipPaths
+            }
 
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey,, "On")
@@ -124,7 +134,7 @@ Loop {
     }
 
     Sleep, 100
-    WinWaitNotActive
+    WinWaitNotActive, ahk_class #32770
     ValidateKey("MainKey", MainKey,, "off")
 
     ; Save the selected option in the Menu if it has been changed
@@ -132,6 +142,13 @@ Loop {
         SaveDialogAction := false
         try IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
     }
+    
+    ; Clean-up paths from clipboard in new process
+    if (LastExe && (LastExe != Exe)) {
+        Clips := []
+    }
+    LastExe := Exe 
+    
 }   ; End of continuous WinWaitActive loop
 
 LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"

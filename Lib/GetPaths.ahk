@@ -1,7 +1,7 @@
 GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
-
+    
     ; Get manager hwnds
     WinGet, _winIdList, list, ahk_group ManagerClasses
     Loop, % _winIdList {
@@ -119,6 +119,54 @@ GetShortPath(ByRef path) {
         LogException(_ex)
     }
     return path
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetClipboardPath(_dataType) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; If the clipboard contents is text, cuts the path where the file is stored. 
+    ; If the path is valid, adds to the array
+    global ClipPaths, Clips
+    static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
+    static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "AStr", "PathIsDirectoryW", "Ptr")
+    
+    if !ClipPaths   
+        return
+    
+    Sleep 50
+    _clip := A_Clipboard
+    if ((_dataType != 1) || !_clip)
+        return
+    
+    try {
+        Loop, parse, _clip, `n 
+        {
+            _path := StrReplace(A_LoopField, "/" , "\")
+            
+            ; Expand env. variables
+            if InStr(_path, "%") {
+                VarSetCapacity(_temp, 2000) 
+                DllCall("ExpandEnvironmentStringsW", "str", _path, "str", _temp, "int", 2000)
+                _path := _temp
+            }
+            
+            _index := 1
+            while (_path) {
+                ; Сheck the correctness of the directory
+                if (DllCall(IsPath, "str", _path)) {
+                    Clips.push([_path, "Clipboard.ico"])
+                    break
+                }
+                
+                ; If this is a file or an incorrect directory, get the parent
+                _path := SubStr(_path, 1, InStr(_path, "\",, -1, _index))
+                _index++
+            }
+        }
+    } catch _ex {
+        LogException(_ex)
+    }
 }
 
 

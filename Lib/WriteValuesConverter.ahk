@@ -81,15 +81,15 @@ Convert(Post) {
     ; Create the output with vertical alignment
     for i, varName in varArr
     {
-        left := varName . "="
-        pad := ""
-        Loop, % eqLen - StrLen(left)
-            pad .= " "
-        ; Right padding for inside quotes
+        var := varName . "="
+        leftPad := ""
+        Loop, % eqLen - StrLen(var)
+            leftPad .= " "
+
         rightPad := ""
         Loop, % maxLen - StrLen(varName)
             rightPad .= " "
-        output .= left . pad . """ " . varName . rightPad . " """ . "`n"
+        output .= var . """ " . leftPad . varName . rightPad . " """ . "`n"
     }
     return output
 }

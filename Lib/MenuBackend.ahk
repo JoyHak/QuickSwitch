@@ -5,8 +5,10 @@ Dummy() {
 }
 
 SelectPath(ByRef array, _name := "", _position := 1) {
+    ; Section number: the order of the array in the menu. 
+    ; Helps to calculate the offset for each array of paths in the Menu.
     global DialogId, FileDialog, ElevatedApps, ShowAfterSelect, ShowAlways, SelectPathAttempts
-
+    
     _log := ""
     loop, % SelectPathAttempts {
         try {

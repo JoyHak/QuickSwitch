@@ -97,18 +97,13 @@ GetTotalRegistryIni() {
     if !_regPath
         return false
 
-    if InStr(_regPath, "`%") {
-        ; Resolve env. variables
-        _ini := _env := ""
-        for _i, _part in StrSplit(_regPath, "`%") {
-            try EnvGet, _env, % _part
-            if _env
-                _ini .= _env
-            else
-                _ini .= _part
-        }
-        return _ini
+    if InStr(_regPath, "%") {
+        ; Resolve env. variables        
+        VarSetCapacity(_path, 2000) 
+        DllCall("ExpandEnvironmentStringsW", "str", _regPath, "str", _path, "int", 2000)
+        _regPath := _path
     }
+    
     return _regPath
 }
 

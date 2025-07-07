@@ -25,20 +25,23 @@ ResetSettings() {
 
     InitAutoStartup()
     InitDarkTheme()
+    InitSections()
     ShowSettings()
 }
 
 SaveSettings() {
     ; Write current GUI (global) values
     Gui, Submit
+    
     DeleteValues()
     SetDefaultColors()
     
     WriteValues()
     ReadValues()
-
+    
     InitAutoStartup()
     InitDarkTheme()
+    InitSections()
 }
 
 RestartApp() {
@@ -52,6 +55,25 @@ RestartApp() {
 
 GuiEscape() {
     Gui, Destroy
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+InitSections() {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Clear / Init global arrays to remove sections from the menu
+    global
+    
+    if !FavoritePaths
+        Favs  := []    
+    if !PinnedPaths 
+        Pins  := []    
+    if !MainPaths
+        Paths := []    
+    if !ClipPaths 
+        Clips := []    
+    if !DragPaths 
+        Drags := []
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

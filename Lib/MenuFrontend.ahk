@@ -63,19 +63,22 @@ AddMenuOptions() {
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
-    FromSettings := false
     try Menu ContextMenu, Delete            ; Delete previous menu
+    
+    (Stack := []).Push(Paths*)
+    Stack.Push(Clips*)
 
-    AddMenuPaths(Paths, Func("SelectPath").bind(Paths))
-    
-    LastPathIndex := 1
-    
-    if (DllCall("GetMenuItemCount", "ptr", MenuGetHandle("ContextMenu")) = -1) {
-        AddMenuTitle("No available paths")
-    } else {
+    if (Stack.length()) {
+        AddMenuPaths(Stack, Func("SelectPath").bind(Stack))
         AddMenuOptions()
+    } else {
+        AddMenuTitle("No available paths")
+        Menu ContextMenu, Add, &Settings, ShowSettings
     }
 
+    FromSettings  := false
+    LastPathIndex := 1
+    
     Menu ContextMenu, Color, % MenuColor
     WinActivate, ahk_id %DialogId%          ; Activate dialog to prevent Menu flickering
     Menu ContextMenu, Show, 0, 100          ; Show new menu and halt the thread
