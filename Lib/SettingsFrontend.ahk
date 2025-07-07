@@ -44,7 +44,7 @@ ShowSettings() {
     Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always
                     
     Gui, Add, CheckBox,     y+20                            vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
-    Gui, Add, CheckBox,                                     vBlackListExe         checked%BlackListExe%,            Add process name to &Black list
+    Gui, Add, CheckBox,                                     vBlackListExe         checked%BlackListExe%,            Add process names to &Black list
     Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
                     
