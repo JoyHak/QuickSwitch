@@ -37,13 +37,14 @@ ShowSettings() {
     ;         Control,    [ Coordinates / Callback          Variable              State / Section                ], Title
     Gui, Tab, 1 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     
-    Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always &show Menu
-    Gui, Add, CheckBox,                                     vShowNoSwitch         checked%ShowNoSwitch%,            Show Menu if Menu options &disabled
-    Gui, Add, CheckBox,                                     vShowAfterSettings    checked%ShowAfterSettings%,       Show Menu after leaving &settings
-    Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Show Menu after selecting &path
+    Gui, Add, Text,,                                                                                                Show menu after:
+    Gui, Add, CheckBox,                                     vShowNoSwitch         checked%ShowNoSwitch%,            &Disabling Auto Switch
+    Gui, Add, CheckBox,                                     vShowAfterSettings    checked%ShowAfterSettings%,       Leaving &settings
+    Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Selecting &path
+    Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always
                     
     Gui, Add, CheckBox,     y+20                            vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
-    Gui, Add, CheckBox,                                     vBlackListExe         checked%BlackListExe%,            &Black list: always add process, not the title
+    Gui, Add, CheckBox,                                     vBlackListExe         checked%BlackListExe%,            Add process name to &Black list
     Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
                     
@@ -53,27 +54,28 @@ ShowSettings() {
     
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
         
-    Gui, Add, CheckBox,     y+20  gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
+    Gui, Add, CheckBox,           gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+13                                                  Section,                          &Menu back color (HEX)
     Gui, Add, Text,         y+13,                                                                                   &Settings back color (HEX)
-    Gui, Add, CheckBox,     y+20  gToggleIcons              vShowIcons            checked%ShowIcons%,               &Show icons from
+    Gui, Add, CheckBox,     y+13  gToggleIcons              vShowIcons            checked%ShowIcons%,               &Show icons from
                         
     Gui, Add, Edit,         ys-6  %edit% w153 Limit8        vMenuColor,                                             %MenuColor%
     Gui, Add, Edit,         y+4   %edit% wp   Limit8        vGuiColor,                                              %GuiColor%
-    Gui, Add, Edit,         y+11  %edit% w100               vIconsDir             Section,                          %IconsDir%  
+    Gui, Add, Edit,         y+4   %edit% w100               vIconsDir             Section,                          %IconsDir%  
                                     
     Gui, Add, Edit,         ys    %edit% w40  Limit3        vIconsSizePlaceholder   
     Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
-    Gui, Add, Edit,      xs y+16  %edit% w153               vFavoritesDir         Section,                          %FavoritesDir%  
-                
-    Gui, Add, CheckBox,     ys+4 x+m                        vFavoritePaths Section checked%FavoritePaths%,          Show &favorites from
-    Gui, Add, CheckBox,                                     vPinnedPaths           checked%PinnedPaths%,            Show &pinned paths
-    Gui, Add, CheckBox,                                     vClipPaths             checked%ClipPaths%,              Show paths from &clipboard
-    Gui, Add, CheckBox,                                     vDragPaths             checked%DragPaths%,              &Drag and drop paths
+    Gui, Add, Edit,      xs y+40 %edit% w153                vFavoritesDir         Section,                          %FavoritesDir%  
+    
+    Gui, Add, Text,         ys-20 xm+15,                                                                            Show sections in Menu:    
+    Gui, Add, CheckBox,     y+10  gToggleFavorites          vFavoritePaths        checked%FavoritePaths%,           &Favorites from
+    Gui, Add, CheckBox,                                     vPinnedPaths          checked%PinnedPaths%,             &Pinned paths
+    Gui, Add, CheckBox,                                     vClipPaths            checked%ClipPaths%,               Paths from &Clipboard
+    Gui, Add, CheckBox,                                     vDragPaths            checked%DragPaths%,               &Drag and drop paths
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui, Add, Checkbox,     gToggleShortPath                vShortPath     Section checked%ShortPath%,              &Show short path, indicate as
+    Gui, Add, Checkbox,     gToggleShortPath                vShortPath    Section checked%ShortPath%,               &Show short path, indicate as
                             
     Gui, Add, Text,         y+13                            vPathSeparatorText,                                     Path &separator
     Gui, Add, Text,         y+13                            vDirsCountText,                                         Number of &dirs displayed
@@ -148,6 +150,7 @@ ShowSettings() {
     ; Current checkbox state
     ToggleShowAlways()
     ToggleIcons()
+    ToggleFavorites()
     ToggleShortPath()
 
     ; Toggle between mouse and keyboard input mode
