@@ -34,118 +34,117 @@ ShowSettings() {
         The X position is chosen automatically depending on the length of the widest "Text" field.
     */
 
-    ;               type,     [ coordinates options     vVARIABLE       gGOTO       Section      ], title
-    Gui,    Tab,    1       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Gui,    Add,    CheckBox,   gToggleShowAlways       vShowAlways     checked%ShowAlways%,        Always &show Menu
-    Gui,    Add,    CheckBox,                           vShowNoSwitch   checked%ShowNoSwitch%,      Show Menu if Menu options &disabled
-    Gui,    Add,    CheckBox,                         vShowAfterSettings checked%ShowAfterSettings%,Show Menu after leaving &settings
-    Gui,    Add,    CheckBox,                           vShowAfterSelect checked%ShowAfterSelect%,  Show Menu after selecting &path
-
-    Gui,    Add,    CheckBox,   y+20                    vAutoSwitch     checked%AutoSwitch%,        &Always Auto Switch
-    Gui,    Add,    CheckBox,                           vBlackListExe   checked%BlackListExe%,      &Black list: always add process, not the title
-    Gui,    Add,    CheckBox,                           vSendEnter      checked%SendEnter%,         &Close old-style file dialog after selecting path
-    Gui,    Add,    CheckBox,                           vPathNumbers    checked%PathNumbers%,       Path numbers &with shortcuts 0-9
-
-    Gui,    Add,    Text,       y+13                                                    Section,    &Limit of displayed paths
-    Gui,    Add,    Edit,       ys-4  %edit% Limit4
-    Gui,    Add,    UpDown,     Range1-9999             vPathLimit,                                 %PathLimit%
-
-    Gui,    Tab,    2       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
+    ;         Control,    [ Coordinates / Callback          Variable              State / Section                ], Title
+    Gui, Tab, 1 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     
-    Gui,    Add,    CheckBox,   y+20  gToggleDarkTheme  vDarkTheme      checked%DarkTheme%,         Apply &dark theme
-    Gui,    Add,    Text,       y+13                                                    Section,    &Menu back color (HEX)
-    Gui,    Add,    Text,       y+13,                                                               &Settings back color (HEX)
-    Gui,    Add,    CheckBox,   y+20  gToggleIcons      vShowIcons      checked%ShowIcons%,         &Show icons from
+    Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always &show Menu
+    Gui, Add, CheckBox,                                     vShowNoSwitch         checked%ShowNoSwitch%,            Show Menu if Menu options &disabled
+    Gui, Add, CheckBox,                                     vShowAfterSettings    checked%ShowAfterSettings%,       Show Menu after leaving &settings
+    Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Show Menu after selecting &path
+                    
+    Gui, Add, CheckBox,     y+20                            vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
+    Gui, Add, CheckBox,                                     vBlackListExe         checked%BlackListExe%,            &Black list: always add process, not the title
+    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
+    Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
+                    
+    Gui, Add, Text,         y+13                                                  Section,                          &Limit of displayed paths
+    Gui, Add, Edit,         ys-4  %edit% Limit4         
+    Gui, Add, UpDown,       Range1-9999                     vPathLimit,                                             %PathLimit%
     
-    Gui,    Add,    Edit,       ys-6 %edit% w153 Limit8 vMenuColor,                                 %MenuColor%
-    Gui,    Add,    Edit,       y+4  %edit% wp   Limit8 vGuiColor,                                  %GuiColor%
-    Gui,    Add,    Edit,       y+11 %edit% w100        vIconsDir                       Section,    %IconsDir%  
+    Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+        
+    Gui, Add, CheckBox,     y+20  gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
+    Gui, Add, Text,         y+13                                                  Section,                          &Menu back color (HEX)
+    Gui, Add, Text,         y+13,                                                                                   &Settings back color (HEX)
+    Gui, Add, CheckBox,     y+20  gToggleIcons              vShowIcons            checked%ShowIcons%,               &Show icons from
+                        
+    Gui, Add, Edit,         ys-6  %edit% w153 Limit8        vMenuColor,                                             %MenuColor%
+    Gui, Add, Edit,         y+4   %edit% wp   Limit8        vGuiColor,                                              %GuiColor%
+    Gui, Add, Edit,         y+11  %edit% w100               vIconsDir             Section,                          %IconsDir%  
+                                    
+    Gui, Add, Edit,         ys    %edit% w40  Limit3        vIconsSizePlaceholder   
+    Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
+    Gui, Add, Edit,      xs y+16  %edit% w153               vFavoritesDir         Section,                          %FavoritesDir%  
+                
+    Gui, Add, CheckBox,     ys+4 x+m                        vFavoritePaths Section checked%FavoritePaths%,          Show &favorites from
+    Gui, Add, CheckBox,                                     vPinnedPaths           checked%PinnedPaths%,            Show &pinned paths
+    Gui, Add, CheckBox,                                     vClipPaths             checked%ClipPaths%,              Show paths from &clipboard
+    Gui, Add, CheckBox,                                     vDragPaths             checked%DragPaths%,              &Drag and drop paths
+
+    Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Gui, Add, Checkbox,     gToggleShortPath                vShortPath     Section checked%ShortPath%,              &Show short path, indicate as
+                            
+    Gui, Add, Text,         y+13                            vPathSeparatorText,                                     Path &separator
+    Gui, Add, Text,         y+13                            vDirsCountText,                                         Number of &dirs displayed
+    Gui, Add, Text,         y+13                            vDirNameLengthText,                                     &Length of dir names
+    Gui, Add, Checkbox,     y+20                            vShowDriveLetter        checked%ShowDriveLetter%,       Show &drive letter
+    Gui, Add, Checkbox,                                     vShowFirstSeparator     checked%ShowFirstSeparator%,    Show &first separator
+    Gui, Add, Checkbox,                                     vShortenEnd             checked%ShortenEnd%,            Shorten the &end
+                
+    Gui, Add, Edit,         ys-4 %edit%                     vShortNameIndicator,                                    %ShortNameIndicator%
+    Gui, Add, Edit,         y+4  %edit%                     vPathSeparator,                                         %PathSeparator%
+                            
+    Gui, Add, Edit,         y+4  %edit%     Limit4                  
+    Gui, Add, UpDown,       Range1-9999                     vDirsCount,                                             %DirsCount%
+    Gui, Add, Edit,         y+4  %edit%     Limit4                  
+    Gui, Add, UpDown,       Range1-9999                     vDirNameLength,                                         %DirNameLength%
+
+    Gui, Tab, 4 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+         
+    Gui, Add, CheckBox,                                     vAutoStartup          checked%AutoStartup%,             Launch at &system startup
+            
+    Gui, Add, Text,         y+20                                                  Section,                          &Show menu by
+    Gui, Add, Text,         y+13,                                                                                   &Restart app by
+    Gui, Add, Text,         y+23,                                                                                   R&estart only in
+    Gui, Add, Text,         y+13,                                                                                   &Font (GUI)
+    Gui, Add, Text,         y+13,                                                                                   Icon (t&ray)
     
-    Gui,    Add,    Edit,       ys %edit% w40    Limit3 vIconsSizePlaceholder
-    Gui,    Add,    UpDown,     Range1-200              vIconsSize,                                 %IconsSize%
-    Gui,    Add,    Edit,       xs y+16  %edit%  w153   vFavoritesDir                   Section,    %FavoritesDir%  
-    
-    Gui,    Add,    CheckBox,   ys+4 xm+15           vFavoritePaths checked%FavoritePaths% Section, Show &favorites from
-    Gui,    Add,    CheckBox,                           vPinnedPaths    checked%PinnedPaths%,       Show &pinned paths
-    Gui,    Add,    CheckBox,                           vClipPaths      checked%ClipPaths%,         Show paths from &clipboard
-    Gui,    Add,    CheckBox,                           vDragPaths      checked%DragPaths%,         &Drag and drop paths
+    ; Keyboard input controls   
+    edit := "w120 r1 -Wrap -vscroll"    
+    Gui, Add, Hotkey,       ys-6  %edit%                    vMainKey              Section,                          %MainKey%
+    Gui, Add, Hotkey,       y+8   %edit%                    vRestartKey,                                            %RestartKey%
+            
+    ; Toggles between keyboard and mouse input modes            
+    Gui, Add, Button,       ys w22   gToggleMainMouse       vMainMouseButton,                                       mouse
+    Gui, Add, Button,          wp    gToggleRestartMouse    vRestartMouseButton,                                    mouse
+                
+    Gui, Add, Edit,         xs    %edit%    w185            vRestartWhere,                                          %RestartWhere%
+    Gui, Add, Edit,         y+4   %edit%    wp              vMainFont,                                              %MainFont%
+    Gui, Add, Edit,         y+4   %edit%    wp              vMainIcon,                                              %MainIcon%
+                        
+    ; Mouse input controls          
+    local mouse := GetMouseList("list")         
+            
+    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey   vMain,                                                   %mouse%
+    Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey   vRestart,                                                %mouse%
+                                                
+    Gui, Add, Edit,         xs ys %edit%    ReadOnly       vMainMouse,                                              %MainMouse%
+    Gui, Add, Edit,         y+8   %edit%    ReadOnly       vRestartMouse,                                           %RestartMouse%
 
-    Gui,    Tab,    3       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
+    Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui,    Add,    Checkbox,   gToggleShortPath        vShortPath checked%ShortPath%  Section,     &Show short path, indicate as
+    Gui, Add, Text,,                                                                                                Delete from configuration:
+    Gui, Add, CheckBox,     y+20                            vDeleteDialogs,                                         &Black List and Auto Switch
+    Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
+    Gui, Add, CheckBox,                                     vDeleteFavorites,                                       &Favorite paths
+    Gui, Add, CheckBox,                                     vDeleteKeys,                                            &Hotkeys and mouse buttons
+    Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 
-    Gui,    Add,    Text,       y+13                    vPathSeparatorText,                         Path &separator
-    Gui,    Add,    Text,       y+13                    vDirsCountText,                             Number of &dirs displayed
-    Gui,    Add,    Text,       y+13                    vDirNameLengthText,                         &Length of dir names
-    Gui,    Add,    Checkbox,   y+20                  vShowDriveLetter checked%ShowDriveLetter%,    Show &drive letter
-    Gui,    Add,    Checkbox,                      vShowFirstSeparator checked%ShowFirstSeparator%, Show &first separator
-    Gui,    Add,    Checkbox,                           vShortenEnd    checked%ShortenEnd%,         Shorten the &end
-
-    Gui,    Add,    Edit,       ys-4 %edit% Limit       vShortNameIndicator,                        %ShortNameIndicator%
-    Gui,    Add,    Edit,       y+4  %edit% Limit       vPathSeparator,                             %PathSeparator%
-
-    Gui,    Add,    Edit,       y+4  %edit% Limit4
-    Gui,    Add,    UpDown,     Range1-9999             vDirsCount,                                 %DirsCount%
-    Gui,    Add,    Edit,       y+4  %edit% Limit4
-    Gui,    Add,    UpDown,     Range1-9999             vDirNameLength,                             %DirNameLength%
-
-    Gui,    Tab,    4       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Gui,    Add,    CheckBox,                           vAutoStartup checked%AutoStartup%,          Launch at &system startup
-
-    Gui,    Add,    Text,       y+20                                                    Section,    &Show menu by
-    Gui,    Add,    Text,       y+13,                                                               &Restart app by
-    Gui,    Add,    Text,       y+23,                                                               R&estart only in
-    Gui,    Add,    Text,       y+13,                                                               &Font (GUI)
-    Gui,    Add,    Text,       y+13,                                                               Icon (t&ray)
-
-    edit := "w120 r1 -Wrap -vscroll"
-
-    ; Keyboard input controls
-    Gui,    Add,    Hotkey,     ys-6  %edit%            vMainKey                        Section,    %MainKey%
-    Gui,    Add,    Hotkey,     y+8   %edit%            vRestartKey,                                %RestartKey%
-
-    ; Toggles between keyboard and mouse input modes
-    Gui,    Add,    Button,     ys w22                  gToggleMainMouse    vMainMouseButton,       mouse
-    Gui,    Add,    Button,        wp                   gToggleRestartMouse vRestartMouseButton,    mouse
-
-    Gui,    Add,    Edit,       xs    %edit% w185       vRestartWhere,                              %RestartWhere%
-    Gui,    Add,    Edit,       y+4   %edit% wp         vMainFont,                                  %MainFont%
-    Gui,    Add,    Edit,       y+4   %edit% wp         vMainIcon,                                  %MainIcon%
-
-    ; Mouse input controls
-    local mouse := GetMouseList("list")
-
-    Gui,    Add,    ListBox,    xs ys+25 w120 h45       gGetMouseKey vMain,                         %mouse%
-    Gui,    Add,    ListBox,    xs ys+60 wp hp          gGetMouseKey vRestart,                      %mouse%
-
-    Gui,    Add,    Edit,       xs ys %edit%            ReadOnly  vMainMouse,                       %MainMouse%
-    Gui,    Add,    Edit,       y+8   %edit%            ReadOnly  vRestartMouse,                    %RestartMouse%
-
-    Gui,    Tab,    5       ;───────────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Gui,    Add,    Text,,                                                                          Delete from configuration:
-    Gui,    Add,    CheckBox,  y+20                     vDeleteDialogs,                             &Black List and Auto Switch
-    Gui,    Add,    CheckBox,                           vDeletePinned,                              &Pinned paths
-    Gui,    Add,    CheckBox,                           vDeleteFavorites,                           &Favorite paths
-    Gui,    Add,    CheckBox,                           vDeleteKeys,                                &Hotkeys and mouse buttons
-    Gui,    Add,    CheckBox,  y+20                     vNukeSettings,                              &Nuke configration
-
-    Gui,    Tab     ; BUTTONS   ────────────────────────────────────────────────────────────────────────────────────────────────────
+    Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     GuiControlGet, pos, Pos, SendEnter
     local posX   := posW / 2 - 10
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
 
-    Gui,    Add,    Button,    x%posX% w74 Cancel       gGuiEscape                      Section,    &Cancel
-    Gui,    Add,    Button,    x+20 yp wp               g%button%Settings,                          &%button%
-    Gui,    Add,    Button,    xs-94 yp wp Default      gSaveSettings,                              &OK
-    Gui,    Add,    Button,    x%posW% ym-4             gShowDebug,                                 Debu&g
+    Gui, Add, Button,       x%posX%         w74             gGuiEscape              Section,                        &Cancel
+    Gui, Add, Button,       x+20      yp    wp              g%button%Settings,                                      &%button%
+    Gui, Add, Button,       xs-94     yp    wp              gSaveSettings           Default,                        &OK
+    Gui, Add, Button,       x%posW%   ym-4                  gShowDebug,                                             Debu&g
 
 
-    ; SETUP AND SHOW GUI        ────────────────────────────────────────────────────────────────────────────────────────────────────
+    ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Current checkbox state
     ToggleShowAlways()
     ToggleIcons()
