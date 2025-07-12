@@ -8,6 +8,7 @@
  */
 
 ; These parameters are not saved in the INI
+LastTabSettings    :=  1
 SelectPathAttempts :=  3
 DialogId           :=  0
 EditId             :=  0
@@ -22,9 +23,6 @@ DeletePinned       :=  false
 DeleteFavorites    :=  false
 DeleteKeys         :=  false
 NukeSettings       :=  false
-
-LastTabSettings    :=  1
-LastPathIndex      :=  1
 
 Favs               :=  []
 Pins               :=  []
