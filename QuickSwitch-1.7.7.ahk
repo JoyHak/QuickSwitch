@@ -2,14 +2,14 @@
 ;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe
 
 ;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
-;@Ahk2Exe-SetMainIcon QuickSwitch.ico
+;@Ahk2Exe-SetMainIcon Icons\QuickSwitch.ico
 ;@Ahk2Exe-SetDescription https://github.com/JoyHak/QuickSwitch
 ;@Ahk2Exe-SetCopyright Rafaello
 ;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license
 ;@Ahk2Exe-SetCompanyName ToYu studio
 
 ;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
-;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Lib" "%A_ScriptDir%\QuickSwitch.ico",, A_ScriptDir
+;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\QuickSwitch.ico" "%A_ScriptDir%\Icons" "%A_ScriptDir%\Favorites",, A_ScriptDir
 
 #Requires AutoHotkey v1.1.37.02 Unicode
 #Warn
@@ -61,6 +61,7 @@ ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
 InitAutoStartup()
 InitDarkTheme()
+InitSections("All")
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
@@ -88,8 +89,6 @@ Loop {
             FingerPrint   := Exe "___" WinTitle
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
-            SelectMenuPath := Func("SelectPath").bind(ShowAfterSelect || ShowAlways, SelectPathAttempts)
-
             /* 
                 Get current dialog settings or use default mode (AutoSwitch flag).
                 Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
@@ -97,10 +96,15 @@ Loop {
             */
             IniRead, BlackList, % INI, Dialogs, % Exe, 0
             IniRead, Switch, % INI, Dialogs, % FingerPrint, % AutoSwitch
-
             DialogAction := Switch | BlackList
-            GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
-
+            
+            if MainPaths {
+                ; Disable clipboard analysis while file managers transfer data through it
+                OnClipboardChange("GetClipboardPath", false)
+                GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
+            }
+            OnClipboardChange("GetClipboardPath", ClipPaths)
+            
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey,, "On")
 
@@ -126,14 +130,21 @@ Loop {
     }
 
     Sleep, 100
-    WinWaitNotActive
-    ValidateKey("MainKey", MainKey,, "off")
+    WinWaitNotActive, ahk_class #32770
+    ValidateKey("MainKey", MainKey,, "Off")
 
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false
         try IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
     }
+    
+    ; Clean-up paths from clipboard in new process
+    if (LastExe && (LastExe != Exe)) {
+        Clips := []
+    }
+    LastExe := Exe 
+    
 }   ; End of continuous WinWaitActive loop
 
 LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"

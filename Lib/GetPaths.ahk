@@ -1,8 +1,8 @@
-GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
+GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
-
-    ; Get manager hwnds
+    
+    ; Get manager uniq IDs
     WinGet, _winIdList, list, ahk_group ManagerClasses
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
@@ -28,9 +28,9 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
                 _winClass := "Dopus"
         }
 
-        _length := array.length()
+        _length := paths.length()
         try {
-            Func(_winClass).call(_winId, array)
+            Func(_winClass).call(_winId, paths)
         } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid, elevatedDict)
@@ -39,13 +39,13 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
             LogException(_ex)
         }
 
-        if (_length = array.length()) {
+        if (_length = paths.length()) {
             AddElevatedName(_winPid, elevatedDict)
         }
 
-        if (_autoSwitch && array[1]) {
+        if (_autoSwitch && paths[1]) {
             _autoSwitch := false
-            SelectPath()
+            SelectPath(paths)
         }
     }
 }
@@ -119,6 +119,34 @@ GetShortPath(ByRef path) {
         LogException(_ex)
     }
     return path
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetClipboardPath(_dataType) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; If the clipboard contents is text, cuts the path where the file is stored. 
+    ; If the path is valid, adds to the array
+    global Clips  
+    Sleep 150
+
+    _clip := A_Clipboard
+    if ((_dataType != 1) || !_clip)
+        return
+    
+    try {
+        Loop, parse, _clip, `n 
+        {   
+            _path := A_LoopField
+            
+            if (ValidateDirectory("", _path, "NoTraytip")) {
+                Clips.push([_path, "Clipboard.ico"])
+                break
+            }
+        }
+    } catch _ex {
+        LogException(_ex)
+    }
 }
 
 

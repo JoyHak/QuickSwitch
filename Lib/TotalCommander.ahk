@@ -4,7 +4,7 @@
 #Include Create.ahk
 #Include Tabs.ahk
 
-GetTotalPaths(ByRef winId, ByRef array) {
+GetTotalPaths(ByRef winId, ByRef paths) {
     /*
         Requests tabs file.
 
@@ -18,7 +18,7 @@ GetTotalPaths(ByRef winId, ByRef array) {
 
     try {
         SendTotalCommand(winId, USER_COMMAND)
-        ParseTotalTabs(TABS_FILE, array)
+        ParseTotalTabs(TABS_FILE, paths)
     } catch {
         WinGet, _winPid, pid, % "ahk_id " winId
         if (!A_IsAdmin && IsProcessElevated(_winPid))
@@ -30,6 +30,6 @@ GetTotalPaths(ByRef winId, ByRef array) {
         CreateTotalUserCommand(_userIni, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
 
         SendTotalCommand(winId, USER_COMMAND)
-        ParseTotalTabs(TABS_FILE, array)
+        ParseTotalTabs(TABS_FILE, paths)
     }
 }

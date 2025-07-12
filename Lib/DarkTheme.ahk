@@ -1,6 +1,38 @@
 ; Contains functions for switching Menu and GUI to dark / light mode
 
+SetDarkTheme(_controls) {
+    ; Sets dark theme for controls names list
+    static SetWindowTheme := DllCall("GetProcAddress"
+                                    , "ptr", DllCall("GetModuleHandle", "str", "uxtheme", "ptr")
+                                    , "astr", "SetWindowTheme", "ptr")
+
+    Loop, parse, _controls, |
+    {
+        GuiControlGet, _id, hwnd, % A_LoopField
+        if (_id)
+            DllCall(SetWindowTheme, "ptr", _id, "str", "DarkMode_Explorer", "ptr", 0)
+    }
+}
+
+SetDefaultColors() {
+    global    
+    
+    if DarkColors {    
+        MenuColor := DarkTheme ? 202020 : ""
+        GuiColor  := MenuColor
+    }
+    
+    DarkColors := false
+}
+
+ToggleDarkTheme() {
+    global DarkColors := true
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 InitDarkTheme() {
+;─────────────────────────────────────────────────────────────────────────────
     ; Noticz: sets theme for Menu and GUI
 	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
     ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
@@ -31,23 +63,6 @@ IsDarkTheme() {
     } 
     
     return false
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-SetDarkTheme(_controls) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Sets dark theme for controls names list
-    static SetWindowTheme := DllCall("GetProcAddress"
-                                    , "ptr", DllCall("GetModuleHandle", "str", "uxtheme", "ptr")
-                                    , "astr", "SetWindowTheme", "ptr")
-
-    Loop, parse, _controls, |
-    {
-        GuiControlGet, _id, hwnd, % A_LoopField
-        if (_id)
-            DllCall(SetWindowTheme, "ptr", _id, "str", "DarkMode_Explorer", "ptr", 0)
-    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

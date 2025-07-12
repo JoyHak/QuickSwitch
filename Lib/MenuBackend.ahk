@@ -4,20 +4,22 @@ Dummy() {
     Return
 }
 
-SelectPath(_showMenu := false, _attempts := 3, _name := "", _position := 1) {
-    global DialogId, FileDialog, Paths, ElevatedApps
-
+SelectPath(ByRef array, _name := "", _position := 1) {
+    ; Section number: the order of the array in the menu. 
+    ; Helps to calculate the offset for each array of paths in the Menu.
+    global DialogId, FileDialog, ElevatedApps, ShowAfterSelect, ShowAlways, SelectPathAttempts
+    
     _log := ""
-    loop, % _attempts {
+    loop, % SelectPathAttempts {
         try {
             if !WinActive("ahk_id " DialogId)
-                return SendPath(Paths[_position])
+                return SendPath(array[_position][1])
 
-            if (FileDialog.call(Paths[_position]), _attempts)
-                return _showMenu ? ShowMenu() : 0
+            if (FileDialog.call(array[_position][1]), SelectPathAttempts)
+                return (ShowAfterSelect || ShowAlways) ? ShowMenu() : 0
 
         } catch _ex {
-            if (A_Index = _attempts)
+            if (A_Index = SelectPathAttempts)
                 _log := _ex.what " " _ex.message " " _ex.extra
         }
     }
@@ -77,13 +79,13 @@ IsMenuReady() {
 ;
 ToggleAutoSwitch() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction, SaveDialogAction
+    global DialogAction, SaveDialogAction, Paths
 
     DialogAction     := (DialogAction = 1) ? 0 : 1
     SaveDialogAction := true
 
     if (DialogAction = 1)
-        SelectPath()
+        SelectPath(Paths)
     if IsMenuReady()
         SendEvent ^#+0
 }

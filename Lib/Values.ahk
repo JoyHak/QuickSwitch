@@ -8,22 +8,23 @@
  */
 
 ; These parameters are not saved in the INI
+; You can find the meaning of each option in the Main and Lib\SettingsBackend files
+LastTabSettings    :=  1
 SelectPathAttempts :=  3
 DialogId           :=  0
 EditId             :=  0
 FingerPrint        :=  ""
+LastExe            :=  ""
 DialogAction       :=  ""
 SaveDialogAction   :=  false
 FromSettings       :=  false
+
 DeleteDialogs      :=  false
 DeletePinned       :=  false
 DeleteFavorites    :=  false
+DeleteClips        :=  false
 DeleteKeys         :=  false
 NukeSettings       :=  false
-
-
-LastTabSettings    :=  1
-Paths              :=  []
 ElevatedApps       :=  {updated: false}
 
 SetDefaultValues() {
@@ -34,33 +35,50 @@ SetDefaultValues() {
         - INI settings are invalid
         - INI doesn't exist (yet)
         - the values must be reset
+        
+        You can find the meaning of each option in Lib\SettingsFrontend
     */
     global
-
+    
+    DarkTheme           :=  IsDarkTheme()
+    DarkColors          :=  true  
+    
+    MainPaths           :=  true
     AutoStartup         :=  true
+    PathNumbers         :=  true
+    ShowIcons           :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
-    PathNumbers         :=  true
 
-    AutoSwitch          :=  false
-    BlackListExe        :=  false
-    DeleteDialogs       :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     SendEnter           :=  false
+    
+    AutoSwitch          :=  false
+    BlackListExe        :=  false
+    
+    FavoritePaths       :=  false
+    PinnedPaths         :=  false
+    ClipPaths           :=  false
+    DragPaths           :=  false
+    
     ShortPath           :=  false
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
 
-    ShortNameIndicator := ".."
+    IconsSize      := 25
     DirsCount      := 3
     DirNameLength  := 20
     PathLimit      := 9
     PathSeparator  := "\"
-
     RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"
+    ShortNameIndicator := ".."
+    
+    ; Requires validation
+    IconsDir       := A_WorkingDir "\Icons"
+    FavoritesDir   := A_WorkingDir "\Favorites"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
     RestartMouse   := ""
@@ -68,19 +86,11 @@ SetDefaultValues() {
     MainIcon       := ""
     MenuColor      := ""
     GuiColor       := ""
-
-    DarkTheme      := IsDarkTheme()
-    SetDefaultColor()
+    SetDefaultColors()
 
     ;@Ahk2Exe-IgnoreBegin
-    MainIcon := "QuickSwitch.ico"
+    MainIcon := IconsDir "\QuickSwitch.ico"
     ;@Ahk2Exe-IgnoreEnd
-}
-
-SetDefaultColor() {
-    global
-    MenuColor := DarkTheme ? 202020 : ""
-    GuiColor  := MenuColor
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -97,38 +107,45 @@ WriteValues() {
 
     local _values := "
     (LTrim
-         AutoStartup="          AutoStartup             "
-         AutoSwitch="           AutoSwitch              "
-         BlackListExe="         BlackListExe            "
-         DeleteDialogs="        DeleteDialogs           "
-         ShowAlways="           ShowAlways              "
-         ShowNoSwitch="         ShowNoSwitch            "
-         ShowAfterSelect="      ShowAfterSelect         "
-         ShowAfterSettings="    ShowAfterSettings       "
-         SendEnter="            SendEnter               "
-         PathNumbers="          PathNumbers             "
-         ShortPath="            ShortPath               "
-         PathSeparator="        PathSeparator           "
-         ShortNameIndicator="   ShortNameIndicator      "
-         DirsCount="            DirsCount               "
-         DirNameLength="        DirNameLength           "
-         PathLimit="            PathLimit               "
-         ShortenEnd="           ShortenEnd              "
-         ShowDriveLetter="      ShowDriveLetter         "
-         ShowFirstSeparator="   ShowFirstSeparator      "
-         DarkTheme="            DarkTheme               "
-         MainFont="             MainFont                "
-         RestartWhere="         RestartWhere            "
-         MainMouse="            MainMouse               "
-         RestartMouse="         RestartMouse            "
+    DarkTheme="              DarkTheme          "
+    DarkColors="             DarkColors         "
+    MainPaths="              MainPaths          "
+    AutoStartup="            AutoStartup        "
+    PathNumbers="            PathNumbers        "
+    ShowIcons="              ShowIcons          "
+    ShowNoSwitch="           ShowNoSwitch       "
+    ShowAfterSettings="      ShowAfterSettings  "
+    ShowAlways="             ShowAlways         "
+    ShowAfterSelect="        ShowAfterSelect    "
+    SendEnter="              SendEnter          "
+    AutoSwitch="             AutoSwitch         "
+    BlackListExe="           BlackListExe       "
+    FavoritePaths="          FavoritePaths      "
+    PinnedPaths="            PinnedPaths        "
+    ClipPaths="              ClipPaths          "
+    DragPaths="              DragPaths          "
+    ShortPath="              ShortPath          "
+    ShortenEnd="             ShortenEnd         "
+    ShowDriveLetter="        ShowDriveLetter    "
+    ShowFirstSeparator="     ShowFirstSeparator "
+    IconsSize="              IconsSize          "
+    DirsCount="              DirsCount          "
+    DirNameLength="          DirNameLength      "
+    PathLimit="              PathLimit          "
+    PathSeparator="          PathSeparator      "
+    RestartWhere="           RestartWhere       "
+    MainFont="               MainFont           "
+    ShortNameIndicator="     ShortNameIndicator "
     )"
 
     _values .= "`n"
-            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
-            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
-            . ValidateTrayIcon( "MainIcon",    MainIcon)
-            . ValidateColor(    "GuiColor",    GuiColor)
-            . ValidateColor(    "MenuColor",   MenuColor)
+    . ValidateKey(      "MainKey",       MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
+    . ValidateKey(      "RestartKey",    RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
+    . ValidateColor(    "GuiColor",      GuiColor)
+    . ValidateColor(    "MenuColor",     MenuColor)
+    . ValidateTrayIcon( "MainIcon",      MainIcon)
+    . ValidateDirectory("IconsDir",      IconsDir)
+    . ValidateDirectory("FavoritesDir",  FavoritesDir)
 
     try {
         IniWrite, % _values, % INI, Global
@@ -146,7 +163,7 @@ ReadValues() {
     ; Reads values from INI
     global
 
-    if !FileExist(INI)
+    if !IsFile(INI)
         return
 
     local _values, _array, _variable, _value
@@ -163,25 +180,61 @@ ReadValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-DeleteValues() {
+IsFile(ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Deletes sections from INI
-    global
+    ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsw
+    static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
+    static IsFile  := DllCall("GetProcAddress", "ptr", shlwapi, "astr", "PathFileExistsW", "ptr")
     
-    if NukeSettings
-        return NukeSettings()
+    return DllCall(IsFile, "str", path)
+}
 
-    if DeleteDialogs
-        try IniDelete, % INI, Dialogs
+;─────────────────────────────────────────────────────────────────────────────
+;
+ExpandVariables(ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Performs a dereference of all built-in, declared and env. variables
+    _pos := 0
+    while (_pos := RegExMatch(path, "%(\w+)%", _var, ++_pos)) {
+        if IsSet(%_var1%) {
+            path := StrReplace(path, "%" _var1 "%", %_var1%)
+        } else {
+            EnvGet, _env, % _var1
+            path := StrReplace(path, "%" _var1 "%", _env)
+        }
+    }
+}
 
-    if DeletePinned
-        try IniDelete, % INI, Pinned
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateDirectory(_paramName, ByRef path, _silent := false) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; If the dir exists, returns a string of the form "paramName=result",
+    ; otherwise returns value from config
+    ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
+    global INI
+    
+    static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
+    static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
+    
+    path := Trim(path, " `t\/.")
+    path := StrReplace(path, "/" , "\")
+    ExpandVariables(path)
 
-    if DeleteFavorites
-        try IniDelete, % INI, Favorites
-
-    if DeleteKeys
-        MainKey := RestartKey := RestartMouse := MainMouse := ""
+    loop, 2 {
+        ; Сheck the correctness of the directory
+        if (DllCall(IsPath, "str", path))
+            return _paramName "=" path "`n"
+        
+        ; If this is a file or an incorrect directory, get the parent
+        path := SubStr(path, 1, InStr(path, "\",, -1))
+    }
+    
+    if !_silent
+        LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
+    
+    IniRead, _default, % INI, Global, % _paramName, % A_Space
+    return _paramName "=" _default "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -191,17 +244,20 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     /*
         If the file exists, changes the tray icon
         and returns a string of the form "paramName=result",
-        otherwise returns empty string
+        otherwise returns value from config
     */
-
+    global INI
+    
     if icon {
-        if FileExist(icon) {
-            Menu, Tray, Icon, % icon
+        try {
+            Menu, % "Tray", % "Icon", % icon
             return _paramName "=" icon "`n"
         }
         LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
     }
-    return ""
+    
+    IniRead, _default, % INI, Global, % _paramName, % A_Space
+    return _paramName "=" _default "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -212,14 +268,18 @@ ValidateColor(_paramName, ByRef color) {
         Searches for a HEX number in any form, e.g. 0x, #, h
 
         If found, returns the string of the form "paramName=result",
-        otherwise returns "paramName= " (empty color)
+        otherwise returns empty color
     */
-
+    global INI
+    
     if color {
-        if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
-            return _paramName . "=" . SubStr(color, _matchPos) . "`n"
-        }
+        if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
+            return _paramName . "=" . _color . "`n"
+
         LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
+        
+        IniRead, _default, % INI, Global, % _paramName, % A_Space
+        return _paramName "=" _default "`n"
     }
 
     return _paramName "=`n"
@@ -237,13 +297,13 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         scan codes, e.g. Q -> sc10
 
         If converted, returns the string of the form "paramName=result",
-        otherwise returns empty string
+        otherwise returns value from config
     */
     global INI
 
     try {
-        if !(_sequence)
-            return _paramName "=`n"
+        if !_sequence
+            return _paramName "=`n"            
 
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
@@ -283,12 +343,16 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             ; Set state for existing hotkey
             Hotkey, % _prefix . _key, % _state
         }
+        
         return _paramName "=" _key "`n"
 
     } catch _ex {
         LogException(_ex)
+        
+        ; Return value from config
+        IniRead, _default, % INI, Global, % _paramName, % A_Space
+        return _paramName "=" _default "`n"
     }
-    return ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -298,8 +362,8 @@ ValidateFile(ByRef filePath) {
     _extra := "Cant write data to the file"
 
     if !filePath {
-        _extra := "File path is empty: `'" filePath "`'"
-    } else if !FileExist(filePath) {
+        _extra := "File path is empty"
+    } else if !IsFile(filePath) {
         _extra := "Unable to create file"
     } else {
         _file := FileOpen(filePath, "r")
@@ -308,7 +372,7 @@ ValidateFile(ByRef filePath) {
             FileGetAttrib, _attr, % filePath
             _extra := "Unable to get access to the file"
         } else {
-            _extra     := "`nRead existing `'" filePath "`'`n"
+            _extra     := "`nReading existing file`n"
 
             _firstLine := RTrim(_file.readLine(), " `r`n")
             _extra     .= Format("Encoding: {} First line: {}, Size in bytes: {} HWND: {}`n"
@@ -322,5 +386,5 @@ ValidateFile(ByRef filePath) {
         }
     }
 
-    return _extra "`n"
+    return "`'" filePath "`' - " _extra "`n"
 }

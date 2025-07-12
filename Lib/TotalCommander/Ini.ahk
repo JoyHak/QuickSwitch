@@ -38,7 +38,7 @@ GetTotalConsoleIni(ByRef totalPid) {
         ; Read exported file
         _log .= " Failed to copy the result to the clipboard."
 
-        if FileExist(INI_PATH) {
+        if IsFile(INI_PATH) {
             FileRead, _iniPath, % INI_PATH
 
             if _iniPath {
@@ -96,19 +96,8 @@ GetTotalRegistryIni() {
 
     if !_regPath
         return false
-
-    if InStr(_regPath, "`%") {
-        ; Resolve env. variables
-        _ini := _env := ""
-        for _i, _part in StrSplit(_regPath, "`%") {
-            try EnvGet, _env, % _part
-            if _env
-                _ini .= _env
-            else
-                _ini .= _part
-        }
-        return _ini
-    }
+    
+    ExpandVariables(_regPath)
     return _regPath
 }
 

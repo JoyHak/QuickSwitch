@@ -11,7 +11,7 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
                 return true
             }
 
-            if FileExist(ini) {
+            if IsFile(ini) {
                 ; Set normal attributes (write access)
                 FileSetAttrib, n, % ini
                 sleep, 20 * A_Index
