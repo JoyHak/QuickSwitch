@@ -44,19 +44,22 @@ SetDefaultValues() {
     */
     global
     
+    DarkTheme           :=  IsDarkTheme()
+    DarkColors          :=  true  
+    
+    MainPaths           :=  true
     AutoStartup         :=  true
-    ShowNoSwitch        :=  true
-    ShowAfterSettings   :=  true
     PathNumbers         :=  true
     ShowIcons           :=  true
-    MainPaths           :=  true
-
-    AutoSwitch          :=  false
-    BlackListExe        :=  false
+    ShowNoSwitch        :=  true
+    ShowAfterSettings   :=  true
 
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     SendEnter           :=  false
+    
+    AutoSwitch          :=  false
+    BlackListExe        :=  false
     
     FavoritePaths       :=  false
     PinnedPaths         :=  false
@@ -67,10 +70,6 @@ SetDefaultValues() {
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
-    
-    DarkTheme           :=  IsDarkTheme()
-    DarkColors          :=  true
-    SetDefaultColors()
 
     IconsSize      := 25
     DirsCount      := 3
@@ -91,6 +90,7 @@ SetDefaultValues() {
     MainIcon       := ""
     MenuColor      := ""
     GuiColor       := ""
+    SetDefaultColors()
 
     ;@Ahk2Exe-IgnoreBegin
     MainIcon := IconsDir "\QuickSwitch.ico"
@@ -111,17 +111,19 @@ WriteValues() {
 
     local _values := "
     (LTrim
+    DarkTheme="              DarkTheme          "
+    DarkColors="             DarkColors         "
+    MainPaths="              MainPaths          "
     AutoStartup="            AutoStartup        "
-    ShowNoSwitch="           ShowNoSwitch       "
-    ShowAfterSettings="      ShowAfterSettings  "
     PathNumbers="            PathNumbers        "
     ShowIcons="              ShowIcons          "
-    MainPaths="              MainPaths          "
-    AutoSwitch="             AutoSwitch         "
-    BlackListExe="           BlackListExe       "
+    ShowNoSwitch="           ShowNoSwitch       "
+    ShowAfterSettings="      ShowAfterSettings  "
     ShowAlways="             ShowAlways         "
     ShowAfterSelect="        ShowAfterSelect    "
     SendEnter="              SendEnter          "
+    AutoSwitch="             AutoSwitch         "
+    BlackListExe="           BlackListExe       "
     FavoritePaths="          FavoritePaths      "
     PinnedPaths="            PinnedPaths        "
     ClipPaths="              ClipPaths          "
@@ -130,9 +132,6 @@ WriteValues() {
     ShortenEnd="             ShortenEnd         "
     ShowDriveLetter="        ShowDriveLetter    "
     ShowFirstSeparator="     ShowFirstSeparator "
-    DarkTheme="              DarkTheme          "
-    DarkColors="             DarkColors         "
-    SetDefaultColors="       SetDefaultColors   "
     IconsSize="              IconsSize          "
     DirsCount="              DirsCount          "
     DirNameLength="          DirNameLength      "
@@ -219,14 +218,17 @@ IsFile(ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ExpandEnvVariables(ByRef path) {
+ExpandVariables(ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
-    static maxLength := 1000
-    
-    if InStr(path, "%") {
-        VarSetCapacity(_temp, maxLength) 
-        DllCall("ExpandEnvironmentStringsW", "str", path, "str", _temp, "int", maxLength)
-        path := _temp
+    ; Performs a dereference of all built-in, declared and env. variables
+    _pos := 0
+    while (_pos := RegExMatch(path, "%(\w+)%", _var, ++_pos)) {
+        if IsSet(%_var1%) {
+            path := StrReplace(path, "%" _var1 "%", %_var1%)
+        } else {
+            EnvGet, _env, % _var1
+            path := StrReplace(path, "%" _var1 "%", _env)
+        }
     }
 }
 
@@ -240,21 +242,21 @@ ValidateDirectory(_paramName, ByRef path, _silent := false) {
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "AStr", "PathIsDirectoryW", "Ptr")
     
-    StrReplace(path, "/" , "\")
-    ExpandEnvVariables(path)
-    
-    loop, 2 {
+    path := Trim(path, " `t\/.")
+    path := StrReplace(path, "/" , "\")
+    ExpandVariables(path)
+
+    loop, 3 {
         ; Сheck the correctness of the directory
-        if (DllCall(IsPath, "str", path)) {
-            return _paramName "=" _dir "`n"
-        }
+        if (DllCall(IsPath, "str", path))
+            return _paramName "=" path "`n"
         
         ; If this is a file or an incorrect directory, get the parent
         path := SubStr(path, 1, InStr(path, "\",, -1))
     }
     
     if !_silent
-        LogError("Directory not found: `'" path "`'", "directory", "Specify the full path to the directory")
+        LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
     
     return ""
 }
@@ -291,8 +293,8 @@ ValidateColor(_paramName, ByRef color) {
     */
 
     if color {
-        if (_matchPos := RegExMatch(color, "i)[a-f0-9]{6}$")) {
-            return _paramName . "=" . SubStr(color, _matchPos) . "`n"
+        if (RegExMatch(color, "i)[a-f0-9]{6}$", _color)) {
+            return _paramName . "=" . _color . "`n"
         }
         LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
     }

@@ -127,14 +127,9 @@ GetClipboardPath(_dataType) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the clipboard contents is text, cuts the path where the file is stored. 
     ; If the path is valid, adds to the array
-    global ClipPaths, Clips
-    static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
-    static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "AStr", "PathIsDirectoryW", "Ptr")
-    
-    if !ClipPaths   
-        return
-    
-    Sleep 50
+    global Clips  
+    Sleep 150
+
     _clip := A_Clipboard
     if ((_dataType != 1) || !_clip)
         return
@@ -143,7 +138,8 @@ GetClipboardPath(_dataType) {
         Loop, parse, _clip, `n 
         {   
             _path := A_LoopField
-            if (ValidateDirectory(_path, true)) {
+            
+            if (ValidateDirectory("", _path, "NoTraytip")) {
                 Clips.push([_path, "Clipboard.ico"])
                 break
             }

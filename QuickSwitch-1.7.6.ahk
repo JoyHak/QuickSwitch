@@ -55,7 +55,6 @@ InitLog()
 SetDefaultValues()
 ReadValues()
 
-OnClipboardChange("GetClipboardPath")
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
@@ -101,14 +100,11 @@ Loop {
             
             if MainPaths {
                 ; Disable clipboard analysis while file managers transfer data through it
-                _ClipPaths := ClipPaths
-                ClipPaths  := false
-                
-                ; Get paths from file managers
+                OnClipboardChange("GetClipboardPath", false)
                 GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
-                ClipPaths := _ClipPaths
             }
-
+            OnClipboardChange("GetClipboardPath", ClipPaths)
+            
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey,, "On")
 

@@ -97,7 +97,7 @@ GetTotalRegistryIni() {
     if !_regPath
         return false
     
-    ExpandEnvVariables(_regPath)
+    ExpandVariables(_regPath)
     return _regPath
 }
 
