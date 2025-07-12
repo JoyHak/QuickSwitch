@@ -12,10 +12,15 @@ AddMenuTitle(_title) {
 AddMenuIcon(_title, _iconName, _isToggle := false) {
     global ShowIcons, IconsDir, IconsSize
     
-    if ShowIcons
-        Menu, % "ContextMenu", % "Icon",  % _title, % IconsDir "\" _iconName,, % IconsSize
-    else if _isToggle
-        Menu, % "ContextMenu", % "Check", % _title
+    try {
+        if ShowIcons
+            Menu, % "ContextMenu", % "Icon",  % _title, % IconsDir "\" _iconName,, % IconsSize
+        else if _isToggle
+            Menu, % "ContextMenu", % "Check", % _title
+    } catch _ex {
+        LogError("Wrong path to the icon: `'" _ex.Extra "`'", "icon")
+        ShowIcons := false
+    }
 }
 
 AddMenuOption(_title, _function, _isToggle := false) {

@@ -65,7 +65,6 @@ InitDarkTheme()
 Loop {
     ; Wait for any "Open/Save as" file dialog
     WinWaitActive, ahk_class #32770
-    ToolTip % ClipboardAll
 
     try {
         DialogId   := WinActive("A")

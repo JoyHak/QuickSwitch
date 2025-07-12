@@ -36,7 +36,8 @@ SaveSettings() {
     DeleteValues()
     SetDefaultColors()
     
-    WriteValues()
+    WriteValues()    
+    SetDefaultValues()
     ReadValues()
     
     InitAutoStartup()

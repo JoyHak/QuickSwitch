@@ -143,13 +143,13 @@ WriteValues() {
     )"
 
     _values .= "`n"
-            . ValidateKey(      "MainKey",      MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
-            . ValidateKey(      "RestartKey",   RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
-            . ValidateColor(    "GuiColor",     GuiColor)
-            . ValidateColor(    "MenuColor",    MenuColor)
-            . ValidateTrayIcon( "MainIcon",     MainIcon)
-            . ValidateDirectory("IconsDir",     IconsDir)
-            . ValidateDirectory("FavoritesDir", FavoritesDir)
+            . ValidateKey(      "MainKey",       MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
+            . ValidateKey(      "RestartKey",    RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
+            . ValidateColor(    "GuiColor",      GuiColor)
+            . ValidateColor(    "MenuColor",     MenuColor)
+            . ValidateTrayIcon( "MainIcon",      MainIcon)
+            . ValidateDirectory("IconsDir",      IconsDir)
+            . ValidateDirectory("FavoritesDir",  FavoritesDir)
 
     try {
         IniWrite, % _values, % INI, Global
@@ -240,13 +240,13 @@ ValidateDirectory(_paramName, ByRef path, _silent := false) {
     ; otherwise returns empty string
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
-    static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "AStr", "PathIsDirectoryW", "Ptr")
+    static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
     
     path := Trim(path, " `t\/.")
     path := StrReplace(path, "/" , "\")
     ExpandVariables(path)
 
-    loop, 3 {
+    loop, 2 {
         ; Сheck the correctness of the directory
         if (DllCall(IsPath, "str", path))
             return _paramName "=" path "`n"
@@ -296,7 +296,7 @@ ValidateColor(_paramName, ByRef color) {
         if (RegExMatch(color, "i)[a-f0-9]{6}$", _color)) {
             return _paramName . "=" . _color . "`n"
         }
-        LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
+        return LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
     }
 
     return _paramName "=`n"
@@ -360,12 +360,12 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             ; Set state for existing hotkey
             Hotkey, % _prefix . _key, % _state
         }
+        
         return _paramName "=" _key "`n"
 
     } catch _ex {
-        LogException(_ex)
+        return LogException(_ex)
     }
-    return ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
