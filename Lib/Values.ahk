@@ -39,9 +39,11 @@ SetDefaultValues() {
         - INI settings are invalid
         - INI doesn't exist (yet)
         - the values must be reset
+        
+        You can find the meaning of each option in Lib\SettingsFrontend
     */
     global
-
+    
     AutoStartup         :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
@@ -65,18 +67,23 @@ SetDefaultValues() {
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
+    
+    DarkTheme           :=  IsDarkTheme()
+    DarkColors          :=  true
+    SetDefaultColors()
 
-    ShortNameIndicator := ".."
-    PathSeparator  := "\"
+    IconsSize      := 25
     DirsCount      := 3
     DirNameLength  := 20
     PathLimit      := 9
-    IconsSize      := 25
-    
-    IconsDir       := A_WorkingDir "\Icons"
-    FavoritesDir   := A_WorkingDir "\Favorites"
+    PathSeparator  := "\"
     RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"
+    ShortNameIndicator := ".."
+    
+    ; Requires validation
+    IconsDir       := A_WorkingDir "\Icons"
+    FavoritesDir   := A_WorkingDir "\Favorites"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
     RestartMouse   := ""
@@ -84,10 +91,6 @@ SetDefaultValues() {
     MainIcon       := ""
     MenuColor      := ""
     GuiColor       := ""
-
-    DarkTheme      := IsDarkTheme()
-    DarkColors     := true
-    SetDefaultColors()
 
     ;@Ahk2Exe-IgnoreBegin
     MainIcon := IconsDir "\QuickSwitch.ico"
@@ -127,34 +130,27 @@ WriteValues() {
     ShortenEnd="             ShortenEnd         "
     ShowDriveLetter="        ShowDriveLetter    "
     ShowFirstSeparator="     ShowFirstSeparator "
-    ShortNameIndicator="     ShortNameIndicator "
-    PathSeparator="          PathSeparator      "
+    DarkTheme="              DarkTheme          "
+    DarkColors="             DarkColors         "
+    SetDefaultColors="       SetDefaultColors   "
+    IconsSize="              IconsSize          "
     DirsCount="              DirsCount          "
     DirNameLength="          DirNameLength      "
     PathLimit="              PathLimit          "
-    IconsSize="              IconsSize          "
-    IconsDir="               IconsDir           "
-    FavoritesDir="           FavoritesDir       "
+    PathSeparator="          PathSeparator      "
     RestartWhere="           RestartWhere       "
     MainFont="               MainFont           "
-    MainKey="                MainKey            "
-    RestartKey="             RestartKey         "
-    RestartMouse="           RestartMouse       "
-    MainMouse="              MainMouse          "
-    MainIcon="               MainIcon           "
-    MenuColor="              MenuColor          "
-    GuiColor="               GuiColor           "
-    DarkTheme="              DarkTheme          "
-    DarkColors="             DarkColors         "
+    ShortNameIndicator="     ShortNameIndicator "
     )"
 
     _values .= "`n"
-            . ValidateKey(      "MainKey",     MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
-            . ValidateKey(      "RestartKey",  RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
-            . ValidateDirectory("IconsDir",    IconsDir)
-            . ValidateTrayIcon( "MainIcon",    MainIcon)
-            . ValidateColor(    "GuiColor",    GuiColor)
-            . ValidateColor(    "MenuColor",   MenuColor)
+            . ValidateKey(      "MainKey",      MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
+            . ValidateKey(      "RestartKey",   RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
+            . ValidateColor(    "GuiColor",     GuiColor)
+            . ValidateColor(    "MenuColor",    MenuColor)
+            . ValidateTrayIcon( "MainIcon",     MainIcon)
+            . ValidateDirectory("IconsDir",     IconsDir)
+            . ValidateDirectory("FavoritesDir", FavoritesDir)
 
     try {
         IniWrite, % _values, % INI, Global
@@ -223,25 +219,43 @@ IsFile(ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateDirectory(_paramName, _dir) {
+ExpandEnvVariables(ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
+    static maxLength := 1000
+    
+    if InStr(path, "%") {
+        VarSetCapacity(_temp, maxLength) 
+        DllCall("ExpandEnvironmentStringsW", "str", path, "str", _temp, "int", maxLength)
+        path := _temp
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidateDirectory(_paramName, ByRef path, _silent := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the dir exists, returns a string of the form "paramName=result",
     ; otherwise returns empty string
+    ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
+    static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
+    static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "AStr", "PathIsDirectoryW", "Ptr")
     
-    if (_attr := IsFile(_dir)) {
-        if (InStr(_attr, "D")) {
+    StrReplace(path, "/" , "\")
+    ExpandEnvVariables(path)
+    
+    loop, 2 {
+        ; Сheck the correctness of the directory
+        if (DllCall(IsPath, "str", path)) {
             return _paramName "=" _dir "`n"
         }
         
-        LogError("The path is not a directory: `'" _dir "`'", "directory", "Specify the full path to the directory. Current file attributes: " _attr)        
-        return ""
+        ; If this is a file or an incorrect directory, get the parent
+        path := SubStr(path, 1, InStr(path, "\",, -1))
     }
     
-    if (_parent := SubStr(_dir, 1 , InStr(_dir, "\",, -1))) {
-        return ValidateDirectory(_paramName, _parent)
-    } 
+    if !_silent
+        LogError("Directory not found: `'" path "`'", "directory", "Specify the full path to the directory")
     
-    LogError("Directory not found: `'" _dir "`'", "directory", "Specify the full path to the directory")
     return ""
 }
 
@@ -257,7 +271,7 @@ ValidateTrayIcon(_paramName, ByRef icon) {
 
     if icon {
         if IsFile(icon) {
-            Menu, Tray, Icon, % icon
+            Menu, % "Tray", % "Icon", % icon
             return _paramName "=" icon "`n"
         }
         LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")

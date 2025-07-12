@@ -14,11 +14,11 @@ MsgWarn(_text) {
     return false
 }
 
-LogError(_message := "Unknown error", _what := "LogError", _extra := "") {
-    return LogException(Exception(_message, _what, _extra), 2)
+LogError(_message := "Unknown error", _what := "LogError", _extra := "", _silent := false) {
+    return LogException(Exception(_message, _what, _extra), 2, _silent)
 }
 
-LogException(_ex, _offset := 1) {
+LogException(_ex, _offset := 1, _silent := false) {
     ; Accepts Exception / any custom object with similar attributes
     global ErrorsLog, ScriptName
 
@@ -41,9 +41,11 @@ LogException(_ex, _offset := 1) {
 
     FormatTime, _date,, dd.MM HH:mm:ss
     try FileAppend, % _date "    [" _stack _what "]    " _msg "    " _ex.extra "`n", % ErrorsLog
-
-    TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
-    return false
+    
+    if !_silent
+        TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
+    
+    return ""
 }
 
 LogInfo(_text, _silent := false) {
@@ -54,6 +56,8 @@ LogInfo(_text, _silent := false) {
 
     if !_silent
         TrayTip, % ScriptName " log", % _text
+    
+    return ""
 }
 
 InitLog() {

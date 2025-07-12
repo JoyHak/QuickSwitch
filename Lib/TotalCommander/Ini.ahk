@@ -96,14 +96,8 @@ GetTotalRegistryIni() {
 
     if !_regPath
         return false
-
-    if InStr(_regPath, "%") {
-        ; Resolve env. variables        
-        VarSetCapacity(_path, 2000) 
-        DllCall("ExpandEnvironmentStringsW", "str", _regPath, "str", _path, "int", 2000)
-        _regPath := _path
-    }
     
+    ExpandEnvVariables(_regPath)
     return _regPath
 }
 

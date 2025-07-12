@@ -141,27 +141,11 @@ GetClipboardPath(_dataType) {
     
     try {
         Loop, parse, _clip, `n 
-        {
-            _path := StrReplace(A_LoopField, "/" , "\")
-            
-            ; Expand env. variables
-            if InStr(_path, "%") {
-                VarSetCapacity(_temp, 2000) 
-                DllCall("ExpandEnvironmentStringsW", "str", _path, "str", _temp, "int", 2000)
-                _path := _temp
-            }
-            
-            _index := 1
-            while (_path) {
-                ; Сheck the correctness of the directory
-                if (DllCall(IsPath, "str", _path)) {
-                    Clips.push([_path, "Clipboard.ico"])
-                    break
-                }
-                
-                ; If this is a file or an incorrect directory, get the parent
-                _path := SubStr(_path, 1, InStr(_path, "\",, -1, _index))
-                _index++
+        {   
+            _path := A_LoopField
+            if (ValidateDirectory(_path, true)) {
+                Clips.push([_path, "Clipboard.ico"])
+                break
             }
         }
     } catch _ex {
