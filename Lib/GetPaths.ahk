@@ -1,4 +1,4 @@
-GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
+GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     
@@ -28,9 +28,9 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
                 _winClass := "Dopus"
         }
 
-        _length := array.length()
+        _length := paths.length()
         try {
-            Func(_winClass).call(_winId, array)
+            Func(_winClass).call(_winId, paths)
         } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid, elevatedDict)
@@ -39,13 +39,13 @@ GetPaths(ByRef array, ByRef elevatedDict, _autoSwitch := false) {
             LogException(_ex)
         }
 
-        if (_length = array.length()) {
+        if (_length = paths.length()) {
             AddElevatedName(_winPid, elevatedDict)
         }
 
-        if (_autoSwitch && array[1]) {
+        if (_autoSwitch && paths[1]) {
             _autoSwitch := false
-            SelectPath(array)
+            SelectPath(paths)
         }
     }
 }

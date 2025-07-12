@@ -10,11 +10,11 @@ GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
 
 
-TTOTAL_CMD(ByRef winId, ByRef array) {
+TTOTAL_CMD(ByRef winId, ByRef paths) {
     return GetTotalPaths(winId, array)
 }
 
-CabinetWClass(ByRef winId, ByRef array) {
+CabinetWClass(ByRef winId, ByRef paths) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
 
     try {
@@ -22,7 +22,7 @@ CabinetWClass(ByRef winId, ByRef array) {
             if (winId = _win.hwnd) {
                 _path := _win.document.folder.self.path
                 if !InStr(_path, "::{") {
-                    array.push([_path, "Explorer.ico"])
+                    paths.push([_path, "Explorer.ico"])
                 }
             }
         }
@@ -32,7 +32,7 @@ CabinetWClass(ByRef winId, ByRef array) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ThunderRT6FormDC(ByRef winId, ByRef array) {
+ThunderRT6FormDC(ByRef winId, ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
     ; Save clipboard to restore later
@@ -64,18 +64,18 @@ ThunderRT6FormDC(ByRef winId, ByRef array) {
     static attempts := 0
     if !(_clip || (attempts = 3)) {
         attempts++
-        return ThunderRT6FormDC(winId, array)
+        return ThunderRT6FormDC(winId, paths)
     }
 
     attempts := 0
     Loop, parse, _clip, `|
-        array.push([A_LoopField, "Xyplorer.ico"])
+        paths.push([A_LoopField, "Xyplorer.ico"])
 
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-Dopus(ByRef winId, ByRef array) {
+Dopus(ByRef winId, ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using MS C++ functions.
     ; Searches for active tab using DOpus window title
@@ -116,6 +116,6 @@ Dopus(ByRef winId, ByRef array) {
 
     ; Push the active tab to the global array first
     ; Remove duplicate and add the remaining tabs
-    array.push(_paths.removeAt(_active))
-    array.push(_paths*)
+    paths.push(_paths.removeAt(_active))
+    paths.push(_paths*)
 }
