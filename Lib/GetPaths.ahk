@@ -2,7 +2,7 @@ GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     
-    ; Get manager hwnds
+    ; Get manager uniq IDs
     WinGet, _winIdList, list, ahk_group ManagerClasses
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%

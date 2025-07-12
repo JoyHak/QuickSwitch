@@ -77,7 +77,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths) {
 ;
 Dopus(ByRef winId, ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Analyzes the text of address bars of each tab using MS C++ functions.
+    ; Analyzes the text of address bars of each tab using windows functions.
     ; Searches for active tab using DOpus window title
 
     WinGetTitle, _title, ahk_id %winId%
@@ -90,28 +90,28 @@ Dopus(ByRef winId, ByRef paths) {
 
     ; Find the first address bar HWND
     ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
-    _previousHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
-    _startHwnd    := _previousHwnd
-    _paths        := []
-    _active       := 1
+    _previousId := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+    _startId    := _previousId
+    _paths      := []
+    _active     := 1
 
     loop, 100 {
         ; Pass every HWND to GetWindowText() and get the content
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
-        if DllCall("GetWindowTextW", "ptr", _previousHwnd, "str", _text, "int", WINDOW_TEXT_SIZE) {
+        if DllCall("GetWindowTextW", "ptr", _previousId, "str", _text, "int", WINDOW_TEXT_SIZE) {
             _paths.push([_text, "Dopus.ico"])
 
             if InStr(_text, _title)
                 _active := A_Index
         }
-        _nextHwnd := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousHwnd, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+        _nextId := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousId, "str", ADDRESS_BAR_CLASS, "ptr", 0)
 
         ; The loop iterates through all the tabs over and over again,
         ; so we must stop when it repeats
-        if (_nextHwnd = _startHwnd)
+        if (_nextId = _startId)
             break
 
-        _previousHwnd := _nextHwnd
+        _previousId := _nextId
     }
 
     ; Push the active tab to the global array first
