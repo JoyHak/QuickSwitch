@@ -86,12 +86,12 @@ InitAutoStartup() {
         _link := A_Startup "\" ScriptName ".lnk"
 
         if AutoStartup {
-            if !FileExist(_link) {
+            if !IsFile(_link) {
                 LogInfo("Auto Startup enabled")
             }
             FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
         } else {
-            if FileExist(_link) {
+            if IsFile(_link) {
                 FileDelete, % _link
                 LogInfo("Auto Startup disabled")
             }

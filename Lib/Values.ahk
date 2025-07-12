@@ -172,7 +172,7 @@ ReadValues() {
     ; Reads values from INI
     global
 
-    if !FileExist(INI)
+    if !IsFile(INI)
         return
 
     local _values, _array, _variable, _value
@@ -212,12 +212,23 @@ DeleteValues() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+IsFile(ByRef path) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsw
+    static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
+    static IsFile  := DllCall("GetProcAddress", "ptr", shlwapi, "astr", "PathFileExistsW", "ptr")
+    
+    return DllCall(IsFile, "str", path)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 ValidateDirectory(_paramName, _dir) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the dir exists, returns a string of the form "paramName=result",
     ; otherwise returns empty string
     
-    if (_attr := FileExist(_dir)) {
+    if (_attr := IsFile(_dir)) {
         if (InStr(_attr, "D")) {
             return _paramName "=" _dir "`n"
         }
@@ -245,7 +256,7 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     */
 
     if icon {
-        if FileExist(icon) {
+        if IsFile(icon) {
             Menu, Tray, Icon, % icon
             return _paramName "=" icon "`n"
         }
@@ -348,8 +359,8 @@ ValidateFile(ByRef filePath) {
     _extra := "Cant write data to the file"
 
     if !filePath {
-        _extra := "File path is empty: `'" filePath "`'"
-    } else if !FileExist(filePath) {
+        _extra := "File path is empty"
+    } else if !IsFile(filePath) {
         _extra := "Unable to create file"
     } else {
         _file := FileOpen(filePath, "r")
@@ -358,7 +369,7 @@ ValidateFile(ByRef filePath) {
             FileGetAttrib, _attr, % filePath
             _extra := "Unable to get access to the file"
         } else {
-            _extra     := "`nRead existing `'" filePath "`'`n"
+            _extra     := "`nReading existing file`n"
 
             _firstLine := RTrim(_file.readLine(), " `r`n")
             _extra     .= Format("Encoding: {} First line: {}, Size in bytes: {} HWND: {}`n"
@@ -372,5 +383,5 @@ ValidateFile(ByRef filePath) {
         }
     }
 
-    return _extra "`n"
+    return "`'" filePath "`' - " _extra "`n"
 }

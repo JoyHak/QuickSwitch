@@ -3,7 +3,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths) {
     ; Searches for the active tab using the "activetab" parameter
 
     loop, 150 {
-        if FileExist(tabsFile) {
+        if IsFile(tabsFile) {
             _paths  := []
 
             ; Tabs index starts with 0, array index starts with 1
@@ -32,7 +32,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths) {
                 Loop, 10 {
                     FileDelete, % tabsFile
                     sleep 100
-                    if !FileExist(tabsFile)
+                    if !IsFile(tabsFile)
                         return
                 }
             }

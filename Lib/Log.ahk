@@ -60,7 +60,7 @@ InitLog() {
     global INI, ErrorsLog, ScriptName
 
     ; Clean log
-    if FileExist(ErrorsLog) {
+    if IsFile(ErrorsLog) {
         FileGetSize, _size, % ErrorsLog, K
         if (_size > 8) {
             FileRecycle, % ErrorsLog
@@ -69,7 +69,7 @@ InitLog() {
     }
 
     ; Create again after cleanup / first launch
-    if !FileExist(ErrorsLog) {
+    if !IsFile(ErrorsLog) {
         try FileAppend, % "
         (LTrim
             Report about error: https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml

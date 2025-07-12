@@ -11,7 +11,7 @@ GroupAdd, ManagerClasses, ahk_class dopus.lister
 
 
 TTOTAL_CMD(ByRef winId, ByRef paths) {
-    return GetTotalPaths(winId, array)
+    return GetTotalPaths(winId, paths)
 }
 
 CabinetWClass(ByRef winId, ByRef paths) {

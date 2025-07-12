@@ -38,7 +38,7 @@ GetTotalConsoleIni(ByRef totalPid) {
         ; Read exported file
         _log .= " Failed to copy the result to the clipboard."
 
-        if FileExist(INI_PATH) {
+        if IsFile(INI_PATH) {
             FileRead, _iniPath, % INI_PATH
 
             if _iniPath {
