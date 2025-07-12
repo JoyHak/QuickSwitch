@@ -143,13 +143,13 @@ WriteValues() {
     )"
 
     _values .= "`n"
-            . ValidateKey(      "MainKey",       MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
-            . ValidateKey(      "RestartKey",    RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
-            . ValidateColor(    "GuiColor",      GuiColor)
-            . ValidateColor(    "MenuColor",     MenuColor)
-            . ValidateTrayIcon( "MainIcon",      MainIcon)
-            . ValidateDirectory("IconsDir",      IconsDir)
-            . ValidateDirectory("FavoritesDir",  FavoritesDir)
+    . ValidateKey(      "MainKey",       MainMouse ? MainMouse : MainKey,          "",  "Off", "^#+0")
+    . ValidateKey(      "RestartKey",    RestartMouse ? RestartMouse : RestartKey, "~", "On",  "RestartApp")
+    . ValidateColor(    "GuiColor",      GuiColor)
+    . ValidateColor(    "MenuColor",     MenuColor)
+    . ValidateTrayIcon( "MainIcon",      MainIcon)
+    . ValidateDirectory("IconsDir",      IconsDir)
+    . ValidateDirectory("FavoritesDir",  FavoritesDir)
 
     try {
         IniWrite, % _values, % INI, Global
@@ -237,8 +237,10 @@ ExpandVariables(ByRef path) {
 ValidateDirectory(_paramName, ByRef path, _silent := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the dir exists, returns a string of the form "paramName=result",
-    ; otherwise returns empty string
+    ; otherwise returns value from config
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
+    global INI
+    
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
     
@@ -258,7 +260,8 @@ ValidateDirectory(_paramName, ByRef path, _silent := false) {
     if !_silent
         LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
     
-    return ""
+    IniRead, _default, % INI, Global, % _paramName, % A_Space
+    return _paramName "=" _default "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -268,17 +271,20 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     /*
         If the file exists, changes the tray icon
         and returns a string of the form "paramName=result",
-        otherwise returns empty string
+        otherwise returns value from config
     */
-
+    global INI
+    
     if icon {
-        if IsFile(icon) {
+        try {
             Menu, % "Tray", % "Icon", % icon
             return _paramName "=" icon "`n"
         }
         LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
     }
-    return ""
+    
+    IniRead, _default, % INI, Global, % _paramName, % A_Space
+    return _paramName "=" _default "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -289,14 +295,18 @@ ValidateColor(_paramName, ByRef color) {
         Searches for a HEX number in any form, e.g. 0x, #, h
 
         If found, returns the string of the form "paramName=result",
-        otherwise returns "paramName= " (empty color)
+        otherwise returns empty color
     */
-
+    global INI
+    
     if color {
-        if (RegExMatch(color, "i)[a-f0-9]{6}$", _color)) {
+        if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
             return _paramName . "=" . _color . "`n"
-        }
-        return LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
+
+        LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
+        
+        IniRead, _default, % INI, Global, % _paramName, % A_Space
+        return _paramName "=" _default "`n"
     }
 
     return _paramName "=`n"
@@ -314,13 +324,13 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         scan codes, e.g. Q -> sc10
 
         If converted, returns the string of the form "paramName=result",
-        otherwise returns empty string
+        otherwise returns value from config
     */
     global INI
 
     try {
-        if !(_sequence)
-            return _paramName "=`n"
+        if !_sequence
+            return _paramName "=`n"            
 
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
@@ -364,7 +374,11 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         return _paramName "=" _key "`n"
 
     } catch _ex {
-        return LogException(_ex)
+        LogException(_ex)
+        
+        ; Return value from config
+        IniRead, _default, % INI, Global, % _paramName, % A_Space
+        return _paramName "=" _default "`n"
     }
 }
 
