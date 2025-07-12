@@ -8,6 +8,7 @@
  */
 
 ; These parameters are not saved in the INI
+; You can find the meaning of each option in the Main and Lib\SettingsBackend files
 LastTabSettings    :=  1
 SelectPathAttempts :=  3
 DialogId           :=  0
@@ -21,14 +22,9 @@ FromSettings       :=  false
 DeleteDialogs      :=  false
 DeletePinned       :=  false
 DeleteFavorites    :=  false
+DeleteClips        :=  false
 DeleteKeys         :=  false
 NukeSettings       :=  false
-
-Favs               :=  []
-Pins               :=  []
-Paths              :=  []
-Clips              :=  []
-Drags              :=  []
 ElevatedApps       :=  {updated: false}
 
 SetDefaultValues() {
@@ -180,29 +176,6 @@ ReadValues() {
         _value      := _array[2]
         %_variable% := _value
     }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-DeleteValues() {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Deletes sections from INI
-    global
-    
-    if NukeSettings
-        return NukeSettings()
-
-    if DeleteDialogs
-        try IniDelete, % INI, Dialogs
-
-    if DeletePinned
-        try IniDelete, % INI, Pinned
-
-    if DeleteFavorites
-        try IniDelete, % INI, Favorites
-
-    if DeleteKeys
-        MainKey := RestartKey := RestartMouse := MainMouse := ""
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

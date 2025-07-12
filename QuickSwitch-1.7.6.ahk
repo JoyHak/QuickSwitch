@@ -61,6 +61,7 @@ ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
 InitAutoStartup()
 InitDarkTheme()
+InitSections("All")
 
 Loop {
     ; Wait for any "Open/Save as" file dialog

@@ -1,17 +1,6 @@
 ; These functions are responsible for the GUI Settings functionality and its Controls
 ; Also contains additional out-of-category functions needed for the app
 
-NukeSettings() {
-    ; Delete configuration
-    global INI, ScriptName
-
-    if MsgWarn("Do you want to delete the configuration?`n" INI) {
-        try FileRecycle, % INI
-        LogInfo("Old configuration has been placed in the Recycle Bin")
-        ResetSettings()
-    }
-}
-
 ResetSettings() {
     ; Show "Nuke" button once after pressing "Reset" button
     if (A_GuiControl = "&Reset")
@@ -33,7 +22,7 @@ SaveSettings() {
     ; Write current GUI (global) values
     Gui, Submit
     
-    DeleteValues()
+    DeleteSections()
     SetDefaultColors()
 
     WriteValues()    
@@ -57,22 +46,66 @@ GuiEscape() {
     Gui, Destroy
 }
 
+NukeSettings() {
+    global INI
+
+    DeleteFile(INI, "configuration")
+    ResetSettings()
+}
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-InitSections() {
+DeleteFile(ByRef path, _title := "config") {
+;─────────────────────────────────────────────────────────────────────────────
+    if MsgWarn("Do you want to delete the " _title "?`n" path) {
+        try FileRecycle, % path
+        LogInfo(_title " has been placed in the Recycle Bin")
+        ResetSettings()
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+DeleteSections() {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Deletes sections from INI
+    global
+    
+    if DeleteFavorites
+        DeleteFile(FavoritesDir, "favorites") 
+
+    if DeleteKeys
+        MainKey := RestartKey := RestartMouse := MainMouse := ""
+    
+    if DeleteClips
+        Clips := []
+    
+    if NukeSettings
+        return NukeSettings()
+    
+    if DeleteDialogs
+        try IniDelete, % INI, Dialogs
+
+    if DeletePinned
+        try IniDelete, % INI, Global, Pins    
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+InitSections(_all := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Clear / Init global arrays to remove sections from the menu
     global
     
-    if !FavoritePaths
+    if (!FavoritePaths || _all)
         Favs  := []    
-    if !PinnedPaths 
+    if (!PinnedPaths   || _all)
         Pins  := []    
-    if !MainPaths
+    if (!MainPaths     || _all)
         Paths := []    
-    if !ClipPaths 
+    if (!ClipPaths     || _all)
         Clips := []    
-    if !DragPaths 
+    if (!DragPaths     || _all)
         Drags := []
 }
 
