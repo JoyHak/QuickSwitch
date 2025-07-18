@@ -19,7 +19,7 @@ GetTotalPaths(ByRef winId, ByRef paths) {
     try {
         SendTotalUserCmd(winId, userCmd)
         Sleep 100
-        ParseTotalTabs(tabsFile, paths)
+        return ParseTotalTabs(tabsFile, paths)
     } catch _ex {
         WinGet, _winPid, % "pid", % "ahk_id " winId
         
@@ -31,6 +31,6 @@ GetTotalPaths(ByRef winId, ByRef paths) {
         LogInfo("Required to create TotalCmd command: " userCmd, "NoTraytip")
         CreateTotalUserCmd(GetTotalIni(winId), userCmd, internalCmd, tabsFile)
         SendTotalUserCmd(winId, userCmd)
-        ParseTotalTabs(tabsFile, paths)
+        return ParseTotalTabs(tabsFile, paths)
     }
 }

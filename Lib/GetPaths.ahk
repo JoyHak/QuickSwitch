@@ -28,19 +28,16 @@ GetPaths(ByRef paths, _autoSwitch := false) {
                 _winClass := "Dopus"
         }
 
-        _length := paths.length()
         try {
-            %_winClass%(_winId, paths)
+            if !(%_winClass%(_winId, paths)) {
+                AddElevatedName(_winPid)
+            }
         } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid)
                 continue
 
             LogException(_ex)
-        }
-
-        if (_length = paths.length()) {
-            AddElevatedName(_winPid)
         }
 
         if (_autoSwitch && paths[1]) {

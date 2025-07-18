@@ -1,8 +1,10 @@
 ; Contains file manager request senders
+; Returns true on success
 
 SendMessage(ByRef winId, _message := 74, ByRef wParam := 0, ByRef lParam := 0) {
     try {
         SendMessage, % _message, % wParam, % lParam,, % "ahk_id " winId
+        return true
     } catch _ex {
         throw Exception("Unable to send message"
                       , GetWinProccess(winId) " message"
@@ -26,7 +28,7 @@ SendExplorerPath(ByRef winId, ByRef path) {
 SendTotalInternalCmd(ByRef winPid, _cmd) {
     ; Internal commands can be found in totalcmd.inc
     WinGet, _winId, % "id", % "ahk_pid " winPid
-    SendMessage(_winId, 1075, _cmd)
+    return SendMessage(_winId, 1075, _cmd)
 }
 
 SendTotalUserCmd(ByRef winId, ByRef cmd) {
@@ -41,7 +43,7 @@ SendTotalUserCmd(ByRef winId, ByRef cmd) {
     NumPut(&_result , _copyData, A_PtrSize * 2)
 
     ; Send data without recieve
-    SendMessage(winId, 74, 0, &_copyData)
+    return SendMessage(winId, 74, 0, &_copyData)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -58,7 +60,7 @@ SendXyplorerScript(ByRef winId, ByRef script) {
     NumPut(&script, _copyData, A_PtrSize * 2, "Ptr")
 
     ; Send data without recieve
-    SendMessage(winId, 74, 0, &_copyData)
+    return SendMessage(winId, 74, 0, &_copyData)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -69,6 +71,7 @@ SendConsoleCommand(ByRef pid, _command) {
     try {
         ControlSend,, % "{Text}" _command "`n", % "ahk_pid " pid
         LogInfo("Executed console command: " _command, "NoTraytip")
+        return true
     } catch _ex {
         throw Exception("Unable to send console command"
                       , "console"
