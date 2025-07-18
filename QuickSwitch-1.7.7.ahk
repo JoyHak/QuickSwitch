@@ -95,12 +95,12 @@ Loop {
             IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
             DialogAction := DialogAction | BlackList
 
-            if MainPaths {
+            if ShowManagers {
                 ; Disable clipboard analysis while file managers transfer data through it
                 OnClipboardChange("GetClipboardPath", false)
-                GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
+                GetPaths(ManagersPaths := [], ElevatedApps, DialogAction == 1)
             }
-            OnClipboardChange("GetClipboardPath", ClipPaths)
+            OnClipboardChange("GetClipboardPath", ShowClipboard)
 
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey,, "On")

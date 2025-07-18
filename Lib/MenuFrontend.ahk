@@ -84,12 +84,12 @@ ShowMenu() {
     FromSettings  := false
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
     
-    Stack := []
-    Stack.Push(Paths*)
-    Stack.Push(Clips*)
+    MenuStack := []
+    MenuStack.Push(ManagersPaths*)
+    MenuStack.Push(ClipboardPaths*)
 
-    if (Stack.length()) {
-        AddMenuPaths(Stack, Func("SelectPath").bind(Stack))
+    if (MenuStack.length()) {
+        AddMenuPaths(MenuStack, Func("SelectPath").bind(MenuStack))
         AddMenuOptions()
     } else {
         AddMenuTitle("No available paths")

@@ -77,8 +77,8 @@ DeleteSections() {
     if DeleteKeys
         MainKey := RestartKey := RestartMouse := MainMouse := ""
 
-    if DeleteClips
-        Clips := []
+    if DeleteClipboard
+        ClipboardPaths := []
 
     if NukeSettings
         return NukeSettings()
@@ -87,7 +87,7 @@ DeleteSections() {
         try IniDelete, % INI, % "Dialogs"
 
     if DeletePinned
-        try IniDelete, % INI, % "Global", % "Pins"
+        try IniDelete, % INI, % "Global", % "PinnedPaths"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -97,16 +97,16 @@ InitSections(_all := false) {
     ; Clear / Init global arrays to remove sections from the menu
     global
 
-    if (!FavoritePaths || _all)
-        Favs  := []
-    if (!PinnedPaths   || _all)
-        Pins  := []
-    if (!MainPaths     || _all)
-        Paths := []
-    if (!ClipPaths     || _all)
-        Clips := []
-    if (!DragPaths     || _all)
-        Drags := []
+    if (!ShowFavorites || _all)
+        FavoritePaths  := []
+    if (!ShowPinned    || _all)
+        PinnedPaths    := []
+    if (!ShowManagers  || _all)
+        ManagersPaths   := []
+    if (!ShowClipboard || _all)
+        ClipboardPaths := []
+    if (!ShowDragNDrop || _all)
+        DragNDropPaths := []
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -189,9 +189,9 @@ ToggleIcons() {
 ToggleFavorites() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Hide or display path input field
-    global FavoritePaths
+    global ShowFavorites
     Gui, Submit, NoHide
-    GuiControl,, % "FavoritePaths", % "&Favorites" . (FavoritePaths ? " from" : "")
+    GuiControl,, % "ShowFavorites", % "&Favorites" . (ShowFavorites ? " from" : "")
 
-    GuiControl,  % "Show" FavoritePaths, % "FavoritesDir"
+    GuiControl,  % "Show" ShowFavorites, % "FavoritesDir"
 }

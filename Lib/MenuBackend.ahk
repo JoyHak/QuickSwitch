@@ -77,13 +77,13 @@ IsMenuReady() {
 ;
 ToggleAutoSwitch() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction, SaveDialogAction, Paths
+    global DialogAction, SaveDialogAction, ManagersPaths
 
     DialogAction     := (DialogAction = 1) ? 0 : 1
     SaveDialogAction := true
 
     if (DialogAction = 1)
-        SelectPath(Paths)
+        SelectPath(ManagersPaths)
     if IsMenuReady()
         SendEvent, % "^#+0"
 }
