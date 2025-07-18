@@ -74,56 +74,59 @@ Loop {
     try {
         DialogId   := WinActive("A")
         FileDialog := GetFileDialog(DialogId, EditId)
+        
+        if !FileDialog {
+            WinWaitNotActive, % "ahk_id " DialogId
+            Continue
+        }
+        
+        ; This is a supported dialog
+        ; Switch focus to non-buttons to prevent accidental closing
+        try {
+            ControlFocus  % "ToolbarWindow321", % "ahk_id " DialogId
+            ControlSend,, % "{end}{space}",     % "ahk_id " EditId
+            Sleep 100
+        }
 
-        if FileDialog {
-            ; This is a supported dialog
-            ; Switch focus to non-buttons to prevent accidental closing
-            try {
-                ControlFocus  % "ToolbarWindow321", % "ahk_id " DialogId
-                ControlSend,, % "{end}{space}",     % "ahk_id " EditId
-                Sleep 100
+        ; If there is any GUI left from previous calls...
+        Gui, Destroy
+
+        WinGet,          DialogProcess, % "ProcessName", % "ahk_id " DialogId
+        WinGetTitle,     DialogTitle,                    % "ahk_id " DialogId
+
+        FingerPrint   := DialogProcess "___" DialogProcess
+        FileDialog    := FileDialog.bind(SendEnter, EditId)
+
+        ; Get current dialog settings or use default mode (AutoSwitch flag).
+        ; Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
+        IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0
+        IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
+        DialogAction := DialogAction | BlackList
+
+        if ShowManagers {
+            ; Disable clipboard analysis while file managers transfer data through it
+            OnClipboardChange("GetClipboardPath", false)
+            GetPaths(ManagersPaths := [], ElevatedApps, DialogAction == 1)
+        }
+        OnClipboardChange("GetClipboardPath", ShowClipboard)
+
+        ; Turn on registered hotkey to show menu later
+        ValidateKey("MainKey", MainKey,, "On")
+
+        if IsMenuReady()
+            SendEvent, % "^#+0"
+
+        if ElevatedApps["updated"] {
+            if (Names := GetElevatedNames(ElevatedApps)) {
+                LogError("Unable to obtain paths: " Names, "admin permission", "
+                    (LTrim
+
+                        Cant send messages to these processes: " Names "
+                        Run these processes as non-admin or run " ScriptName " as admin | with UI access
+
+                    )")
             }
-
-            ; If there is any GUI left from previous calls...
-            Gui, Destroy
-
-            WinGet,          DialogProcess, % "ProcessName", % "ahk_id " DialogId
-            WinGetTitle,     DialogTitle,                    % "ahk_id " DialogId
-
-            FingerPrint   := DialogProcess "___" DialogProcess
-            FileDialog    := FileDialog.bind(SendEnter, EditId)
-
-            ; Get current dialog settings or use default mode (AutoSwitch flag).
-            ; Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
-            IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0
-            IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
-            DialogAction := DialogAction | BlackList
-
-            if ShowManagers {
-                ; Disable clipboard analysis while file managers transfer data through it
-                OnClipboardChange("GetClipboardPath", false)
-                GetPaths(ManagersPaths := [], ElevatedApps, DialogAction == 1)
-            }
-            OnClipboardChange("GetClipboardPath", ShowClipboard)
-
-            ; Turn on registered hotkey to show menu later
-            ValidateKey("MainKey", MainKey,, "On")
-
-            if IsMenuReady()
-                SendEvent, % "^#+0"
-
-            if ElevatedApps["updated"] {
-                if (Names := GetElevatedNames(ElevatedApps)) {
-                    LogError("Unable to obtain paths: " Names, "admin permission", "
-                        (LTrim
-
-                            Cant send messages to these processes: " Names "
-                            Run these processes as non-admin or run " ScriptName " as admin | with UI access
-
-                        )")
-                }
-                ElevatedApps["updated"] := false
-            }
+            ElevatedApps["updated"] := false
         }
 
     } catch GlobalEx {
@@ -131,12 +134,13 @@ Loop {
     }
 
     Sleep, 100
-    WinWaitNotActive, % "ahk_class #32770"
+    WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
 
     ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
-    if (WriteDialogAction && FingerPrint && DialogAction != "") {
+    if WriteDialogAction {
+        ToolTip write
         WriteDialogAction := false
         try IniWrite, % DialogAction, % INI, % "Dialogs", % FingerPrint
     }
