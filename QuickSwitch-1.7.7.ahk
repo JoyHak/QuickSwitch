@@ -106,7 +106,7 @@ Loop {
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
-            GetPaths(ManagersPaths := [], ElevatedApps, DialogAction == 1)
+            GetPaths(ManagersPaths := [], DialogAction == 1)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
 
@@ -116,19 +116,7 @@ Loop {
         if IsMenuReady()
             SendEvent, % "^#+0"
 
-        if ElevatedApps["updated"] {
-            if (Names := GetElevatedNames(ElevatedApps)) {
-                LogError("Unable to obtain paths: " Names, "admin permission", "
-                    (LTrim
-
-                        Cant send messages to these processes: " Names "
-                        Run these processes as non-admin or run " ScriptName " as admin | with UI access
-
-                    )")
-            }
-            ElevatedApps["updated"] := false
-        }
-
+        LogElevatedNames()
     } catch GlobalEx {
         LogException(GlobalEx)
     }

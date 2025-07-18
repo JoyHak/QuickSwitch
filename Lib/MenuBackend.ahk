@@ -5,7 +5,7 @@ Dummy() {
 }
 
 SelectPath(ByRef paths, _name := "", _position := 1) {
-    global DialogId, FileDialog, ElevatedApps, ShowAfterSelect, ShowAlways, SelectPathAttempts
+    global DialogId, FileDialog, ShowAfterSelect, ShowAlways, SelectPathAttempts
     
     _log := ""
     loop, % SelectPathAttempts {
@@ -25,8 +25,8 @@ SelectPath(ByRef paths, _name := "", _position := 1) {
     ; If dialog owner is elevated, show error in Main
     WinGet, _winPid, pid, % "ahk_id " DialogId
 
-    if (IsAppElevated(_winPid, ElevatedApps)
-     || AddElevatedName(_winPid, ElevatedApps)) {
+    if (IsAppElevated(_winPid)
+     || AddElevatedName(_winPid)) {
         return
     }
 

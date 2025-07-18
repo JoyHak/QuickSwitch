@@ -24,7 +24,6 @@ DeleteFavorites     :=  false
 DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
-ElevatedApps        :=  {updated: false}
 
 SetDefaultValues() {
     /*
