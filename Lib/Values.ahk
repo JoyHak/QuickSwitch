@@ -19,7 +19,7 @@ DialogAction        :=  ""
 DialogProcess       :=  ""
 LastDialogProcess   :=  ""
 
-SaveDialogAction    :=  false
+WriteDialogAction   :=  false
 FromSettings        :=  false
     
 DeleteDialogs       :=  false
