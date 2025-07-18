@@ -53,7 +53,11 @@ ErrorsLog  := "Errors.log"
 
 InitLog()
 SetDefaultValues()
-ReadValues()
+
+if IsFile(INI)
+    ReadValues()
+else
+    WriteValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
