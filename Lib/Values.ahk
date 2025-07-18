@@ -248,13 +248,17 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     */
     global INI
     
-    if icon {
-        try {
-            Menu, % "Tray", % "Icon", % icon
-            return _paramName "=" icon "`n"
-        }
-        LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
+    if !icon {
+        Menu, % "Tray", % "Icon", *
+        return _paramName "=`n"
     }
+
+    try {
+        Menu, % "Tray", % "Icon", % icon
+        return _paramName "=" icon "`n"
+    }
+    
+    LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
     
     IniRead, _default, % INI, % "Global", % _paramName, % A_Space
     return _paramName "=" _default "`n"
@@ -274,7 +278,7 @@ ValidateColor(_paramName, ByRef color) {
     
     if color {
         if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
-            return _paramName . "=" . _color . "`n"
+            return _paramName "=" _color "`n"
 
         LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
         
