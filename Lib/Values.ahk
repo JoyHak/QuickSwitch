@@ -13,10 +13,6 @@ LastTabSettings     :=  1
 SelectPathAttempts  :=  3
 DialogId            :=  0
 EditId              :=  0
-
-FingerPrint         :=  ""
-DialogAction        :=  ""
-DialogProcess       :=  ""
 LastDialogProcess   :=  ""
 
 WriteDialogAction   :=  false
