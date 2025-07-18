@@ -256,6 +256,7 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     }
 
     try {
+        ExpandVariables(icon)        
         Menu, % "Tray", % "Icon", % icon
         return _paramName "=" icon "`n"
     }
