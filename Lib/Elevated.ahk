@@ -1,25 +1,33 @@
-AddElevatedName(ByRef winPid, ByRef elevatedDict) {
-    ; Updates the dictionary by "winPid" key.
-    ; Returns true if script isn't elevated and value is aadded
+ElevatedApps := {updated: false}
 
-    if (A_IsAdmin || elevatedDict.hasKey(winPid))
+AddElevatedName(ByRef winPid) {
+    ; Updates the dictionary by "winPid" key.
+    ; Returns true if script isn't elevated and value is added
+    global ElevatedApps
+
+    if (A_IsAdmin || ElevatedApps.hasKey(winPid))
         return false
 
-    elevatedDict["updated"] := true
-    elevatedDict[winPid]    := {elevated:  IsProcessElevated(winPid)
+    ElevatedApps["updated"] := true
+    ElevatedApps[winPid]    := {elevated:  IsProcessElevated(winPid)
                               , name:      Format("{} ({})", GetProcessName(winPid), winPid)}
     return true
 }
 
-GetElevatedNames(ByRef elevatedDict) {
-    ; Returns a string with elevated processes names from "elevatedDict".
+LogElevatedNames(_silent := false) {
+    ; Logs elevated processes names.
     ; Non-existing processes are deleted
-
+    global ElevatedApps, ScriptName
+    
+    if !(ElevatedApps["updated"])
+        return ""
+    
+    ElevatedApps["updated"] := false
     _names := ""
-    for _pid, _info in elevatedDict {
+    for _pid, _info in ElevatedApps {
         try {
             if !WinExist("ahk_pid " _pid) {
-                elevatedDict.delete(_pid)
+                ElevatedApps.delete(_pid)
                 continue
             }
 
@@ -27,15 +35,22 @@ GetElevatedNames(ByRef elevatedDict) {
                 _names .= _info["name"] . ", "
 
         } catch _ex {
-            LogException(_ex)
+            return LogException(_ex, 1, _silent)
         }
     }
+    
+    return LogError("Unable to obtain paths: " _names, "admin permission", "
+        (LTrim
 
-    return RTrim(_names, ", ")
+            Unable to send messages to these processes: " _names "
+            Run them as non-admin or run " ScriptName " as admin | with UI access
+
+        )", _silent)
 }
 
-IsAppElevated(ByRef winPid, ByRef elevatedDict) {
-    return !A_IsAdmin && elevatedDict.hasKey(winPid) && elevatedDict[winPid]["elevated"]
+IsAppElevated(ByRef winPid) {
+    global ElevatedApps
+    return !A_IsAdmin && ElevatedApps.hasKey(winPid) && ElevatedApps[winPid]["elevated"]
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

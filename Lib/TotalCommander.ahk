@@ -29,8 +29,6 @@ GetTotalPaths(ByRef winId, ByRef paths) {
 
         LogInfo("Required to create TotalCmd command: " userCmd, "NoTraytip")
         CreateTotalUserCmd(GetTotalIni(winId), userCmd, internalCmd, tabsFile)
-        
-        Sleep 200
         SendTotalUserCmd(winId, userCmd)
         ParseTotalTabs(tabsFile, paths)
     }

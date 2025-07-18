@@ -1,4 +1,4 @@
-GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
+GetPaths(ByRef paths, _autoSwitch := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     
@@ -8,7 +8,7 @@ GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
         _winId := _winIdList%A_Index%
         WinGet, _winPid, % "pid", % "ahk_id " _winId
     
-        if IsAppElevated(_winPid, elevatedDict)
+        if IsAppElevated(_winPid)
             continue
 
         ; Fix specific problems
@@ -33,14 +33,14 @@ GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
             %_winClass%(_winId, paths)
         } catch _ex {
             ; Assume that the file manager is elevated
-            if AddElevatedName(_winPid, elevatedDict)
+            if AddElevatedName(_winPid)
                 continue
 
             LogException(_ex)
         }
 
         if (_length = paths.length()) {
-            AddElevatedName(_winPid, elevatedDict)
+            AddElevatedName(_winPid)
         }
 
         if (_autoSwitch && paths[1]) {
