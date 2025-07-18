@@ -5,15 +5,15 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
     try {
         loop, 4 {
             ; Read the contents of the config until it appears or the loop ends with an error
-            IniRead, _section, % ini, % cmd
-            if (_section && _section != "ERROR") {
+            IniRead, _section, % ini, % cmd, % A_Space
+            if _section {
                 LogInfo("Created [" cmd "] command:`n" _section "`nin `'" ini "`'`n")
                 return true
             }
 
             if IsFile(ini) {
                 ; Set normal attributes (write access)
-                FileSetAttrib, n, % ini
+                FileSetAttrib, % "n", % ini
                 sleep, 20 * A_Index
 
                 FileGetAttrib, _attr, % ini

@@ -44,10 +44,10 @@ SelectPath(ByRef array, _name := "", _position := 1) {
 SendPath(path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send path to the current file manager / active window
-    WinGet, _id, id, A
-    WinGet, _exe, ProcessPath, A
-    WinGetClass, _class, A
-    path := """" . path . """"
+    WinGet, _id,  % "id", % "A"
+    WinGet, _exe, % "ProcessPath", % "A"
+    WinGetClass, _class, % "A"
+    path := """" path """"
 
     switch (_class) {
         case "CabinetWClass":

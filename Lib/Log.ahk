@@ -8,7 +8,7 @@
 MsgWarn(_text) {
     ; Yes/No, Warn icon, default is "No", always on top without title bar
     MsgBox, % (4 + 48 + 256 + 262144),, % _text
-    IfMsgBox yes
+    IfMsgBox, % "yes"
         return true
 
     return false
@@ -88,14 +88,14 @@ InitLog() {
     ; Does the cur. dir. match the dir. of the script
     ; That previously created this log?
     _curPath := A_ScriptFullPath
-    IniRead, _lastPath, % INI, App, LastPath
+    IniRead, _lastPath, % INI, % "App", % "LastPath", % A_Space
     switch (_lastPath) {
         case _curPath:
-        case "ERROR": 
+        case "": 
             return
         default:
             ; New info about the script
-            try IniWrite, % _curPath, % INI, App, LastPath
+            try IniWrite, % _curPath, % INI, % "App", % "LastPath"
             try FileAppend, % "`n`n`n" A_ScriptName "`n`n", % ErrorsLog
     }
 }

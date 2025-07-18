@@ -2,13 +2,13 @@
 
 GetWinProccess(ByRef id) {
     ; Slice everything before .exe
-    WinGet, _name, ProcessName, ahk_id %id%
+    WinGet, _name, % "ProcessName", % "ahk_id " id
     return SubStr(_name, 1, -4)
 }
 
 GetProcessName(ByRef pid) {
     ; Slice everything before .exe
-    WinGet, _name, ProcessName, ahk_pid %pid%
+    WinGet, _name, % "ProcessName", % "ahk_pid " pid
     return SubStr(_name, 1, -4)
 }
 
@@ -27,9 +27,12 @@ GetProcessProperty(_property := "name", _rules := "") {
         try {
             return _process[_property]
         } catch _e {
-            _extra := Format("Property: {} Rules: {} " _property, _rules)
-            _extra .= "Details: " _e.what " " _e.message " " _e.extra
-            throw Exception(_process.name " cant return property", "process property", _extra)
+            _extra := 
+
+            throw Exception(_process.name " cant return property"
+                          , "process property"
+                          , Format("Property: {} Rules: {}`nDetails: {}"
+                          , _property, _rules, _e.what " " _e.message " " _e.extra))
         }
     }
 }
@@ -57,11 +60,11 @@ CloseChildWindows(ByRef winId, ByRef winPid) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Closes child windows of the specified process
 
-    WinGet, _childs, list, ahk_pid %winPid%
+    WinGet, _childs, % "list", % "ahk_pid " winPid
     Loop, % _childs {
         _winId := _childs%A_Index%
         if (_winId != winId) {
-            WinClose, ahk_id %_winId%
+            WinClose, "ahk_id " _winId
         }
     }
 }
@@ -73,8 +76,8 @@ CloseProcess(_name) {
     ; Closes the process tree with the specified name
 
     Loop, 100 {
-        Process, Close, % _name
-        Process, Exist, % _name
+        Process, % "Close", % _name
+        Process, % "Exist", % _name
     } Until !ErrorLevel
 }
 

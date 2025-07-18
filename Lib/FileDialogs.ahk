@@ -18,24 +18,24 @@ FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3
 FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Read the current text in the "File Name"
-    ControlGetText, _fileName,, ahk_id %editId%
+    ControlGetText, _fileName,, % "ahk_id " editId
 
     Loop, % attempts {
         ; Change current path
-        ControlFocus,, ahk_id %editId%
-        ControlSetText,, % path, ahk_id %editId%
-        ControlGetText, _path,,  ahk_id %editId%
+        ControlFocus,,            % "ahk_id " editId
+        ControlSetText,, % path,  % "ahk_id " editId
+        ControlGetText, _path,,   % "ahk_id " editId
 
         if (_path = path) {
             ; Successfully changed
             if !sendEnter
                 return true
 
-            ControlSend,, {Enter}, ahk_id %editId%
+            ControlSend,, % "{Enter}", % "ahk_id " editId
 
             ; Restore filename
-            ControlFocus,, ahk_id %editId%
-            ControlSetText,, % _fileName, ahk_id %editId%
+            ControlFocus,, % "ahk_id " editId
+            ControlSetText,, % _fileName, % "ahk_id " editId
             return true
         }
     }
@@ -52,17 +52,17 @@ FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
     ; it would always be used later on if you continue with {Enter}!
     Loop, % attempts {
         Sleep, 15
-        ControlFocus     SysListView321, ahk_id %DialogId%
-        ControlGetFocus, _focus,         ahk_id %DialogId%
+        ControlFocus,  % "SysListView321", % "ahk_id " DialogId
+        ControlGetFocus, _focus,           % "ahk_id " DialogId
 
     } Until (_focus = "SysListView321")
 
-    ControlSend SysListView321, {Home},  ahk_id %DialogId%
+    ControlSend, % "SysListView321", % "{Home}", % "ahk_id " DialogId
 
     Loop, % attempts {
         Sleep, 15
-        ControlSend SysListView321, ^{Space}, ahk_id %DialogId%
-        ControlGet, _focus, List, Selected, SysListView321, ahk_id %DialogId%
+        ControlSend, % "SysListView321", % "^{Space}",  % "ahk_id " DialogId
+        ControlGet, _focus, % "List", % "Selected", % "SysListView321", % "ahk_id " DialogId
 
     } Until !_focus
 
@@ -77,8 +77,8 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
     ; if required controls found, otherwise returns "false"
 
     try {
-        ControlGet, buttonId, hwnd,, Button1, ahk_id %dialogId%
-        ControlGet, editId,   hwnd,, Edit1,   ahk_id %dialogId%
+        ControlGet, buttonId, % "hwnd",, % "Button1", % "ahk_id " DialogId
+        ControlGet, editId,   % "hwnd",, % "Edit1",   % "ahk_id " DialogId
     }
 
     if !(buttonId || editId)
@@ -86,7 +86,7 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 
     ; Dialog with buttons
     ; Get specific controls
-    WinGet, _controlList, ControlList, ahk_id %dialogId%
+    WinGet, _controlList, % "ControlList", % "ahk_id " DialogId
 
     ; Search for...
     static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16}

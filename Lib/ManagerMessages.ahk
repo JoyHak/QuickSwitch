@@ -2,11 +2,11 @@
 
 SendMessage(ByRef winId, ByRef data, _message := 74) {
     try {
-        SendMessage, % _message, 0, &data,, ahk_id %winId%
+        SendMessage, % _message, 0, &data,, % "ahk_id " winId
     } catch _e {
         throw Exception("Unable to send message"
                       , GetWinProccess(winId) " message"
-                      , Format("`nMessage: {}  HWND: {:d}  Data: {}`n Details: {}`n"
+                      , Format("`nMessage: {}  HWND: {:d}  Data: {}`nDetails: {}"
                       , _message, winId, data, _e.what " " _e.message " " _e.extra))
     }
 }
@@ -14,7 +14,7 @@ SendMessage(ByRef winId, ByRef data, _message := 74) {
 
 SendTotalMessage(ByRef winPid, _message) {
     ; Internal messages can be found in totalcmd.inc
-    WinGet, _winId, id, ahk_pid %winPid%
+    WinGet, _winId, % "id", % "ahk_pid " winPid
     SendMessage(_winId, _message, 1075)
 }
 
@@ -73,7 +73,7 @@ SendConsoleCommand(ByRef pid, _command) {
     } catch _e {
         throw Exception("Unable to send console command"
                       , "console"
-                      , Format("`nCommand: [{}]  HWND: {:d}  Details: {}`n"
+                      , Format("`nCommand: [{}]  HWND: {:d}`nDetails: {}`n"
                       , _command, pid, _e.what " " _e.message " " _e.extra))
     }
 }
