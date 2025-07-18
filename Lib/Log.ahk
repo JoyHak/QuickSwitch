@@ -89,13 +89,9 @@ InitLog() {
     ; That previously created this log?
     _curPath := A_ScriptFullPath
     IniRead, _lastPath, % INI, % "App", % "LastPath", % A_Space
-    switch (_lastPath) {
-        case _curPath:
-        case "": 
-            return
-        default:
-            ; New info about the script
-            try IniWrite, % _curPath, % INI, % "App", % "LastPath"
-            try FileAppend, % "`n`n`n" A_ScriptName "`n`n", % ErrorsLog
+    if (_lastPath && (_lastPath != _curPath)) {
+        ; New info about the script
+        try IniWrite, % _curPath, % INI, % "App", % "LastPath"
+        try FileAppend, % "`n`n`n" A_ScriptName "`n`n", % ErrorsLog
     }
 }

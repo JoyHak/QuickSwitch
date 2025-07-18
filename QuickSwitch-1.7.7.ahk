@@ -18,14 +18,14 @@
 #SingleInstance force
 #KeyHistory 0
 ListLines Off
-Process, Priority, , A
-SetBatchLines, -1
 SendLevel 2
+SetBatchLines, -1
 SetWinDelay, -1
 SetKeyDelay, -1
 
-FileEncoding, UTF-8
-SetWorkingDir %A_ScriptDir%
+Process, % "Priority", , % "A"
+FileEncoding, % "UTF-8"
+SetWorkingDir, % A_ScriptDir
 
 ScriptName := "QuickSwitch"
 INI        := ScriptName ".ini"
@@ -89,27 +89,24 @@ Loop {
             FingerPrint   := DialogProcess "___" DialogProcess
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
-            /* 
-                Get current dialog settings or use default mode (AutoSwitch flag).
-                Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
-                If .exe or FingerPrint == -1 then DialogAction will be -1 (window in BlackList)
-            */
-            IniRead, BlackList, % INI, % "Dialogs", % DialogProcess, 0
-            IniRead, Switch,    % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
-            DialogAction := Switch | BlackList
-            
+            ; Get current dialog settings or use default mode (AutoSwitch flag).
+            ; Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
+            IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0
+            IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
+            DialogAction := DialogAction | BlackList
+
             if MainPaths {
                 ; Disable clipboard analysis while file managers transfer data through it
                 OnClipboardChange("GetClipboardPath", false)
                 GetPaths(Paths := [], ElevatedApps, DialogAction == 1)
             }
             OnClipboardChange("GetClipboardPath", ClipPaths)
-            
+
             ; Turn on registered hotkey to show menu later
             ValidateKey("MainKey", MainKey,, "On")
 
             if IsMenuReady()
-                SendEvent ^#+0
+                SendEvent, % "^#+0"
 
             if ElevatedApps["updated"] {
                 if (Names := GetElevatedNames(ElevatedApps)) {
@@ -132,20 +129,20 @@ Loop {
     Sleep, 100
     WinWaitNotActive, % "ahk_class #32770"
     ValidateKey("MainKey", MainKey,, "Off")
-        
+
     ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false
         try IniWrite, % DialogAction, % INI, % "Dialogs", % FingerPrint
     }
-    
+
     ; Clean-up paths from clipboard in new process
     if (LastDialogProcess && (LastDialogProcess != DialogProcess)) {
         Clips := []
     }
-    LastDialogProcess := DialogProcess 
-    
+    LastDialogProcess := DialogProcess
+
 }   ; End of continuous WinWaitActive loop
 
 LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
@@ -157,7 +154,7 @@ ExitApp
 ^#+0::
     ; Popup main Menu
     ShowMenu()
-    
+
     ; Release all keys to prevent holding
-    SendEvent {Ctrl up}{Win up}{Shift up}
+    SendEvent, % "{Ctrl up}{Win up}{Shift up}"
 Return

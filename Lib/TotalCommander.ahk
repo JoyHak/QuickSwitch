@@ -12,24 +12,26 @@ GetTotalPaths(ByRef winId, ByRef paths) {
         in that directory with the EM_ user command to export tabs to the file
     */
 
-    static USER_COMMAND     :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
-    static EXPORT_COMMAND   :=  "SaveTabs2"
-    static TABS_FILE        :=  A_Temp "\TotalTabs.tab"
+    static userCmd      :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
+    static internalCmd  :=  "SaveTabs2"
+    static tabsFile     :=  A_Temp "\TotalTabs.tab"
 
     try {
-        SendTotalCommand(winId, USER_COMMAND)
-        ParseTotalTabs(TABS_FILE, paths)
-    } catch {
+        SendTotalUserCmd(winId, userCmd)
+        ParseTotalTabs(tabsFile, paths)
+    } catch _ex {
         WinGet, _winPid, % "pid", % "ahk_id " winId
+        
         if (!A_IsAdmin && IsProcessElevated(_winPid))
-            throw Exception("Unable to obtain TotalCmd paths", "admin permission")
+            throw Exception("Unable to obtain TotalCmd paths"
+                          , "admin permission"
+                          , _ex.what " " _ex.message " " _ex.extra)
 
-        LogInfo("Required to create TotalCmd command: " USER_COMMAND, true)
-
-        _userIni := GetTotalIni(winId)
-        CreateTotalUserCommand(_userIni, USER_COMMAND, EXPORT_COMMAND, TABS_FILE)
-
-        SendTotalCommand(winId, USER_COMMAND)
-        ParseTotalTabs(TABS_FILE, paths)
+        LogInfo("Required to create TotalCmd command: " userCmd, "NoTraytip")
+        CreateTotalUserCmd(GetTotalIni(winId), userCmd, internalCmd, tabsFile)
+        
+        Sleep 200
+        SendTotalUserCmd(winId, userCmd)
+        ParseTotalTabs(tabsFile, paths)
     }
 }

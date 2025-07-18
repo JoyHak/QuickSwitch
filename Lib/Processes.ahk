@@ -56,16 +56,15 @@ GetTotalConsolePid(ByRef totalPid) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-CloseChildWindows(ByRef winId, ByRef winPid) {
+CloseChildWindows(ByRef processId, ByRef excludeWinId := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Closes child windows of the specified process
+    ; Closes child windows of the specified process except main window with winId
 
-    WinGet, _childs, % "list", % "ahk_pid " winPid
+    WinGet, _childs, % "list", % "ahk_pid " processId
     Loop, % _childs {
         _winId := _childs%A_Index%
-        if (_winId != winId) {
-            WinClose, "ahk_id " _winId
-        }
+        if (_winId != excludeWinId)
+            WinClose % "ahk_id " _winId
     }
 }
 

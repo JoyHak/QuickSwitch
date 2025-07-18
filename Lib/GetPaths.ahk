@@ -30,7 +30,7 @@ GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
 
         _length := paths.length()
         try {
-            Func(_winClass).call(_winId, paths)
+            %_winClass%(_winId, paths)
         } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid, elevatedDict)

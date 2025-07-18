@@ -4,18 +4,16 @@ Dummy() {
     Return
 }
 
-SelectPath(ByRef array, _name := "", _position := 1) {
-    ; Section number: the order of the array in the menu. 
-    ; Helps to calculate the offset for each array of paths in the Menu.
+SelectPath(ByRef paths, _name := "", _position := 1) {
     global DialogId, FileDialog, ElevatedApps, ShowAfterSelect, ShowAlways, SelectPathAttempts
     
     _log := ""
     loop, % SelectPathAttempts {
         try {
             if !WinActive("ahk_id " DialogId)
-                return SendPath(array[_position][1])
+                return SendPath(paths[_position][1])
 
-            if (FileDialog.call(array[_position][1]), SelectPathAttempts)
+            if (%FileDialog%(paths[_position][1], SelectPathAttempts))
                 return (ShowAfterSelect || ShowAlways) ? ShowMenu() : 0
 
         } catch _ex {
@@ -87,7 +85,7 @@ ToggleAutoSwitch() {
     if (DialogAction = 1)
         SelectPath(Paths)
     if IsMenuReady()
-        SendEvent ^#+0
+        SendEvent, % "^#+0"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -104,5 +102,5 @@ ToggleBlackList() {
     }
 
     if IsMenuReady()
-       SendEvent ^#+0
+       SendEvent, % "^#+0"
 }
