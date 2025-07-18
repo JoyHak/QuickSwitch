@@ -80,8 +80,8 @@ SetDefaultValues() {
     ShortNameIndicator := ".."
     
     ; Requires validation
-    IconsDir       := A_WorkingDir "\Icons"
-    FavoritesDir   := A_WorkingDir "\Favorites"
+    IconsDir       := "Icons"
+    FavoritesDir   := "Favorites"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
     RestartMouse   := ""
