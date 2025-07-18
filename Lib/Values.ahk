@@ -25,7 +25,7 @@ FromSettings        :=  false
 DeleteDialogs       :=  false
 DeletePinned        :=  false
 DeleteFavorites     :=  false
-DeleteClips         :=  false
+DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
 ElevatedApps        :=  {updated: false}
@@ -46,7 +46,7 @@ SetDefaultValues() {
     DarkTheme           :=  IsDarkTheme()
     DarkColors          :=  true  
     
-    MainPaths           :=  true
+    ShowManagers        :=  true
     AutoStartup         :=  true
     PathNumbers         :=  true
     ShowIcons           :=  true
@@ -60,10 +60,10 @@ SetDefaultValues() {
     AutoSwitch          :=  false
     BlackListProcess    :=  false
     
-    FavoritePaths       :=  false
-    PinnedPaths         :=  false
-    ClipPaths           :=  false
-    DragPaths           :=  false
+    ShowFavorites       :=  false
+    ShowPinned          :=  false
+    ShowClipboard       :=  false
+    ShowDragNDrop       :=  false
     
     ShortPath           :=  false
     ShortenEnd          :=  false
@@ -112,7 +112,7 @@ WriteValues() {
     (LTrim
     DarkTheme="              DarkTheme          "
     DarkColors="             DarkColors         "
-    MainPaths="              MainPaths          "
+    ShowManagers="           ShowManagers       "
     AutoStartup="            AutoStartup        "
     PathNumbers="            PathNumbers        "
     ShowIcons="              ShowIcons          "
@@ -123,10 +123,10 @@ WriteValues() {
     SendEnter="              SendEnter          "
     AutoSwitch="             AutoSwitch         "
     BlackListProcess="       BlackListProcess   "
-    FavoritePaths="          FavoritePaths      "
-    PinnedPaths="            PinnedPaths        "
-    ClipPaths="              ClipPaths          "
-    DragPaths="              DragPaths          "
+    ShowFavorites="          ShowFavorites      "
+    ShowPinned="             ShowPinned         "
+    ShowClipboard="          ShowClipboard      "
+    ShowDragNDrop="          ShowDragNDrop      "
     ShortPath="              ShortPath          "
     ShortenEnd="             ShortenEnd         "
     ShowDriveLetter="        ShowDriveLetter    "

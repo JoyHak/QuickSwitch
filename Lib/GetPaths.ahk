@@ -127,7 +127,7 @@ GetClipboardPath(_dataType) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the clipboard contents is text, cuts the path where the file is stored. 
     ; If the path is valid, adds to the array
-    global Clips  
+    global ClipboardPaths  
     Sleep 150
 
     _clip := A_Clipboard
@@ -140,7 +140,7 @@ GetClipboardPath(_dataType) {
             _path := A_LoopField
             
             if (ValidateDirectory("", _path, "NoTraytip")) {
-                Clips.push([_path, "Clipboard.ico"])
+                ClipboardPaths.push([_path, "Clipboard.ico"])
                 break
             }
         }

@@ -68,11 +68,11 @@ ShowSettings() {
     Gui, Add, Edit,      xs y+40 %edit% w153                vFavoritesDir         Section,                          %FavoritesDir%  
     
     Gui, Add, Text,         ys-20 xm+15,                                                                            Show sections in Menu:    
-    Gui, Add, CheckBox,     y+10  gToggleFavorites          vFavoritePaths        checked%FavoritePaths%,           &Favorites from
-    Gui, Add, CheckBox,                                     vPinnedPaths          checked%PinnedPaths%,             &Pinned paths
-    Gui, Add, CheckBox,                                     vMainPaths            checked%MainPaths%,               &File managers paths
-    Gui, Add, CheckBox,                                     vClipPaths            checked%ClipPaths%,               Paths from &Clipboard
-    Gui, Add, CheckBox,                                     vDragPaths            checked%DragPaths%,               &Drag and drop paths
+    Gui, Add, CheckBox,     y+10  gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           &Favorites from
+    Gui, Add, CheckBox,                                     vShowPinned           checked%ShowPinned%,              &Pinned paths
+    Gui, Add, CheckBox,                                     vShowManagers         checked%ShowManagers%,            &File managers paths
+    Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
+    Gui, Add, CheckBox,                                     vShowDragNDrop        checked%ShowDragNDrop%,           &Drag and drop paths
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -131,7 +131,7 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+20                            vDeleteDialogs,                                         &Black List and Auto Switch
     Gui, Add, CheckBox,                                     vDeleteFavorites,                                       &Favorite paths
     Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
-    Gui, Add, CheckBox,                                     vDeleteClips,                                           &Clipboard paths
+    Gui, Add, CheckBox,                                     vDeleteClipboard,                                       &Clipboard paths
     Gui, Add, CheckBox,                                     vDeleteKeys,                                            &Hotkeys and mouse buttons
     Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 
