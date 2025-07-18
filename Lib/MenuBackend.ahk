@@ -99,8 +99,8 @@ ToggleBlackList() {
     DialogAction     := (DialogAction = -1) ? 0 : -1
     SaveDialogAction := true
 
-    if BlackListExe {
-        FingerPrint := Exe
+    if BlackListProcess {
+        FingerPrint := DialogProcess
     }
 
     if IsMenuReady()

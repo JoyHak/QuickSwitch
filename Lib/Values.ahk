@@ -15,9 +15,9 @@ DialogId            :=  0
 EditId              :=  0
 
 FingerPrint         :=  ""
-Exe                 :=  ""
-LastExe             :=  ""
 DialogAction        :=  ""
+DialogProcess       :=  ""
+LastDialogProcess   :=  ""
 
 SaveDialogAction    :=  false
 FromSettings        :=  false
@@ -58,7 +58,7 @@ SetDefaultValues() {
     SendEnter           :=  false
     
     AutoSwitch          :=  false
-    BlackListExe        :=  false
+    BlackListProcess    :=  false
     
     FavoritePaths       :=  false
     PinnedPaths         :=  false
@@ -122,7 +122,7 @@ WriteValues() {
     ShowAfterSelect="        ShowAfterSelect    "
     SendEnter="              SendEnter          "
     AutoSwitch="             AutoSwitch         "
-    BlackListExe="           BlackListExe       "
+    BlackListProcess="       BlackListProcess   "
     FavoritePaths="          FavoritePaths      "
     PinnedPaths="            PinnedPaths        "
     ClipPaths="              ClipPaths          "
