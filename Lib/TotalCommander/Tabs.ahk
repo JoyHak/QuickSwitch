@@ -31,15 +31,8 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths) {
         paths.push(_paths.removeAt(_active + 1))
         paths.push(_paths*)
 
-        try {
-            Loop, 10 {
-                FileDelete, % tabsFile
-                Sleep 100
-
-                if !IsFile(tabsFile)
-                    return true
-            }
-        }
+        try FileDelete, % tabsFile
+        Sleep 100
         return true
     }
     throw Exception("Unable to access tabs"
