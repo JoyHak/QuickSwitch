@@ -33,7 +33,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths) {
 
         try FileDelete, % tabsFile
         Sleep 100
-        return true
+        return _paths.length() + 1
     }
     throw Exception("Unable to access tabs"
                     , "TotalCmd tabs"

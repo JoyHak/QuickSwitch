@@ -189,13 +189,16 @@ IsFile(ByRef path) {
 ExpandVariables(ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Performs a dereference of all built-in, declared and env. variables
-    _pos := 0
+    ; Returns the number of expanded variables.
+    _pos := _count := 0
     while (_pos := RegExMatch(path, "%(\w+)%", _var, ++_pos)) {
         if IsSet(%_var1%) {
             path := StrReplace(path, "%" _var1 "%", %_var1%)
+            ++_count
         } else {
             EnvGet, _env, % _var1
             path := StrReplace(path, "%" _var1 "%", _env)
+            ++_count
         }
     }
 }
