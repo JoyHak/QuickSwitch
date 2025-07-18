@@ -139,7 +139,7 @@ GetClipboardPath(_dataType) {
         {   
             _path := A_LoopField
             
-            if (ValidateDirectory("", _path, "NoTraytip")) {
+            if ValidateDirectory("", _path) {
                 ClipboardPaths.push([_path, "Clipboard.ico"])
                 break
             }
