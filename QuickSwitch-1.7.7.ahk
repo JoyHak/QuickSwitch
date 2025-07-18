@@ -132,7 +132,8 @@ Loop {
     Sleep, 100
     WinWaitNotActive, ahk_class #32770
     ValidateKey("MainKey", MainKey,, "Off")
-
+        
+    ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false

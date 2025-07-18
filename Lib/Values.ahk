@@ -9,23 +9,26 @@
 
 ; These parameters are not saved in the INI
 ; You can find the meaning of each option in the Main and Lib\SettingsBackend files
-LastTabSettings    :=  1
-SelectPathAttempts :=  3
-DialogId           :=  0
-EditId             :=  0
-FingerPrint        :=  ""
-LastExe            :=  ""
-DialogAction       :=  ""
-SaveDialogAction   :=  false
-FromSettings       :=  false
+LastTabSettings     :=  1
+SelectPathAttempts  :=  3
+DialogId            :=  0
+EditId              :=  0
 
-DeleteDialogs      :=  false
-DeletePinned       :=  false
-DeleteFavorites    :=  false
-DeleteClips        :=  false
-DeleteKeys         :=  false
-NukeSettings       :=  false
-ElevatedApps       :=  {updated: false}
+FingerPrint         :=  ""
+Exe                 :=  ""
+LastExe             :=  ""
+DialogAction        :=  ""
+
+SaveDialogAction    :=  false
+FromSettings        :=  false
+    
+DeleteDialogs       :=  false
+DeletePinned        :=  false
+DeleteFavorites     :=  false
+DeleteClips         :=  false
+DeleteKeys          :=  false
+NukeSettings        :=  false
+ElevatedApps        :=  {updated: false}
 
 SetDefaultValues() {
     /*
