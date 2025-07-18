@@ -3,22 +3,22 @@ GetPaths(ByRef paths, ByRef elevatedDict, _autoSwitch := false) {
     ; is recognized as a known file manager class (in Z-order).
     
     ; Get manager uniq IDs
-    WinGet, _winIdList, list, ahk_group ManagerClasses
+    WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
-        WinGet, _winPid, pid, ahk_id %_winId%
+        WinGet, _winPid, % "pid", % "ahk_id " _winId
     
         if IsAppElevated(_winPid, elevatedDict)
             continue
 
         ; Fix specific problems
-        WinGetClass, _winClass, ahk_id %_winId%
+        WinGetClass, _winClass, % "ahk_id " _winId
         switch _winClass {
             case "ThunderRT6FormDC":
                 ; Exclude XYplorer child windows:
                 ; main window have "ThunderRT6Main" owner
                 _ownerId := DllCall("GetWindow", "ptr", _winId, "uint", 4)
-                WinGetClass, _ownerClass, ahk_id %_ownerId%
+                WinGetClass, _ownerClass, % "ahk_id " _ownerId
 
                 if (_ownerClass != "ThunderRT6Main")
                     continue

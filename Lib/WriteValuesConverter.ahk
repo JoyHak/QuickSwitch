@@ -10,7 +10,7 @@ Process, Priority, , A
 SetBatchLines, -1
 SetKeyDelay, -1, -1
 SetWinDelay, -1
-SetWorkingDir %A_ScriptDir%
+SetWorkingDir, % A_ScriptDir
 
 Gui, Font, q5 s10, Maple mono
 Gui, Add, Edit, w640 h480 vPost

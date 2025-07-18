@@ -20,7 +20,7 @@ GetTotalPaths(ByRef winId, ByRef paths) {
         SendTotalCommand(winId, USER_COMMAND)
         ParseTotalTabs(TABS_FILE, paths)
     } catch {
-        WinGet, _winPid, pid, % "ahk_id " winId
+        WinGet, _winPid, % "pid", % "ahk_id " winId
         if (!A_IsAdmin && IsProcessElevated(_winPid))
             throw Exception("Unable to obtain TotalCmd paths", "admin permission")
 

@@ -21,13 +21,13 @@ ResetSettings() {
 SaveSettings() {
     ; Write current GUI (global) values
     Gui, Submit
-    
+
     DeleteSections()
     SetDefaultColors()
 
-    WriteValues()    
+    WriteValues()
     ReadValues()
-    
+
     InitAutoStartup()
     InitDarkTheme()
     InitSections()
@@ -70,24 +70,24 @@ DeleteSections() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Deletes sections from INI
     global
-    
+
     if DeleteFavorites
-        DeleteFile(FavoritesDir, "favorites") 
+        DeleteFile(FavoritesDir, "favorites")
 
     if DeleteKeys
         MainKey := RestartKey := RestartMouse := MainMouse := ""
-    
+
     if DeleteClips
         Clips := []
-    
+
     if NukeSettings
         return NukeSettings()
-    
+
     if DeleteDialogs
-        try IniDelete, % INI, Dialogs
+        try IniDelete, % INI, % "Dialogs"
 
     if DeletePinned
-        try IniDelete, % INI, Global, Pins    
+        try IniDelete, % INI, % "Global", % "Pins"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -96,15 +96,15 @@ InitSections(_all := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Clear / Init global arrays to remove sections from the menu
     global
-    
+
     if (!FavoritePaths || _all)
-        Favs  := []    
+        Favs  := []
     if (!PinnedPaths   || _all)
-        Pins  := []    
+        Pins  := []
     if (!MainPaths     || _all)
-        Paths := []    
+        Paths := []
     if (!ClipPaths     || _all)
-        Clips := []    
+        Clips := []
     if (!DragPaths     || _all)
         Drags := []
 }
@@ -165,7 +165,7 @@ ToggleShortPath() {
     GuiControl,  % "Enable" ShortPath,   % "PathSeparator"
     GuiControl,  % "Enable" ShortPath,   % "PathSeparatorText"
     GuiControl,  % "Enable" ShortPath,   % "ShowFirstSeparator"
-                 
+
     GuiControl,  % "Show" ShortPath,     % "ShortNameIndicator"
     GuiControl,  % "Show" ShortPath,     % "ShortNameIndicatorText"
 }
@@ -192,6 +192,6 @@ ToggleFavorites() {
     global FavoritePaths
     Gui, Submit, NoHide
     GuiControl,, % "FavoritePaths", % "&Favorites" . (FavoritePaths ? " from" : "")
-    
+
     GuiControl,  % "Show" FavoritePaths, % "FavoritesDir"
 }

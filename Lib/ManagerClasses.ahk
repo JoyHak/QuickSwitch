@@ -79,8 +79,7 @@ Dopus(ByRef winId, ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using windows functions.
     ; Searches for active tab using DOpus window title
-
-    WinGetTitle, _title, ahk_id %winId%
+    WinGetTitle, _title, % "ahk_id " winId
 
     ; Each tab has its own address bar, so we can use it to determine the path of each tab
     static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer"

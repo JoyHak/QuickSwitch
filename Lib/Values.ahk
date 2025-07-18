@@ -151,9 +151,9 @@ WriteValues() {
     . ValidateDirectory("FavoritesDir",  FavoritesDir)
 
     try {
-        IniWrite, % _values, % INI, Global
+        IniWrite, % _values, % INI, % "Global"
     } catch {
-        LogError("Please create this file with UTF-16 LE BOM encoding manually: `'" INI "`'"
+        LogError("Please create INI with UTF-16 LE BOM encoding manually: `'" INI "`'"
                , "config"
                , ValidateFile(INI))
     }
@@ -170,7 +170,7 @@ ReadValues() {
         return
 
     local _values, _array, _variable, _value
-    IniRead, _values, % INI, Global
+    IniRead, _values, % INI, % "Global"
 
     Loop, Parse, _values, `n
     {
@@ -236,7 +236,7 @@ ValidateDirectory(_paramName, ByRef path, _silent := false) {
     if !_silent
         LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
     
-    IniRead, _default, % INI, Global, % _paramName, % A_Space
+    IniRead, _default, % INI, % "Global", % _paramName, % A_Space
     return _paramName "=" _default "`n"
 }
 
@@ -259,7 +259,7 @@ ValidateTrayIcon(_paramName, ByRef icon) {
         LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
     }
     
-    IniRead, _default, % INI, Global, % _paramName, % A_Space
+    IniRead, _default, % INI, % "Global", % _paramName, % A_Space
     return _paramName "=" _default "`n"
 }
 
@@ -281,7 +281,7 @@ ValidateColor(_paramName, ByRef color) {
 
         LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
         
-        IniRead, _default, % INI, Global, % _paramName, % A_Space
+        IniRead, _default, % INI, % "Global", % _paramName, % A_Space
         return _paramName "=" _default "`n"
     }
 
@@ -335,7 +335,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             Hotkey, % _prefix . _key, % _function, % _state
             try {
                 ; Remove old if exist
-                IniRead, _old, % INI, Global, % _paramName, % _key
+                IniRead, _old, % INI, % "Global", % _paramName, % _key
                 if (_old != _key) {
                     Hotkey, % _prefix . _old, % "Off"
                     Hotkey, % _old, % "Off"
@@ -353,7 +353,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         LogException(_ex)
         
         ; Return value from config
-        IniRead, _default, % INI, Global, % _paramName, % A_Space
+        IniRead, _default, % INI, % "Global", % _paramName, % A_Space
         return _paramName "=" _default "`n"
     }
 }

@@ -19,12 +19,12 @@ GetTotalConsoleIni(ByRef totalPid) {
     _consolePid := GetTotalConsolePid(totalPid)
 
     ; Send command to the console
-    static COMMAND   :=  "echo `%commander_ini`%"
-    static INI_PATH  :=  A_Temp "\ini_path.txt"
+    static command     :=  "echo %commander_ini%"
+    static exportFile  :=  A_Temp "\TotalCmdIni.txt"
 
-    SendConsoleCommand(_consolePid, COMMAND " > " INI_PATH)  ; Export
+    SendConsoleCommand(_consolePid, command " > " exportFile)  ; Export
     sleep, 150
-    SendConsoleCommand(_consolePid, COMMAND " | clip")       ; Copy
+    SendConsoleCommand(_consolePid, command " | clip")         ; Copy
 
     ClipWait, 5
     _clip     := Clipboard
@@ -38,12 +38,12 @@ GetTotalConsoleIni(ByRef totalPid) {
         ; Read exported file
         _log .= " Failed to copy the result to the clipboard."
 
-        if IsFile(INI_PATH) {
-            FileRead, _iniPath, % INI_PATH
+        if IsFile(exportFile) {
+            FileRead, _path, % exportFile
 
-            if _iniPath {
+            if _path {
                 LogInfo(_log, "NoTraytip")
-                return _iniPath
+                return _path
             }
 
             _log .= " Exported file is empty."
@@ -88,17 +88,19 @@ GetTotalRegistryIni() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Searches the ini in the registry
 
-    static LEAF := "Software\Ghisler\Total Commander"
-    try RegRead, _regPath, HKEY_CURRENT_USER\%LEAF%, IniFileName
+    static totalCmd := "Software\Ghisler\Total Commander"
+    static iniKey   := "IniFileName"
+    
+    try RegRead, _path, % "HKEY_CURRENT_USER\" totalCmd, % iniKey
 
-    if !_regPath
-        try RegRead, _regPath, HKEY_LOCAL_MACHINE\%LEAF%, IniFileName
+    if !_path
+        try RegRead, _path, % "HKEY_LOCAL_MACHINE\" totalCmd, % iniKey
 
-    if !_regPath
+    if !_path
         return false
     
-    ExpandVariables(_regPath)
-    return _regPath
+    ExpandVariables(_path)
+    return _path
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -109,7 +111,7 @@ UseIniInProgramDir(ByRef ini) {
     ; https://www.ghisler.ch/wiki/index.php/Wincmd.ini
 
     _flag := 0
-    IniRead, _flag, % ini, Configuration, UseIniInProgramDir, 0
+    IniRead, _flag, % ini, % "Configuration", % "UseIniInProgramDir", 0
     LogInfo("Config: UseIniInProgramDir=" _flag, "NoTraytip")
 
     return (_flag & 4)
@@ -120,7 +122,7 @@ UseIniInProgramDir(ByRef ini) {
 GetTotalPathIni(ByRef totalPid) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Searches the ini in the current TC directory
-    WinGet, _winPath, ProcessPath, ahk_pid %totalPid%
+    WinGet, _winPath, % "ProcessPath", % "ahk_pid " totalPid
 
     ; Remove exe name
     _winPath := SubStr(_winPath, 1, InStr(_winPath, "\",, -12))

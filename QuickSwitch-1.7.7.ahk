@@ -65,7 +65,7 @@ InitSections("All")
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
-    WinWaitActive, ahk_class #32770
+    WinWaitActive, % "ahk_class #32770"
 
     try {
         DialogId   := WinActive("A")
@@ -75,16 +75,16 @@ Loop {
             ; This is a supported dialog
             ; Switch focus to non-buttons to prevent accidental closing
             try {
-                ControlFocus  % "ToolbarWindow321", % "ahk_id" DialogId
-                ControlSend,, % "{end}{space}",     % "ahk_id" EditId
+                ControlFocus  % "ToolbarWindow321", % "ahk_id " DialogId
+                ControlSend,, % "{end}{space}",     % "ahk_id " EditId
                 Sleep 100
             }
 
             ; If there is any GUI left from previous calls...
             Gui, Destroy
 
-            WinGet,          DialogProcess, % "ProcessName", % "ahk_id" DialogId
-            WinGetTitle,     DialogTitle,                    % "ahk_id" DialogId
+            WinGet,          DialogProcess, % "ProcessName", % "ahk_id " DialogId
+            WinGetTitle,     DialogTitle,                    % "ahk_id " DialogId
 
             FingerPrint   := DialogProcess "___" DialogProcess
             FileDialog    := FileDialog.bind(SendEnter, EditId)
@@ -130,14 +130,14 @@ Loop {
     }
 
     Sleep, 100
-    WinWaitNotActive, ahk_class #32770
+    WinWaitNotActive, % "ahk_class #32770"
     ValidateKey("MainKey", MainKey,, "Off")
         
     ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
     if (SaveDialogAction && FingerPrint && DialogAction != "") {
         SaveDialogAction := false
-        try IniWrite, % DialogAction, % INI, Dialogs, % FingerPrint
+        try IniWrite, % DialogAction, % INI, % "Dialogs", % FingerPrint
     }
     
     ; Clean-up paths from clipboard in new process

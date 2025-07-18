@@ -8,7 +8,7 @@ GetTotalIni(ByRef winId) {
         https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
     */ 
     
-    WinGet, _winPid, PID, ahk_id %winId%
+    WinGet, _winPid, % "pid", % "ahk_id " winId
 
     ; Close the child windows of the current TC instance
     ; to ensure that messages are sent correctly

@@ -55,7 +55,7 @@ IsDarkTheme() {
     try {
         static reg := "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes"
         
-        RegRead, _theme, % reg, % "CurrentTheme" 
+        RegRead, _theme,    % reg,                % "CurrentTheme" 
         RegRead, _appLight, % reg "\Personalize", % "AppsUseLightTheme" 
         RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme" 
         

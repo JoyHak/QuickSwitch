@@ -5,7 +5,7 @@
 */
 
 AddMenuTitle(_title) {
-    Menu, % "ContextMenu", % "Add", % _title, Dummy
+    Menu, % "ContextMenu", % "Add", % _title, % "Dummy"
     Menu, % "ContextMenu", % "Disable", % _title
 }
 
@@ -28,7 +28,7 @@ AddMenuOption(_title, _function, _isToggle := false) {
     
     ; Underline the first letter to activate using keyboard
     _name := "&" . _title
-    Menu, % "ContextMenu", % "Add", % _name, % _function, Radio
+    Menu, % "ContextMenu", % "Add", % _name, % _function, % "Radio"
     
     ; Add icon with a postfix depending on the toggle
     AddMenuIcon(_name, _title . (_isToggle ? "On" : "Off") . ".ico", _isToggle)        
@@ -97,7 +97,7 @@ ShowMenu() {
     }
 
     Menu, % "ContextMenu", % "Color", % MenuColor
-    WinActivate, ahk_id %DialogId%              ; Activate dialog to prevent Menu flickering
+    WinActivate, % "ahk_id " DialogId           ; Activate dialog to prevent Menu flickering
     Menu, % "ContextMenu", % "Show", 0, 100     ; Show new menu and halt the thread
 }
 
