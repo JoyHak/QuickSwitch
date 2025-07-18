@@ -75,18 +75,18 @@ Loop {
             ; This is a supported dialog
             ; Switch focus to non-buttons to prevent accidental closing
             try {
-                ControlFocus ToolbarWindow321, ahk_id %DialogId%
-                ControlSend,, {end}{space}, ahk_id %EditId%
+                ControlFocus  % "ToolbarWindow321", % "ahk_id" DialogId
+                ControlSend,, % "{end}{space}",     % "ahk_id" EditId
                 Sleep 100
             }
 
             ; If there is any GUI left from previous calls...
             Gui, Destroy
 
-            WinGet,          Exe,        ProcessName,    ahk_id %DialogId%
-            WinGetTitle,     WinTitle,                   ahk_id %DialogId%
+            WinGet,          DialogProcess, % "ProcessName", % "ahk_id" DialogId
+            WinGetTitle,     DialogTitle,                    % "ahk_id" DialogId
 
-            FingerPrint   := Exe "___" WinTitle
+            FingerPrint   := DialogProcess "___" DialogProcess
             FileDialog    := FileDialog.bind(SendEnter, EditId)
 
             /* 
@@ -94,8 +94,8 @@ Loop {
                 Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
                 If .exe or FingerPrint == -1 then DialogAction will be -1 (window in BlackList)
             */
-            IniRead, BlackList, % INI, Dialogs, % Exe, 0
-            IniRead, Switch, % INI, Dialogs, % FingerPrint, % AutoSwitch
+            IniRead, BlackList, % INI, % "Dialogs", % DialogProcess, 0
+            IniRead, Switch,    % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
             DialogAction := Switch | BlackList
             
             if MainPaths {
@@ -141,10 +141,10 @@ Loop {
     }
     
     ; Clean-up paths from clipboard in new process
-    if (LastExe && (LastExe != Exe)) {
+    if (LastDialogProcess && (LastDialogProcess != DialogProcess)) {
         Clips := []
     }
-    LastExe := Exe 
+    LastDialogProcess := DialogProcess 
     
 }   ; End of continuous WinWaitActive loop
 
