@@ -166,9 +166,6 @@ ReadValues() {
     ; Reads values from INI
     global
 
-    if !IsFile(INI)
-        return
-
     local _values, _array, _variable, _value
     IniRead, _values, % INI, % "Global"
 
