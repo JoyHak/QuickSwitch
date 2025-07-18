@@ -202,7 +202,7 @@ ExpandVariables(ByRef path) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateDirectory(_paramName, ByRef path, _silent := false) {
+ValidateDirectory(_paramName, ByRef path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the dir exists, returns a string of the form "paramName=result",
     ; otherwise returns value from config
@@ -212,6 +212,7 @@ ValidateDirectory(_paramName, ByRef path, _silent := false) {
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
     
+    ; Filter the path
     path := Trim(path, " `t\/.")
     path := StrReplace(path, "/" , "\")
     ExpandVariables(path)
@@ -225,9 +226,12 @@ ValidateDirectory(_paramName, ByRef path, _silent := false) {
         path := SubStr(path, 1, InStr(path, "\",, -1))
     }
     
-    if !_silent
-        LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
+    if !_paramName
+        return ""
     
+    LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
+    
+    ; Return value from config        
     IniRead, _default, % INI, % "Global", % _paramName, % A_Space
     return _paramName "=" _default "`n"
 }
@@ -253,6 +257,9 @@ ValidateTrayIcon(_paramName, ByRef icon) {
         return _paramName "=" icon "`n"
     }
     
+    if !_paramName
+        return ""
+        
     LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
     
     IniRead, _default, % INI, % "Global", % _paramName, % A_Space
@@ -274,7 +281,10 @@ ValidateColor(_paramName, ByRef color) {
     if color {
         if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
             return _paramName "=" _color "`n"
-
+        
+        if !_paramName
+            return ""
+        
         LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
         
         IniRead, _default, % INI, % "Global", % _paramName, % A_Space
@@ -342,10 +352,13 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             ; Set state for existing hotkey
             Hotkey, % _prefix . _key, % _state
         }
-        
+            
         return _paramName "=" _key "`n"
 
-    } catch _ex {
+    } catch _ex {        
+        if !_paramName
+            return ""
+            
         LogException(_ex)
         
         ; Return value from config
