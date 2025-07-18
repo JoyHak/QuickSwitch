@@ -77,10 +77,10 @@ IsMenuReady() {
 ;
 ToggleAutoSwitch() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction, SaveDialogAction, ManagersPaths
+    global
 
-    DialogAction     := (DialogAction = 1) ? 0 : 1
-    SaveDialogAction := true
+    DialogAction := (DialogAction = 1) ? 0 : 1
+    WriteDialogAction := true
 
     if (DialogAction = 1)
         SelectPath(ManagersPaths)
@@ -94,12 +94,11 @@ ToggleBlackList() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
 
-    DialogAction     := (DialogAction = -1) ? 0 : -1
-    SaveDialogAction := true
+    DialogAction := (DialogAction = -1) ? 0 : -1
+    WriteDialogAction := true
 
-    if BlackListProcess {
+    if BlackListProcess
         FingerPrint := DialogProcess
-    }
 
     if IsMenuReady()
        SendEvent, % "^#+0"

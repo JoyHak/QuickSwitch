@@ -136,8 +136,8 @@ Loop {
 
     ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
-    if (SaveDialogAction && FingerPrint && DialogAction != "") {
-        SaveDialogAction := false
+    if (WriteDialogAction && FingerPrint && DialogAction != "") {
+        WriteDialogAction := false
         try IniWrite, % DialogAction, % INI, % "Dialogs", % FingerPrint
     }
 
