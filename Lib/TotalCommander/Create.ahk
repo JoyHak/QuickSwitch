@@ -1,13 +1,13 @@
-CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "") {
-    ; Creates cmd in specified ini config.
-    ; "cmd" param must start with EM_
+CreateTotalUserCmd(ByRef ini, ByRef userCmd, ByRef internalCmd, ByRef param := "") {
+    ; Creates userCmd in specified ini config.
+    ; "userCmd" param must start with EM_
 
     try {
         loop, 4 {
             ; Read the contents of the config until it appears or the loop ends with an error
-            IniRead, _section, % ini, % cmd, % A_Space
+            IniRead, _section, % ini, % userCmd,, % A_Space
             if _section {
-                LogInfo("Created [" cmd "] command:`n" _section "`nin `'" ini "`'`n")
+                LogInfo("Created [" userCmd "] command:`n" _section "`nin `'" ini "`'`n")
                 return true
             }
 
@@ -25,7 +25,7 @@ CreateTotalUserCommand(ByRef ini, ByRef cmd, ByRef internalCmd, ByRef param := "
             FileAppend, % "
             (LTrim
                 # Please dont add commands with the same name
-                [" cmd "]
+                [" userCmd "]
                 cmd="   internalCmd  "
                 param=" param        "
 

@@ -15,7 +15,7 @@ GetTotalConsoleIni(ByRef totalPid) {
     Clipboard  := ""
 
     ; Create new console process and get its PID
-    SendTotalMessage(totalPid, 511)
+    SendTotalInternalCmd(totalPid, 511)
     _consolePid := GetTotalConsolePid(totalPid)
 
     ; Send command to the console
@@ -23,41 +23,40 @@ GetTotalConsoleIni(ByRef totalPid) {
     static exportFile  :=  A_Temp "\TotalCmdIni.txt"
 
     SendConsoleCommand(_consolePid, command " > " exportFile)  ; Export
-    sleep, 150
+    Sleep 150
     SendConsoleCommand(_consolePid, command " | clip")         ; Copy
 
-    ClipWait, 5
+    ClipWait 5
     _clip     := Clipboard
     Clipboard := _clipSaved
     try Process, Close, % _consolePid
 
     ; Parse the result
     _log := "TotalCmd PID: " totalPid " Console PID: " _consolePid
-
-    if !_clip {
-        ; Read exported file
-        _log .= " Failed to copy the result to the clipboard."
-
-        if IsFile(exportFile) {
-            FileRead, _path, % exportFile
-
-            if _path {
-                LogInfo(_log, "NoTraytip")
-                return _path
-            }
-
-            _log .= " Exported file is empty."
-
-        } else {
-            _log .= " Failed to export the result."
-        }
-
-    } else {
+    
+    if _clip {
         LogInfo(_log " The result is copied to the clipboard.", "NoTraytip")
         return _clip
     }
+    
 
-    _log .= " Copied result is empty."
+    ; Read exported file
+    _log .= " Failed to copy the result to the clipboard."
+
+    if IsFile(exportFile) {
+        FileRead, _path, % exportFile
+
+        if _path {
+            LogInfo(_log, "NoTraytip")
+            return _path
+        }
+
+        _log .= " Exported file is empty."
+
+    } else {
+        _log .= " Failed to export the result."
+    }
+
     throw Exception("Unable to get INI", "TotalCmd console", "The env. variable was successfully requested. " _log)
 }
 
@@ -90,6 +89,7 @@ GetTotalRegistryIni() {
 
     static totalCmd := "Software\Ghisler\Total Commander"
     static iniKey   := "IniFileName"
+    _path := ""
     
     try RegRead, _path, % "HKEY_CURRENT_USER\" totalCmd, % iniKey
 
@@ -97,8 +97,8 @@ GetTotalRegistryIni() {
         try RegRead, _path, % "HKEY_LOCAL_MACHINE\" totalCmd, % iniKey
 
     if !_path
-        return false
-    
+        return ""
+
     ExpandVariables(_path)
     return _path
 }
