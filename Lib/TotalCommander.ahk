@@ -18,6 +18,7 @@ GetTotalPaths(ByRef winId, ByRef paths) {
 
     try {
         SendTotalUserCmd(winId, userCmd)
+        Sleep 100
         ParseTotalTabs(tabsFile, paths)
     } catch _ex {
         WinGet, _winPid, % "pid", % "ahk_id " winId
