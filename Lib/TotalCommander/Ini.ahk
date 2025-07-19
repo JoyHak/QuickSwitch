@@ -130,7 +130,7 @@ GetTotalPathIni(ByRef totalPid) {
     _ini := ""
     Loop, Files, % _winPath "wincmd.ini", R
     {
-        _ini := A_LoopFileLongPath
+        _ini := A_LoopFileFullPath
         break
     }
 

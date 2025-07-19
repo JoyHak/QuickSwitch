@@ -136,7 +136,8 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-
+    
+    ; Get longest control info: pos(X, Y, Width, Height)
     GuiControlGet, pos, Pos, SendEnter
     local posX   := posW / 2 - 10
     local button := NukeSettings ? "Nuke" : "Reset"
