@@ -17,6 +17,7 @@
 #Persistent
 #SingleInstance force
 #KeyHistory 0
+#InstallMouseHook
 ListLines Off
 SendLevel 2
 SetBatchLines, -1
@@ -132,7 +133,6 @@ Loop {
     ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
     if WriteDialogAction {
-        ToolTip write
         WriteDialogAction := false
         try IniWrite, % DialogAction, % INI, % "Dialogs", % FingerPrint
     }
