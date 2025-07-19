@@ -9,14 +9,25 @@ AddMenuTitle(_title) {
     Menu, % "ContextMenu", % "Disable", % _title
 }
 
-AddMenuIcon(_title, _iconName, _isToggle := false) {
+AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
+    /* 
+        Adds an icon to a menu item. If icons are disabled, adds a check mark.
+        
+        _icon:          abosolute / relative to IconsDir path to ICO, CUR, ANI, EXE, DLL, CPL, SCR and other resource that contains icons. 
+        _iconNumber:    postive number from non-ICO resource.
+        _isToggle:      add check mark if ShowIcons is false.
+    */
     global ShowIcons, IconsDir, IconsSize
     
     try {
-        if ShowIcons
-            Menu, % "ContextMenu", % "Icon",  % _title, % IconsDir "\" _iconName,, % IconsSize
-        else if _isToggle
+        if ShowIcons {
+            if !IsFile(_icon)
+                _icon := IconsDir "\" _icon
+            
+            Menu, % "ContextMenu", % "Icon",  % _title, % _icon, % _iconNumber, % IconsSize
+        } else if _isToggle {
             Menu, % "ContextMenu", % "Check", % _title
+        }
     } catch _ex {
         LogError("Wrong path to the icon: `'" _ex.Extra "`'", "icon")
         ShowIcons := false
@@ -24,35 +35,36 @@ AddMenuIcon(_title, _iconName, _isToggle := false) {
 }
 
 AddMenuOption(_title, _function, _isToggle := false) {
-    global ShowIcons
-    
     ; Underline the first letter to activate using keyboard
-    _name := "&" . _title
+    _name := "&" _title
     Menu, % "ContextMenu", % "Add", % _name, % _function, % "Radio"
     
     ; Add icon with a postfix depending on the toggle
-    AddMenuIcon(_name, _title . (_isToggle ? "On" : "Off") . ".ico", _isToggle)        
+    AddMenuIcon(_name, _title . (_isToggle ? "On" : "Off") . ".ico", 1, _isToggle)        
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 AddMenuPaths(ByRef paths, _function) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Array must be array of arrays: [path, iconName]
+    ; Array must be array of arrays: [path, icon, iconNumber?, title?]
+    ; If the "title" of menu item is specified, it will be used instead of short path.
     global ShortPath, PathLimit, PathNumbers
 
     for _index, _options in paths {
-        _display := ""
+        _title := ""
 
         if (PathNumbers && (_index < 10))
-            _display .= "&" _index++ " "
-        if ShortPath
-            _display .= GetShortPath(_options[1])
+            _title .= "&" _index " "
+        if _options[4]
+            _title .= _options[4]
+        else if ShortPath
+            _title .= GetShortPath(_options[1])
         else
-            _display .= _options[1]
+            _title .= _options[1]
 
-        Menu, % "ContextMenu", % "Insert",, % _display, % _function
-        AddMenuIcon(_display, _options[2])
+        Menu, % "ContextMenu", % "Insert",, % _title, % _function
+        AddMenuIcon(_title, _options[2], _options[3] + 0)
         
         if (_index = PathLimit)
             return
