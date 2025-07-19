@@ -88,15 +88,10 @@ Loop {
             ControlSend,, % "{end}{space}",     % "ahk_id " EditId
             Sleep 100
         }
-
-        ; If there is any GUI left from previous calls...
-        Gui, Destroy
-
-        WinGet,          DialogProcess, % "ProcessName", % "ahk_id " DialogId
-        WinGetTitle,     DialogTitle,                    % "ahk_id " DialogId
-
-        FingerPrint   := DialogProcess "___" DialogProcess
-        FileDialog    := FileDialog.bind(SendEnter, EditId)
+        
+        WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
+        WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
+        FingerPrint := DialogProcess "___" DialogProcess
 
         ; Get current dialog settings or use default mode (AutoSwitch flag).
         ; Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
@@ -117,7 +112,9 @@ Loop {
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")
-
+        ; If there is any GUI left from previous calls...
+        Gui, Destroy
+        
         if IsMenuReady()
             SendEvent, % "^#+0"
 
@@ -158,3 +155,4 @@ ExitApp
     ; Release all keys to prevent holding
     SendEvent, % "{Ctrl up}{Win up}{Shift up}"
 Return
+
