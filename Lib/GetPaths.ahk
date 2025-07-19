@@ -123,7 +123,7 @@ GetShortPath(ByRef path) {
 GetClipboardPath(_dataType) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; If the clipboard contents is text, cuts the path where the file is stored. 
-    ; If the path is valid, adds to the array
+    ; If the path is valid, adds to the array and returns true
     global ClipboardPaths  
     Sleep 150
 
@@ -137,13 +137,50 @@ GetClipboardPath(_dataType) {
             _path := A_LoopField
             
             if ValidateDirectory("", _path) {
-                ClipboardPaths.push([_path, "Clipboard.ico"])
-                break
+                ClipboardPaths.push([_path, "Clipboard.ico", 1, ""])
+                return true
             }
         }
+        
+        return false
     } catch _ex {
         LogException(_ex)
     }
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetFavoritesPaths(ByRef paths) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
+    ; Returns the number of added paths.
+    global FavoritesDir
+    
+    _count := 0
+    Loop, files, % FavoritesDir "\*.lnk", R
+	{   
+        try {
+            FileGetShortcut, % A_LoopFileFullPath, _path, _workingDir,, _title, _icon, _iconNumber
+                    
+            if !(_path && ValidateDirectory("", _path))
+                _path := _workingDir
+                
+            if !ValidateDirectory("", _path)
+                continue
+            
+            if _icon
+                ExpandVariables(_icon)
+            else    
+                _icon := "Favorite.ico"
+                
+            ExpandVariables(_title)
+            paths.push([_path, _icon, _iconNumber, _title])
+            _count++
+        } catch _ex {
+            LogException(_ex)
+        }
+	}
+    
+    return _count
+}
 

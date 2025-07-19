@@ -102,13 +102,17 @@ Loop {
         IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0
         IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
         DialogAction := DialogAction | BlackList
-
+        
+        ; Get paths for Menu sections
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
             GetPaths(ManagersPaths := [], DialogAction == 1)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
+        
+        if ShowFavorites
+            GetFavoritesPaths(FavoritePaths := [])
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")
@@ -134,9 +138,9 @@ Loop {
     }
 
     ; Clean-up paths from clipboard in new process
-    if (LastDialogProcess && (LastDialogProcess != DialogProcess)) {
+    if (LastDialogProcess && (LastDialogProcess != DialogProcess))
         Clips := []
-    }
+
     LastDialogProcess := DialogProcess
 
 }   ; End of continuous WinWaitActive loop
