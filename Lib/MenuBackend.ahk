@@ -4,16 +4,21 @@ Dummy() {
     Return
 }
 
-SelectPath(ByRef paths, _name := "", _position := 1) {
-    global DialogId, FileDialog, ShowAfterSelect, ShowAlways, SelectPathAttempts
+SelectPath(ByRef paths, _name := "", _pos := 1) {
+    global
     
-    _log := ""
+    if GetKeyState(PinKey) {
+        PinnedPaths.push([paths[_pos][1], "Pin.ico", 1, ""])
+        return paths.removeAt(_pos)
+    }
+    
+    local _ex, _winPid, _log := ""
     loop, % SelectPathAttempts {
         try {
             if !WinActive("ahk_id " DialogId)
-                return SendPath(paths[_position][1])
+                return SendPath(paths[_pos][1])
 
-            if (%FileDialog%(paths[_position][1], SelectPathAttempts))
+            if (%FileDialog%(SendEnter, EditId, paths[_pos][1], SelectPathAttempts))
                 return (ShowAfterSelect || ShowAlways) ? ShowMenu() : 0
 
         } catch _ex {
@@ -31,10 +36,9 @@ SelectPath(ByRef paths, _name := "", _position := 1) {
     }
 
     ; Log additional info and error details (if catched)
-    _log  :=  FileDialog.name ": Timeout. " _log
-    _msg  :=  _name ? "Menu selection" : "Auto Switch"
-
-    LogError("Failed to feed the file dialog", _msg, _log)
+    LogError("Failed to feed the file dialog"
+            , _name ? "Menu selection" : "Auto Switch"
+            , FileDialog.name ": Timeout. " _log)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

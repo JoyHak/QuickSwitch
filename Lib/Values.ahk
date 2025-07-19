@@ -77,6 +77,7 @@ SetDefaultValues() {
     ; Requires validation
     IconsDir       := "Icons"
     FavoritesDir   := "Favorites"
+    PinKey         := "^d"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
     RestartMouse   := ""
