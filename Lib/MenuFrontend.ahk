@@ -97,6 +97,7 @@ ShowMenu() {
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
     
     MenuStack := []
+    MenuStack.Push(FavoritePaths*)
     MenuStack.Push(ManagersPaths*)
     MenuStack.Push(ClipboardPaths*)
 
