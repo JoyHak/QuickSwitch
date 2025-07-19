@@ -20,6 +20,30 @@ InitMouseMode(_type := "Main", _toggle := false) {
     GuiControl, % "Hide",         % _type         ; Drop-down list
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
+TogglePinMouse(_control := 0) {
+;─────────────────────────────────────────────────────────────────────────────
+    static toggle := false
+
+    ; Toggle mouse input controls and set button caption
+    toggle := !toggle
+    InitMouseMode("Pin", toggle)
+
+    ; Set button caption
+    GuiControl,, % "PinMouseButton", % (toggle ? "keybd" : "mouse")
+
+    ; Hide control below to select mouse key from drop-down list
+    GuiControlGet, _mouse,, % "MainMouse"
+    GuiControl, % "Hide" toggle, % "Main" . (_mouse ? "Mouse" : "Key")
+    if !toggle
+        return InitKeybdMode("Pin")
+
+    ; Set visibility
+    GuiControl, % "Show" toggle, % "PinMouse"    ; Mouse buttons placeholder
+    GuiControl, % "Show" toggle, % "Pin"         ; Drop-down list
+    GuiControl, % "Hide" toggle, % "PinKey"      ; Hotkey control
+}
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
@@ -34,9 +58,9 @@ ToggleMainMouse(_control := 0) {
     ; Set button caption
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
 
-    ; Hide controls below to select mouse key from drop-down list
-    GuiControl, % "Hide" toggle, % "RestartKey"
-    GuiControl, % "Hide" toggle, % "RestartMouse"
+    ; Hide control below to select mouse key from drop-down list
+    GuiControlGet, _mouse,, % "RestartMouse"
+    GuiControl, % "Hide" toggle, % "Restart" . (_mouse ? "Mouse" : "Key")
     if !toggle
         return InitKeybdMode("Main")
 
@@ -77,49 +101,71 @@ GetMouseKey(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Gets value from the mouse input mode (drop-down list)
     ; Get value and mouse button name
-    GuiControlGet, _key,, % _control
-    GuiControlGet, _type, % "Name", % _control
+    _type := A_GuiControl
 
     ; Hide drop-down list
     Toggle%_type%Mouse()
-
+    
     ; Set placeholder to the selected mouse button
+    GuiControlGet, _key,, % _control
     GuiControl,, % _type "Mouse", % _key
+    
+    ; Show placeholder and hide hotkey control 
     GuiControl, % "Show", % _type "Mouse"
+    GuiControl, % "Hide", % _type "Key"      
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 GetMouseList(_action, _sequence := "") {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Stores and returns mouse _keys in a friendly way
+    ; Stores and returns mouse keys and keyboard modifiers friendly names
     ; Returns specific mouse data on "action"
-    static buttons := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
-    static modifiers := {"Ctrl+": "^", "Win+": "#", "Alt+": "!", "Shift+": "+"}
+    static mouseButtons   := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
+    static modKeys        := {"Ctrl": "^", "Win": "#", "Alt": "!", "Shift": "+"}
 
-    static list := ""
-    if !(list) {
-        ; Convert to permanent drop-down list with modifiers
-        for _key, _ in buttons {
-            list .= "|" . _key
-            for _mod, _ in modifiers {
-                list .= "|" . _mod . _key
+    static mouseList := ""
+    static keysList  := ""
+    
+    if !(mouseList) {
+        ; Convert to permanent drop-down list "key+mouse"
+        for _mouse, _ in mouseButtons {
+            mouseList .= "|" _mouse
+            for _key, _ in modKeys {
+                mouseList .= "|" _key "+" _mouse
             }
         }
-        list := LTrim(list, "|")
+        mouseList := LTrim(mouseList, "|")
+    }
+    
+    if !(keysList) {
+        ; Convert to permanent drop-down list "key1+key2"
+        for _key1, _ in modKeys {
+            keysList .= "|" _key1
+            for _key2, _ in modKeys {
+                if (_key1 != _key2) {
+                    keysList .= "|" _key1 "+" _key2
+                }
+            }
+        }
+        keysList := LTrim(keysList, "|")
     }
 
     switch (_action) {
-        case "list":
-            return list
+        case "mouseList":
+            return mouseList
+        case "keysList":
+            return keysList   
         case "isMouse":
-            return InStr(_sequence, "Button") || InStr(list, _sequence)
+            return InStr(_sequence, "Button") || InStr(mouseList, _sequence)
 
         case "convert":
-            for _key, _value in buttons
+            _sequence := StrReplace(_sequence, "+")
+            
+            for _key, _value in mouseButtons
                 _sequence := StrReplace(_sequence, _key, _value)
 
-            for _mod, _value in modifiers
+            for _mod, _value in modKeys
                 _sequence := StrReplace(_sequence, _mod, _value)
 
             return _sequence

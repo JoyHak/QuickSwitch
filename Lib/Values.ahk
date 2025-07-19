@@ -77,11 +77,12 @@ SetDefaultValues() {
     ; Requires validation
     IconsDir       := "Icons"
     FavoritesDir   := "Favorites"
-    PinKey         := "^d"
+    PinKey         := "Shift"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
     RestartMouse   := ""
     MainMouse      := ""
+    PinMouse       := ""
     MainIcon       := ""
     MenuColor      := ""
     GuiColor       := ""

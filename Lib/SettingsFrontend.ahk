@@ -97,33 +97,38 @@ ShowSettings() {
          
     Gui, Add, CheckBox,                                     vAutoStartup          checked%AutoStartup%,             Launch at &system startup
             
-    Gui, Add, Text,         y+20                                                  Section,                          &Show menu by
-    Gui, Add, Text,         y+13,                                                                                   &Restart app by
+    Gui, Add, Text,         y+20                                                  Section,                          &Pin path holding
+    Gui, Add, Text,         y+17,                                                                                   &Show menu by
+    Gui, Add, Text,         y+17,                                                                                   &Restart app by
     Gui, Add, Text,         y+23,                                                                                   R&estart only in
     Gui, Add, Text,         y+13,                                                                                   &Font (GUI)
     Gui, Add, Text,         y+13,                                                                                   Icon (t&ray)
     
     ; Keyboard input controls   
-    edit := "w120 r1 -Wrap -vscroll"    
-    Gui, Add, Hotkey,       ys-6  %edit%                    vMainKey              Section,                          %MainKey%
-    Gui, Add, Hotkey,       y+8   %edit%                    vRestartKey,                                            %RestartKey%
+    edit := "w120 r1 -Wrap -vscroll"               
+    Gui, Add, DropDownList, ys-4  w120 h60                  vPinKey               Section,                          % GetMouseList("keysList")
+    Gui, Add, Hotkey,             %edit%                    vMainKey,                                               %MainKey%
+    Gui, Add, Hotkey,             %edit%                    vRestartKey,                                            %RestartKey%
             
     ; Toggles between keyboard and mouse input modes            
-    Gui, Add, Button,       ys w22   gToggleMainMouse       vMainMouseButton,                                       mouse
-    Gui, Add, Button,          wp    gToggleRestartMouse    vRestartMouseButton,                                    mouse
-                
+    Gui, Add, Button,       ys w22   gTogglePinMouse        vPinMouseButton,                                        mouse
+    Gui, Add, Button,           wp   gToggleMainMouse       vMainMouseButton,                                       mouse
+    Gui, Add, Button,           wp   gToggleRestartMouse    vRestartMouseButton,                                    mouse
+    
     Gui, Add, Edit,         xs    %edit%    w185            vRestartWhere,                                          %RestartWhere%
     Gui, Add, Edit,         y+4   %edit%    wp              vMainFont,                                              %MainFont%
     Gui, Add, Edit,         y+4   %edit%    wp              vMainIcon,                                              %MainIcon%
-                        
-    ; Mouse input controls          
-    local mouse := GetMouseList("list")         
-            
-    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey   vMain,                                                   %mouse%
-    Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey   vRestart,                                                %mouse%
-                                                
-    Gui, Add, Edit,         xs ys %edit%    ReadOnly       vMainMouse,                                              %MainMouse%
-    Gui, Add, Edit,         y+8   %edit%    ReadOnly       vRestartMouse,                                           %RestartMouse%
+     
+    ; Mouse input controls 
+    local mouse := GetMouseList("mouseList")
+    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPin,                                                   %mouse%
+    Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey    vMain,                                                  %mouse%
+    Gui, Add, ListBox,   xs ys+90 wp hp     gGetMouseKey    vRestart,                                               %mouse%
+    
+    ; Mouse buttons placeholder
+    Gui, Add, Edit,         xs ys %edit%    ReadOnly        vPinMouse,                                              %PinMouse%
+    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vMainMouse,                                             %MainMouse%
+    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vRestartMouse,                                          %RestartMouse%
 
     Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -157,6 +162,7 @@ ShowSettings() {
     ToggleShortPath()
 
     ; Toggle between mouse and keyboard input mode
+    InitMouseMode("Pin",     PinMouse     != "")
     InitMouseMode("Main",    MainMouse    != "")
     InitMouseMode("Restart", RestartMouse != "")
 
