@@ -25,7 +25,7 @@ CabinetWClass(ByRef winId, ByRef paths) {
                 _path := _win.document.folder.self.path
                 if !InStr(_path, "::{") {
                     _count++
-                    paths.push([_path, "Explorer.ico"])
+                    paths.push([_path, "Explorer.ico", 1, ""])
                 }
             }
         }
@@ -77,7 +77,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths) {
     Loop, parse, _clip, `|
     {
         _count++
-        paths.push([A_LoopField, "Xyplorer.ico"])
+        paths.push([A_LoopField, "Xyplorer.ico", 1, ""])
     }
     
     return _count
@@ -109,7 +109,7 @@ Dopus(ByRef winId, ByRef paths) {
         ; Pass every HWND to GetWindowText() and get the content
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
         if DllCall("GetWindowTextW", "ptr", _previousId, "str", _text, "int", WINDOW_TEXT_SIZE) {
-            _paths.push([_text, "Dopus.ico"])
+            _paths.push([_text, "Dopus.ico", 1, ""])
 
             if InStr(_text, _title)
                 _active := A_Index
