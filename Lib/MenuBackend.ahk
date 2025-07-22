@@ -9,7 +9,8 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
     
     if GetKeyState(PinKey) {
         PinnedPaths.push([paths[_pos][1], "Pin.ico", 1, ""])
-        return paths.removeAt(_pos)
+        paths.removeAt(_pos)
+        return ShowMenu()
     }
     
     local _ex, _winPid, _log := ""

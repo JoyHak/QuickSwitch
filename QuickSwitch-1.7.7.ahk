@@ -61,6 +61,7 @@ else
     WriteValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
+ValidateKey(     "PinKey",      PinKey,      "~",  "Off",  "Dummy") ; Init for global var only
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
@@ -91,13 +92,14 @@ Loop {
         
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
-        FingerPrint := DialogProcess "___" DialogProcess
+        FingerPrint := DialogProcess "___" DialogTitle
 
         ; Get current dialog settings or use default mode (AutoSwitch flag).
-        ; Current "AutoSwitch" choice will override "Always AutoSwitch" mode.
-        IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0
-        IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch
-        DialogAction := DialogAction | BlackList
+        ; The default DialogAction value is depends on "Always AutoSwitch" option.
+        ; Current choice will override "Always AutoSwitch" value.
+        IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0               ; -1 or 0
+        IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch    ; -1, 0 or 1 
+        DialogAction |= BlackList   
         
         ; Get paths for Menu sections
         if ShowManagers {

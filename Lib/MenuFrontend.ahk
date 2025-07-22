@@ -52,10 +52,10 @@ AddMenuPaths(ByRef paths, _function) {
     global ShortPath, PathLimit, PathNumbers
 
     for _index, _options in paths {
-        _title := ""
+        _title := "&"
 
         if (PathNumbers && (_index < 10))
-            _title .= "&" _index " "
+            _title .= _index " "
         if _options[4]
             _title .= _options[4]
         else if ShortPath
@@ -101,7 +101,9 @@ ShowMenu() {
     MenuStack.Push(FavoritePaths*)
     MenuStack.Push(ManagersPaths*)
     MenuStack.Push(ClipboardPaths*)
-
+    
+    ToolTip % PinnedPaths.length()
+    
     if (MenuStack.length()) {
         AddMenuPaths(MenuStack, Func("SelectPath").bind(MenuStack))
         AddMenuOptions()

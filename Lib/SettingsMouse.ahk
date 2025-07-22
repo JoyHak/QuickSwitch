@@ -1,4 +1,21 @@
-; Contains functions for selecting mouse buttons in the GUI.
+/* 
+    Entering hotkey and the choice of one mouse button consists of two parts: 
+    - Hotkey control (next, we will call it Key input mode) 
+    - Several mouse buttons choice controls (next, we will call them Mouse input mode).
+    
+    Mouse input mode works using:
+    - Listbox: allows user to select the mouse buttons. 
+      Imitates Drop-Down List, but this is a more convenient control for switching between Mouse / Key input modes.
+      Appears under Placeholder.
+    
+    - Placeholder (edit): displays the mouse button selected in Listbox. 
+      It is displayed in the place of Hotkey control.
+    
+    - Button (keybd / mouse): toggles between Mouse / Key input modes. 
+      Shows controls above, hides everything that overlaps with them, hides Hotkey Control.
+      If the controls are already visible above, upon repeated pressing the process is in the reverse order: 
+      show previously hidden controls, hide Listbox and so on.
+*/ 
 
 InitKeybdMode(_type := "Main", _toggle := true) {
     ; Switches the key input mode
@@ -6,18 +23,16 @@ InitKeybdMode(_type := "Main", _toggle := true) {
     InitMouseMode(_type, !_toggle)
 
     if _toggle {
-        ; Reset global mouse
-        ; Focus hotkey control
-        GuiControl,, % _type "Mouse", % ""
-        GuiControl, % "Focus", % _type "Key"
+        GuiControl,, % _type "MousePlaceholder", % ""   ; Reset global mouse
+        GuiControl, % "Focus", % _type "Key"            ; Focus hotkey control
     }
 }
 
 InitMouseMode(_type := "Main", _toggle := false) {
-    ; Switches the visibility of mouse buttons selection controls
-    GuiControl, % "Show" _toggle, % _type "Mouse" ; Mouse keys placeholder
-    GuiControl, % "Hide" _toggle, % _type "Key"   ; Hotkey control
-    GuiControl, % "Hide",         % _type         ; Drop-down list
+    ; Changes the visibility of mouse buttons selection controls
+    GuiControl, % "Show" _toggle, % _type "MousePlaceholder"
+    GuiControl, % "Hide",         % _type "MouseListBox"
+    GuiControl, % "Hide" _toggle, % _type "Key"  ; Hotkey control
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -34,15 +49,17 @@ TogglePinMouse(_control := 0) {
     GuiControl,, % "PinMouseButton", % (toggle ? "keybd" : "mouse")
 
     ; Hide control below to select mouse key from drop-down list
-    GuiControlGet, _mouse,, % "MainMouse"
-    GuiControl, % "Hide" toggle, % "Main" . (_mouse ? "Mouse" : "Key")
+    ; If the mouse button is selected -> hide Hotkey control and vice versa
+    GuiControlGet, _mouse,, % "MainMousePlaceholder"
+    GuiControl, % "Hide" toggle, % "Main" . (_mouse ? "MousePlaceholder" : "Key")
+    
     if !toggle
         return InitKeybdMode("Pin")
 
     ; Set visibility
-    GuiControl, % "Show" toggle, % "PinMouse"    ; Mouse buttons placeholder
-    GuiControl, % "Show" toggle, % "Pin"         ; Drop-down list
-    GuiControl, % "Hide" toggle, % "PinKey"      ; Hotkey control
+    GuiControl, % "Show" toggle, % "PinMousePlaceholder"
+    GuiControl, % "Show" toggle, % "PinMouseListbox"    
+    GuiControl, % "Hide" toggle, % "PinKey" ; Hotkey control
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -59,15 +76,17 @@ ToggleMainMouse(_control := 0) {
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
 
     ; Hide control below to select mouse key from drop-down list
-    GuiControlGet, _mouse,, % "RestartMouse"
-    GuiControl, % "Hide" toggle, % "Restart" . (_mouse ? "Mouse" : "Key")
+    ; If the mouse button is selected -> hide Hotkey control and vice versa
+    GuiControlGet, _mouse,, % "RestartMousePlaceholder"     
+    GuiControl, % "Hide" toggle, % "Restart" . (_mouse ? "MousePlaceholder" : "Key")
+    
     if !toggle
         return InitKeybdMode("Main")
 
     ; Set visibility
-    GuiControl, % "Show" toggle, % "MainMouse"    ; Mouse buttons placeholder
-    GuiControl, % "Show" toggle, % "Main"         ; Drop-down list
-    GuiControl, % "Hide" toggle, % "MainKey"      ; Hotkey control
+    GuiControl, % "Show" toggle, % "MainMousePlaceholder"
+    GuiControl, % "Show" toggle, % "MainMouseListbox"
+    GuiControl, % "Hide" toggle, % "MainKey" ; Hotkey control
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -91,8 +110,8 @@ ToggleRestartMouse(_control := 0) {
         return InitKeybdMode("Restart")
 
     ; Set visibility
-    GuiControl, % "Show" toggle, % "RestartMouse" ; Mouse buttons placeholder
-    GuiControl, % "Show" toggle, % "Restart"      ; Drop-down list
+    GuiControl, % "Show" toggle, % "RestartMousePlaceholder"
+    GuiControl, % "Show" toggle, % "RestartMouseListbox"    
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -101,17 +120,17 @@ GetMouseKey(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Gets value from the mouse input mode (drop-down list)
     ; Get value and mouse button name
-    _type := A_GuiControl
+    _type := StrReplace(A_GuiControl, "MouseListbox")
 
     ; Hide drop-down list
     Toggle%_type%Mouse()
     
-    ; Set placeholder to the selected mouse button
-    GuiControlGet, _key,, % _control
-    GuiControl,, % _type "Mouse", % _key
+    ; Set placeholder to the selected mouse button and show it
+    GuiControlGet, _userChoice,, % _control
+    GuiControl,, % _type "MousePlaceholder", % _userChoice
+    GuiControl, % "Show", % _type "MousePlaceholder"
     
-    ; Show placeholder and hide hotkey control 
-    GuiControl, % "Show", % _type "Mouse"
+    ; Hide hotkey control 
     GuiControl, % "Hide", % _type "Key"      
 }
 
@@ -123,6 +142,7 @@ GetMouseList(_action, _sequence := "") {
     ; Returns specific mouse data on "action"
     static mouseButtons   := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
     static modKeys        := {"Ctrl": "^", "Win": "#", "Alt": "!", "Shift": "+"}
+    ; static specialKeys    := ["Space", "Tab"]
 
     static mouseList := ""
     static keysList  := ""
