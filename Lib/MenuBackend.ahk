@@ -7,15 +7,15 @@ Dummy() {
 SelectPath(ByRef paths, _name := "", _pos := 1) {
     global
     
-    if GetKeyState(PinKey) {
-        PinnedPaths.push([paths[_pos][1], "Pin.ico", 1, ""])
-        paths.removeAt(_pos)
-        return ShowMenu()
-    }
-    
     local _ex, _winPid, _log := ""
     loop, % SelectPathAttempts {
         try {
+            if (ShowPinned && (_pos > PinnedPaths.length()) && GetKeyState(PinKey)) {
+                PinnedPaths.push([paths[_pos][1], "Pin.ico", 1, ""])
+                WritePinnedPaths := true
+                return ShowMenu()                
+            }
+        
             if !WinActive("ahk_id " DialogId)
                 return SendPath(paths[_pos][1])
 

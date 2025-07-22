@@ -16,6 +16,7 @@ EditId              :=  0
 LastDialogProcess   :=  ""
 
 WriteDialogAction   :=  false
+WritePinnedPaths    :=  false
 FromSettings        :=  false
     
 DeleteDialogs       :=  false
@@ -140,12 +141,12 @@ WriteValues() {
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
     RestartMousePlaceholder=" RestartMousePlaceholder "
+    PinKey=" (PinMousePlaceholder ? GetMouseList("convert", PinMousePlaceholder) : PinKey) "
     )"
 
     _values .= "`n"
-    . ValidateKey(      "PinKey",        PinMousePlaceholder     ? PinMousePlaceholder     : PinKey,     "~",  "Off", "Dummy")   ; Convert and write only
-    . ValidateKey(      "MainKey",       MainMousePlaceholder    ? MainMousePlaceholder    : MainKey,    "",   "Off", "^#+0")
-    . ValidateKey(      "RestartKey",    RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey, "~",  "On",  "RestartApp")
+    . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),    "",   "Off", "^#+0")
+    . ValidateKey(      "RestartKey",    (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
@@ -410,4 +411,38 @@ ValidateFile(ByRef filePath) {
     }
 
     return "`'" filePath "`' - " _extra "`n"
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Restores or saves the "paths" array depending on the flags.
+    ; Returns the number of paths in the array after processing.
+    global INI, WritePinnedPaths
+    
+    if (_state && !paths.length()) {
+        IniRead, _paths, % INI, % "App", % _paramName, % A_Space
+        if _paths {
+            loop, parse, _paths, `|
+            {
+                paths.push([A_LoopField, "Pin.ico", 1, ""])
+            }
+        }            
+        return paths.length()
+    }
+    
+    if ((!_state || WritePinnedPaths) && paths.length()) {
+        WritePinnedPaths := false   
+        _paths := ""
+        for _, _arr in paths
+            _paths .= "|" . _arr[1]
+            
+        try IniWrite, % LTrim(_paths, "|"), % INI, % "App", % _paramName
+    }    
+    
+    if !_state
+        paths := []
+    
+    return paths.length()
 }
