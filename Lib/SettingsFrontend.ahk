@@ -102,33 +102,41 @@ ShowSettings() {
     Gui, Add, Text,         y+17,                                                                                   &Restart app by
     Gui, Add, Text,         y+23,                                                                                   R&estart only in
     Gui, Add, Text,         y+13,                                                                                   &Font (GUI)
-    Gui, Add, Text,         y+13,                                                                                   Icon (t&ray)
-    
+    Gui, Add, Text,         y+13,                                                                                   Icon (t&ray)     
+    /* 
+        Entering each key and the choice of one mouse button consists of two parts: 
+        - Hotkey control (Keyboard input mode) 
+        - Several mouse buttons choice controls (Mouse input mode).
+        See the implementation and documentation in Lib\SettingsMouse) 
+    */
     ; Keyboard input controls   
     edit := "w120 r1 -Wrap -vscroll"               
     Gui, Add, DropDownList, ys-4  w120 h60                  vPinKey               Section,                          % GetMouseList("keysList")
     Gui, Add, Hotkey,             %edit%                    vMainKey,                                               %MainKey%
     Gui, Add, Hotkey,             %edit%                    vRestartKey,                                            %RestartKey%
             
-    ; Toggles between keyboard and mouse input modes            
+    ; Button (keybd / mouse): toggles between Keyboard / Mouse input modes 
+    ; Add at section Y and after Hotkey X pos 
     Gui, Add, Button,       ys w22   gTogglePinMouse        vPinMouseButton,                                        mouse
     Gui, Add, Button,           wp   gToggleMainMouse       vMainMouseButton,                                       mouse
     Gui, Add, Button,           wp   gToggleRestartMouse    vRestartMouseButton,                                    mouse
     
+    ; Non-mouse: add after previous controls at the left edge X
     Gui, Add, Edit,         xs    %edit%    w185            vRestartWhere,                                          %RestartWhere%
     Gui, Add, Edit,         y+4   %edit%    wp              vMainFont,                                              %MainFont%
     Gui, Add, Edit,         y+4   %edit%    wp              vMainIcon,                                              %MainIcon%
-     
-    ; Mouse input controls 
-    local mouse := GetMouseList("mouseList")
-    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPin,                                                   %mouse%
-    Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey    vMain,                                                  %mouse%
-    Gui, Add, ListBox,   xs ys+90 wp hp     gGetMouseKey    vRestart,                                               %mouse%
     
-    ; Mouse buttons placeholder
-    Gui, Add, Edit,         xs ys %edit%    ReadOnly        vPinMouse,                                              %PinMouse%
-    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vMainMouse,                                             %MainMouse%
-    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vRestartMouse,                                          %RestartMouse%
+    ; ListBox: allows user to select the mouse buttons
+    local mouse := GetMouseList("mouseList")
+    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPinMouseListBox,                                       %mouse%
+    Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey    vMainMouseListBox,                                      %mouse%
+    Gui, Add, ListBox,   xs ys+90 wp hp     gGetMouseKey    vRestartMouseListBox,                                   %mouse%
+    
+    ; Placeholder (edit): displays the mouse button selected in Listbox.
+    ; Placed exactly in the position of the Hotkey and corresponds to its width and height.
+    Gui, Add, Edit,         xs ys %edit%    ReadOnly        vPinMousePlaceholder,                                   %PinMousePlaceholder%
+    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vMainMousePlaceholder,                                  %MainMousePlaceholder%
+    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vRestartMousePlaceholder,                               %RestartMousePlaceholder%
 
     Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -162,9 +170,9 @@ ShowSettings() {
     ToggleShortPath()
 
     ; Toggle between mouse and keyboard input mode
-    InitMouseMode("Pin",     PinMouse     != "")
-    InitMouseMode("Main",    MainMouse    != "")
-    InitMouseMode("Restart", RestartMouse != "")
+    InitMouseMode("Pin",     PinMousePlaceholder     != "")
+    InitMouseMode("Main",    MainMousePlaceholder    != "")
+    InitMouseMode("Restart", RestartMousePlaceholder != "")
 
     if DarkTheme {
         SetDarkTheme("&OK|&Cancel|&Nuke|&Debug|&Reset|msctls_hotkey321")
