@@ -49,7 +49,7 @@ AddMenuPaths(ByRef paths, _function) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Array must be array of arrays: [path, icon, iconNumber?, title?]
     ; If the "title" of menu item is specified, it will be used instead of short path.
-    global ShortPath, PathLimit, PathNumbers
+    global ShortPath, PathNumbers
 
     for _index, _options in paths {
         _title := "&"
@@ -65,9 +65,6 @@ AddMenuPaths(ByRef paths, _function) {
 
         Menu, % "ContextMenu", % "Insert",, % _title, % _function
         AddMenuIcon(_title, _options[2], _options[3] + 0)
-        
-        if (_index = PathLimit)
-            return
     }
 }
 
@@ -102,9 +99,8 @@ ShowMenu() {
     MenuStack.Push(ManagersPaths*)
     MenuStack.Push(ClipboardPaths*)
     
-    ToolTip % PinnedPaths.length()
-    
-    if (MenuStack.length()) {
+    if (len := MenuStack.length()) {
+        MenuStack.RemoveAt(PathLimit + 1, len)    
         AddMenuPaths(MenuStack, Func("SelectPath").bind(MenuStack))
         AddMenuOptions()
     } else {
@@ -115,5 +111,6 @@ ShowMenu() {
     Menu, % "ContextMenu", % "Color", % MenuColor
     WinActivate, % "ahk_id " DialogId           ; Activate dialog to prevent Menu flickering
     Menu, % "ContextMenu", % "Show", 0, 100     ; Show new menu and halt the thread
+    return true
 }
 

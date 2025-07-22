@@ -61,9 +61,9 @@ else
     WriteValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
-ValidateKey(     "PinKey",      PinKey,      "~",  "Off",  "Dummy") ; Init for global var only
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
+IniRead, PinKey, % INI, % "Global", % "PinKey"
 
 InitAutoStartup()
 InitDarkTheme()
@@ -128,6 +128,7 @@ Loop {
     Sleep, 100
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
+    ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
 
     ; Pending actions that are performed after closing a dialog
     ; Save the selected option in the Menu if it has been changed
