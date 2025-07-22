@@ -60,7 +60,6 @@ DeleteFile(ByRef path, _title := "config") {
     if MsgWarn("Do you want to delete the " _title "?`n" path) {
         try FileRecycle, % path
         LogInfo(_title " has been placed in the Recycle Bin")
-        ResetSettings()
     }
 }
 
@@ -72,22 +71,26 @@ DeleteSections() {
     global
 
     if DeleteFavorites
-        DeleteFile(FavoritesDir, "favorites")
+        DeleteFile(FavoritesDir "\*.lnk", "favorites")
 
-    if DeleteKeys
-        MainKey := RestartKey := RestartMouse := MainMouse := ""
+    if DeleteKeys {
+        PinKey := MainKey := RestartKey := ""
+        PinMousePlaceholder := RestartMouselaceholder := MainMouselaceholder := ""
+    }
 
     if DeleteClipboard
         ClipboardPaths := []
+
+    if DeletePinned {
+        PinnedPaths := []
+        try IniDelete, % INI, % "App", % "PinnedPaths"
+    }
 
     if NukeSettings
         return NukeSettings()
 
     if DeleteDialogs
         try IniDelete, % INI, % "Dialogs"
-
-    if DeletePinned
-        try IniDelete, % INI, % "Global", % "PinnedPaths"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -96,13 +99,16 @@ InitSections(_all := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Clear / Init global arrays to remove sections from the menu
     global
-
+    
+    if _all
+        PinnedPaths := []
+    
+    ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
+    
     if (!ShowFavorites || _all)
         FavoritePaths  := []
-    if (!ShowPinned    || _all)
-        PinnedPaths    := []
     if (!ShowManagers  || _all)
-        ManagersPaths   := []
+        ManagersPaths  := []
     if (!ShowClipboard || _all)
         ClipboardPaths := []
     if (!ShowDragNDrop || _all)
