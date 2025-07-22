@@ -111,7 +111,7 @@ ShowSettings() {
     */
     ; Keyboard input controls   
     edit := "w120 r1 -Wrap -vscroll"               
-    Gui, Add, DropDownList, ys-4  w120 h60                  vPinKey               Section,                          % GetMouseList("keysList")
+    Gui, Add, DropDownList, ys-4  w120 h60                  vPinKey               Section,                          % StrReplace(GetMouseList("modsList"), PinKey, PinKey "||")
     Gui, Add, Hotkey,             %edit%                    vMainKey,                                               %MainKey%
     Gui, Add, Hotkey,             %edit%                    vRestartKey,                                            %RestartKey%
             
@@ -128,7 +128,7 @@ ShowSettings() {
     
     ; ListBox: allows user to select the mouse buttons
     local mouse := GetMouseList("mouseList")
-    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPinMouseListBox,                                       %mouse%
+    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPinMouseListBox,                                       % GetMouseList("buttonsList")
     Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey    vMainMouseListBox,                                      %mouse%
     Gui, Add, ListBox,   xs ys+90 wp hp     gGetMouseKey    vRestartMouseListBox,                                   %mouse%
     

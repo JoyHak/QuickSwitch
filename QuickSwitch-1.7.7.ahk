@@ -9,7 +9,7 @@
 ;@Ahk2Exe-SetCompanyName ToYu studio
 
 ;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
-;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\QuickSwitch.ico" "%A_ScriptDir%\Icons" "%A_ScriptDir%\Favorites",, A_ScriptDir
+;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Icons" "%A_ScriptDir%\Favorites" "%A_ScriptDir%\Lib",, A_ScriptDir
 
 #Requires AutoHotkey v1.1.37.02 Unicode
 #Warn

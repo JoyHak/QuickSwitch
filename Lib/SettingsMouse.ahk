@@ -140,40 +140,21 @@ GetMouseList(_action, _sequence := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Stores and returns mouse keys and keyboard modifiers friendly names
     ; Returns specific mouse data on "action"
-    static mouseButtons   := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
-    static modKeys        := {"Ctrl": "^", "Win": "#", "Alt": "!", "Shift": "+"}
-    ; static specialKeys    := ["Space", "Tab"]
+    static mouseButtons := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
+    static modKeys      := {"Ctrl": "^", "Win": "#", "Alt": "!", "Shift": "+"}
 
-    static mouseList := ""
-    static keysList  := ""
-    
-    if !(mouseList) {
-        ; Convert to permanent drop-down list "key+mouse"
-        for _mouse, _ in mouseButtons {
-            mouseList .= "|" _mouse
-            for _key, _ in modKeys {
-                mouseList .= "|" _key "+" _mouse
-            }
-        }
-        mouseList := LTrim(mouseList, "|")
-    }
-    
-    if !(keysList) {
-        ; Convert to permanent drop-down list "key1+key2"
-        for _key1, _ in modKeys {
-            keysList .= "|" _key1
-            for _key2, _ in modKeys {
-                if (_key1 != _key2) {
-                    keysList .= "|" _key1 "+" _key2
-                }
-            }
-        }
-        keysList := LTrim(keysList, "|")
-    }
+    static buttonsList  := "Middle|Backward|Forward"
+    static mouseList    := buttonsList . "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward"
+    static modsList     := "Ctrl|Win|Alt|Shift|Tab|Capslock|Space"
+    static keysList     := modsList . "|Ctrl+Win|Ctrl+Alt|Ctrl+Shift|Win+Alt|Win+Shift|Alt+Shift"
 
     switch (_action) {
+        case "buttonsList":
+            return buttonsList
         case "mouseList":
             return mouseList
+        case "modsList":
+            return modsList
         case "keysList":
             return keysList   
         case "isMouse":
@@ -181,9 +162,9 @@ GetMouseList(_action, _sequence := "") {
 
         case "convert":
             _sequence := StrReplace(_sequence, "+")
-            
-            for _key, _value in mouseButtons
-                _sequence := StrReplace(_sequence, _key, _value)
+
+            for _mouse, _value in mouseButtons
+                _sequence := StrReplace(_sequence, _mouse, _value)
 
             for _mod, _value in modKeys
                 _sequence := StrReplace(_sequence, _mod, _value)
