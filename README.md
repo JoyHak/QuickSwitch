@@ -47,6 +47,23 @@ Here is a short list of the main keys:
 - Settings: `S`
 - Hide menu: `Esc` / `click` anywhere
 
+## Appearance
+
+
+#### Variables
+In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch/Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](https://github.com/JoyHak/QuickSwitch/blob/main/Lib/Values.ahk). Enclose the variables in percent signs `%`.
+<details><summary>Examples</summary>
+ 
+  %AppData%\Icons <br>
+  %A_ScriptDir%\Icons <br>
+  %Temp%\Icons\%SOME_SYSTEM_PATH% <br>
+  C:\%IconsDir% <br>
+  Icons <br>
+  <br>
+ If you have enabled the `Settings > Theme > Show paths from clipboard`, all copied variables will also be expanded. For example, if you have [Cmder](https://github.com/cmderdev/cmder) or [ConEmu](https://github.com/Maximus5/ConEmu) installed you can copy the `%ConEmuDir%` text to always see the path `C:\Users\...\cmder\vendor\conemu-maximus5` in the Menu. For permanent use you can pin this path and it will be visible in the menu always (enable `Settings > Theme > Show pinned paths`).
+
+</details>
+
 ## Feedback
 
 **I really need your feedback!** If something is not working for you, please [let me know](https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml). If you think that app can be improved, [write to me](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml).
