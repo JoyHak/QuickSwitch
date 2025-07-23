@@ -110,7 +110,7 @@ Loop {
         OnClipboardChange("GetClipboardPath", ShowClipboard)
         
         if ShowFavorites
-            GetFavoritesPaths(FavoritePaths := [])
+            GetFavoritePaths(FavoritePaths := [])
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")

@@ -45,6 +45,7 @@ SetDefaultValues() {
     ShowManagers        :=  true
     AutoStartup         :=  true
     PathNumbers         :=  true
+    DeleteDuplicates    :=  true
     ShowIcons           :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
@@ -114,6 +115,7 @@ WriteValues() {
     ShowManagers="            ShowManagers            "
     AutoStartup="             AutoStartup             "
     PathNumbers="             PathNumbers             "
+    DeleteDuplicates="        DeleteDuplicates        "
     ShowIcons="               ShowIcons               "
     ShowNoSwitch="            ShowNoSwitch            "
     ShowAfterSettings="       ShowAfterSettings       "
@@ -435,7 +437,7 @@ ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
     if ((!_state || WritePinnedPaths) && paths.length()) {
         WritePinnedPaths := false   
         _paths := ""
-        for _, _arr in paths
+        for _, _arr in GetUniqPaths(paths)
             _paths .= "|" . _arr[1]
             
         try IniWrite, % LTrim(_paths, "|"), % INI, % "App", % _paramName

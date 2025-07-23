@@ -150,7 +150,7 @@ GetClipboardPath(_dataType) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetFavoritesPaths(ByRef paths) {
+GetFavoritePaths(ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
     ; Returns the number of added paths.
@@ -184,3 +184,18 @@ GetFavoritesPaths(ByRef paths) {
     return _count
 }
 
+;─────────────────────────────────────────────────────────────────────────────
+;
+GetUniqPaths(paths) {
+;─────────────────────────────────────────────────────────────────────────────
+    _seen := {}
+    _paths := []
+    for _, _arr in paths {
+        _path := _arr[1]
+        if !_seen.hasKey(_path) {
+            _paths.push(_arr)
+            _seen[_path] := true
+        }
+    }
+    return _paths
+}
