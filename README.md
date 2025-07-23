@@ -22,16 +22,6 @@ And of course you can customize the display of paths in the Menu:
 ![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.png)
 ![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.gif)
 
-[The latest versions](https://github.com/JoyHak/QuickSwitch/releases) include the following features:
-
-- Significantly improved performance.
-- Added the ability to always show the Menu or enable always Auto Switch.
-- Added application auto-startup at Windows log-on.
-- The menu will display the paths from all open tabs starting from the current one. 
-- The path can be displayed in a shortened form.
-- Improved settings interface and additional customization options and features.
-- Added minimalistic display of errors about incorrectly entered settings.
-
 As an addition I recommend the [BigSur](https://www.deviantart.com/niivu/art/Big-Sur-2-Windows-10-Themes-861727886) or [CakeOS](https://www.deviantart.com/niivu/art/cakeOS-2-0-for-Windows-11-953541433) themes from Niivu and [XYplorer](https://www.xyplorer.com/index.php) file manager.
 
 ## Keyboard
@@ -46,6 +36,8 @@ Here is a short list of the main keys:
 - Black list: `B`
 - Settings: `S`
 - Hide menu: `Esc` / `click` anywhere
+
+You can select keys or mouse buttons on `Settings > App` tab. You can even select the `CapsLock` or `Win` key in the settings or the middle mouse button to show the Menu. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them.
 
 ## Appearance
 #### Menu sections
