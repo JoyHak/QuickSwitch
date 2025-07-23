@@ -26,6 +26,8 @@ DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
 
+RegisteredSpecialKeys := {}
+
 SetDefaultValues() {
     /*
         Sets defaults without overwriting existing INI.
@@ -322,18 +324,25 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         If converted, returns the string of the form "paramName=result",
         otherwise returns value from config
     */
-    global INI
+    global INI, RegisteredSpecialKeys
 
     try {
         if !_sequence
             return _paramName "=`n"            
-
+        
+        _isSpecial := false
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
             _key := _sequence
         } else if (GetMouseList("isMouse", _sequence)) {
             ; Convert to mouse buttons
-            _key := GetMouseList("convert", _sequence)
+            _key := GetMouseList("convertMouse", _sequence)
+        
+        } else if (GetMouseList("isSpecial", _sequence)) {
+            ; Don't change, use hook
+            _key       :=  _sequence
+            _prefix    :=  "$"
+            _isSpecial :=  true
         } else {
             ; Convert sequence to Scan Codes (if not converted)
             _key := ""
@@ -352,13 +361,22 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 
         if _function {
             ; Register new hotkey
-            Hotkey, % _prefix . _key, % _function, % _state
+            Hotkey, % _prefix . _key, % _function, % _state            
+            if _isSpecial
+                RegisteredSpecialKeys[_key] := true
+            
+            if !_paramName
+                return ""
+            
             try {
                 ; Remove old if exist
-                IniRead, _old, % INI, % "Global", % _paramName, % _key
-                if (_old != _key) {
+                IniRead, _old, % INI, % "Global", % _paramName, % A_Space
+                if (_old && (_old != _key)) {
                     Hotkey, % _prefix . _old, % "Off"
                     Hotkey, % _old, % "Off"
+                    
+                    if _isSpecial
+                        RegisteredSpecialKeys[_old] := false
                 }
             }
 
