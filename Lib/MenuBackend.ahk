@@ -9,9 +9,13 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
     
     local _ex, _winPid, _log := ""
     loop, % SelectPathAttempts {
-        try {
-            if (ShowPinned && (_pos > PinnedPaths.length()) && GetKeyState(PinKey)) {
-                PinnedPaths.push([paths[_pos][1], "Pin.ico", 1, ""])
+        try {         
+            if (ShowPinned && GetKeyState(PinKey)) {
+                if (_pos > PinnedPaths.length())
+                      PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
+                  else
+                      PinnedPaths.RemoveAt(_pos)
+                      
                 WritePinnedPaths := true
                 return ShowMenu()                
             }

@@ -143,7 +143,7 @@ GetMouseList(_action, _sequence := "") {
     static mouseButtons := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
     static modKeys      := {"Ctrl": "^", "Win": "#", "Alt": "!", "Shift": "+"}
 
-    static buttonsList  := "Middle|Backward|Forward"
+    static buttonsList  := "Middle|Backward|Forward|Right"
     static mouseList    := buttonsList . "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward"
     static modsList     := "Ctrl|Win|Alt|Shift|Tab|Capslock|Space"
     static keysList     := modsList . "|Ctrl+Win|Ctrl+Alt|Ctrl+Shift|Win+Alt|Win+Shift|Alt+Shift"
