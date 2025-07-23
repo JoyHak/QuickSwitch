@@ -78,19 +78,19 @@ SetDefaultValues() {
     MainFont       := "Tahoma"
     ShortNameIndicator := ".."
     
+    PinMousePlaceholder     := "Right"
+    MainMousePlaceholder    := ""
+    RestartMousePlaceholder := ""
+    
     ; Requires validation
-    IconsDir       := "Icons"
-    FavoritesDir   := "Favorites"
-    PinKey         := "Shift"
+    PinKey         := "RButton"
     MainKey        := "^sc10"
     RestartKey     := "^sc1F"
+    IconsDir       := "Icons"
+    FavoritesDir   := "Favorites"
     MainIcon       := ""
     MenuColor      := ""
     GuiColor       := ""
-    
-    PinMousePlaceholder     := ""
-    MainMousePlaceholder    := ""
-    RestartMousePlaceholder := ""
     SetDefaultColors()
 
     ;@Ahk2Exe-IgnoreBegin
@@ -145,10 +145,10 @@ WriteValues() {
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
     RestartMousePlaceholder=" RestartMousePlaceholder "
-    PinKey=" (PinMousePlaceholder ? GetMouseList("convert", PinMousePlaceholder) : PinKey) "
     )"
 
     _values .= "`n"
+    . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),     "",   "Off", "Dummy") ; Init and dont use this key
     . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),    "",   "Off", "^#+0")
     . ValidateKey(      "RestartKey",    (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
     . ValidateColor(    "GuiColor",      GuiColor)
