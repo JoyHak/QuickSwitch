@@ -40,26 +40,12 @@ InitMouseMode(_type := "Main", _toggle := false) {
 TogglePinMouse(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
     static toggle := false
-
-    ; Toggle mouse input controls and set button caption
     toggle := !toggle
-    InitMouseMode("Pin", toggle)
 
-    ; Set button caption
-    GuiControl,, % "PinMouseButton", % (toggle ? "keybd" : "mouse")
-
-    ; Hide control below to select mouse key from drop-down list
-    ; If the mouse button is selected -> hide Hotkey control and vice versa
-    GuiControlGet, _mouse,, % "MainMousePlaceholder"
-    GuiControl, % "Hide" toggle, % "Main" . (_mouse ? "MousePlaceholder" : "Key")
-    
-    if !toggle
-        return InitKeybdMode("Pin")
-
-    ; Set visibility
-    GuiControl, % "Show" toggle, % "PinMousePlaceholder"
-    GuiControl, % "Show" toggle, % "PinMouseListbox"    
-    GuiControl, % "Hide" toggle, % "PinKey" ; Hotkey control
+    ; Hide controls below to select mouse key from listbox
+    GuiControl, % "Hide" toggle, % "MainKey"
+    GuiControl, % "Hide" toggle, % "MainMousePlaceholder"
+    GuiControl, % "Show" toggle, % "PinMouseListbox"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -75,7 +61,7 @@ ToggleMainMouse(_control := 0) {
     ; Set button caption
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
 
-    ; Hide control below to select mouse key from drop-down list
+    ; Hide control below to select mouse key from listbox
     ; If the mouse button is selected -> hide Hotkey control and vice versa
     GuiControlGet, _mouse,, % "RestartMousePlaceholder"     
     GuiControl, % "Hide" toggle, % "Restart" . (_mouse ? "MousePlaceholder" : "Key")
@@ -102,7 +88,7 @@ ToggleRestartMouse(_control := 0) {
     ; Set button caption
     GuiControl,, % "RestartMouseButton", % (toggle ? "keybd" : "mouse")
 
-    ; Hide controls below to select mouse key from drop-down list
+    ; Hide controls below to select mouse key from listbox
     GuiControl, % "Hide" toggle, % "RestartKey"
     GuiControl, % "Hide" toggle, % "RestartWhere"
 
@@ -118,11 +104,10 @@ ToggleRestartMouse(_control := 0) {
 ;
 GetMouseKey(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Gets value from the mouse input mode (drop-down list)
-    ; Get value and mouse button name
-    _type := StrReplace(A_GuiControl, "MouseListbox")
+    ; Gets value from the listbox
 
     ; Hide drop-down list
+    _type := StrReplace(A_GuiControl, "MouseListbox")
     Toggle%_type%Mouse()
     
     ; Set placeholder to the selected mouse button and show it
@@ -138,29 +123,32 @@ GetMouseKey(_control := 0) {
 ;
 GetMouseList(_action, _sequence := "") {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Stores and returns mouse keys and keyboard modifiers friendly names
-    ; Returns specific mouse data on "action"
+    ; Stores and returns mouse keys and keyboard modifiers friendly names.
     static mouseButtons := {"Left": "LButton", "Right": "RButton", "Middle": "MButton", "Backward": "XButton1", "Forward": "XButton2"}
     static modKeys      := {"Ctrl": "^", "Win": "#", "Alt": "!", "Shift": "+"}
 
     static buttonsList  := "Middle|Backward|Forward|Right"
-    static mouseList    := buttonsList . "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward"
-    static modsList     := "Ctrl|Win|Alt|Shift|Tab|Capslock|Space"
-    static keysList     := modsList . "|Ctrl+Win|Ctrl+Alt|Ctrl+Shift|Win+Alt|Win+Shift|Alt+Shift"
-
-    switch (_action) {
+    static specialList  := "Tab|Capslock|LWin|Space"
+    
+    static mouseList    := buttonsList "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward"
+    static keysList     := "Ctrl|Shift|Alt+Space|Shift+Space|Ctrl+Win|Ctrl+Alt|Ctrl+Shift|Win+Alt|Win+Shift|Alt+Shift"
+    
+    switch (_action) {  
         case "buttonsList":
             return buttonsList
+        case "specialList":
+            return specialList
         case "mouseList":
             return mouseList
-        case "modsList":
-            return modsList
         case "keysList":
-            return keysList   
+            return keysList 
+        
         case "isMouse":
             return InStr(_sequence, "Button") || InStr(mouseList, _sequence)
-
-        case "convert":
+        case "isSpecial":
+            return InStr(specialList, _sequence)
+        
+        case "convertMouse":
             _sequence := StrReplace(_sequence, "+")
 
             for _mouse, _value in mouseButtons

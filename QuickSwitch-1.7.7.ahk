@@ -17,7 +17,6 @@
 #Persistent
 #SingleInstance force
 #KeyHistory 0
-#InstallMouseHook
 ListLines Off
 SendLevel 2
 SetBatchLines, -1
@@ -61,6 +60,7 @@ else
     WriteValues()
 
 ValidateTrayIcon("MainIcon",    MainIcon)
+ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 IniRead, PinKey, % INI, % "Global", % "PinKey"
@@ -145,11 +145,31 @@ Loop {
 
 }   ; End of continuous WinWaitActive loop
 
+
 LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
        , "main menu"
        , "End of continuous WinWaitActive loop in main file")
 
 ExitApp
+
+
+; Disable special keys
+DisableKey() {
+    global
+    
+    if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog) {
+        ; This key is chosen by the user in the settings and the file dialog is open.
+        ; Its standard functionality must be disabled.        
+        SendEvent, % "{Blind}{vkFF}"
+    }
+}
+
+#IfWinActive ahk_class #32770
+~Tab::DisableKey()
+~Capslock::DisableKey()
+~LWin::DisableKey()
+~Space::DisableKey()
+~RButton::DisableKey()
 
 ^#+0::
     ; Popup main Menu
@@ -158,4 +178,3 @@ ExitApp
     ; Release all keys to prevent holding
     SendEvent, % "{Ctrl up}{Win up}{Shift up}"
 Return
-
