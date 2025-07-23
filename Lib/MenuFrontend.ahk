@@ -99,8 +99,11 @@ ShowMenu() {
     MenuStack.Push(ManagersPaths*)
     MenuStack.Push(ClipboardPaths*)
     
-    if (len := MenuStack.length()) {
-        MenuStack.RemoveAt(PathLimit + 1, len)    
+    if (stackLength := MenuStack.length()) {
+        if DeleteDuplicates
+            MenuStack := GetUniqPaths(MenuStack)
+                
+        MenuStack.RemoveAt(PathLimit + 1, stackLength)  
         AddMenuPaths(MenuStack, Func("SelectPath").bind(MenuStack))
         AddMenuOptions()
     } else {

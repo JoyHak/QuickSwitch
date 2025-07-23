@@ -47,6 +47,7 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
     Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
+    Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
                     
     Gui, Add, Text,         y+13                                                  Section,                          &Limit of displayed paths
     Gui, Add, Edit,         ys-4  %edit% Limit4         
