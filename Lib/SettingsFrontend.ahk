@@ -112,13 +112,13 @@ ShowSettings() {
     */
     ; Keyboard input controls   
     edit := "w120 r1 -Wrap -vscroll"               
-    Gui, Add, DropDownList, ys-4  w120 h60                  vPinKey               Section,                          % StrReplace(GetMouseList("modsList"), PinKey, PinKey "||")
+    Gui, Add, Edit,         ys-4  %edit%    ReadOnly        vPinKey               Section                           ; Dummy for positioning                        
     Gui, Add, Hotkey,             %edit%                    vMainKey,                                               %MainKey%
     Gui, Add, Hotkey,             %edit%                    vRestartKey,                                            %RestartKey%
             
     ; Button (keybd / mouse): toggles between Keyboard / Mouse input modes 
     ; Add at section Y and after Hotkey X pos 
-    Gui, Add, Button,       ys w22   gTogglePinMouse        vPinMouseButton,                                        mouse
+    Gui, Add, Button,       ys w22   gTogglePinMouse,                                                               mouse
     Gui, Add, Button,           wp   gToggleMainMouse       vMainMouseButton,                                       mouse
     Gui, Add, Button,           wp   gToggleRestartMouse    vRestartMouseButton,                                    mouse
     
@@ -128,8 +128,10 @@ ShowSettings() {
     Gui, Add, Edit,         y+4   %edit%    wp              vMainIcon,                                              %MainIcon%
     
     ; ListBox: allows user to select the mouse buttons
-    local mouse := GetMouseList("mouseList")
-    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPinMouseListBox,                                       % GetMouseList("buttonsList")
+    static buttons  := GetMouseList("specialList") . "|" . GetMouseList("buttonsList")
+    static mouse    := GetMouseList("specialList") . "|" . GetMouseList("mouseList")
+    
+    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPinMouseListBox,                                       %buttons% 
     Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey    vMainMouseListBox,                                      %mouse%
     Gui, Add, ListBox,   xs ys+90 wp hp     gGetMouseKey    vRestartMouseListBox,                                   %mouse%
     
@@ -171,7 +173,7 @@ ShowSettings() {
     ToggleShortPath()
 
     ; Toggle between mouse and keyboard input mode
-    InitMouseMode("Pin",     PinMousePlaceholder     != "")
+    InitMouseMode("Pin",     true)  ; Mouse buttons only
     InitMouseMode("Main",    MainMousePlaceholder    != "")
     InitMouseMode("Restart", RestartMousePlaceholder != "")
 
