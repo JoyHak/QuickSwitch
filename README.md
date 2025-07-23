@@ -48,7 +48,55 @@ Here is a short list of the main keys:
 - Hide menu: `Esc` / `click` anywhere
 
 ## Appearance
+#### Menu sections
+In addition to the paths from the file managers, you can add additional paths to the Menu on `Settings > Theme` tab.
 
+<details><summary>Pinned paths (that are always visible)</summary> 
+
+If you want some paths to appear permanently in the Menu, you can pin them. To do this, enable the `Settings > Theme > Show pinned paths`  option and select a key or mouse button at  `Settings > App > Pin path...`. Close the settings and open the Menu. Hold down the selected key and left click on any path. Now it is pinned and it will be stored in the configuration. You will see this path on every restart. 
+
+If you turn this option off, the paths will no longer be displayed. If you turn it on, all pinned paths will be displayed again. If you want to delete all pinned paths, check `Settings > Reset > Delete favorite paths` and press `Enter`.
+
+If you want to see the same paths in the list of fixed paths and from file managers *(for example, it is easier for you to find a path by knowing the icon of a file manager)*, disable the `Settings > Menu > Delete duplicate paths` option.
+
+</details>
+
+<details><summary>Paths from clipboard (temporary, for a single file dialog)</summary> 
+
+You can copy any file or directory path (or any [variable](https://github.com/JoyHak/QuickSwitch#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you switch between file dialogs of different applications, the copied paths will disappear after switching. If you do not want a path to disappear, pin it. 
+
+Copied paths will not disappear if you force the Menu to appear using `Ctrl+Shift+Win+0` combination. It can help you open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
+
+The option works in the background and analyzes the clipboard for the presence of a path when changing it. If several paths separated by line breaks (multi-line text) have been copied, they will be added to the Menu individually. 
+
+Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > Show file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
+
+</details>
+
+<details><summary>Favorite paths (with customizable icons and names)</summary>  
+ 
+If you have many paths and want to customize how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. The option works with `.lnk` shortcuts (links) from the directory you specified in the input field next to it. [Create a shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file in it (in this case the directory it is in will be used). From the context Menu, open the shortcut's "properties" and click on the "shortcut" tab. You will see editable fields that will directly affect the display of the shortcut in QuickSwitch:
+- Target
+
+- Start in (working dir.)
+
+- Comment
+
+- Change icon (button)
+
+The "target" field is the main path you will see. The "start in" field will only be used if the "target" field is empty. Even if the "target" points to a file, QuickSwitch will use the file directory by removing everything after the last slash `\`. You can change the displayed path and give it any name you want in the "comment" field. This field takes precedence over displaying the full or short path (`Settings > Short path`). All fields support [variables](https://github.com/JoyHak/QuickSwitch#variables).
+
+Let's put the `ScriptName` variable in the "comment" field. The Menu will show the internal QuickSwitch name for the shortcut named "MyFavoritePath". 
+
+If you leave the "comment" field empty, the Menu will show the `Temp` variable value from "target" field (e.g. path to `C:\Temp`).
+
+You can put the path to ICO, CUR, ANI, EXE, DLL, CPL, SCR and other resource that contains icons. For example I chose the system icon "shutdown" from `shell32.dll`, however I could choose ICO from the "Icons" folder. You can create as many shortcuts as you like and customize each one.
+
+If you have many shortcuts, you can give them names (e.g. "MyFavoritePath") that will not be visible in the Menu and arrange them in directories. Regardless of the directory structure of your favorite paths, QuickSwitch will display all `.lnk` files from all directories. You can hide some shortcuts by changing or removing their extension.
+
+If there are a lot of shortcuts and you don't need them anymore, check `Settings > Reset > Delete favorite paths`. After pressing the `Enter` button, your shortcuts will be placed in the trash. You will be able to restore them before emptying the trash can.
+
+</details>
 
 #### Variables
 In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch/Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](https://github.com/JoyHak/QuickSwitch/blob/main/Lib/Values.ahk). Enclose the variables in percent signs `%`.
