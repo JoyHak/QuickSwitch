@@ -65,7 +65,11 @@ If you want to see the same paths in the list of fixed paths and from file manag
 
 You can copy any file or directory path (or any [variable](https://github.com/JoyHak/QuickSwitch#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you switch between file dialogs of different applications, the copied paths will disappear after switching. If you do not want a path to disappear, pin it. 
 
+<img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/0014e6fc-74df-4936-b683-9c35a2d95068" />
+
 Copied paths will not disappear if you force the Menu to appear using `Ctrl+Shift+Win+0` combination. It can help you open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
+
+<img width="614" height="593" alt="clipboard2" src="https://github.com/user-attachments/assets/09237a63-2264-4050-9a8c-b0501536fd27" />
 
 The option works in the background and analyzes the clipboard for the presence of a path when changing it. If several paths separated by line breaks (multi-line text) have been copied, they will be added to the Menu individually. 
 
@@ -75,26 +79,33 @@ Background analysis is temporarily disabled when requesting paths from other fil
 
 <details><summary>Favorite paths (with customizable icons and names)</summary>  
  
-If you have many paths and want to customize how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. The option works with `.lnk` shortcuts (links) from the directory you specified in the input field next to it. [Create a shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file in it (in this case the directory it is in will be used). From the context Menu, open the shortcut's "properties" and click on the "shortcut" tab. You will see editable fields that will directly affect the display of the shortcut in QuickSwitch:
+If you have many paths and want to customize how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. The option works with `.lnk` shortcuts (links) from the directory you specified in the input field next to it. [Create a shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file in it (in this case the directory it is in will be used). From the context Menu, open the shortcut's "properties" and click on the "shortcut" tab. 
+
+<img width="1920" height="1920" alt="properties" src="https://github.com/user-attachments/assets/ec65e78b-26cb-4989-a71b-a14c6ea964bf" />
+
+You will see editable fields that will directly affect the display of the shortcut in QuickSwitch:
 - Target
-
 - Start in (working dir.)
-
 - Comment
-
 - Change icon (button)
 
 The "target" field is the main path you will see. The "start in" field will only be used if the "target" field is empty. Even if the "target" points to a file, QuickSwitch will use the file directory by removing everything after the last slash `\`. You can change the displayed path and give it any name you want in the "comment" field. This field takes precedence over displaying the full or short path (`Settings > Short path`). All fields support [variables](https://github.com/JoyHak/QuickSwitch#variables).
 
 Let's put the `ScriptName` variable in the "comment" field. The Menu will show the internal QuickSwitch name for the shortcut named "MyFavoritePath". 
 
+<img width="1101" height="946" alt="shell32 example" src="https://github.com/user-attachments/assets/bcb9e450-efa5-40fd-899f-3f2c37842704" />
+
 If you leave the "comment" field empty, the Menu will show the `Temp` variable value from "target" field (e.g. path to `C:\Temp`).
 
 You can put the path to ICO, CUR, ANI, EXE, DLL, CPL, SCR and other resource that contains icons. For example I chose the system icon "shutdown" from `shell32.dll`, however I could choose ICO from the "Icons" folder. You can create as many shortcuts as you like and customize each one.
 
-If you have many shortcuts, you can give them names (e.g. "MyFavoritePath") that will not be visible in the Menu and arrange them in directories. Regardless of the directory structure of your favorite paths, QuickSwitch will display all `.lnk` files from all directories. You can hide some shortcuts by changing or removing their extension.
+<img width="745" height="802" alt="recusrsive favorites" src="https://github.com/user-attachments/assets/3a969435-cfe1-48e1-b603-edf64dde2ffe" />
 
-If there are a lot of shortcuts and you don't need them anymore, check `Settings > Reset > Delete favorite paths`. After pressing the `Enter` button, your shortcuts will be placed in the trash. You will be able to restore them before emptying the trash can.
+If you have many shortcuts, you can give them names (e.g. "MyFavoritePath") that will not be visible in the Menu and arrange them in directories. Regardless of the directory structure of your favorite paths, QuickSwitch will display all `.lnk` files from all directories. 
+
+<img width="1369" height="778" alt="structure" src="https://github.com/user-attachments/assets/f9e2dd3c-3930-4f27-a826-e3fc86799cdc" />
+
+You can hide some shortcuts by changing or removing their extension. If there are a lot of shortcuts and you don't need them anymore, check `Settings > Reset > Delete favorite paths`. After pressing the `Enter` button, your shortcuts will be placed in the trash. You will be able to restore them before emptying the trash can.
 
 </details>
 
@@ -109,6 +120,9 @@ In the settings you can select the paths to the desired directories *(e.g. icons
   Icons <br>
   <br>
  If you have enabled the `Settings > Theme > Show paths from clipboard`, all copied variables will also be expanded. For example, if you have [Cmder](https://github.com/cmderdev/cmder) or [ConEmu](https://github.com/Maximus5/ConEmu) installed you can copy the `%ConEmuDir%` text to always see the path `C:\Users\...\cmder\vendor\conemu-maximus5` in the Menu. For permanent use you can pin this path and it will be visible in the menu always (enable `Settings > Theme > Show pinned paths`).
+ 
+ <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/80ea3b3d-9eec-4629-aa64-38b35a28ab92" />
+
 
 </details>
 
