@@ -73,7 +73,6 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowManagers         checked%ShowManagers%,            &File managers paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
-    Gui, Add, CheckBox,                                     vShowDragNDrop        checked%ShowDragNDrop%,           &Drag and drop paths
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 

@@ -112,8 +112,6 @@ InitSections(_all := false) {
         ManagersPaths  := []
     if (!ShowClipboard || _all)
         ClipboardPaths := []
-    if (!ShowDragNDrop || _all)
-        DragNDropPaths := []
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

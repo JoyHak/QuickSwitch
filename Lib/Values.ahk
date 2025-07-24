@@ -62,7 +62,6 @@ SetDefaultValues() {
     ShowFavorites       :=  false
     ShowPinned          :=  false
     ShowClipboard       :=  false
-    ShowDragNDrop       :=  false
     
     ShortPath           :=  false
     ShortenEnd          :=  false
@@ -129,7 +128,6 @@ WriteValues() {
     ShowFavorites="           ShowFavorites           "
     ShowPinned="              ShowPinned              "
     ShowClipboard="           ShowClipboard           "
-    ShowDragNDrop="           ShowDragNDrop           "
     ShortPath="               ShortPath               "
     ShortenEnd="              ShortenEnd              "
     ShowDriveLetter="         ShowDriveLetter         "
