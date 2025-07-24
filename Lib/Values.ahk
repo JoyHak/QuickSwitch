@@ -195,7 +195,7 @@ IsFile(ByRef path) {
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsFile  := DllCall("GetProcAddress", "ptr", shlwapi, "astr", "PathFileExistsW", "ptr")
     
-    return DllCall(IsFile, "str", path)
+    return DllCall(IsFile, "ptr", &path)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
