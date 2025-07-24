@@ -4,7 +4,7 @@
 #Include Create.ahk
 #Include Tabs.ahk
 
-GetTotalPaths(ByRef winId, ByRef paths) {
+GetTotalPaths(ByRef winId, ByRef paths, _activeTabOnly := false) {
     /*
         Requests tabs file.
 
@@ -19,7 +19,7 @@ GetTotalPaths(ByRef winId, ByRef paths) {
     try {
         SendTotalUserCmd(winId, userCmd)
         Sleep 100
-        return ParseTotalTabs(tabsFile, paths)
+        return ParseTotalTabs(tabsFile, paths, _activeTabOnly)
     } catch _ex {
         WinGet, _winPid, % "pid", % "ahk_id " winId
         

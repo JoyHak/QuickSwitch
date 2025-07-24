@@ -1,4 +1,4 @@
-GetPaths(ByRef paths, _autoSwitch := false) {
+GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     
@@ -29,7 +29,7 @@ GetPaths(ByRef paths, _autoSwitch := false) {
         }
 
         try {
-            if !(%_winClass%(_winId, paths)) {
+            if !(%_winClass%(_winId, paths, _activeTabOnly)) {
                 AddElevatedName(_winPid)
             }
         } catch _ex {
