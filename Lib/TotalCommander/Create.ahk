@@ -7,6 +7,11 @@ CreateTotalUserCmd(ByRef ini, ByRef userCmd, ByRef internalCmd, ByRef param := "
             ; Read the contents of the config until it appears or the loop ends with an error
             IniRead, _section, % ini, % userCmd,, % A_Space
             if _section {
+                if (A_Index = 1) {
+                    LogInfo("Requested command that already exists: [" userCmd "] `n" _section "`nin `'" ini "`'`n", "NoTraytip")
+                    return false
+                }
+            
                 LogInfo("Created [" userCmd "] command:`n" _section "`nin `'" ini "`'`n")
                 return true
             }
