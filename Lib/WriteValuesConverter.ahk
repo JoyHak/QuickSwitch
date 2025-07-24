@@ -39,7 +39,7 @@ Update() {
 Copy() {
     global Post
     Gui, Submit, NoHide
-    Clipboard := Post
+    A_Clipboard := Post
 }
 
 Clear() {

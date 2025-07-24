@@ -1,6 +1,6 @@
 /*
     Contains getters whose names correspond to classes of known file managers.
-    All functions add options to the array: [path, iconName]
+    All functions add options to the array. See implementation and documentation in Lib\MenuFrontend
     "winId" param must be existing window uniq ID (window handle / HWND)
 */
 
@@ -8,11 +8,6 @@ GroupAdd, ManagerClasses, ahk_class TTOTAL_CMD
 GroupAdd, ManagerClasses, ahk_class CabinetWClass
 GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
-
-
-TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
-    return GetTotalPaths(winId, paths, _activeTabOnly, _showLockedTabs)
-}
 
 CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
@@ -46,7 +41,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     
     ; Save clipboard to restore later
     _clipSaved := ClipboardAll
-    Clipboard  := ""
+    A_Clipboard  := ""
     
     ; $hideLockedTabs is unset by default
     static getAllPaths := "
@@ -83,8 +78,8 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
 
     ; Try to fetch clipboard data
     ClipWait 1
-    _clip     := Clipboard
-    Clipboard := _clipSaved
+    _clip       := A_Clipboard
+    A_Clipboard := _clipSaved
 
     ; Retry if empty
     static attempts := 0

@@ -90,7 +90,7 @@ ExportDebug() {
         }
 
         _file.close()
-        clipboard := _fileName
+        A_Clipboard := _fileName
         LogInfo("Export completed. Path copied to clipboard.")
     
     } catch _ex {

@@ -11,8 +11,8 @@
 GetTotalConsoleIni(ByRef totalPid) {
     ; Searches the ini through the console, throws readable error
     ; Save clipboard to restore later
-    _clipSaved := ClipboardAll
-    Clipboard  := ""
+    _clipSaved   := ClipboardAll
+    A_Clipboard  := ""
 
     ; Create new console process and get its PID
     SendTotalInternalCmd(totalPid, 511)
@@ -27,8 +27,8 @@ GetTotalConsoleIni(ByRef totalPid) {
     SendConsoleCommand(_consolePid, command " | clip")         ; Copy
 
     ClipWait 5
-    _clip     := Clipboard
-    Clipboard := _clipSaved
+    _clip       := A_Clipboard
+    A_Clipboard := _clipSaved
     try Process, Close, % _consolePid
 
     ; Parse the result
