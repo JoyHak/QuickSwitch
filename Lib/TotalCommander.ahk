@@ -4,7 +4,7 @@
 #Include Create.ahk
 #Include Tabs.ahk
 
-GetTotalPaths(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
+TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
     /*
         Requests tabs file.
 
@@ -17,9 +17,17 @@ GetTotalPaths(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs
     static tabsFile     :=  A_Temp "\TotalTabs.tab"
 
     try {
+        if (_activeTabOnly && _showLockedTabs)
+            return GetTotalActiveTab(winId, paths)
+    
         SendTotalUserCmd(winId, userCmd)
         Sleep 100
-        return ParseTotalTabs(tabsFile, paths, _activeTabOnly, _showLockedTabs)
+        
+        if !_activeTabOnly
+            return ParseTotalTabs(tabsFile, paths, _showLockedTabs)
+        
+        return GetTotalUnlockedTab(tabsFile, paths)
+        
     } catch _ex {
         WinGet, _winPid, % "pid", % "ahk_id " winId
         
