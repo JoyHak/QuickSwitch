@@ -156,7 +156,7 @@ ExitApp
 ; Disable special keys
 DisableKey() {
     global
-    
+
     if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog) {
         ; This key is chosen by the user in the settings and the file dialog is open.
         ; Its standard functionality must be disabled.        
@@ -173,9 +173,11 @@ DisableKey() {
     if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog)
         SetCapsLockState, % "Off"
 return
+#IfWinActive
 
+
+; Popup main Menu
 ^#+0::
-    ; Popup main Menu
     ShowMenu()
 
     ; Release all keys to prevent holding
