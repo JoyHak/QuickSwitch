@@ -166,10 +166,13 @@ DisableKey() {
 
 #IfWinActive ahk_class #32770
 ~Tab::DisableKey()
-~Capslock::DisableKey()
 ~LWin::DisableKey()
 ~Space::DisableKey()
 ~RButton::DisableKey()
+~Capslock::
+    if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog)
+        SetCapsLockState, % "Off"
+return
 
 ^#+0::
     ; Popup main Menu
