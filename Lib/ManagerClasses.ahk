@@ -10,11 +10,11 @@ GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
 
 
-TTOTAL_CMD(ByRef winId, ByRef paths) {
-    return GetTotalPaths(winId, paths)
+TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false) {
+    return GetTotalPaths(winId, paths, _activeTabOnly)
 }
 
-CabinetWClass(ByRef winId, ByRef paths) {
+CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
     ; Returns number of added paths
 
@@ -24,8 +24,11 @@ CabinetWClass(ByRef winId, ByRef paths) {
             if (winId = _win.hwnd) {
                 _path := _win.document.folder.self.path
                 if !InStr(_path, "::{") {
-                    _count++
                     paths.push([_path, "Explorer.ico", 1, ""])
+                    if _activeTabOnly
+                        return 1
+                    
+                    _count++
                 }
             }
         }
@@ -36,7 +39,7 @@ CabinetWClass(ByRef winId, ByRef paths) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ThunderRT6FormDC(ByRef winId, ByRef paths) {
+ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
     ; Returns number of added paths.
@@ -76,8 +79,11 @@ ThunderRT6FormDC(ByRef winId, ByRef paths) {
     _count := attempts := 0
     Loop, parse, _clip, `|
     {
-        _count++
         paths.push([A_LoopField, "Xyplorer.ico", 1, ""])
+        if _activeTabOnly
+            return 1
+            
+        _count++
     }
     
     return _count
@@ -85,7 +91,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-Dopus(ByRef winId, ByRef paths) {
+Dopus(ByRef winId, ByRef paths, _activeTabOnly := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using windows functions.
     ; Searches for active tab using DOpus window title.
@@ -109,10 +115,14 @@ Dopus(ByRef winId, ByRef paths) {
         ; Pass every HWND to GetWindowText() and get the content
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
         if DllCall("GetWindowTextW", "ptr", _previousId, "str", _text, "int", WINDOW_TEXT_SIZE) {
-            _paths.push([_text, "Dopus.ico", 1, ""])
-
-            if InStr(_text, _title)
+            if InStr(_text, _title) {
+                if _activeTabOnly {
+                    paths.push([_text, "Dopus.ico", 1, ""])
+                    return 1
+                }
                 _active := A_Index
+            }
+            _paths.push([_text, "Dopus.ico", 1, ""])
         }
         _nextId := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousId, "str", ADDRESS_BAR_CLASS, "ptr", 0)
 

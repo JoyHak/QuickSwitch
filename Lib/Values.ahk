@@ -59,6 +59,7 @@ SetDefaultValues() {
     AutoSwitch          :=  false
     BlackListProcess    :=  false
     
+    ActiveTabOnly       :=  false
     ShowFavorites       :=  false
     ShowPinned          :=  false
     ShowClipboard       :=  false
@@ -125,6 +126,7 @@ WriteValues() {
     SendEnter="               SendEnter               "
     AutoSwitch="              AutoSwitch              "
     BlackListProcess="        BlackListProcess        "
+    ActiveTabOnly="           ActiveTabOnly           "
     ShowFavorites="           ShowFavorites           "
     ShowPinned="              ShowPinned              "
     ShowClipboard="           ShowClipboard           "

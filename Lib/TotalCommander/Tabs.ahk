@@ -1,4 +1,4 @@
-ParseTotalTabs(ByRef tabsFile, ByRef paths) {
+ParseTotalTabs(ByRef tabsFile, ByRef paths, _activeTabOnly := false) {
     ; Parses tabsFile.
     ; Searches for the active tab using the "activetab" parameter
 
@@ -10,7 +10,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths) {
             
         _paths  := []
         ; Tabs index starts with 0, array index starts with 1
-        _active := _last := 0
+        _active := _last := 1
 
         Loop, read, % tabsFile
         {
@@ -22,18 +22,23 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths) {
             if (_num := InStr(A_LoopReadLine, "activetab=")) {
                 ; Skip next active tab by saving last
                 _active := _last
-                _last   := SubStr(A_LoopReadLine, _num + 10)
+                _last   := 1 + SubStr(A_LoopReadLine, _num + 10)
+                
+                if (_activeTabOnly && _paths.hasKey(_last)) {
+                    paths.push(_paths.removeAt(_last))
+                    return 1
+                }
             }
         }
 
         ; Push the active tab to the global array first
         ; Remove duplicate and add the remaining tabs
-        paths.push(_paths.removeAt(_active + 1))
+        paths.push(_paths.removeAt(_active))
         paths.push(_paths*)
 
         try FileDelete, % tabsFile
         Sleep 100
-        return _paths.length() + 1
+        return _paths.length()
     }
     throw Exception("Unable to access tabs"
                     , "TotalCmd tabs"
