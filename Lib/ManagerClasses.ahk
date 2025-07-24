@@ -10,11 +10,11 @@ GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
 
 
-TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false) {
-    return GetTotalPaths(winId, paths, _activeTabOnly)
+TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
+    return GetTotalPaths(winId, paths, _activeTabOnly, _showLockedTabs)
 }
 
-CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false) {
+CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
     ; Returns number of added paths
 
@@ -39,7 +39,7 @@ CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false) {
+ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
     ; Returns number of added paths.
@@ -47,22 +47,39 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false) {
     ; Save clipboard to restore later
     _clipSaved := ClipboardAll
     Clipboard  := ""
-
-    static script := "
+    
+    ; $hideLockedTabs is unset by default
+    static getAllPaths := "
     ( LTrim Join Comments
-        ::$paths = <get tabs_sf | a>, 'r'`;         ; Get tabs from the active panel, resolve native variables
+        $paths = <get tabs_sf | a>, 'r'`;           ; Get tabs from the active panel, resolve native variables
         if (get('#800')) {                          ; Second panel is enabled
             $paths .= '|' . <get tabs_sf | i>`;     ; Get tabs from second panels
         }
         $reals = ''`;
+        $count = 0`;
         foreach($path, $paths, '|') {               ; Path separator is |
+            $count++;
+            if (($hideLockedTabs == true) && (tab('get', 'flags', $count) % 4 > 0)) {
+                continue`;                          ; Exclude locked tabs
+            }
             $reals .= '|' . pathreal($path)`;       ; Get the real path (XY has special and virtual paths)
         }
         $reals = trim($reals, '|', 'L')`;           ; Remove the extra  | from the beginning of $reals
         copytext $reals`;                           ; Place $reals to the clipboard, faster then copydata
     )"
-
-    SendXyplorerScript(winId, script)
+    
+    static getCurPath := "
+    ( LTrim Join
+        if (($hideLockedTabs == true) && (tab('get', 'flags') % 4 > 0)) { 
+            copytext 'unset'`;
+        } else { 
+            copytext <curpath>`; 
+        }
+    )"
+    
+    _script := _activeTabOnly ? getCurPath : getAllPaths
+    _prefix := _showLockedTabs ? "::$hideLockedTabs = true`;" : "::"
+    SendXyplorerScript(winId, _prefix . _script)
 
     ; Try to fetch clipboard data
     ClipWait 1
@@ -73,9 +90,12 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false) {
     static attempts := 0
     if !(_clip || (attempts = 3)) {
         attempts++
-        return ThunderRT6FormDC(winId, paths)
+        return ThunderRT6FormDC(winId, paths, _activeTabOnly, _showLockedTabs)
     }
-
+    
+    if (!_clip || (_clip = "unset"))
+        return 0
+    
     _count := attempts := 0
     Loop, parse, _clip, `|
     {
@@ -91,7 +111,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-Dopus(ByRef winId, ByRef paths, _activeTabOnly := false) {
+Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes the text of address bars of each tab using windows functions.
     ; Searches for active tab using DOpus window title.

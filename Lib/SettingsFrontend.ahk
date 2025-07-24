@@ -66,14 +66,15 @@ ShowSettings() {
                                     
     Gui, Add, Edit,         ys    %edit% w40  Limit3        vIconsSizePlaceholder   
     Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
-    Gui, Add, Edit,    xs+5 y+40  %edit% w153               vFavoritesDir         Section,                          %FavoritesDir%  
+    Gui, Add, Edit,      xs y+40  %edit% w153               vFavoritesDir         Section,                          %FavoritesDir%  
     
     Gui, Add, Text,         ys-20 xm+15,                                                                            Show sections in Menu:    
     Gui, Add, CheckBox,     y+10  gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           &Favorites from
-    Gui, Add, CheckBox,                                     vShowManagers Section checked%ShowManagers%,            Fil&e managers paths 
-    Gui, Add, CheckBox,     ys                              vActiveTabOnly        checked%ActiveTabOnly%,           only the &active tab
-    Gui, Add, CheckBox,     xs                              vShowPinned           checked%ShowPinned%,              &Pinned paths
+    Gui, Add, CheckBox,                                     vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
+    Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            Fil&e managers paths 
+    Gui, Add, CheckBox,     xp+20 y+10                      vActiveTabOnly        checked%ActiveTabOnly%,           only the &active tab
+    Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          &locked tabs
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
