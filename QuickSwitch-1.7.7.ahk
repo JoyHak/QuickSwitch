@@ -63,7 +63,6 @@ ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
-IniRead, PinKey, % INI, % "Global", % "PinKey"
 
 InitAutoStartup()
 InitDarkTheme()
@@ -153,6 +152,15 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 ExitApp
 
 
+; Popup main Menu
+^#+0::
+    ShowMenu()
+
+    ; Release all keys to prevent holding
+    SendEvent, % "{Ctrl up}{Win up}{Shift up}"
+return
+
+
 ; Disable special keys
 DisableKey() {
     global
@@ -173,13 +181,6 @@ DisableKey() {
     if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog)
         SetCapsLockState, % "Off"
 return
-#IfWinActive
 
 
-; Popup main Menu
-^#+0::
-    ShowMenu()
 
-    ; Release all keys to prevent holding
-    SendEvent, % "{Ctrl up}{Win up}{Shift up}"
-Return
