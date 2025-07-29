@@ -5,7 +5,7 @@
 
 #Requires AutoHotkey v2.0.19
 #Include 'GetInterpreter\GetInterpreter.ahk'
-#SingleInstance force
+#SingleInstance ignore
 #Warn
 
 ; ── Variables ──────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -25,9 +25,9 @@ ahk2exe       := FindFile(autohotkeyDir '\Compiler\Ahk2Exe.exe')
 winRar      := FindFile('C:\Program Files\WinRAR\WinRar.exe')   ; WinRar: creates SFX archive and a separate archive with the source code
 resHacker   := FindFile('C:\Program Files (x86)\Resource Hacker\ResourceHacker.exe')    ; Resource Hacker: copies the version and description of the script in SFX
 ; Comment all unnecessary variables below    
-sfxIcon     := FindFile(scriptDir '\' scriptName '*.ico')       ; Icon of the final SFX. Only .ICO files, .exe is not allowed. Defaults to the archive icon.
-sfxName     := scriptBase '.exe'                                ; Name of the final SFX.
-extractTo   := scriptName                                       ; Remove extract SFX into the directory relative to current dir. Defaults to the current dir.
+archiveIcon := FindFile(scriptDir '\' scriptName '*.ico')       ; Icon of the final SFX. Only .ICO files, .exe is not allowed. Defaults to the archive icon.
+archiveName := scriptBase '.exe'                                ; Name of the final SFX.
+extractDir  := scriptName                                       ; Extract SFX into the directory relative to current dir. Defaults to the current dir.
 
 ; Write the list of files / dirs that you need to archive with the final .exe: icons, dependencies, readme, ...
 ; Relative to scriptDir or absolute paths are allowed. You can change 'relativeTo' param.
@@ -40,28 +40,28 @@ library      := GetDependenciesPaths(scriptDir, 'Lib')
 
 ; ── Build .ahk and it's dependencies  ────────────────────────────────────────────────────────────────────────────
 
-try TraySetIcon(sfxIcon)
+try TraySetIcon(archiveIcon)
 if !IsDir(&outDir)
     DirCreate(outDir)
 
 ; Comment unnecessary OS architectures
 Build('64')
-; Build('32')
+Build('32')
 
 
 Build(architecture?) {
-    global
+    global autohotkey, ahk2exe, resHacker, winRar, scriptPath, scriptDir, outDir, outName, archiveIcon, archiveName, extractDir, dependencies, library
     
     ; ── Assemble .ahk to .exe ──────────────────────────────────────────────────────────────────────────────────────
     
-    outPath := outDir . '\' outName
+    outExe := outDir . '\' outName
     if IsSet(architecture)
         autohotkey := RegExReplace(autohotkey, '\d{2}.exe', architecture ".exe")
     
     ; Success code is 0
-    if RunWait('`"' ahk2exe '`" /in `"' scriptPath '`" /out `"' outPath '`" /base `"' autohotkey '`"', scriptDir) {
+    if RunWait('`"' ahk2exe '`" /in `"' scriptPath '`" /out `"' outExe '`" /base `"' autohotkey '`"', scriptDir) {
         StdErr('Failed to build the script using Ahk2Exe:`t' scriptPath)
-        StdOutVars("ahk2exe scriptPath outPath autohotkey")
+        StdOutVars("ahk2exe scriptPath outExe autohotkey")
         return false 
     }
     
@@ -76,10 +76,10 @@ Build(architecture?) {
     config := 'config.ini'
     try FileDelete(config)    
     
-    runAfterExtraction := IsSet(extractTo) ? extractTo '\' outName : outName
+    runAfterExtraction := IsSet(extractDir) ? extractDir '\' outName : outName
     FileAppend(
     (
-        'Title=`"' outName '`"                 
+       'Title=`"' outName '`"                 
         Setup=`"' runAfterExtraction '`" 
         Silent=1'
     ), config, 'UTF-8')
@@ -100,9 +100,11 @@ Build(architecture?) {
     ; Prepare arguments for WinRar in readable form, add quotes
     sfxModule  := '-sfxDefault' . ((architecture = '32') ? '32.sfx' : '.sfx')
     sfxConfig  := '-z`"' config '`"'    
-    sfxIcon    := IsSet(sfxIcon)       ?   '-iicon`"' sfxIcon '`"'   :  ''
-    extractTo  := IsSet(extractTo)     ?   '-ap`"' extractTo '`"'    :  ''
-    sfxName    := IsSet(sfxName)       ?   sfxName                   :  outName
+    sfxIcon    := IsSet(archiveIcon)   ?   '-iicon`"' archiveIcon '`"'   :  ''
+    extractTo  := IsSet(extractDir)    ?   '-ap`"' extractDir '`"'       :  ''
+    sfxName    := IsSet(archiveName)   ?   archiveName                   :  outName
+    scriptDeps := IsSet(dependencies)  ?   dependencies                  :  ''
+    scriptLib  := IsSet(library)       ?   library                       :  ''
 
     ; Append file postfix
     SplitPath(sfxName,,, &sfxExtension, &sfxBase)
@@ -114,12 +116,12 @@ Build(architecture?) {
         sfxName := sfxBase "." sfxExtension  
 
         if (sfxName = outName) {
-            FileMove(outPath, outPath '.tmp')
-            outPath .= '.tmp'
+            FileMove(outExe, outExe '.tmp')
+            outExe .= '.tmp'
         }
     } catch as moveEx {
         return StdErr('Unable to rename the script to avoid conflict of names:`n' 
-                     . OsError(A_LastError).Message) '`n`n' outPath
+                     . OsError(A_LastError).Message) '`n`n' outExe
     }
     
     ; Prepare errors output
@@ -127,19 +129,41 @@ Build(architecture?) {
     sfxLog  := '-ilog`"' logName '`"'
     
     ; Delete old archives
-    try FileDelete(sfxBase '*')
-        
+    try {
+        loop 10 {
+            FileDelete(sfxBase '*')
+            sleep 200
+            if !FileExist(sfxBase '*')
+                break        
+        }
+    }
+     
     ; Success code is 0
-    command := '`"' winRar '`" ' switches ' -sfx -scf ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outPath '`" ' dependencies
+    command := '`"' winRar '`" ' switches ' -sfx -scf ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outExe '`" ' scriptDeps
     if RunWait(command) {
         FileAppend('`n`nExecuted command:`n`n' command, logName)    
         return StdErr('Failed to build the script into SFX:`n`n' FileRead(logName))
     }
     
-    command := '`"' winRar '`" ' switches ' -afzip ' sfxLog ' ' extractTo ' `"' sfxBase '.zip`" `"' scriptPath '`" ' dependencies ' ' library
+    ; ── Archive source code ────────────────────────────────────────────────────────────────────────────────────────
+    
+    try {
+        outScript := scriptPath
+        
+        ; Give the source script a similar outName and put in the archive
+        outBase   := SubStr(outName, 1, InStr(outName, '.',, -1)) 
+        outScript := outDir '\' outBase 'ahk'
+        FileCopy(scriptPath, outScript)
+
+    } catch as moveEx {
+        StdErr('Unable to rename the source script:`n' 
+              . OsError(A_LastError).Message) '`n`n' scriptPath
+    }
+    
+    command := '`"' winRar '`" ' switches ' -afzip ' sfxLog ' ' extractTo ' `"' sfxBase '.zip`" `"' outScript '`" ' scriptDeps ' ' scriptLib
     if RunWait(command) {
         FileAppend('`n`nExecuted command:`n`n' command, logName)    
-        return StdErr('Failed to archive source code:`n`n' FileRead(logName))
+        StdErr('Failed to archive source code:`n`n' FileRead(logName))
     }
     
     if !IsSet(resHacker)
@@ -152,7 +176,7 @@ Build(architecture?) {
     err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
     resHacker := '`"' resHacker '`" -log ' logName 
     
-    if RunWait(resHacker ' -open `"' outPath '`" -save VersionInfo.rc -action extract -mask VersionInfo')
+    if RunWait(resHacker ' -open `"' outExe '`" -save VersionInfo.rc -action extract -mask VersionInfo')
         return err('Failed to get resource')
 
     if RunWait(resHacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
@@ -164,7 +188,8 @@ Build(architecture?) {
     ; Delete created files
     success:
     try FileDelete('VersionInfo*')
-    try FileDelete(outPath)
+    try FileDelete(outExe)
+    try FileDelete(outScript)
     try FileDelete(config)
     
     return true
