@@ -186,7 +186,7 @@ To build the application, open the [Build.ahk](https://github.com/JoyHak/QuickSw
 > [!NOTE]
 > The builder is designed for different scripts regardless of their interpreter. It will automatically select the interpreter based on the script name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
 
-You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8.....ahk`.
+You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8.....ahk`. After completing the configuration process, run the `Build.ahk`.
 
 > Directives allow the user to specify details of how a script is to be builded via [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
 >
