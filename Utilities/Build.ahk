@@ -27,7 +27,7 @@ resHacker   := FindFile('C:\Program Files (x86)\Resource Hacker\ResourceHacker.e
 ; Comment all unnecessary variables below    
 archiveIcon := FindFile(scriptDir '\' scriptName '*.ico')       ; Icon of the final SFX. Only .ICO files, .exe is not allowed. Defaults to the archive icon.
 archiveName := scriptBase '.exe'                                ; Name of the final SFX.
-extractDir  := scriptName                                       ; Extract SFX into the directory relative to current dir. Defaults to the current dir.
+extractDir  := scriptName '-test'                                      ; Extract SFX into the directory relative to current dir. Defaults to the current dir.
 
 ; Write the list of files / dirs that you need to archive with the final .exe: icons, dependencies, readme, ...
 ; Relative to scriptDir or absolute paths are allowed. You can change 'relativeTo' param.
@@ -48,9 +48,8 @@ if !IsDir(&outDir)
 Build('64')
 Build('32')
 
-
 Build(architecture?) {
-    global autohotkey, ahk2exe, resHacker, winRar, scriptPath, scriptDir, outDir, outName, archiveIcon, archiveName, extractDir, dependencies, library
+    global autohotkey, ahk2exe, winRar, scriptPath, scriptDir, outDir, outName, archiveIcon, archiveName, extractDir, dependencies, library
     
     ; ── Assemble .ahk to .exe ──────────────────────────────────────────────────────────────────────────────────────
     
@@ -71,35 +70,17 @@ Build(architecture?) {
     ; ── Prepare WinRAR ──────────────────────────────────────────────────────────────────────────────────────────────
     
     SetWorkingDir(outDir)
-    
-    ; Config documentation: https://documentation.help/WinRAR/HELPGUISFXScript.htm
-    config := 'config.ini'
-    try FileDelete(config)    
-    
-    runAfterExtraction := IsSet(extractDir) ? extractDir '\' outName : outName
-    FileAppend(
-    (
-        'Title=`"' outName '`"                 
-        Setup=`"' runAfterExtraction '`" 
-        Silent=1'
-    ), config, 'UTF-8')
-    
-    loop 10 {
-        sleep 200
-        if FileExist(config)
-            break        
-    }
-    
+        
     ; Switches documentation: https://documentation.help/WinRAR/HELPSwitches.htm
     ; (a)rchive, (-cfg-)ignore default config, (-s)olid, (-t)est after packaging, (-k)block archive changes, (-y)es to all prompts,
     ; (-m0)no compression [to prevent antivirus and scan issues], 
-    ; (-ep1)exclude current base dir, (-sfx)self extracting, (-scf)UTF-8 config, (-z)path to config,
+    ; (-ep1)exclude current base dir, (-sfx)self extracting, (-scu)UTF-16 config, (-z)path to config,
     ; archive name, files and dirs to include.
     switches   := 'a -cfg- -s -t -k -y -m0 -ep1'
         
     ; Prepare arguments for WinRar in readable form, add quotes
     sfxModule  := '-sfxDefault' . ((architecture = '32') ? '32.sfx' : '.sfx')
-    sfxConfig  := '-z`"' config '`"'    
+    sfxConfig  := '-z`"' CreateSfxConfig(IsSet(extractDir) ? extractDir '\' outName : outName) '`"'    
     sfxIcon    := IsSet(archiveIcon)   ?   '-iicon`"' archiveIcon '`"'   :  ''
     extractTo  := IsSet(extractDir)    ?   '-ap`"' extractDir '`"'       :  ''
     sfxName    := IsSet(archiveName)   ?   archiveName                   :  outName
@@ -127,19 +108,11 @@ Build(architecture?) {
         return StdErr('Unable to rename the script to avoid conflict of names:`n' 
                      . OsError(A_LastError).Message) '`n`n' outExe
     }
-        
-    ; Delete old archive
-    try {
-        loop 10 {
-            FileDelete(sfxName)
-            sleep 200
-            if !FileExist(sfxName)
-                break        
-        }
-    }
-        
+                
+    SafeDelete(sfxName)
+    command := '`"' winRar '`" ' switches ' -sfx -scu ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outExe '`" ' scriptDeps
+    
     ; Success code is 0
-    command := '`"' winRar '`" ' switches ' -sfx -scf ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outExe '`" ' scriptDeps
     if RunWait(command) {
         FileAppend('`n`nExecuted command:`n`n' command, logName)    
         return StdErr('Failed to build the script into SFX:`n`n' FileRead(logName))
@@ -147,11 +120,12 @@ Build(architecture?) {
     
     ; ── Archive source code ────────────────────────────────────────────────────────────────────────────────────────
     
+    static isArchived := false
     archExtension := '.zip'
     archName      := sfxBase . archExtension
     archExtension := '-af' archExtension
     
-    if !FileExist(archName) {
+    if !isArchived {
         try {
             outScript := scriptPath
             
@@ -162,41 +136,78 @@ Build(architecture?) {
     
         } catch as moveEx {
             StdErr('Unable to rename the source script:`n' 
-                . OsError(A_LastError).Message) '`n`n' scriptPath
+                  . OsError(A_LastError).Message) '`n`n' scriptPath
         }
         
+        SafeDelete(archName)
         command := '`"' winRar '`" ' switches ' ' archExtension ' ' sfxLog ' ' extractTo ' `"' archName '`" `"' outScript '`" ' scriptDeps ' ' scriptLib
+        
         if RunWait(command) {
             FileAppend('`n`nExecuted command:`n`n' command, logName)    
             StdErr('Failed to archive source code:`n`n' FileRead(logName))
-        }    
+        } else {        
+            isArchived := true
+        }            
     }
         
     ; ── Change SFX VersionInfo (description, company, ...) ─────────────────────────────────────────────────────────
         
-    if IsSet(resHacker) {
-        ; Prepare output
-        logName := 'VersionInfo.log'
-        err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
-        hacker  := '`"' resHacker '`" -log ' logName 
-        
-        if RunWait(hacker ' -open `"' outExe '`" -save VersionInfo.rc -action extract -mask VersionInfo')
-            return err('Failed to get resource')
-    
-        if RunWait(hacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
-            return err('Failed to compile resource')
-        
-        if RunWait(hacker ' -open `"' sfxName '`" -save `"' sfxName '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo')
-            return err('Failed to update VersionInfo')
-            
-        try FileDelete('VersionInfo*')
-    }
+    if IsSet(resHacker)
+        SetVersionInfo(outExe, sfxName)
     
     ; Delete created files
     try FileDelete(outExe)
     try FileDelete(outScript)
-    try FileDelete(config)
+    ; try FileDelete(config)
     sleep 200
     
+    return true
+}
+
+
+CreateSfxConfig(app) {
+    ; Config documentation: https://documentation.help/WinRAR/HELPGUISFXScript.htm
+    static config := 'config.ini'
+    ; try FileDelete(config)    
+    
+    if FileExist(config) {
+        IniWrite('`"' app '`"', config, 'Global', 'Setup')
+        return config
+    } 
+    
+    IniWrite(
+    (               
+        'Setup=`"' app '`" 
+        Silent=1'
+    ), config, 'Global')
+    
+    loop 10 {
+        sleep 200
+        if FileExist(config)
+            break
+    }
+
+    return config       
+}
+
+
+SetVersionInfo(source, target) {
+    global resHacker
+
+    ; Prepare output
+    logName := 'VersionInfo.log'
+    err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
+    hacker  := '`"' resHacker '`" -log ' logName 
+    
+    if RunWait(hacker ' -open `"' source '`" -save VersionInfo.rc -action extract -mask VersionInfo')
+        return err('Failed to get resource')
+    
+    if RunWait(hacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
+        return err('Failed to compile resource')
+    
+    if RunWait(hacker ' -open `"' target '`" -save `"' target '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo')
+        return err('Failed to update VersionInfo')
+        
+    try FileDelete('VersionInfo*')
     return true
 }
