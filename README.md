@@ -162,33 +162,33 @@ Subscribe to releases so you don't miss critical updates!
 
 ## Compiling	
 
-`QuickSwitch.ahk` can be automatically compiled using `ahk2exe` and `7-zip` (CLI).
+This script is written on  [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey) and cannot be compiled. However, it can be built into a single file using a special script.
 
-<details><summary>Details</summary>
+<details><summary>Dependencies</summary>
 
-`ahk2exe` is here by default: `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe`. </br>
-It can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
-It can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-ahk2exe.ahk` </br>
-</br>
-`7zG.exe` is also needed to automatically create an archive with the required files from `CMD / PWSH`: https://7-zip.org
+Required applications:
+- `Autohotkey` interpreter (v1.1.37.02 Unicode and v2.0.19): https://www.autohotkey.com/download
+- `Ahk2Exe` builder to create EXE from AHK. It's included in AHK installer: `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe`</br>
+    - Can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
+    - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
+    *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
+
+> Autohotkey v1.1.37.02 is an **outdated version.** If you want to start learning this language, learn `v2.0.19+`. QuickSwitch needs to be updated from `v1` to `v2` !   </br></br>
+
+These dependencies are optional and can be disabled:
+- `WinRAR` archiver to create SFX and ZIP: https://www.rarlab.com/download.htm </br>
+- `Resource Hacker` to change SFX version and description: https://www.angusj.com/resourcehacker
+
 </details>
 
-To compile, open `ahk2exe` and select the main file (e.g. `QuickSwitch-1.7.ahk`). Be sure to create the `Releases` directory next to this file! The necessary directives are already configured in main file, so you can immediately press `Convert`. 
+To build the application, open the [Build.ahk](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk).
 
-![compile](https://github.com/user-attachments/assets/99a689e0-5b54-4994-9bd8-f242ac51c76b)
+> [!NOTE]
+> The builder is designed for different scripts regardless of their interpreter. It will automatically select the interpreter based on the script name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
 
-However, you can customize all the settings and click `Save` to automatically apply them to future releases of `QuickSwitch`. For manual compilation, you need to select the AHK `.exe` v1.1.+ with Unicode support *(e.g. Autohotkey U64.exe)*. It can be found here:
-```powershell
-C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe
-C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe
-# version may vary
-```
-> [!WARNING]
-> Autohotkey v1 is an **outdated version.** I'm using it temporarily. It is not recommended to save such settings if you are already using AHK v2 scripts!
+You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8.....ahk`.
 
-But I use [compiler directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin) for automation. [The benefits of directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#SetProp):
-
-> Script compiler directives allow the user to specify details of how a script is to be compiled via [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
+> Directives allow the user to specify details of how a script is to be builded via [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
 >
 > - Ability to change the version information (such as the name, description, version...).
 > - Ability to add resources to the compiled script.
@@ -197,9 +197,7 @@ But I use [compiler directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeD
 
 ## Need help with
 - Auto-check for update (lib and setting)
-- AutoSwitch on clipboard change
-- Drag and drop any file field
-- Pin favourite paths
+- New GUI design.
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
