@@ -59,7 +59,7 @@ Build(architecture?) {
         autohotkey := RegExReplace(autohotkey, '\d{2}.exe', architecture ".exe")
     
     ; Success code is 0
-    if (RunWait('`"' ahk2exe '`" /in `"' scriptPath '`" /out `"' outPath '`" /base `"' autohotkey '`"', scriptDir)) {
+    if RunWait('`"' ahk2exe '`" /in `"' scriptPath '`" /out `"' outPath '`" /base `"' autohotkey '`"', scriptDir) {
         StdErr('Failed to build the script using Ahk2Exe:`t' scriptPath)
         StdOutVars("ahk2exe scriptPath outPath autohotkey")
         return false 
@@ -73,19 +73,20 @@ Build(architecture?) {
     SetWorkingDir(outDir)
     
     ; Config documentation: https://documentation.help/WinRAR/HELPGUISFXScript.htm
-    sfxConfig := 'config.ini'
-    runAfterExtraction := IsSet(extractTo) ? extractTo '\' outName : outName
+    config := 'config.ini'
+    try FileDelete(config)    
     
+    runAfterExtraction := IsSet(extractTo) ? extractTo '\' outName : outName
     FileAppend(
     (
         'Title=`"' outName '`"                 
         Setup=`"' runAfterExtraction '`" 
         Silent=1'
-    ), sfxConfig, 'UTF-8')
+    ), config, 'UTF-8')
     
     loop 10 {
         sleep 200
-        if FileExist(sfxConfig)
+        if FileExist(config)
             break        
     }
     
@@ -94,25 +95,24 @@ Build(architecture?) {
     ; (-m0)no compression [to prevent antivirus and scan issues], 
     ; (-ep1)exclude current base dir, (-sfx)self extracting, (-scf)UTF-8 config, (-z)path to config,
     ; archive name, files and dirs to include.
-    switches   := 'a -cfg- -s -t -k -y -m0 -ep1 -sfx -scf'
+    switches   := 'a -cfg- -s -t -k -y -m0 -ep1'
         
     ; Prepare arguments for WinRar in readable form, add quotes
-    sfxModule  := '-sfxDefault.sfx'
-    sfxConfig  := '-z`"' sfxConfig '`"'    
+    sfxModule  := '-sfxDefault' . ((architecture = '32') ? '32.sfx' : '.sfx')
+    sfxConfig  := '-z`"' config '`"'    
     sfxIcon    := IsSet(sfxIcon)       ?   '-iicon`"' sfxIcon '`"'   :  ''
     extractTo  := IsSet(extractTo)     ?   '-ap`"' extractTo '`"'    :  ''
     sfxName    := IsSet(sfxName)       ?   sfxName                   :  outName
 
     ; Append file postfix
-    if IsSet(architecture) {
-        sfxExtension := SubStr(sfxName, InStr(sfxName, ".",, -1))
-        sfxName := StrReplace(sfxName, sfxExtension, '-x' . architecture . sfxExtension)
-        
-        if (architecture = '32')
-            sfxModule := StrReplace(sfxModule, '.sfx', '32.sfx')
-    }
+    SplitPath(sfxName,,, &sfxExtension, &sfxBase)
+    if IsSet(architecture)
+        sfxBase .= '-x' architecture        
     
     try {
+        ; Updated base will be used later
+        sfxName := sfxBase "." sfxExtension  
+
         if (sfxName = outName) {
             FileMove(outPath, outPath '.tmp')
             outPath .= '.tmp'
@@ -123,26 +123,27 @@ Build(architecture?) {
     }
     
     ; Prepare errors output
-    logName    := sfxName '.log'
-    sfxLog     := '-ilog`"' logName '`"'
+    logName := sfxBase '.log'
+    sfxLog  := '-ilog`"' logName '`"'
     
-    ; Delete old files
-    try FileDelete(sfxName)
-    try FileDelete(sfxConfig)
-    try FileDelete(logName)
+    ; Delete old archives
+    try FileDelete(sfxBase '*')
         
     ; Success code is 0
-    command := '`"' winRar '`" ' switches ' ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outPath '`" ' dependencies
-    if (RunWait(command)) {
+    command := '`"' winRar '`" ' switches ' -sfx -scf ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outPath '`" ' dependencies
+    if RunWait(command) {
         FileAppend('`n`nExecuted command:`n`n' command, logName)    
         return StdErr('Failed to build the script into SFX:`n`n' FileRead(logName))
     }
-        
-    if !IsSet(resHacker) {
-        ; Delete converted .ahk
-        try FileDelete(outPath)
-        return true
+    
+    command := '`"' winRar '`" ' switches ' -afzip ' sfxLog ' ' extractTo ' `"' sfxBase '.zip`" `"' scriptPath '`" ' dependencies ' ' library
+    if RunWait(command) {
+        FileAppend('`n`nExecuted command:`n`n' command, logName)    
+        return StdErr('Failed to archive source code:`n`n' FileRead(logName))
     }
+    
+    if !IsSet(resHacker)
+        goto success
         
     ; ── Change SFX VersionInfo (description, company, ...) ─────────────────────────────────────────────────────────
         
@@ -151,17 +152,20 @@ Build(architecture?) {
     err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
     resHacker := '`"' resHacker '`" -log ' logName 
     
-    if (RunWait(resHacker ' -open `"' outPath '`" -save VersionInfo.rc -action extract -mask VersionInfo'))
+    if RunWait(resHacker ' -open `"' outPath '`" -save VersionInfo.rc -action extract -mask VersionInfo')
         return err('Failed to get resource')
 
-    if (RunWait(resHacker ' -open VersionInfo.rc -save VersionInfo.res -action compile'))
+    if RunWait(resHacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
         return err('Failed to compile resource')
     
-    if (RunWait(resHacker ' -open `"' sfxName '`" -save `"' sfxName '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo'))
+    if RunWait(resHacker ' -open `"' sfxName '`" -save `"' sfxName '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo')
         return err('Failed to update VersionInfo')
     
     ; Delete created files
+    success:
     try FileDelete('VersionInfo*')
     try FileDelete(outPath)
+    try FileDelete(config)
+    
     return true
 }
