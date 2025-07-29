@@ -25,6 +25,19 @@ FindFile(path, recursive := 'R', &base := '') {
     ExitApp
 }
 
+SafeDelete(path, attempts := 10, timeout := 200) {
+    try {
+        loop attempts {
+            FileDelete(path)
+            Sleep(timeout)
+            if !FileExist(path)
+                return true        
+        }
+        return false
+    }    
+    return true
+}
+
 GetDependenciesPaths(relativeTo, list, sep := '|') {
     FindDependency(&path) {
         loop files, path, 'D' {
