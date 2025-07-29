@@ -84,11 +84,6 @@ Convert(moveLeft := false, moveRight := false) {
 
     if !variables.length
         return ""
-
-    if (!u.IsSection && quote) {
-        ; Increase the length of the variable for the correct alignment of the last quote in the line
-        variables[1] := " " variables[1]
-    }
     
     ; Apply vertical alignment
     for var in variables {
@@ -121,7 +116,7 @@ Convert(moveLeft := false, moveRight := false) {
         }
         
         ; No open quote: add quote, reduce padding by 1 for correct alignment
-        return indent . "(`n" . SubStr(padding, 2) . u.quote . Trim(output, " `"`'`t`n") . "`n" . indent . ")"
+        return indent . "(`n" . padding . u.quote . Trim(output, " `"`'`t`n") . "`n" . indent . ")"
     }   
     
     ; Delete the opening quote if it was added
