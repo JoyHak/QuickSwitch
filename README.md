@@ -181,7 +181,7 @@ These dependencies are optional and can be disabled:
 
 </details>
 
-To build the application, open the [Build.ahk](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk).
+To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Open the [.\Utilities\Build.ahk](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk).
 
 > [!NOTE]
 > The builder is designed for different scripts regardless of their interpreter. It will automatically select the interpreter based on the script name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
