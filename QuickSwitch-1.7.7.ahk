@@ -1,15 +1,10 @@
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU32.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x32.exe
-;@Ahk2Exe-Base C:\Program Files\AutoHotkey\v1.1.37.02\AutoHotkeyU64.exe, %A_ScriptDir%\Releases\%A_ScriptName~\.ahk%-x64.exe
-
-;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
-;@Ahk2Exe-SetMainIcon Icons\QuickSwitch.ico
 ;@Ahk2Exe-SetDescription https://github.com/JoyHak/QuickSwitch
+;@Ahk2Exe-SetProductName QuickSwitch
+;@Ahk2Exe-SetMainIcon Icons\QuickSwitch.ico
 ;@Ahk2Exe-SetCopyright Rafaello
-;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license
 ;@Ahk2Exe-SetCompanyName ToYu studio
-
-;@Ahk2Exe-Let U_name = %A_ScriptName~\.ahk%
-;@Ahk2Exe-PostExec "C:\Program Files\7-Zip\7zG.exe" a "%A_ScriptDir%\Releases\%U_name%".zip -tzip -sae -- "%A_ScriptDir%\%U_name%.ahk" "%A_ScriptDir%\Icons" "%A_ScriptDir%\Favorites" "%A_ScriptDir%\Lib",, A_ScriptDir
+;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license
+;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 
 #Requires AutoHotkey v1.1.37.02 Unicode
 #Warn
@@ -67,6 +62,8 @@ ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 InitAutoStartup()
 InitDarkTheme()
 InitSections("All")
+
+LogInfo("Launched for x" A_PtrSize * 8)
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
