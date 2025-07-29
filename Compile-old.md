@@ -1,6 +1,6 @@
 ## Compiling	
 
-`QuickSwitch.ahk` can be automatically compiled using `ahk2exe` and `7-zip` (CLI).
+`QuickSwitch-v1.0-v1.7.ahk` can be automatically compiled using `ahk2exe` and `7-zip` (CLI). Starting with version 1.8, a [new application build system](https://github.com/JoyHak/QuickSwitch#compiling) is used.
 
 <details><summary>Details</summary>
 
