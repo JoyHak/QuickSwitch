@@ -68,7 +68,7 @@ Build(architecture?) {
     if !IsSet(winRar)
         return true
     
-    ; ── Archive .exe and it's dependencies to SFX ──────────────────────────────────────────────────────────────────
+    ; ── Prepare WinRAR ──────────────────────────────────────────────────────────────────────────────────────────────
     
     SetWorkingDir(outDir)
     
@@ -79,7 +79,7 @@ Build(architecture?) {
     runAfterExtraction := IsSet(extractDir) ? extractDir '\' outName : outName
     FileAppend(
     (
-       'Title=`"' outName '`"                 
+        'Title=`"' outName '`"                 
         Setup=`"' runAfterExtraction '`" 
         Silent=1'
     ), config, 'UTF-8')
@@ -108,13 +108,17 @@ Build(architecture?) {
 
     ; Append file postfix
     SplitPath(sfxName,,, &sfxExtension, &sfxBase)
+    
+    ; Prepare errors output
+    logName := sfxBase '.log'
+    sfxLog  := '-ilog`"' logName '`"'
+    
+    ; ── Archive .exe and it's dependencies to SFX ──────────────────────────────────────────────────────────────────
+    
     if IsSet(architecture)
-        sfxBase .= '-x' architecture        
+        sfxName := sfxBase '-x' architecture "." sfxExtension  
     
     try {
-        ; Updated base will be used later
-        sfxName := sfxBase "." sfxExtension  
-
         if (sfxName = outName) {
             FileMove(outExe, outExe '.tmp')
             outExe .= '.tmp'
@@ -123,21 +127,17 @@ Build(architecture?) {
         return StdErr('Unable to rename the script to avoid conflict of names:`n' 
                      . OsError(A_LastError).Message) '`n`n' outExe
     }
-    
-    ; Prepare errors output
-    logName := sfxBase '.log'
-    sfxLog  := '-ilog`"' logName '`"'
-    
-    ; Delete old archives
+        
+    ; Delete old archive
     try {
         loop 10 {
-            FileDelete(sfxBase '*')
+            FileDelete(sfxName)
             sleep 200
-            if !FileExist(sfxBase '*')
+            if !FileExist(sfxName)
                 break        
         }
     }
-     
+        
     ; Success code is 0
     command := '`"' winRar '`" ' switches ' -sfx -scf ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outExe '`" ' scriptDeps
     if RunWait(command) {
@@ -147,50 +147,56 @@ Build(architecture?) {
     
     ; ── Archive source code ────────────────────────────────────────────────────────────────────────────────────────
     
-    try {
-        outScript := scriptPath
+    archExtension := '.zip'
+    archName      := sfxBase . archExtension
+    archExtension := '-af' archExtension
+    
+    if !FileExist(archName) {
+        try {
+            outScript := scriptPath
+            
+            ; Give the source script a similar outName and put in the archive
+            outBase   := SubStr(outName, 1, InStr(outName, '.',, -1)) 
+            outScript := outDir '\' outBase 'ahk'
+            FileCopy(scriptPath, outScript)
+    
+        } catch as moveEx {
+            StdErr('Unable to rename the source script:`n' 
+                . OsError(A_LastError).Message) '`n`n' scriptPath
+        }
         
-        ; Give the source script a similar outName and put in the archive
-        outBase   := SubStr(outName, 1, InStr(outName, '.',, -1)) 
-        outScript := outDir '\' outBase 'ahk'
-        FileCopy(scriptPath, outScript)
-
-    } catch as moveEx {
-        StdErr('Unable to rename the source script:`n' 
-              . OsError(A_LastError).Message) '`n`n' scriptPath
+        command := '`"' winRar '`" ' switches ' ' archExtension ' ' sfxLog ' ' extractTo ' `"' archName '`" `"' outScript '`" ' scriptDeps ' ' scriptLib
+        if RunWait(command) {
+            FileAppend('`n`nExecuted command:`n`n' command, logName)    
+            StdErr('Failed to archive source code:`n`n' FileRead(logName))
+        }    
     }
-    
-    command := '`"' winRar '`" ' switches ' -afzip ' sfxLog ' ' extractTo ' `"' sfxBase '.zip`" `"' outScript '`" ' scriptDeps ' ' scriptLib
-    if RunWait(command) {
-        FileAppend('`n`nExecuted command:`n`n' command, logName)    
-        StdErr('Failed to archive source code:`n`n' FileRead(logName))
-    }
-    
-    if !IsSet(resHacker)
-        goto success
         
     ; ── Change SFX VersionInfo (description, company, ...) ─────────────────────────────────────────────────────────
         
-    ; Prepare output
-    logName := 'VersionInfo.log'
-    err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
-    resHacker := '`"' resHacker '`" -log ' logName 
+    if IsSet(resHacker) {
+        ; Prepare output
+        logName := 'VersionInfo.log'
+        err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
+        hacker  := '`"' resHacker '`" -log ' logName 
+        
+        if RunWait(hacker ' -open `"' outExe '`" -save VersionInfo.rc -action extract -mask VersionInfo')
+            return err('Failed to get resource')
     
-    if RunWait(resHacker ' -open `"' outExe '`" -save VersionInfo.rc -action extract -mask VersionInfo')
-        return err('Failed to get resource')
-
-    if RunWait(resHacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
-        return err('Failed to compile resource')
-    
-    if RunWait(resHacker ' -open `"' sfxName '`" -save `"' sfxName '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo')
-        return err('Failed to update VersionInfo')
+        if RunWait(hacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
+            return err('Failed to compile resource')
+        
+        if RunWait(hacker ' -open `"' sfxName '`" -save `"' sfxName '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo')
+            return err('Failed to update VersionInfo')
+            
+        try FileDelete('VersionInfo*')
+    }
     
     ; Delete created files
-    success:
-    try FileDelete('VersionInfo*')
     try FileDelete(outExe)
     try FileDelete(outScript)
     try FileDelete(config)
+    sleep 200
     
     return true
 }
