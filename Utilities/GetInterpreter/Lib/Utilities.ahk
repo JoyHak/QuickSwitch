@@ -1,19 +1,19 @@
-IsDir(&path) {
+IsDir(path) {
     static shlwapi := DllCall('GetModuleHandle', 'str', 'Shlwapi', 'ptr')
     static IsPath  := DllCall('GetProcAddress', 'Ptr', shlwapi, 'astr', 'PathIsDirectoryW', 'ptr')
-    return DllCall(IsPath, 'ptr', StrPtr(path))
+    return DllCall(IsPath, 'str', path)
 }
 
-IsFile(&path) {
+IsFile(path) {
     static shlwapi := DllCall('GetModuleHandle', 'str', 'Shlwapi', 'ptr')
     static IsFile  := DllCall('GetProcAddress', 'Ptr', shlwapi, 'astr', 'PathFileExistsW', 'ptr')
-    return DllCall(IsFile, 'ptr', StrPtr(path))
+    return DllCall(IsFile, 'str', path)
 }
 
 GetParentDirectory(path, offset := 1) => SubStr(path, 1, InStr(path, '\',, -1, -offset) - 1)
 
 FindFile(path, recursive := 'R', &base := '') {
-    if IsFile(&path)
+    if IsFile(path)
         return path
     
     loop files, path, recursive {
@@ -30,7 +30,7 @@ SafeDelete(path, attempts := 10, timeout := 200) {
         loop attempts {
             FileDelete(path)
             Sleep(timeout)
-            if !FileExist(path)
+            if !IsFile(path)
                 return true        
         }
         return false
@@ -46,7 +46,7 @@ GetDependenciesPaths(relativeTo, list, sep := '|') {
         return ''
     }
     
-    if !IsDir(&relativeTo) {
+    if !IsDir(relativeTo) {
         StdOut('Non-existing directory for the relative path of dependencies: ' relativeTo)
         return ''
     }

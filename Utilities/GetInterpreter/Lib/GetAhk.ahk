@@ -26,7 +26,7 @@ VerifyAhk(exeinfo) {
 
 ReadHashes(path, filter?) {
     filemap := Map(), filemap.CaseSense := 0
-    if !FileExist(path)
+    if !IsFile(path)
         return filemap
     csvfile := FileOpen(path, 'r')
     props := StrSplit(csvfile.ReadLine(), ',')

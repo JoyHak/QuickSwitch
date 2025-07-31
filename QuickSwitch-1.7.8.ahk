@@ -63,6 +63,8 @@ InitAutoStartup()
 InitDarkTheme()
 InitSections("All")
 
+LogInfo("Launched for x" A_PtrSize * 8)
+
 Loop {
     ; Wait for any "Open/Save as" file dialog
     WinWaitActive, % "ahk_class #32770"

@@ -22,8 +22,9 @@ autohotkeyDir := GetParentDirectory(autohotkey, 2)
 ahk2exe       := FindFile(autohotkeyDir '\Compiler\Ahk2Exe.exe')
 
 ; ── Archiver (comment what you don't need)
-winRar      := FindFile('C:\Program Files\WinRAR\WinRar.exe')   ; WinRar: creates SFX archive and a separate archive with the source code
+winRar      := FindFile('C:\Program Files\WinRAR\WinRar.exe')                           ; WinRar: creates SFX archive and a separate archive with the source code
 resHacker   := FindFile('C:\Program Files (x86)\Resource Hacker\ResourceHacker.exe')    ; Resource Hacker: copies the version and description of the script in SFX
+
 ; Comment all unnecessary variables below
 archiveIcon := FindFile(scriptDir '\' scriptName '*.ico')       ; Icon of the final SFX. Only .ICO files, .exe is not allowed. Defaults to the archive icon.
 archiveName := scriptBase '.exe'                                ; Name of the final SFX.
@@ -40,47 +41,54 @@ library      := GetDependenciesPaths(scriptDir, 'Lib')
 
 ; ── Build .ahk and it's dependencies  ────────────────────────────────────────────────────────────────────────────
 
-try TraySetIcon(archiveIcon)
-if !IsDir(&outDir)
+SetWorkingDir(outDir)
+try TraySetIcon(winRar)
+if !IsDir(outDir)
     DirCreate(outDir)
+
+
+ShowTooltip("Building started")
 
 ; Comment unnecessary OS architectures
 Build('64')
 Build('32')
 
-Build(architecture?) {
+ShowTooltip("Building complete")
+
+
+Build(bitness := '') {
     global autohotkey, ahk2exe, winRar, scriptPath, scriptDir, outDir, outName, archiveIcon, archiveName, extractDir, dependencies, library
 
     ; ── Assemble .ahk to .exe ──────────────────────────────────────────────────────────────────────────────────────
 
     outExe := outDir . '\' outName
-    if IsSet(architecture)
-        autohotkey := RegExReplace(autohotkey, '\d{2}.exe', architecture ".exe")
+    if bitness
+        autohotkey := RegExReplace(autohotkey, '\d{2}.exe', bitness ".exe")
 
-    ; Success code is 0
-    if RunWait('`"' ahk2exe '`" /in `"' scriptPath '`" /out `"' outExe '`" /base `"' autohotkey '`"', scriptDir) {
-        StdErr('Failed to build the script using Ahk2Exe:`t' scriptPath)
-        StdOutVars("ahk2exe scriptPath outExe autohotkey")
-        return false
-    }
+    Exec(
+        '`"' ahk2exe '`" /in `"' scriptPath '`" /out `"' outExe '`" /base `"' autohotkey '`"',
+        'Failed to build the script using Ahk2Exe'
+    )
 
     if !IsSet(winRar)
-        return true
+        return
 
     ; ── Prepare WinRAR ──────────────────────────────────────────────────────────────────────────────────────────────
-
-    SetWorkingDir(outDir)
 
     ; Switches documentation: https://documentation.help/WinRAR/HELPSwitches.htm
     ; (a)rchive, (-cfg-)ignore default config, (-s)olid, (-t)est after packaging, (-k)block archive changes, (-y)es to all prompts,
     ; (-m0)no compression [to prevent antivirus and scan issues],
     ; (-ep1)exclude current base dir, (-sfx)self extracting, (-scu)UTF-16 config, (-z)path to config,
     ; archive name, files and dirs to include.
-    switches   := 'a -cfg- -s -t -k -y -m0 -ep1'
+    static switches := 'a -cfg- -s -t -k -y -m0 -ep1'
 
     ; Prepare arguments for WinRar in readable form, add quotes
-    sfxModule  := '-sfxDefault' . ((architecture = '32') ? '32.sfx' : '.sfx')
+    logName    := outDir '\SfxBuild.log'  ; Doesn't work with relative path
+    rar        := '`"' winRar '`" ' switches ' -ilog`"' logName '`"'
+
+    sfxModule  := '-sfxDefault' . ((bitness = '32') ? '32.sfx' : '.sfx')
     sfxConfig  := '-z`"' . CreateSfxConfig(IsSet(extractDir) ? extractDir '\' outName : outName) . '`"'
+
     sfxIcon    := IsSet(archiveIcon)   ?   '-iicon`"' archiveIcon '`"'   :  ''
     extractTo  := IsSet(extractDir)    ?   '-ap`"' extractDir '`"'       :  ''
     sfxName    := IsSet(archiveName)   ?   archiveName                   :  outName
@@ -90,14 +98,10 @@ Build(architecture?) {
     ; Append file postfix
     SplitPath(sfxName,,, &sfxExtension, &sfxBase)
 
-    ; Prepare errors output
-    logName := sfxBase '.log'
-    sfxLog  := '-ilog`"' logName '`"'
-
     ; ── Archive .exe and it's dependencies to SFX ──────────────────────────────────────────────────────────────────
 
-    if IsSet(architecture)
-        sfxName := sfxBase '-x' architecture "." sfxExtension
+    if bitness
+        sfxName := sfxBase '-x' bitness '.' sfxExtension
 
     try {
         if (sfxName = outName) {
@@ -105,23 +109,22 @@ Build(architecture?) {
             outExe .= '.tmp'
         }
     } catch {
-        return StdErr('Unable to rename the script to avoid conflict of names:`n'
-                     . OsError(A_LastError).Message) '`n`n' outExe
+        return FileErr('Unable to rename the script to avoid conflict of names', outExe)
     }
 
-    SafeDelete(sfxName)
-    command := '`"' winRar '`" ' switches ' -sfx -scu ' sfxModule ' ' sfxConfig ' ' sfxLog ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outExe '`" ' scriptDeps
-
-    ; Success code is 0
-    if RunWait(command) {
-        FileAppend('`n`nExecuted command:`n`n' command, logName)
-        return StdErr('Failed to build the script into SFX:`n`n' FileRead(logName))
-    }
+    SafeDelete(outDir '\' sfxName)
+    Exec(
+        rar ' -sfx -scu ' sfxModule ' ' sfxConfig ' ' sfxIcon ' ' extractTo ' `"' sfxName '`" `"' outExe '`" ' scriptDeps,
+        'Failed to build the script into SFX',
+        logName
+    )
+    SetVersionInfo(outExe, sfxName)
 
     ; ── Archive source code ────────────────────────────────────────────────────────────────────────────────────────
 
-    static isArchived := false
-    archExtension := '.zip'
+    static isArchived    := false
+    static archExtension := '.zip'
+
     archName      := sfxBase . archExtension
     archExtension := '-af' archExtension
 
@@ -135,27 +138,23 @@ Build(architecture?) {
             FileCopy(scriptPath, outScript)
 
         } catch {
-            StdErr('Unable to rename the source script:`n'
-                  . OsError(A_LastError).Message) '`n`n' scriptPath
+            return FileErr('Unable to rename the source script', scriptPath)
         }
 
-        SafeDelete(archName)
-        command := '`"' winRar '`" ' switches ' ' archExtension ' ' sfxLog ' ' extractTo ' `"' archName '`" `"' outScript '`" ' scriptDeps ' ' scriptLib
+        SafeDelete(outDir '\' archName)
+        Exec(
+            rar ' ' archExtension ' ' extractTo ' `"' archName '`" `"' outScript '`" ' scriptDeps ' ' scriptLib,
+            'Failed to archive source code',
+            logName
+        )
 
-        if RunWait(command) {
-            FileAppend('`n`nExecuted command:`n`n' command, logName)
-            StdErr('Failed to archive source code:`n`n' FileRead(logName))
-        } else {
-            isArchived := IsFile(&archName)
-        }
+        isArchived := true
     }
-
-    if IsSet(resHacker)
-        SetVersionInfo(outExe, sfxName)
 
     ; Delete created files
     try FileDelete(outExe)
     try FileDelete(outScript)
+    try FileDelete(outDir '\*.log')
     sleep 200
 
     return true
@@ -164,10 +163,11 @@ Build(architecture?) {
 
 CreateSfxConfig(app) {
     ; Config documentation: https://documentation.help/WinRAR/HELPGUISFXScript.htm
-    static config := 'SfxConfig.ini'
+    global outDir
+    static config := outDir '\SfxConfig.ini'
     ; try FileDelete(config)  ; It's faster to reuse existing config
 
-    if FileExist(config) {
+    if IsFile(config) {
         IniWrite('`"' app '`"', config, 'Global', 'Setup')
         return config
     }
@@ -175,7 +175,7 @@ CreateSfxConfig(app) {
     IniWrite('Setup=`"' app '`"`nSilent=1', config, 'Global')
     loop 10 {
         sleep 200
-        if FileExist(config)
+        if IsFile(config)
             break
     }
 
@@ -185,21 +185,62 @@ CreateSfxConfig(app) {
 
 SetVersionInfo(source, target) {
     global resHacker
+    if !IsSet(resHacker)
+        return false
 
-    ; Prepare output
     logName := 'VersionInfo.log'
-    err(msg) => StdErr('VersionInfo error: ' msg '`n`n' FileRead(logName))
-    hacker  := '`"' resHacker '`" -log ' logName
+    hacker  := '`"' resHacker '`" -log `"' logName '`"'
 
-    if RunWait(hacker ' -open `"' source '`" -save VersionInfo.rc -action extract -mask VersionInfo')
-        return err('Failed to get resource')
+    Exec(cmd, errorMsg) {
+        if RunWait(cmd,, "Hide") {
+            StdErr(errorMsg ':`n' FileRead(logName) '`n`nSee details in ' logName)
+            ExitApp 1
+        }
 
-    if RunWait(hacker ' -open VersionInfo.rc -save VersionInfo.res -action compile')
-        return err('Failed to compile resource')
+        return true
+    }
 
-    if RunWait(hacker ' -open `"' target '`" -save `"' target '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo')
-        return err('Failed to update VersionInfo')
+    Exec(
+        hacker ' -open `"' source '`" -save VersionInfo.rc -action extract -mask VersionInfo',
+        'Failed to get resource from ' source
+    )
+
+    Exec(
+        hacker ' -open VersionInfo.rc -save VersionInfo.res -action compile',
+        'Failed to compile resource'
+    )
+
+    Exec(
+        hacker ' -open `"' target '`" -save `"' target '`" -resource VersionInfo.res -action AddOverwrite -mask VersionInfo',
+        'Failed to update VersionInfo for ' target
+    )
 
     try FileDelete('VersionInfo*')
+    try FileDelete(logName)
     return true
+}
+
+
+Exec(cmd, errorMsg, cmdLog := '', returnOutput := false) {
+    global outDir
+    EolTrim(text) => Trim(text, ' `t`r`n')
+
+    consoleLog := 'Console.log'
+    if RunWait(A_ComSpec ' /c (' cmd ') > ' consoleLog ' 2>&1', outDir, "Hide") {
+        output := EolTrim(FileRead(consoleLog))
+        if cmdLog
+            output .= '`n`n' EolTrim(FileRead(cmdLog))
+        else
+            cmdLog := consoleLog
+
+        if (output := EolTrim(output))
+            errorMsg .= ':`n`n' output
+
+        StdErr(errorMsg '`n`nSee details in ' cmdLog)
+        FileAppend('`nExecuted command:`n' cmd, cmdLog)
+
+        ExitApp 1
+    }
+
+    return returnOutput ? EolTrim(FileRead(consoleLog)) : true
 }
