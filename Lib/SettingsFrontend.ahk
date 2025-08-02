@@ -13,6 +13,7 @@ ShowSettings() {
 
     ; Options that affects subsequent controls
     ; Hide window border and header
+    Gui, Destroy
     Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop
     Gui, Color, % GuiColor, % GuiColor
     Gui, Font, q5, % MainFont           ; Clean quality

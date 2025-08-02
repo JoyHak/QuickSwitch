@@ -78,6 +78,9 @@ Loop {
             Continue
         }
         
+        ; If there is any GUI left from previous calls...
+        Gui, Destroy
+        
         ; This is a supported dialog
         ; Switch focus to non-buttons to prevent accidental closing
         try {
@@ -110,8 +113,6 @@ Loop {
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")
-        ; If there is any GUI left from previous calls...
-        Gui, Destroy
         
         if IsMenuReady()
             SendEvent, % "^#+0"
