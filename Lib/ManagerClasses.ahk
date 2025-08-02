@@ -54,18 +54,22 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
         $count = 0`;
         foreach($path, $paths, '|') {               ; Path separator is |
             $count++;
-            if (($hideLockedTabs == true) && (tab('get', 'flags', $count) % 4 > 0)) {
+            if (IsSet($hideLockedTabs) && (tab('get', 'flags', $count) % 4 > 0)) {
                 continue`;                          ; Exclude locked tabs
             }
             $reals .= '|' . pathreal($path)`;       ; Get the real path (XY has special and virtual paths)
         }
-        $reals = trim($reals, '|', 'L')`;           ; Remove the extra  | from the beginning of $reals
-        copytext $reals`;                           ; Place $reals to the clipboard, faster then copydata
+        if !($reals) {
+            copytext 'unset'`;                      ; No available tabs
+        } else {
+            $reals = trim($reals, '|', 'L')`;       ; Remove the extra  | from the beginning of $reals
+            copytext $reals`;                       ; Place $reals to the clipboard, faster then copydata
+        }
     )"
     
     static getCurPath := "
     ( LTrim Join
-        if (($hideLockedTabs == true) && (tab('get', 'flags') % 4 > 0)) { 
+        if (IsSet($hideLockedTabs) && (tab('get', 'flags') % 4 > 0)) { 
             copytext 'unset'`;
         } else { 
             copytext <curpath>`; 
@@ -73,7 +77,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     )"
     
     _script := _activeTabOnly ? getCurPath : getAllPaths
-    _prefix := _showLockedTabs ? "::$hideLockedTabs = true`;" : "::"
+    _prefix := _showLockedTabs ? "::" : "::$hideLockedTabs = true`;"
     SendXyplorerScript(winId, _prefix . _script)
 
     ; Try to fetch clipboard data
