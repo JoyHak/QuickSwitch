@@ -103,14 +103,21 @@ You can hide some shortcuts by changing or removing their extension. If there ar
 
 #### Variables
 In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch/Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](https://github.com/JoyHak/QuickSwitch/blob/main/Lib/Values.ahk). Enclose the variables in percent signs `%`.
+
 <details><summary>Examples</summary>
- 
-  %AppData%\Icons <br>
-  %A_ScriptDir%\Icons <br>
-  %Temp%\Icons\%SOME_SYSTEM_PATH% <br>
-  C:\%IconsDir% <br>
-  Icons <br>
-  <br>
+
+```haml
+Icons
+%AppData%\Icons
+%A_ScriptDir%\Icons
+```
+```rust
+%SYSTEM_PATH%\%IconsDir%\SubDir
+```  
+```ruby
+C:\%IconsDir%
+```
+
  If you have enabled the `Settings > Theme > Show paths from clipboard`, all copied variables will also be expanded. For example, if you have [Cmder](https://github.com/cmderdev/cmder) or [ConEmu](https://github.com/Maximus5/ConEmu) installed you can copy the `%ConEmuDir%` text to always see the path `C:\Users\...\cmder\vendor\conemu-maximus5` in the Menu. For permanent use you can pin this path and it will be visible in the menu always (enable `Settings > Theme > Show pinned paths`).
  
  <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/80ea3b3d-9eec-4629-aa64-38b35a28ab92" />
@@ -201,3 +208,4 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
