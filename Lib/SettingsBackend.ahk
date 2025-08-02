@@ -70,8 +70,12 @@ DeleteSections() {
     ; Deletes sections from INI
     global
 
-    if DeleteFavorites
-        DeleteFile(FavoritesDir "\*.lnk", "favorites")
+    if (DeleteFavorites
+     && MsgWarn("Do you want to delete the favorites?`n" FavoritesDir "\*.lnk")) {
+        RunWait, % A_ComSpec " /c del /s /q """ FavoritesDir "\*.lnk""",, % "Hide"
+        if !ErrorLevel       
+            LogInfo("Favorites has been placed in the Recycle Bin")
+    }
 
     if DeleteKeys {
         PinKey := MainKey := RestartKey := ""
