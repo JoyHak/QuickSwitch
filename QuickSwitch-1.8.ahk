@@ -72,15 +72,15 @@ Loop {
     try {
         DialogId   := WinActive("A")
         FileDialog := GetFileDialog(DialogId, EditId)
-        
+
         if !FileDialog {
             WinWaitNotActive, % "ahk_id " DialogId
             Continue
         }
-        
+
         ; If there is any GUI left from previous calls...
         Gui, Destroy
-        
+
         ; This is a supported dialog
         ; Switch focus to non-buttons to prevent accidental closing
         try {
@@ -88,7 +88,7 @@ Loop {
             ControlSend,, % "{end}{space}",     % "ahk_id " EditId
             Sleep 100
         }
-        
+
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
         FingerPrint := DialogProcess "___" DialogTitle
@@ -97,23 +97,23 @@ Loop {
         ; The default DialogAction value is depends on "Always AutoSwitch" option.
         ; Current choice will override "Always AutoSwitch" value.
         IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0               ; -1 or 0
-        IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch    ; -1, 0 or 1 
-        DialogAction |= BlackList   
-        
+        IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch    ; -1, 0 or 1
+        DialogAction |= BlackList
+
         ; Get paths for Menu sections
+        if ShowFavorites
+            GetFavoritePaths(FavoritePaths := [])
+
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
             GetPaths(ManagersPaths := [], DialogAction == 1, ActiveTabOnly, ShowLockedTabs)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
-        
-        if ShowFavorites
-            GetFavoritePaths(FavoritePaths := [])
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")
-        
+
         if IsMenuReady()
             SendEvent, % "^#+0"
 
@@ -165,7 +165,7 @@ DisableKey() {
 
     if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog) {
         ; This key is chosen by the user in the settings and the file dialog is open.
-        ; Its standard functionality must be disabled.        
+        ; Its standard functionality must be disabled.
         SendEvent, % "{Blind}{vkFF}"
     }
 }
