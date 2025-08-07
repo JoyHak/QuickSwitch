@@ -45,7 +45,7 @@ SetDefaultValues() {
     DarkColors          :=  true  
     
     ShowManagers        :=  true
-    AutoStartup         :=  false
+    AutoStartup         :=  true
     PathNumbers         :=  true
     DeleteDuplicates    :=  true
     ShowIcons           :=  true
