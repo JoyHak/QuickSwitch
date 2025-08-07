@@ -12,24 +12,50 @@ GroupAdd, ManagerClasses, ahk_class dopus.lister
 CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
     ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
     ; Returns number of added paths
-
+    _count := 0
+    _activeTab := 0
+    
+    try
+        ControlGet, _activeTab, % "hwnd",, % "ShellTabWindowClass1", % "ahk_id " winId    
+    catch
+        ControlGet, _activeTab, % "hwnd",, % "TabWindowClass1", % "ahk_id " winId
+    
     try {
-        _count := 0
         for _win in ComObjCreate("Shell.Application").windows {
-            if (winId = _win.hwnd) {
-                _path := _win.document.folder.self.path
-                if !InStr(_path, "::{") {
-                    paths.push([_path, "Explorer.ico", 1, ""])
-                    if _activeTabOnly
-                        return 1
-                    
-                    _count++
-                }
+            if (winId != _win.hwnd)
+                continue            
+            
+            if (_activeTabOnly && _activeTab) {
+                static IID_IShellBrowser := "{000214E2-0000-0000-C000-000000000046}"
+                _shell := ComObjQuery(_win, IID_IShellBrowser, IID_IShellBrowser)
+                
+                ; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=109907
+                ; Invoke the method from the vtable of the _shell object, which represents the IShellBrowser interface, 
+                ; to retrieve the current tab in Windows Explorer. 
+                DllCall(NumGet(NumGet(_shell + 0), 3 * A_PtrSize), "ptr", _shell, "ptr*", _currentTab := 0)
+                
+                if (_currentTab != _activeTab)
+                    continue
+                
+                ObjRelease(_shell)
             }
-        }
-        _win := ""
-        return _count
+            
+            _path := _win.document.folder.self.path
+            if InStr(_path, "::{")
+                continue
+            
+            paths.push([_path, "Explorer.ico", 1, ""])
+            if _activeTabOnly
+                return 1
+                    
+            _count++
+        }  
+        
+        if _count
+            ObjRelease(_win)        
     }
+                
+    return _count
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
