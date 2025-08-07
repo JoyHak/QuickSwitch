@@ -155,9 +155,9 @@ You can also [disable UAC](https://superuser.com/a/1773044) and use low-level or
 Subscribe to releases so you don't miss critical updates!
 ![Subscribe](https://github.com/user-attachments/assets/57eb9a93-fc9d-4dfd-bfb0-00720c2911f1)
 
-1. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest version.
+1. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
 
-2. Run `.exe` for your CPU architecture and check it's existence in the tray.
+2. Create a directory, copy downloaded archive here and select "extract here" from the context menu. With each subsequent update, select "extract here" to update the old files with the new ones. The configuration is never deleted or replaced. Run `QuickSwitch.exe`.
 
 3. Open different directories in a supported file manager. E.g., open `C:\` in `Explorer`.
 
@@ -208,4 +208,5 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
