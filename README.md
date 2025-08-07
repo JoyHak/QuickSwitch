@@ -180,11 +180,9 @@ Required applications:
     - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
     *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
 
-> Autohotkey v1.1.37.02 is an **outdated version.** If you want to start learning this language, learn `v2.0.19+`. QuickSwitch needs to be updated from `v1` to `v2` !   </br></br>
+> Autohotkey v1.1.37.02 is an **outdated version.** If you want to start learning this language, learn `v2.0.19+`. QuickSwitch needs to be updated from `v1` to `v2`! 
 
-These dependencies are optional and can be disabled:
-- `WinRAR` archiver to create SFX and ZIP: https://www.rarlab.com/download.htm </br>
-- `Resource Hacker` to change SFX version and description: https://www.angusj.com/resourcehacker
+Optional `7zG.exe` to create an archives with the required files: https://7-zip.org
 
 </details>
 
@@ -208,5 +206,6 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
