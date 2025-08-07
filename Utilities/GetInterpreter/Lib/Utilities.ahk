@@ -38,7 +38,7 @@ SafeDelete(path, attempts := 10, timeout := 200) {
     return true
 }
 
-GetDependenciesPaths(relativeTo, list, sep := '|') {
+GetDependenciesPaths(relativeTo, list, sep := '|') {   
     FindDependency(&path) {
         loop files, path, 'D' {
             return A_LoopFileFullPath
@@ -60,8 +60,8 @@ GetDependenciesPaths(relativeTo, list, sep := '|') {
             StdOut('Unable to find the dependency: ' relativeTo '\' A_LoopField)
             continue
         }
-
-        paths .= '`"' path '`" '
+        
+        paths .= '"' path '" '
     }
     
     return Trim(paths)
