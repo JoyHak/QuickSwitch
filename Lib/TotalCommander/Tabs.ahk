@@ -42,6 +42,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
         
         ; Push the active tab to the array first.
         ; Remove duplicate and add the remaining tabs
+        _count := _paths.length()
         if _paths.hasKey(_active)
             paths.push(_paths.removeAt(_active))
         
@@ -49,7 +50,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
 
         try FileDelete, % tabsFile
         Sleep 100
-        return _paths.length() + 1
+        return _count
     }
     throw Exception("Unable to access tabs"
                     , "TotalCmd tabs"
