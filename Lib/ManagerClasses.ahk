@@ -181,8 +181,10 @@ Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := fals
 
     ; Push the active tab to the global array first
     ; Remove duplicate and add the remaining tabs
-    paths.push(_paths.removeAt(_active))
-    paths.push(_paths*)
+    _count := _paths.length()
+    if _paths.hasKey(_active)
+        paths.push(_paths.removeAt(_active))
     
-    return _paths.length() + 1
+    paths.push(_paths*)
+    return _count
 }
