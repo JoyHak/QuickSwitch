@@ -11,9 +11,11 @@
 ; You can find the meaning of each option in the Main and Lib\SettingsBackend files
 LastTabSettings     :=  1
 SelectPathAttempts  :=  3
+DialogAction        :=  0
 DialogId            :=  0
 EditId              :=  0
 LastDialogProcess   :=  ""
+FileDialog          :=  Func("Dummy")
 
 WriteDialogAction   :=  false
 WritePinnedPaths    :=  false
