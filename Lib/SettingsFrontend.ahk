@@ -16,10 +16,7 @@ ShowSettings() {
     Gui, Destroy
     Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop
     Gui, Color, % GuiColor, % GuiColor
-    Gui, Font, q5, % MainFont           ; Clean quality
-
-    if DarkTheme
-        Gui, Font, % "q5 c" InvertColor(GuiColor), % MainFont
+    Gui, Font, % "q5 " (DarkTheme ? "c" InvertColor(GuiColor) : ""), % MainFont
 
     ; Edit fields: fixed width, one row, max 6 symbols, no multi-line word wrap and vertical scrollbar
     local edit := "w63 r1 -Wrap -vscroll"
@@ -184,11 +181,13 @@ ShowSettings() {
     }
 
     ; Get dialog position
-    local _winX, _winY, _pos := ""
-    WinGetPos, _winX, _winY,,, A
+    local _pos := ""
+    WinGetPos, _posX, _posY,,, A
 
-    if (_winX && _winY)
-        _pos := " x" _winX " y" _winY + 100
-
-    Gui, Show, % "AutoSize" _pos, Settings
+    if (_posX && _posY)
+        _pos := " x" _posX " y" _posY + 100
+    else
+        _pos := " x0 y100"
+    
+    Gui, Show, % "AutoSize " _pos, Settings
 }
