@@ -168,7 +168,7 @@ DisableKey() {
     }
 }
 
-#IfWinActive ahk_class #32770
+
 ~Tab::DisableKey()
 ~LWin::DisableKey()
 ~Space::DisableKey()
