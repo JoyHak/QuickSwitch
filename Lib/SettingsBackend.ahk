@@ -151,7 +151,6 @@ ToggleShowAlways() {
     Gui, Submit, NoHide
 
     GuiControl,  % "Disable" ShowAlways, % "ShowNoSwitch"
-    GuiControl,  % "Disable" ShowAlways, % "ShowNoSwitch"
     GuiControl,  % "Disable" ShowAlways, % "ShowAfterSettings"
     GuiControl,  % "Disable" ShowAlways, % "ShowAfterSelect"
 }
@@ -176,7 +175,6 @@ ToggleShortPath() {
     GuiControl,  % "Enable" ShortPath,   % "ShowFirstSeparator"
 
     GuiControl,  % "Show" ShortPath,     % "ShortNameIndicator"
-    GuiControl,  % "Show" ShortPath,     % "ShortNameIndicatorText"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
