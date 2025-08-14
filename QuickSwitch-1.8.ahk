@@ -81,12 +81,14 @@ Loop {
 
         ; This is a supported dialog
         ; Switch focus to non-buttons to prevent accidental closing
-        try {
-            ControlFocus  % "ToolbarWindow321", % "ahk_id " DialogId
-            ControlSend,, % "{end}{space}",     % "ahk_id " EditId
+        if isDialogClosed {
+            try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
+            
             Sleep 100
+            ControlSend,, % "{end}{space}", % "ahk_id " EditId
+            Sleep 200            
         }
-
+        
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
         FingerPrint := DialogProcess "___" DialogTitle
@@ -137,6 +139,7 @@ Loop {
         Clips := []
 
     LastDialogProcess := DialogProcess
+    isDialogClosed := !WinExist("ahk_id " DialogId)
 
 }   ; End of continuous WinWaitActive loop
 
