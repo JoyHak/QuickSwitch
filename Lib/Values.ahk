@@ -15,7 +15,9 @@ DialogAction        :=  0
 DialogId            :=  0
 EditId              :=  0
 LastDialogProcess   :=  ""
+DialogProcess       :=  "Dummy"
 FileDialog          :=  Func("Dummy")
+isDialogClosed      :=  true
 
 WriteDialogAction   :=  false
 WritePinnedPaths    :=  false
