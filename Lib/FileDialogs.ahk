@@ -79,6 +79,8 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
     try {
         ControlGet, buttonId, % "hwnd",, % "Button1", % "ahk_id " DialogId
         ControlGet, editId,   % "hwnd",, % "Edit1",   % "ahk_id " DialogId
+    } catch {
+        return false
     }
 
     if !(buttonId || editId)
