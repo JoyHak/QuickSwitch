@@ -76,12 +76,14 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
     ; Gets all dialog controls and returns FuncObj for this dialog
     ; if required controls found, otherwise returns "false"
 
+    addressBarId := 0
     try {
         ControlGet, buttonId, % "hwnd",, % "Button1", % "ahk_id " DialogId
         ControlGet, editId,   % "hwnd",, % "Edit1",   % "ahk_id " DialogId
+        ControlGet, addressBarId, % "hwnd",, % "ToolbarWindow321", % "ahk_id " DialogId
     }
 
-    if !(buttonId || editId)
+    if !(buttonId || editId) || !(addressBarId)
         return false
 
     ; Dialog with buttons
