@@ -77,17 +77,7 @@ Loop {
         }
 
         ; If there is any GUI left from previous calls...
-        Gui, Destroy
-
-        ; This is a supported dialog
-        ; Switch focus to non-buttons to prevent accidental closing
-        if isDialogClosed {
-            try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
-            
-            Sleep 100
-            ControlSend,, % "{end}{space}", % "ahk_id " EditId
-            Sleep 200            
-        }
+        Gui, Destroy        
         
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
@@ -139,7 +129,7 @@ Loop {
         Clips := []
 
     LastDialogProcess := DialogProcess
-    isDialogClosed := !WinExist("ahk_id " DialogId)
+    IsDialogClosed := !WinExist("ahk_id " DialogId)
 
 }   ; End of continuous WinWaitActive loop
 
