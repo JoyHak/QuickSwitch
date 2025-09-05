@@ -1,6 +1,7 @@
 GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLockedTabs := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
+    global IsDialogClosed, DialogId, EditId
     
     ; Get manager uniq IDs
     WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
@@ -42,6 +43,17 @@ GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLocked
 
         if (_autoSwitch && paths[1]) {
             _autoSwitch := false
+            ; Switch focus to non-buttons to prevent accidental closing
+            if IsDialogClosed {
+                try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
+                ControlSend,, % "{end}{space}", % "ahk_id " EditId
+                
+                _select := Func("SelectPath").Bind(paths)
+                SetTimer, % _select, -300
+
+                continue           
+            }
+        
             SelectPath(paths)
         }
     }
