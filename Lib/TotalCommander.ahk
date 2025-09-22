@@ -14,26 +14,26 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
 
     static userCmd      :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
          , internalCmd  :=  "SaveTabs2"
-         , tabsFile     :=  A_Temp "\TotalTabs.tab"
+         , tabsDir      :=  A_Temp "\TotalTabs"
+         , tabsFile     :=  tabsDir "\TotalTabs.tab"
          , lastWinId    :=  0
          , userIni      :=  ""
     
     try {
         if (_activeTabOnly && _showLockedTabs)
             return GetTotalActiveTab(winId, paths)
-    
-        SendTotalUserCmd(winId, userCmd)
-        Sleep 100
         
-        if !_activeTabOnly
-            return ParseTotalTabs(tabsFile, paths, _showLockedTabs)
+        SendTotalUserCmd(winId, userCmd)       
+        WaitForTabs(tabsDir, tabsFile)
         
-        return GetTotalUnlockedTab(tabsFile, paths)
+        if _activeTabOnly
+            return GetTotalUnlockedTab(tabsFile, paths)
+        
+        return ParseTotalTabs(tabsFile, paths, _showLockedTabs)
         
     } catch _ex {
         ; Get proccess permissions
-        WinGet, _winPid, % "pid", % "ahk_id " winId
-        
+        WinGet, _winPid, % "pid", % "ahk_id " winId        
         if (!A_IsAdmin && IsProcessElevated(_winPid))
             throw Exception("Unable to obtain TotalCmd paths"
                           , "admin permission"
@@ -42,12 +42,15 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
         ; Create user command and retry
         if (lastWinId != winId) {
             LogInfo("Required to create user command: [" userCmd "]", "NoTraytip")
-            userIni := GetTotalIni(winId)
+            userIni := GetTotalIni(winId, _winPid)
         }
         lastWinId := winId
         
-        if (CreateTotalUserCmd(userIni, userCmd, internalCmd, tabsFile))
+        ; Retry if user command was successfully created
+        if (CreateTotalUserCmd(userIni, userCmd, internalCmd, tabsFile)) {
+            FileCreateDir % tabsDir
             return TTOTAL_CMD(winId, paths, _activeTabOnly, _showLockedTabs)
+        }
         
         ; The user command already exists. Re-throw exception to the caller      
         throw _ex
