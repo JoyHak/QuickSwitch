@@ -16,7 +16,6 @@ DialogId            :=  0
 EditId              :=  0
 LastDialogProcess   :=  ""
 DialogProcess       :=  "Dummy"
-FileDialog          :=  Func("Dummy")
 IsDialogClosed      :=  true
 
 WriteDialogAction   :=  false
@@ -58,7 +57,6 @@ SetDefaultValues() {
 
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
-    SendEnter           :=  false
     
     AutoSwitch          :=  false
     BlackListProcess    :=  false
@@ -128,7 +126,6 @@ WriteValues() {
     ShowAfterSettings="       ShowAfterSettings       "
     ShowAlways="              ShowAlways              "
     ShowAfterSelect="         ShowAfterSelect         "
-    SendEnter="               SendEnter               "
     AutoSwitch="              AutoSwitch              "
     BlackListProcess="        BlackListProcess        "
     ActiveTabOnly="           ActiveTabOnly           "
