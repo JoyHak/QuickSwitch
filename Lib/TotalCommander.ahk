@@ -12,7 +12,7 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
         in that directory with the EM_ user command to export tabs to the file
     */
 
-    static userCmd      :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs"
+    static userCmd      :=  "EM_ScriptCommand_QuickSwitch_SaveAllTabs2"
          , internalCmd  :=  "SaveTabs2"
          , tabsDir      :=  A_Temp "\TotalTabs"
          , tabsFile     :=  tabsDir "\TotalTabs.tab"
