@@ -6,20 +6,20 @@ Dummy() {
 
 SelectPath(ByRef paths, _name := "", _pos := 1) {
     global
-    
+
     local _ex, _winPid, _log := ""
     loop, % SelectPathAttempts {
-        try {   
+        try {
             if (ShowPinned && GetKeyState(PinKey)) {
                 if (_pos > PinnedPaths.length())
                       PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
                   else
                       PinnedPaths.RemoveAt(_pos)
-                      
+
                 WritePinnedPaths := true
-                return ShowMenu()                
+                return ShowMenu()
             }
-        
+
             if !WinActive("ahk_id " DialogId)
                 return SendPath(paths[_pos][1])
 
