@@ -1,4 +1,4 @@
-GetTotalIni(ByRef winId) {
+GetTotalIni(ByRef winId, ByRef winPid) {
     /*
         Searches for the location of wincmd.ini
         Needed to create usercmd.ini in that directory
@@ -8,21 +8,17 @@ GetTotalIni(ByRef winId) {
         https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
     */
 
-    WinGet, _winPid, % "pid", % "ahk_id " winId
-
     ; Close the child windows of the current TC instance
     ; to ensure that messages are sent correctly
-    CloseChildWindows(_winPid, winId)
+    WinWaitActive, % "ahk_class #32770 ahk_pid " winPid,, 0.25
+    CloseChildWindows(winPid, winId)
 
     _ini := ""
     for _, _func in ["GetTotalConsoleIni", "GetTotalLaunchIni", "GetTotalPathIni"] {
-        try {
-            if (_ini := %_func%(_winPid)) {
-                break
-            }
-        } catch _ex {
+        try if (_ini := %_func%(winPid))
+            break
+        catch _ex
             LogException(_ex)
-        }
     }
 
     if _ini {
