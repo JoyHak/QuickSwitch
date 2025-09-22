@@ -53,7 +53,7 @@ GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLocked
 
                 continue           
             }
-        
+
             SelectPath(paths)
         }
     }

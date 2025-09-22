@@ -10,19 +10,23 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
     local _ex, _winPid, _log := ""
     loop, % SelectPathAttempts {
         try {
-            if (ShowPinned && GetKeyState(PinKey)) {
-                if (_pos > PinnedPaths.length())
-                      PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
-                  else
-                      PinnedPaths.RemoveAt(_pos)
+            ; Called from the Menu
+            if _name {  
+                if (ShowPinned && GetKeyState(PinKey)) {
+                    if (_pos > PinnedPaths.length())
+                        PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
+                    else
+                        PinnedPaths.RemoveAt(_pos)
+    
+                    WritePinnedPaths := true
+                    return ShowMenu()
+                }
 
-                WritePinnedPaths := true
-                return ShowMenu()
+                if IsDialogClosed
+                    return SendPath(paths[_pos][1])
             }
-
-            if !WinActive("ahk_id " DialogId)
-                return SendPath(paths[_pos][1])
-
+            
+            ; Select path
             if FillDialog(EditId, paths[_pos][1], SelectPathAttempts)
                 return (ShowAfterSelect || ShowAlways) ? ShowMenu() : 0
 
@@ -94,7 +98,7 @@ ToggleAutoSwitch() {
     if (DialogAction = 1)
         SelectPath(ManagersPaths)
     if IsMenuReady()
-        SendEvent, % "^#+0"
+        SendInput ^#+0
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -110,5 +114,5 @@ ToggleBlackList() {
         FingerPrint := DialogProcess
 
     if IsMenuReady()
-       SendEvent, % "^#+0"
+       SendInput ^#+0
 }
