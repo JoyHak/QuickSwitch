@@ -56,7 +56,7 @@ else
 
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
-ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "^#+0")
+ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
 InitAutoStartup()
@@ -98,12 +98,13 @@ Loop {
             GetPaths(ManagersPaths := [], DialogAction == 1, ActiveTabOnly, ShowLockedTabs)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
+        IsDialogClosed := false
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")
-
+        
         if IsMenuReady()
-            SendEvent, % "^#+0"
+            SendInput ^#+0
 
         LogElevatedNames()
     } catch GlobalEx {
@@ -144,7 +145,7 @@ ExitApp
     ShowMenu()
 
     ; Release all keys to prevent holding
-    SendEvent, % "{Ctrl up}{Win up}{Shift up}"
+    SendInput, % "{Ctrl up}{Win up}{Shift up}"
 return
 
 
@@ -155,7 +156,7 @@ DisableKey() {
     if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog) {
         ; This key is chosen by the user in the settings and the file dialog is open.
         ; Its standard functionality must be disabled.
-        SendEvent, % "{Blind}{vkFF}"
+        SendInput, % "{Blind}{vkFF}"
     }
 }
 

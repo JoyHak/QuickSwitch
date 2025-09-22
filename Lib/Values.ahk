@@ -151,8 +151,8 @@ WriteValues() {
     )"
 
     _values .= "`n"
-    . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),     "",   "Off", "Dummy") ; Init and dont use this key
-    . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),    "",   "Off", "^#+0")
+    . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),     "",   "Off", "Dummy")  ; Init and dont use this key
+    . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),    "",   "Off", "ShowMenu")
     . ValidateKey(      "RestartKey",    (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
