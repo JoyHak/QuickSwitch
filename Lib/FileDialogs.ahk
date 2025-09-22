@@ -9,14 +9,10 @@
 
 FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
     ; Always send "Enter" key to the General dialog
-    static SEND_ENTER := true
-    return FeedDialogSYSTREEVIEW(SEND_ENTER, editId, path, attempts)
+    return FeedDialogSYSTREEVIEW(true, editId, path, attempts)
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
-;─────────────────────────────────────────────────────────────────────────────
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, % "ahk_id " editId
 
@@ -44,33 +40,6 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-FeedDialogSYSLISTVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
-;─────────────────────────────────────────────────────────────────────────────
-    global DialogId
-
-    ; Make sure no element is preselected in listview,
-    ; it would always be used later on if you continue with {Enter}!
-    Loop, % attempts {
-        Sleep, 15
-        ControlFocus,  % "SysListView321", % "ahk_id " DialogId
-        ControlGetFocus, _focus,           % "ahk_id " DialogId
-
-    } Until (_focus = "SysListView321")
-
-    ControlSend, % "SysListView321", % "{Home}", % "ahk_id " DialogId
-
-    Loop, % attempts {
-        Sleep, 15
-        ControlSend, % "SysListView321", % "^{Space}",  % "ahk_id " DialogId
-        ControlGet, _focus, % "List", % "Selected", % "SysListView321", % "ahk_id " DialogId
-
-    } Until !_focus
-
-    return FeedDialogSYSTREEVIEW(sendEnter, editId, path, attempts)
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Gets all dialog controls and returns FuncObj for this dialog
@@ -91,7 +60,7 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
     WinGet, _controlList, % "ControlList", % "ahk_id " DialogId
 
     ; Search for...
-    static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16}
+    static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16, SysTabControl321: 32}
 
     ; Find controls and set bitwise flag
     _f := 0
@@ -101,26 +70,15 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
             _f |= _class
     }
 
-    ; Check specific controls
-    if (_f & 8 && _f & 16) {
-        return Func("FeedDialogGENERAL")
-    }
+    ; Check for specific controls
+    if (_f & 8 && _f & 16)
+        return Func("FeedDialogGENERAL")      ; Main
 
-    if (_f & 1) {
-        if (_f & 4) {
-            if (_f & 8) {
-                return Func("FeedDialogSYSTREEVIEW")
-            }
-            return Func("FeedDialogSYSLISTVIEW")
-        }
-        if (_f & 8) {
-            return Func("FeedDialogSYSLISTVIEW")
-        }
-    }
+    if (_f & 1 && _f & 4 && _f & 8)
+        return Func("FeedDialogSYSTREEVIEW")  ; Rare
 
-    if (_f & 2) {
-        return Func("FeedDialogSYSTREEVIEW")
-    }
+    if (_f = 2)
+        return Func("FeedDialogSYSTREEVIEW")  ; Very old
 
     return false
 }
