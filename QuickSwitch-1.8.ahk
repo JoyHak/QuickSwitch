@@ -68,10 +68,8 @@ Loop {
     WinWaitActive, % "ahk_class #32770"
 
     try {
-        DialogId   := WinActive("A")
-        FileDialog := GetFileDialog(DialogId, EditId)
-
-        if !FileDialog {
+        DialogId := WinActive("A")
+        if !IsFileDialog(DialogId, EditId) {
             WinWaitNotActive, % "ahk_id " DialogId
             Continue
         }

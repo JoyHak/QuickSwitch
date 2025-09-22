@@ -66,7 +66,7 @@ LV_WriteLine(_file, _row, _maxWidths) {
 ;
 ExportDebug() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global FingerPrint, FileDialog
+    global FingerPrint
 
     try {
         _fileName := A_ScriptDir "\" FingerPrint ".csv"
@@ -103,7 +103,7 @@ ExportDebug() {
 ShowDebug() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Displays information about the file dialog Controls
-    global FileDialog, DialogId, MainFont, GuiColor, DarkTheme
+    global DialogId, MainFont, GuiColor, DarkTheme
     
     Gui, Destroy
     Gui, -DPIScale
@@ -140,5 +140,5 @@ ShowDebug() {
         SetDarkTheme("&Export|&Cancel|SysListView321")
     }
     
-    Gui, Show,, % FileDialog.name
+    Gui, Show,, % "File dialog controls"
 }

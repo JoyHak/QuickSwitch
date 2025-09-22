@@ -43,7 +43,6 @@ ShowSettings() {
                     
     Gui, Add, CheckBox,     y+20                            vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
-    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
     Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
                     
@@ -151,18 +150,14 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-    
-    ; Get longest control info: pos(X, Y, Width, Height)
-    GuiControlGet, pos, Pos, SendEnter
-    local posX   := posW / 2 - 10
+
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
-
-    Gui, Add, Button,       x%posX%         w74             gGuiEscape              Section,                        &Cancel
-    Gui, Add, Button,       x+20      yp    wp              g%button%Settings,                                      &%button%
-    Gui, Add, Button,       xs-94     yp    wp              gSaveSettings           Default,                        &OK
-    Gui, Add, Button,       x%posW%   ym-4                  gShowDebug,                                             Debu&g
-
+  
+    Gui, Add, Button,       w74 xm+40       Default         gSaveSettings,                                          &OK
+    Gui, Add, Button,       wp x+20 yp      Cancel          gGuiEscape,                                             &Cancel
+    Gui, Add, Button,       wp x+20 yp                      g%button%Settings,                                      &%button%
+    Gui, Add, Button,       x+-20 ym-4                      gShowDebug,                                             &Debug
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Current checkbox state
@@ -176,12 +171,13 @@ ShowSettings() {
     InitMouseMode("Main",    MainMousePlaceholder    != "")
     InitMouseMode("Restart", RestartMousePlaceholder != "")
 
-    if DarkTheme {
+    if DarkTheme
         SetDarkTheme("&OK|&Cancel|&Nuke|&Debug|&Reset|msctls_hotkey321")
-    }
 
     ; Get dialog position
-    local _pos := ""
+    local _pos  := ""
+        , _posX := ""
+        , _posY := ""
     WinGetPos, _posX, _posY,,, A
 
     if (_posX && _posY)

@@ -23,7 +23,7 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
             if !WinActive("ahk_id " DialogId)
                 return SendPath(paths[_pos][1])
 
-            if (%FileDialog%(SendEnter, EditId, paths[_pos][1], SelectPathAttempts))
+            if FillDialog(EditId, paths[_pos][1], SelectPathAttempts)
                 return (ShowAfterSelect || ShowAlways) ? ShowMenu() : 0
 
         } catch _ex {
@@ -43,7 +43,7 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
     ; Log additional info and error details (if catched)
     LogError("Failed to feed the file dialog"
             , _name ? "Menu selection" : "Auto Switch"
-            , FileDialog.name ": Timeout. " _log)
+            , "Timeout. " _log)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

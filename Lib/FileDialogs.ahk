@@ -1,18 +1,5 @@
-/*
-    Contains functions that feeds specific dialog.
-    GetFileDialog() returns the FuncObj to call it later
-    and feed the current dialog.
-
-    "editId" param must be existing Edit control uniq ID (handle)
-    "path"   param must be a string valid for any dialog
-*/
-
-FeedDialogGENERAL(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
-    ; Always send "Enter" key to the General dialog
-    return FeedDialogSYSTREEVIEW(true, editId, path, attempts)
-}
-
-FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts := 3) {
+FillDialog(ByRef editId, ByRef path, ByRef attempts := 3) {
+    ; Fills Edit field by specified handle with "path".
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, % "ahk_id " editId
 
@@ -24,9 +11,6 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
 
         if (_path = path) {
             ; Successfully changed
-            if !sendEnter
-                return true
-
             ControlSend,, % "{Enter}", % "ahk_id " editId
 
             ; Restore filename
@@ -40,9 +24,9 @@ FeedDialogSYSTREEVIEW(ByRef sendEnter, ByRef editId, ByRef path, ByRef attempts 
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
+IsFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Gets all dialog controls and returns FuncObj for this dialog
+    ; Checks all dialog controls and returns true
     ; if required controls found, otherwise returns "false"
 
     try {
@@ -71,14 +55,7 @@ GetFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
     }
 
     ; Check for specific controls
-    if (_f & 8 && _f & 16)
-        return Func("FeedDialogGENERAL")      ; Main
-
-    if (_f & 1 && _f & 4 && _f & 8)
-        return Func("FeedDialogSYSTREEVIEW")  ; Rare
-
-    if (_f = 2)
-        return Func("FeedDialogSYSTREEVIEW")  ; Very old
-
-    return false
+    return (_f & 8 && _f & 16)
+        || (_f & 1 && _f & 4 && _f & 8)
+        || (_f = 2)
 }
