@@ -4,7 +4,7 @@
 SendMessage(ByRef winId, _message := 74, ByRef wParam := 0, ByRef lParam := 0) {
     try {
         SendMessage, % _message, % wParam, % lParam,, % "ahk_id " winId
-        return true
+        return (ErrorLevel = 0)
     } catch _ex {
         throw Exception("Unable to send message"
                       , GetWinProccess(winId) " message"
