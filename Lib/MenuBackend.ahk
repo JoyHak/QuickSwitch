@@ -11,13 +11,13 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
     loop, % SelectPathAttempts {
         try {
             ; Called from the Menu
-            if _name {  
+            if _name {
                 if (ShowPinned && GetKeyState(PinKey)) {
                     if (_pos > PinnedPaths.length())
                         PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
                     else
                         PinnedPaths.RemoveAt(_pos)
-    
+
                     WritePinnedPaths := true
                     return ShowMenu()
                 }
@@ -25,10 +25,10 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
                 if IsDialogClosed
                     return SendPath(paths[_pos][1])
             }
-            
+
             ; Select path
             if FillDialog(EditId, paths[_pos][1], SelectPathAttempts)
-                return (ShowAfterSelect || ShowAlways) ? ShowMenu() : 0
+                return ((_name && ShowAfterSelect) || ShowAlways) ? ShowMenu() : 0
 
         } catch _ex {
             if (A_Index = SelectPathAttempts)
@@ -80,10 +80,11 @@ IsMenuReady() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
 
-    return ( WinActive("ahk_id " DialogId)
-        && ( (ShowAlways && (DialogAction != -1))
-          || (ShowNoSwitch && (DialogAction = 0))
-          || (ShowAfterSettings && FromSettings) ) )
+    if !WinActive("ahk_id " DialogId)
+        return false
+
+    return ((ShowAlways || ShowNoSwitch) && (DialogAction = 0))
+        || (ShowAfterSettings && FromSettings)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

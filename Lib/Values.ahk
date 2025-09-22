@@ -21,7 +21,7 @@ IsDialogClosed      :=  true
 WriteDialogAction   :=  false
 WritePinnedPaths    :=  false
 FromSettings        :=  false
-    
+
 DeleteDialogs       :=  false
 DeletePinned        :=  false
 DeleteFavorites     :=  false
@@ -39,14 +39,14 @@ SetDefaultValues() {
         - INI settings are invalid
         - INI doesn't exist (yet)
         - the values must be reset
-        
+
         You can find the meaning of each option in Lib\SettingsFrontend
     */
     global
-    
+
     DarkTheme           :=  IsDarkTheme()
-    DarkColors          :=  true  
-    
+    DarkColors          :=  true
+
     ShowManagers        :=  true
     AutoStartup         :=  true
     PathNumbers         :=  true
@@ -57,16 +57,16 @@ SetDefaultValues() {
 
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
-    
+
     AutoSwitch          :=  false
     BlackListProcess    :=  false
-    
+
     ActiveTabOnly       :=  false
     ShowLockedTabs      :=  false
     ShowFavorites       :=  false
     ShowPinned          :=  false
     ShowClipboard       :=  false
-    
+
     ShortPath           :=  false
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
@@ -80,11 +80,11 @@ SetDefaultValues() {
     RestartWhere   := "ahk_exe notepad++.exe"
     MainFont       := "Tahoma"
     ShortNameIndicator := ".."
-    
+
     PinMousePlaceholder     := "Right"
     MainMousePlaceholder    := ""
     RestartMousePlaceholder := ""
-    
+
     ; Requires validation
     PinKey         := "RButton"
     MainKey        := "^sc10"
@@ -195,7 +195,7 @@ IsFile(ByRef path) {
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsw
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsFile  := DllCall("GetProcAddress", "ptr", shlwapi, "astr", "PathFileExistsW", "ptr")
-    
+
     return DllCall(IsFile, "ptr", &path)
 }
 
@@ -226,10 +226,10 @@ ValidateDirectory(_paramName, ByRef path) {
     ; otherwise returns value from config
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
     global INI
-    
+
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
-    
+
     ; Filter the path
     path := Trim(path, " `t\/.")
     path := StrReplace(path, "/" , "\")
@@ -239,17 +239,17 @@ ValidateDirectory(_paramName, ByRef path) {
         ; Сheck the correctness of the directory
         if (DllCall(IsPath, "str", path))
             return _paramName "=" path "`n"
-        
+
         ; If this is a file or an incorrect directory, get the parent
         path := SubStr(path, 1, InStr(path, "\",, -1))
     }
-    
+
     if !_paramName
         return ""
-    
+
     LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
-    
-    ; Return value from config        
+
+    ; Return value from config
     IniRead, _default, % INI, % "Global", % _paramName, % A_Space
     return _paramName "=" _default "`n"
 }
@@ -264,23 +264,23 @@ ValidateTrayIcon(_paramName, ByRef icon) {
         otherwise returns value from config
     */
     global INI
-    
+
     if !icon {
         Menu, % "Tray", % "Icon", *
         return _paramName "=`n"
     }
 
     try {
-        ExpandVariables(icon)        
+        ExpandVariables(icon)
         Menu, % "Tray", % "Icon", % icon
         return _paramName "=" icon "`n"
     }
-    
+
     if !_paramName
         return ""
-        
+
     LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
-    
+
     IniRead, _default, % INI, % "Global", % _paramName, % A_Space
     return _paramName "=" _default "`n"
 }
@@ -296,16 +296,16 @@ ValidateColor(_paramName, ByRef color) {
         otherwise returns empty color
     */
     global INI
-    
+
     if color {
         if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
             return _paramName "=" _color "`n"
-        
+
         if !_paramName
             return ""
-        
+
         LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
-        
+
         IniRead, _default, % INI, % "Global", % _paramName, % A_Space
         return _paramName "=" _default "`n"
     }
@@ -331,8 +331,8 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 
     try {
         if !_sequence
-            return _paramName "=`n"            
-        
+            return _paramName "=`n"
+
         _isSpecial := false
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted
@@ -340,7 +340,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         } else if (GetMouseList("isMouse", _sequence)) {
             ; Convert to mouse buttons
             _key := GetMouseList("convertMouse", _sequence)
-        
+
         } else if (GetMouseList("isSpecial", _sequence)) {
             ; Don't change, use hook
             _key       :=  _sequence
@@ -364,20 +364,20 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 
         if _function {
             ; Register new hotkey
-            Hotkey, % _prefix . _key, % _function, % _state            
+            Hotkey, % _prefix . _key, % _function, % _state
             if _isSpecial
                 RegisteredSpecialKeys[_key] := true
-            
+
             if !_paramName
                 return ""
-            
+
             try {
                 ; Remove old if exist
                 IniRead, _old, % INI, % "Global", % _paramName, % A_Space
                 if (_old && (_old != _key)) {
                     Hotkey, % _prefix . _old, % "Off"
                     Hotkey, % _old, % "Off"
-                    
+
                     if _isSpecial
                         RegisteredSpecialKeys[_old] := false
                 }
@@ -387,15 +387,15 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             ; Set state for existing hotkey
             Hotkey, % _prefix . _key, % _state
         }
-            
+
         return _paramName "=" _key "`n"
 
-    } catch _ex {        
+    } catch _ex {
         if !_paramName
             return ""
-            
+
         LogException(_ex)
-        
+
         ; Return value from config
         IniRead, _default, % INI, % "Global", % _paramName, % A_Space
         return _paramName "=" _default "`n"
@@ -443,7 +443,7 @@ ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
     ; Restores or saves the "paths" array depending on the flags.
     ; Returns the number of paths in the array after processing.
     global INI, WritePinnedPaths
-    
+
     if (_state && !paths.length()) {
         IniRead, _paths, % INI, % "App", % _paramName, % A_Space
         if _paths {
@@ -451,21 +451,21 @@ ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
             {
                 paths.push([A_LoopField, "Pin.ico", 1, ""])
             }
-        }            
+        }
         return paths.length()
     }
-    
+
     if ((!_state || WritePinnedPaths) && paths.length()) {
-        WritePinnedPaths := false   
+        WritePinnedPaths := false
         _paths := ""
         for _, _arr in GetUniqPaths(paths)
             _paths .= "|" . _arr[1]
-            
+
         try IniWrite, % LTrim(_paths, "|"), % INI, % "App", % _paramName
-    }    
-    
+    }
+
     if !_state
         paths := []
-    
+
     return paths.length()
 }
