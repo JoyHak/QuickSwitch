@@ -102,7 +102,7 @@ Loop {
 
         ; Turn on registered hotkey to show menu later
         ValidateKey("MainKey", MainKey,, "On")
-        
+
         if IsMenuReady()
             SendInput ^#+0
 
