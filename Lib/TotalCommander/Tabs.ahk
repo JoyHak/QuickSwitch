@@ -46,14 +46,18 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
     ; Parses tabsFile.
     ; Searches for the active tab using the "activetab" parameter
             
+    ; Tabs index starts with 0, array index starts with 1
+    IniRead, _active, % tabsFile, % "activetabs", % "activetab", 0
+    _active += 1
     _paths  := []   
+    
     Loop, read, % tabsFile
     {
         _line := A_LoopReadLine
         
         ; Get path, omit the "path=" key
-        if (_pos := InStr(_line, "path=")) {
-            _path := RTrim(SubStr(_line, _pos + 5), "\")
+        if (_path := InStr(_line, "path=")) {
+            _path := RTrim(SubStr(_line, _path + 5), "\")
             _paths.push([_path, "TotalCmd.ico", 1, ""])
             continue
         }
@@ -63,14 +67,16 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
             _bits := SubStr(_line, _bits + 8)    ; bits 1|0|0...
             _lock := 0 + SubStr(_bits, 11, 1)    ; Integer at 11 pos.
             
-            if (_lock > 0)
+            if (_lock > 0) {
                 _paths.pop()
+                
+                ; If the element is removed to the left of _active, 
+                ; then shift _active to the left
+                if (_paths.length() < _active)
+                    _active--
+            }
         }
     }
-
-    ; Tabs index starts with 0, array index starts with 1
-    IniRead, _active, % tabsFile, % "activetabs", % "activetab", 0
-    _active += 1
 
     ; Push the active tab to the array first.
     ; Remove duplicate and add the remaining tabs
