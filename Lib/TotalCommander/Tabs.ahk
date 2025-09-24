@@ -4,33 +4,41 @@
     See options and documentation in Lib\MenuFrontend
 */
 
-WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 6) {
+WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 3) {
     ; Waits for access to a file with tabs. Monitors write changes for a dynamic fast timeout instead of Sleep().
     
     _notificationId := DllCall("FindFirstChangeNotificationW", "ptr", &tabsDir, "int", 1, "uint", 17)
     if (_notificationId = -1)
-       throw Exception("Tabs file doesn't exist", "TotalCmd tabs")
+       throw Exception("Tabs directory doesn't exist"
+                     , "TotalCmd tabs"
+                     , "Please create it manually: '" tabsDir "'")
 
     loop % _attempts {
         ; Wait for the write changes with timeout
-        DllCall("WaitForSingleObject", "ptr", _notificationId, "uint", 500)
+        _result := DllCall("WaitForSingleObject", "ptr", _notificationId, "uint", 500)
         DllCall("FindNextChangeNotification", "ptr", _notificationId)
-    
+        
+        if (_result != 0)
+            continue
+        
         ; Request access to the file
+        ; Wait in case the tabs is writed again
+        Sleep 50  
         _fileId := DllCall("CreateFileW"
             , "ptr", &tabsFile 
             , "uint", 0x80000000          ; Read access    
             , "uint", 0, "uint", 0 
             , "uint", 3                   ; Open only if exists
-            , "uint", 0, "uint", 0)         
-        
-        if (_fileId = -1)
+            , "uint", 0, "uint", 0)
+
+        if (_fileId = -1) {
+            ; File is being used
+            Sleep 50    
             continue
-        
+        }
+
         DllCall("CloseHandle", "ptr", _fileId)
         DllCall("FindCloseChangeNotification", "ptr", _notificationId)
-        Sleep 50  ; Wait in case the tabs is writed again
-        
         return true
     }  
     
@@ -38,7 +46,7 @@ WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 6) {
     
     throw Exception("Unable to access tabs"
         , "TotalCmd tabs"
-        , "Restart TotalCmd and retry`n"
+        , "`nWatcher result: " _result " Last error: " A_LastError "`n"
         . ValidateFile(tabsFile))
 }
 

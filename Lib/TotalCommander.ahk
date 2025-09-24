@@ -39,6 +39,13 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
                           , "admin permission"
                           , _ex.what " " _ex.message " " _ex.extra)
         
+        ; Check if required dir exists
+        dirWasCreated := false 
+        if !FileExist(tabsDir) {
+            FileCreateDir % tabsDir
+            dirWasCreated := true
+        }
+        
         ; Create user command and retry
         if (lastWinId != winId) {
             LogInfo("Required to create user command: [" userCmd "]", "NoTraytip")
@@ -46,9 +53,9 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
         }
         lastWinId := winId
         
-        ; Retry if user command was successfully created
-        if (CreateTotalUserCmd(userIni, userCmd, internalCmd, tabsFile)) {
-            FileCreateDir % tabsDir
+        ; Retry if user command or new dir was successfully created
+        if (CreateTotalUserCmd(userIni, userCmd, internalCmd, tabsFile)
+         || dirWasCreated) {
             return TTOTAL_CMD(winId, paths, _activeTabOnly, _showLockedTabs)
         }
         
