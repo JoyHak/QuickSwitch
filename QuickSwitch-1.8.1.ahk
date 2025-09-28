@@ -95,7 +95,10 @@ Loop {
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
-            GetPaths(ManagersPaths := [], DialogAction == 1, ActiveTabOnly, ShowLockedTabs)
+            
+            GetPaths(ManagersPaths := [], DialogAction == 1
+                   , %AutoSwitchTarget%, AutoSwitchIndex
+                   , ActiveTabOnly, ShowLockedTabs)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
         IsDialogClosed := false
@@ -112,7 +115,7 @@ Loop {
     } catch GlobalEx {
         LogException(GlobalEx)
     }
-
+    
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
     ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)

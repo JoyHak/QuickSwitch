@@ -1,4 +1,4 @@
-GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLockedTabs := false) {
+GetPaths(ByRef paths, _autoSwitch := false, _autoSwitchTarget := "", _autoSwitchIndex := 1, _activeTabOnly := false, _showLockedTabs := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     global IsDialogClosed, DialogId, EditId
@@ -42,18 +42,18 @@ GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLocked
         }
         
         ; AutoSwitch only if the dialog was already open and it's fully rendered (issue #77)
-        if (_autoSwitch && !IsDialogClosed && paths.Length()) {
+        if (_autoSwitch && !IsDialogClosed && _autoSwitchTarget.Length()) {
             _autoSwitch := false
-            SwitchPath(paths[1][1])
+            SwitchPath(_autoSwitchTarget[_autoSwitchIndex][1])
         }
     } 
     
     ; AutoSwitch if all paths are recieved.
     ; Switch focus to non-buttons to prevent accidental closing (issue #77)
-    if (_autoSwitch && paths.Length()) {
+    if (_autoSwitch && _autoSwitchTarget.Length()) {
         try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
         ControlSend,,     % "{end}{space}",   % "ahk_id " EditId
-        SwitchPath(paths[1][1])
+        SwitchPath(_autoSwitchTarget[_autoSwitchIndex][1])
     }
 }
 

@@ -41,7 +41,13 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Selecting &path
     Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always
 
-    Gui, Add, CheckBox,     y+20                            vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
+    Gui, Add, Text,         y+20                                                  Section,                          Auto Switch
+    Gui, Add, Edit,         ys-5 w40 r1 -Wrap -vscroll      Limit2
+    Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
+    Gui, Add, Text,         ys+5                                                  Section,                          path from
+    Gui, Add, DropDownList, ys-5 w105                       vAutoSwitchTarget,                                      % StrReplace("PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack", AutoSwitchTarget, AutoSwitchTarget "|")
+
+    Gui, Add, CheckBox,     y+10 xm+15                      vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
     Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
