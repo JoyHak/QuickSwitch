@@ -45,7 +45,7 @@ ShowSettings() {
     Gui, Add, Edit,         ys-5 w40 r1 -Wrap -vscroll      Limit2
     Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
     Gui, Add, Text,         ys+5                            vCenteredText         Section,                          path from
-    Gui, Add, DropDownList, ys-5 w120                       vAutoSwitchTarget,                                      % StrReplace("PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths", AutoSwitchTarget, AutoSwitchTarget "|")
+    Gui, Add, DropDownList, ys-5 w120                       vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths
 
     Gui, Add, CheckBox,     y+10 xm+15                      vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
@@ -167,6 +167,12 @@ ShowSettings() {
 
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ; Pre-select ListBox items
+    GuiControl, % "ChooseString", % "AutoSwitchTarget",     % AutoSwitchTarget
+    GuiControl, % "ChooseString", % "PinMouseListBox",      % PinMousePlaceholder
+    GuiControl, % "ChooseString", % "MainMouseListBox",     % MainMousePlaceholder
+    GuiControl, % "ChooseString", % "RestartMouseListBox",  % RestartMousePlaceholder
+    
     ; Current checkbox state
     ToggleShowAlways()
     ToggleIcons()
