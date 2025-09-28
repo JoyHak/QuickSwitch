@@ -2,7 +2,7 @@ GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLocked
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     global IsDialogClosed, DialogId, EditId
-    
+
     ; Get manager uniq IDs
     WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
     Loop, % _winIdList {
@@ -30,9 +30,9 @@ GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLocked
         }
 
         try {
-            if !(%_winClass%(_winId, paths, _activeTabOnly, _showLockedTabs)) {
+            if !(%_winClass%(_winId, paths, _activeTabOnly, _showLockedTabs))
                 AddElevatedName(_winPid)
-            }
+                
         } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid)
@@ -40,22 +40,20 @@ GetPaths(ByRef paths, _autoSwitch := false, _activeTabOnly := false, _showLocked
 
             LogException(_ex)
         }
-
-        if (_autoSwitch && paths[1]) {
+        
+        ; AutoSwitch only if the dialog was already open and it's fully rendered (issue #77)
+        if (_autoSwitch && !IsDialogClosed && paths.Length()) {
             _autoSwitch := false
-            ; Switch focus to non-buttons to prevent accidental closing
-            if IsDialogClosed {
-                try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
-                ControlSend,, % "{end}{space}", % "ahk_id " EditId
-                
-                _select := Func("SelectPath").Bind(paths)
-                SetTimer, % _select, -300
-
-                continue           
-            }
-
-            SelectPath(paths)
+            SwitchPath(paths[1][1])
         }
+    } 
+    
+    ; AutoSwitch if all paths are recieved.
+    ; Switch focus to non-buttons to prevent accidental closing (issue #77)
+    if (_autoSwitch && paths.Length()) {
+        try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
+        ControlSend,,     % "{end}{space}",   % "ahk_id " EditId
+        SwitchPath(paths[1][1])
     }
 }
 
