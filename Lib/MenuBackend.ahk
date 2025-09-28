@@ -1,36 +1,22 @@
 ; These functions are responsible for the Context Menu functionality and its Options
 
 Dummy() {
-    Return
+    return
 }
 
-SelectPath(ByRef paths, _name := "", _pos := 1) {
+SwitchPath(ByRef path, _fromMenu := "") {
     global
 
     local _ex, _winPid, _log := ""
-    loop, % SelectPathAttempts {
+    loop % SelectPathAttempts {
         try {
-            ; Called from the Menu
-            if _name {
-                if (ShowPinned && GetKeyState(PinKey)) {
-                    if (_pos > PinnedPaths.length())
-                        PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
-                    else
-                        PinnedPaths.RemoveAt(_pos)
-
-                    WritePinnedPaths := true
-                    return ShowMenu()
-                }
-
-                if IsDialogClosed
-                    return SendPath(paths[_pos][1])
-            }
-
-            ; Select path
-            if FillDialog(EditId, paths[_pos][1], SelectPathAttempts)
-                return ((_name && ShowAfterSelect) || ShowAlways) ? ShowMenu() : 0
+            if FillDialog(EditId, path, SelectPathAttempts)
+                return true
 
         } catch _ex {
+            if !WinActive("ahk_id " DialogId)
+                return false
+        
             if (A_Index = SelectPathAttempts)
                 _log := _ex.what " " _ex.message " " _ex.extra
         }
@@ -40,14 +26,34 @@ SelectPath(ByRef paths, _name := "", _pos := 1) {
     WinGet, _winPid, pid, % "ahk_id " DialogId
 
     if (IsAppElevated(_winPid)
-     || AddElevatedName(_winPid)) {
-        return
-    }
+     || AddElevatedName(_winPid))
+        return false
 
     ; Log additional info and error details (if catched)
-    LogError("Failed to feed the file dialog"
-            , _name ? "Menu selection" : "Auto Switch"
-            , "Timeout. " _log)
+    return LogError("Failed to feed the file dialog"
+                  , _fromMenu ? "Menu selection" : "AutoSwitch"
+                  , "Timeout. " _log)
+}
+
+SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
+    global
+    
+    if (ShowPinned && GetKeyState(PinKey)) {
+        if (_pos > PinnedPaths.Length())
+            PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
+        else
+            PinnedPaths.RemoveAt(_pos)
+
+        WritePinnedPaths := true
+        return CreateMenu()
+    }
+
+    if IsDialogClosed
+        return SendPath(paths[_pos][1])
+    
+    SwitchPath(paths[_pos][1], _fromMenu)
+    if (ShowAlways || ShowAfterSelect)
+        ShowMenu()
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -79,12 +85,9 @@ SendPath(path) {
 IsMenuReady() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
-
-    if !WinActive("ahk_id " DialogId)
-        return false
-
-    return ((ShowAlways || ShowNoSwitch) && (DialogAction = 0))
-        || (ShowAfterSettings && FromSettings)
+    return ShowAlways && DialogAction != -1
+        || ShowNoSwitch && DialogAction = 0
+        || ShowAfterSettings && FromSettings
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -95,11 +98,13 @@ ToggleAutoSwitch() {
 
     DialogAction := (DialogAction = 1) ? 0 : 1
     WriteDialogAction := true
-
+    AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
+    
     if (DialogAction = 1)
-        SelectPath(ManagersPaths)
+        SwitchPath(ManagersPaths[1][1])
+
     if IsMenuReady()
-        SendInput ^#+0
+        ShowMenu()
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -110,10 +115,11 @@ ToggleBlackList() {
 
     DialogAction := (DialogAction = -1) ? 0 : -1
     WriteDialogAction := true
-
+    AddMenuOption("BlackList", "ToggleBlackList", DialogAction = -1)
+    
     if BlackListProcess
         FingerPrint := DialogProcess
 
     if IsMenuReady()
-       SendInput ^#+0
+       ShowMenu()
 }

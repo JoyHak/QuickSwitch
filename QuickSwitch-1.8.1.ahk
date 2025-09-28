@@ -99,11 +99,13 @@ Loop {
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
         IsDialogClosed := false
-
-        ; Turn on registered hotkey to show menu later
+        
+        ; Force menu re-creation on first hotkey press
+        try Menu, % "ContextMenu", % "Delete"
+        ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
 
-        if IsMenuReady()
+        if (WinActive("ahk_id " DialogId) && IsMenuReady())
             SendInput ^#+0
 
         LogElevatedNames()
@@ -111,7 +113,6 @@ Loop {
         LogException(GlobalEx)
     }
 
-    Sleep, 100
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
     ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
@@ -140,9 +141,8 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 ExitApp
 
 
-; Popup main Menu
 ^#+0::
-    ShowMenu()
+    CreateMenu()
 
     ; Release all keys to prevent holding
     SendInput, % "{Ctrl up}{Win up}{Shift up}"
