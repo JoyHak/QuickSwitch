@@ -57,8 +57,6 @@ SetDefaultValues() {
 
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
-
-    AutoSwitch          :=  false
     BlackListProcess    :=  false
 
     ActiveTabOnly       :=  false
@@ -72,28 +70,32 @@ SetDefaultValues() {
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
 
-    IconsSize      := 25
-    DirsCount      := 3
-    DirNameLength  := 20
-    PathLimit      := 9
-    PathSeparator  := "\"
-    RestartWhere   := "ahk_exe notepad++.exe"
-    MainFont       := "Tahoma"
+    IconsSize     := 25
+    DirsCount     := 3
+    DirNameLength := 20
+    PathLimit     := 9
+    PathSeparator := "\"
+    RestartWhere  := "ahk_exe notepad++.exe"
+    MainFont      := "Tahoma"
     ShortNameIndicator := ".."
 
     PinMousePlaceholder     := "Right"
     MainMousePlaceholder    := ""
     RestartMousePlaceholder := ""
 
+    AutoSwitch       := false
+    AutoSwitchIndex  := 1
+    AutoSwitchTarget := "ManagersPaths"
+
     ; Requires validation
-    PinKey         := "RButton"
-    MainKey        := "^sc10"
-    RestartKey     := "^sc1F"
-    IconsDir       := "Icons"
-    FavoritesDir   := "Favorites"
-    MainIcon       := ""
-    MenuColor      := ""
-    GuiColor       := ""
+    PinKey       := "RButton"
+    MainKey      := "^sc10"
+    RestartKey   := "^sc1F"
+    IconsDir     := "Icons"
+    FavoritesDir := "Favorites"
+    MainIcon     := ""
+    MenuColor    := ""
+    GuiColor     := ""
     SetDefaultColors()
 
     ;@Ahk2Exe-IgnoreBegin
@@ -127,6 +129,8 @@ WriteValues() {
     ShowAlways="              ShowAlways              "
     ShowAfterSelect="         ShowAfterSelect         "
     AutoSwitch="              AutoSwitch              "
+    AutoSwitchIndex="         AutoSwitchIndex         "
+    AutoSwitchTarget="        AutoSwitchTarget        "
     BlackListProcess="        BlackListProcess        "
     ActiveTabOnly="           ActiveTabOnly           "
     ShowLockedTabs="          ShowLockedTabs          "

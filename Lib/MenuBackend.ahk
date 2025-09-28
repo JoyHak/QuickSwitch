@@ -101,7 +101,7 @@ ToggleAutoSwitch() {
     AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
     
     if (DialogAction = 1)
-        SwitchPath(ManagersPaths[1][1])
+        SwitchPath(AutoSwitchTarget[AutoSwitchIndex][1])
 
     if IsMenuReady()
         ShowMenu()
