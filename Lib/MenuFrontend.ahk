@@ -23,13 +23,13 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
         if ShowIcons {
             if !IsFile(_icon)
                 _icon := IconsDir "\" _icon
-
+                
             Menu, % "ContextMenu", % "Icon",  % _title, % _icon, % _iconNumber, % IconsSize
         } else if _isToggle {
             Menu, % "ContextMenu", % "Check", % _title
         }
     } catch _ex {
-        LogError("Wrong path to the icon: `'" _ex.Extra "`'", "icon")
+        LogError("Wrong path to the icon: '" _ex.Extra "'", "icon")
         ShowIcons := false
     }
 }
@@ -87,7 +87,7 @@ AddMenuOptions() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ShowMenu() {
+CreateMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
     FromSettings := false
@@ -115,5 +115,15 @@ ShowMenu() {
     WinActivate, % "ahk_id " DialogId           ; Activate dialog to prevent Menu flickering
     Menu, % "ContextMenu", % "Show", 0, 100     ; Show new menu and halt the thread
     return true
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ShowMenu() {
+;─────────────────────────────────────────────────────────────────────────────    
+    try 
+        Menu, % "ContextMenu", % "Show", 0, 100
+    catch
+        CreateMenu()
 }
 
