@@ -44,8 +44,8 @@ ShowSettings() {
     Gui, Add, Text,         y+20                                                  Section,                          Auto Switch
     Gui, Add, Edit,         ys-5 w40 r1 -Wrap -vscroll      Limit2
     Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
-    Gui, Add, Text,         ys+5                                                  Section,                          path from
-    Gui, Add, DropDownList, ys-5 w105                       vAutoSwitchTarget,                                      % StrReplace("PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack", AutoSwitchTarget, AutoSwitchTarget "|")
+    Gui, Add, Text,         ys+5                            vCenteredText         Section,                          path from
+    Gui, Add, DropDownList, ys-5 w120                       vAutoSwitchTarget,                                      % StrReplace("PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths", AutoSwitchTarget, AutoSwitchTarget "|")
 
     Gui, Add, CheckBox,     y+10 xm+15                      vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
@@ -156,14 +156,15 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ 
+    local _button := NukeSettings ? "Nuke" : "Reset"
+    NukeSettings  := false
 
-    local button := NukeSettings ? "Nuke" : "Reset"
-    NukeSettings := false
+    Gui, Add, Button,       x142  w74                       gGuiEscape              Section,                        &Cancel
+    Gui, Add, Button,       x+20  yp wp                     g%_button%Settings,                                     &%_button%
+    Gui, Add, Button,       xs-94 yp wp                     gSaveSettings           Default,                        &OK
+    Gui, Add, Button,       x314  ym-4                      gShowDebug,                                             Debu&g
 
-    Gui, Add, Button,       w74 xm+40       Default         gSaveSettings,                                          &OK
-    Gui, Add, Button,       wp x+20 yp      Cancel          gGuiEscape,                                             &Cancel
-    Gui, Add, Button,       wp x+20 yp                      g%button%Settings,                                      &%button%
-    Gui, Add, Button,       x+-20 ym-4                      gShowDebug,                                             &Debug
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Current checkbox state
