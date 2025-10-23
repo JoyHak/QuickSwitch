@@ -41,7 +41,7 @@ You can select keys or mouse buttons on `Settings > App` tab. You can even selec
 
 ## Appearance
 ### Short path
-If you've turned off `Menu > Paths numbers with shortcuts` option, turn on `ShortPath > Show short path...` to underscore the first letters of the directory, i.e., assign keys to menu items.
+If you've turned off `Menu > Paths numbers with shortcuts` option, turn on `ShortPath > Show short path...` to underline the first letters of the directory, i.e., assign keys to menu items.
 
 When you turn on `ShortPath > Show short path...` the path is shortened to a specified number of directories. For example, enter number `2` in the `Number of dirs` field on the `ShortPath` tab. If the path to the menu will contain more than 2 directories (`C:\Windows\System32\Resources`), it will be shortened to 2 directories: `System32\Resources`
 
@@ -50,7 +50,7 @@ When you turn on `ShortPath > Show short path...` the path is shortened to a spe
 
 You can include the disk letter at the beginning or change the separator of the directories to anything, e.g. tilda `~`: `W:~Windows~System32`
 
-The first letter of the path (or selected tilda `~`) will be <ins>underscored</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underscored</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](https://github.com/JoyHak/QuickSwitch/edit/main/README.md#keyboard)).
+The first letter of the path (or selected tilda `~`) will be <ins>underlined</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underlined</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](https://github.com/JoyHak/QuickSwitch/edit/main/README.md#keyboard)).
 
 The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underscored in your Menu.
 
@@ -220,6 +220,7 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
 
