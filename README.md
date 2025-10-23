@@ -52,6 +52,18 @@ You can include the disk letter at the beginning or change the separator of the 
 
 The first letter of the path (or selected tilda `~`) will be <ins>underlined</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underlined</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](https://github.com/JoyHak/QuickSwitch/edit/main/README.md#keyboard)).
 
+<details><summary>Underlined letters examples</summary>
+
+C̲:\Windows – press `C` to activate this path and change file dialog path.
+
+W̲indows\System32 – press `W` to activate this path.
+
+.̲.̲Windows – press `.` to activate this path.
+
+~̲Windows – press `~` to activate this path.
+ 
+</details>
+
 The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underlined in your Menu.
 
 #### Menu sections
@@ -220,6 +232,7 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
 
