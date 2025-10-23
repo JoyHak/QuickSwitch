@@ -52,7 +52,7 @@ You can include the disk letter at the beginning or change the separator of the 
 
 The first letter of the path (or selected tilda `~`) will be <ins>underlined</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underlined</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](https://github.com/JoyHak/QuickSwitch/edit/main/README.md#keyboard)).
 
-The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underscored in your Menu.
+The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underlined in your Menu.
 
 #### Menu sections
 In addition to the paths from the file managers, you can add additional paths to the Menu on `Settings > Theme` tab.
@@ -220,6 +220,7 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
 
