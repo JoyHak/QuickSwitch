@@ -39,7 +39,7 @@ Here is a short list of the main keys:
 
 You can select keys or mouse buttons on `Settings > App` tab. You can even select the `CapsLock` or `Win` key in the settings or the middle mouse button to show the Menu. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them.
 
-## Appearanc
+## Appearance
 ### Short path
 If you've turned off `Menu > Paths numbers with shortcuts` option, turn on `ShortPath > Show short path...` to underscore the first letters of the directory, i.e., assign keys to menu items.
 
@@ -220,6 +220,7 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
 
