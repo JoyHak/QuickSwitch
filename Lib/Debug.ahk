@@ -66,17 +66,18 @@ LV_WriteLine(_file, _row, _maxWidths) {
 ;
 ExportDebug() {
 ;─────────────────────────────────────────────────────────────────────────────
-    global FingerPrint
+    global FingerPrintActive
 
     try {
-        _fileName := A_ScriptDir "\" FingerPrint ".csv"
+        _fileName := A_ScriptDir "\" FingerPrintActive ".csv"
         _file := FileOpen(_fileName, "w")
         if !IsObject(_file) {
             return LogError(_fileName
                          , "export"
                          , "File closed for writing. Check the attributes of the target directory")
         }
-
+        
+        _file.writeLine(FingerPrintActive "`n")
         ; Align ListView contents vertically to write readable table
         _columns    :=  ["Control", "Text", "ID", "PID", "X", "Y", "Width", "Height"]
         _maxWidths  :=  LV_MaxWidths(_columns)
@@ -103,7 +104,7 @@ ExportDebug() {
 ShowDebug() {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Displays information about the file dialog Controls
-    global DialogId, MainFont, GuiColor, DarkTheme
+    global DialogId, MainFont, GuiColor, DarkTheme, FingerPrintActive
     
     Gui, Destroy
     Gui, -DPIScale
@@ -116,7 +117,7 @@ ShowDebug() {
     SetFormat, Integer, D
     Gui, Add, ListView, r30 w1024, Control||Text|ID|PID|X|Y|Width|Height
 
-    WinGet, _controlsList, ControlList, ahk_id %DialogId%
+    WinGet, _controlsList, ControlList, A
     Loop, Parse, _controlsList, `n
     {
         ControlGet, _id, hwnd,, % A_LoopField, A
@@ -125,7 +126,7 @@ ShowDebug() {
 
         _pid := DllCall("GetParent", "Ptr", _id)
         ; Abs for hex to dec
-        LV_Add(, A_LoopField, _text, abs(_id), _pid, _x, _y, _width, _height)
+        LV_Add( , A_LoopField, _text, Abs(_id), _pid, _x, _y, _width, _height)
     }
 
     ; Auto-size each column to fit its contents
@@ -140,5 +141,10 @@ ShowDebug() {
         SetDarkTheme("&Export|&Cancel|SysListView321")
     }
     
-    Gui, Show,, % "File dialog controls"
+    WinGetTitle, _title, A
+    WinGetClass, _class, A    
+    WinGet,      _process, % "ProcessName", A
+    
+    FingerPrintActive := _process "___" _class "___" _title    
+    Gui, Show,, % FingerPrintActive
 }
