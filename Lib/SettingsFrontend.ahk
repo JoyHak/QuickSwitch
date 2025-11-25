@@ -191,8 +191,8 @@ ShowSettings() {
     local _pos  := ""
         , _posX := ""
         , _posY := ""
-    WinGetPos, _posX, _posY,,, A
-
+    WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+    
     if (_posX && _posY)
         _pos := " x" _posX " y" _posY + 100
     else
