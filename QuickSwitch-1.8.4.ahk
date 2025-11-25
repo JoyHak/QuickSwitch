@@ -161,7 +161,11 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 ExitApp
 
 
-^#+0::CreateMenu()
+^#+0::
+    DialogId := WinActive("A")
+    CreateMenu()
+    ShowMenu()
+return
 
 ; Disable special keys
 DisableKey() {
