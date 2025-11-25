@@ -103,8 +103,8 @@ ToggleAutoSwitch() {
     AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
     AddMenuOption("BlackList",  "ToggleBlackList",  false)
     
-    if (DialogAction = 1)
-        SwitchPath(AutoSwitchTarget[AutoSwitchIndex][1])
+    if (DialogAction = 1 && %AutoSwitchTarget%.Length())
+        SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
 
     if IsMenuReady()
         ShowMenu()

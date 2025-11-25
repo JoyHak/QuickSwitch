@@ -94,14 +94,17 @@ Loop {
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
-            
-            GetPaths(ManagersPaths := [], DialogAction == 1
-                   , %AutoSwitchTarget%, AutoSwitchIndex
-                   , ActiveTabOnly, ShowLockedTabs)
+            GetPaths(ManagersPaths := [], ActiveTabOnly, ShowLockedTabs)
         }
-        OnClipboardChange("GetClipboardPath", ShowClipboard)
-        IsDialogClosed := false
         
+        if (DialogAction = 1 && %AutoSwitchTarget%.Length()) {
+            ; AutoSwitch if all paths are recieved            
+            SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
+        }
+        
+        IsDialogClosed := false
+        OnClipboardChange("GetClipboardPath", ShowClipboard)
+
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
         ; Turn on registered hotkey
