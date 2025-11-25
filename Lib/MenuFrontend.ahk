@@ -112,7 +112,7 @@ CreateMenu() {
     }
 
     Menu, % "ContextMenu", % "Color", % MenuColor
-    WinActivate, % "ahk_id " DialogId           ; Activate dialog to prevent Menu flickering
+    WinActivate, % "ahk_id " DialogId           ; Activate dialog for correct Menu coordinates
     Menu, % "ContextMenu", % "Show", 0, 100     ; Show new menu and halt the thread
     return true
 }
