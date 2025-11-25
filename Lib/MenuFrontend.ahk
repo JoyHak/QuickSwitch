@@ -122,7 +122,10 @@ ShowMenu() {
     global DialogId
     
     try {
-        Menu, % "ContextMenu", % "Show", 0, 100
+        ; Manually calc pos, because the file dialog is not active
+        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+        ; Halt main thread
+        Menu, % "ContextMenu", % "Show", % _posX, % _posY + 100
         return true
     } catch {
         CreateMenu()
