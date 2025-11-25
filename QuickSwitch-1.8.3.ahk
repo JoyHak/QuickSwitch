@@ -20,6 +20,7 @@ SetKeyDelay, -1
 Process, % "Priority", , % "A"
 FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
+CoordMode, % "Menu", % "Screen"
 
 ScriptName := "QuickSwitch"
 INI        := ScriptName ".ini"
@@ -120,8 +121,9 @@ Loop {
             if (WinActive("ahk_id " DialogId) 
              || WinActive("ahk_id " A_ScriptHwnd)) {
                 WinActivate, % "ahk_id " A_ScriptHwnd
-                WinActivate, % "ahk_id " DialogId
                 ShowMenu()
+                WinActivate, % "ahk_id " DialogId
+                WinMoveBottom(A_ScriptHwnd)
             }
             DetectHiddenWindows, Off
         } 
