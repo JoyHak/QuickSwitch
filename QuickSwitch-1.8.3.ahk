@@ -96,32 +96,35 @@ Loop {
             OnClipboardChange("GetClipboardPath", false)
             GetPaths(ManagersPaths := [], ActiveTabOnly, ShowLockedTabs)
         }
-        
-        if (DialogAction = 1 && %AutoSwitchTarget%.Length()) {
-            ; AutoSwitch if all paths are recieved            
-            SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
-        }
-        
+        OnClipboardChange("GetClipboardPath", ShowClipboard)        
         IsDialogClosed := false
-        OnClipboardChange("GetClipboardPath", ShowClipboard)
 
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
-
+        
+        if (DialogAction = 1) {
+            ; AutoSwitch if all paths are recieved            
+            if (AutoSwitchTarget = "MenuStack")                
+                CreateMenu()
+            if (%AutoSwitchTarget%.Length())                
+                SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
+        }
+        
         ; Activate hidden script window to prevent Menu stuck on screen
         ; https://github.com/samhocevar-forks/ahk/blob/master/source/script_menu.cpp#L1273
-        if IsMenuReady() {            
+        if IsMenuReady() {
             DetectHiddenWindows, On
             
             if (WinActive("ahk_id " DialogId) 
              || WinActive("ahk_id " A_ScriptHwnd)) {
                 WinActivate, % "ahk_id " A_ScriptHwnd
-                CreateMenu()
+                WinActivate, % "ahk_id " DialogId
+                ShowMenu()
             }
             DetectHiddenWindows, Off
-        }
+        } 
         LogElevatedNames()
         
     } catch GlobalEx {

@@ -45,7 +45,7 @@ ShowSettings() {
     Gui, Add, Edit,         ys-5 w40 r1 -Wrap -vscroll      Limit2
     Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
     Gui, Add, Text,         ys+5                            vCenteredText         Section,                          path from
-    Gui, Add, DropDownList, ys-5 w120                       vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths
+    Gui, Add, DropDownList, ys-5 w120                       vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack
 
     Gui, Add, CheckBox,     y+10 xm+15                      vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list

@@ -45,7 +45,9 @@ SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
             PinnedPaths.RemoveAt(_pos)
 
         WritePinnedPaths := true
-        return CreateMenu()
+
+        CreateMenu()
+        return ShowMenu()
     }
 
     if IsDialogClosed
@@ -53,7 +55,7 @@ SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
     
     SwitchPath(paths[_pos][1], _fromMenu)
     if (ShowAlways || ShowAfterSelect)
-        ShowMenu()
+        return ShowMenu()
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

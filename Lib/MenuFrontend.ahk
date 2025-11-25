@@ -99,12 +99,12 @@ CreateMenu() {
     MenuStack.Push(ManagersPaths*)
     MenuStack.Push(ClipboardPaths*)
 
-    if (stackLength := MenuStack.length()) {
+    if (stackLength := MenuStack.Length()) {
         if DeleteDuplicates
             MenuStack := GetUniqPaths(MenuStack)
 
         MenuStack.RemoveAt(PathLimit + 1, stackLength)
-        AddMenuPaths(MenuStack, Func("SelectPath").bind(MenuStack))
+        AddMenuPaths(MenuStack, Func("SelectPath").Bind(MenuStack))
         AddMenuOptions()
     } else {
         AddMenuTitle("No available paths")
@@ -112,8 +112,6 @@ CreateMenu() {
     }
 
     Menu, % "ContextMenu", % "Color", % MenuColor
-    WinActivate, % "ahk_id " DialogId           ; Activate dialog for correct Menu coordinates
-    Menu, % "ContextMenu", % "Show", 0, 100     ; Show new menu and halt the thread
     return true
 }
 
@@ -121,9 +119,14 @@ CreateMenu() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────    
-    try 
+    global DialogId
+    
+    try {
         Menu, % "ContextMenu", % "Show", 0, 100
-    catch
+        return true
+    } catch {
         CreateMenu()
+        return ShowMenu()
+    }
 }
 
