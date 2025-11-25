@@ -25,8 +25,8 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
                 _icon := IconsDir "\" _icon
                 
             Menu, % "ContextMenu", % "Icon",  % _title, % _icon, % _iconNumber, % IconsSize
-        } else if _isToggle {
-            Menu, % "ContextMenu", % "Check", % _title
+        } else {
+            Menu, % "ContextMenu", % _isToggle ? "Check" : "UnCheck", % _title
         }
     } catch _ex {
         LogError("Wrong path to the icon: '" _ex.Extra "'", "icon")
@@ -34,13 +34,30 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
     }
 }
 
-AddMenuOption(_title, _function, _isToggle := false) {
+AddMenuOption(_title, _function, _isToggle := false, _type := "Radio") {
     ; Underline the first letter to activate using keyboard
-    _name := "&" _title
-    Menu, % "ContextMenu", % "Add", % _name, % _function, % "Radio"
+    _item := "&" _title
+    Menu, % "ContextMenu", % "Add", % _item, % _function, % _type
 
     ; Add icon with a postfix depending on the toggle
-    AddMenuIcon(_name, _title . (_isToggle ? "On" : "Off") . ".ico", 1, _isToggle)
+    AddMenuIcon(_item, _title . (_isToggle ? "On" : "Off") . ".ico", 1, _isToggle)
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+AddMenuOptions() {
+;─────────────────────────────────────────────────────────────────────────────
+    global DialogAction
+
+    ; Add options to select
+    Menu, % "ContextMenu", % "Add"
+    AddMenuTitle("Options")
+
+    AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
+    AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)
+
+    Menu, % "ContextMenu", % "Add"
+    AddMenuOption("Settings",   "ShowSettings")
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -66,23 +83,6 @@ AddMenuPaths(ByRef paths, _function) {
         Menu, % "ContextMenu", % "Insert",, % _title, % _function
         AddMenuIcon(_title, _options[2], _options[3] + 0)
     }
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-AddMenuOptions() {
-;─────────────────────────────────────────────────────────────────────────────
-    global DialogAction
-
-    ; Add options to select
-    Menu, % "ContextMenu", % "Add"
-    AddMenuTitle("Options")
-
-    AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
-    AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)
-
-    Menu, % "ContextMenu", Add
-    AddMenuOption("Settings",   "ShowSettings")
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

@@ -98,7 +98,10 @@ ToggleAutoSwitch() {
 
     DialogAction := (DialogAction = 1) ? 0 : 1
     WriteDialogAction := true
+    
+    ; Check only current item
     AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
+    AddMenuOption("BlackList",  "ToggleBlackList",  false)
     
     if (DialogAction = 1)
         SwitchPath(AutoSwitchTarget[AutoSwitchIndex][1])
@@ -115,7 +118,10 @@ ToggleBlackList() {
 
     DialogAction := (DialogAction = -1) ? 0 : -1
     WriteDialogAction := true
-    AddMenuOption("BlackList", "ToggleBlackList", DialogAction = -1)
+
+    ; Check only current item
+    AddMenuOption("AutoSwitch", "ToggleAutoSwitch", false)
+    AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)    
     
     if BlackListProcess
         FingerPrint := DialogProcess
