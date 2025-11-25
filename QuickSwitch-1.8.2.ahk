@@ -13,7 +13,6 @@
 #SingleInstance force
 #KeyHistory 0
 ListLines Off
-SendLevel 2
 SetBatchLines, -1
 SetWinDelay, -1
 SetKeyDelay, -1
@@ -108,14 +107,24 @@ Loop {
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
 
-        if (WinActive("ahk_id " DialogId) && IsMenuReady())
-            SendInput ^#+0
-
+        ; Activate hidden script window to prevent Menu stuck on screen
+        ; https://github.com/samhocevar-forks/ahk/blob/master/source/script_menu.cpp#L1273
+        if IsMenuReady() {            
+            DetectHiddenWindows, On
+            
+            if (WinActive("ahk_id " DialogId) 
+             || WinActive("ahk_id " A_ScriptHwnd)) {
+                WinActivate, % "ahk_id " A_ScriptHwnd
+                CreateMenu()
+            }
+            DetectHiddenWindows, Off
+        }
         LogElevatedNames()
+        
     } catch GlobalEx {
         LogException(GlobalEx)
     }
-    
+
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
     ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
@@ -144,13 +153,7 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 ExitApp
 
 
-^#+0::
-    CreateMenu()
-
-    ; Release all keys to prevent holding
-    SendInput, % "{Ctrl up}{Win up}{Shift up}"
-return
-
+^#+0::CreateMenu()
 
 ; Disable special keys
 DisableKey() {
@@ -172,6 +175,3 @@ DisableKey() {
     if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog)
         SetCapsLockState, % "Off"
 return
-
-
-
