@@ -78,7 +78,8 @@ GetShortPath(ByRef path) {
             _stop  := _size
 
             ; An indication that there are more paths after the drive letter
-            _shortPath .= ShortNameIndicator
+            if ShowFirstSeparator
+                _shortPath .= ShortNameIndicator
         }
 
         ; Add first separator if needed
