@@ -117,12 +117,12 @@ ShowDebug() {
     SetFormat, Integer, D
     Gui, Add, ListView, r30 w1024, Control||Text|ID|PID|X|Y|Width|Height
 
-    WinGet, _controlsList, ControlList, A
+    WinGet, _controlsList, % "ControlList", % "ahk_id " DialogId
     Loop, Parse, _controlsList, `n
     {
-        ControlGet, _id, hwnd,, % A_LoopField, A
-        ControlGetText _text,, ahk_id %_id%
-        ControlGetPos _x, _y, _width, _height, , ahk_id %_id%
+        ControlGet, _id, % "hwnd",, % A_LoopField, % "ahk_id " DialogId
+        ControlGetText _text,, % "ahk_id " _id
+        ControlGetPos _x, _y, _width, _height,, % "ahk_id " _id
 
         _pid := DllCall("GetParent", "Ptr", _id)
         ; Abs for hex to dec
@@ -141,9 +141,9 @@ ShowDebug() {
         SetDarkTheme("&Export|&Cancel|SysListView321")
     }
     
-    WinGetTitle, _title, A
-    WinGetClass, _class, A    
-    WinGet,      _process, % "ProcessName", A
+    WinGetTitle, _title, % "ahk_id " DialogId
+    WinGetClass, _class, % "ahk_id " DialogId    
+    WinGet,      _process, % "ProcessName", % "ahk_id " DialogId
     
     FingerPrintActive := _process "___" _class "___" _title    
     Gui, Show,, % FingerPrintActive
