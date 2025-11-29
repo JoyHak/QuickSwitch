@@ -97,8 +97,7 @@ Loop {
             OnClipboardChange("GetClipboardPath", false)
             GetPaths(ManagersPaths := [], ActiveTabOnly, ShowLockedTabs)
         }
-        OnClipboardChange("GetClipboardPath", ShowClipboard)        
-        IsDialogClosed := false
+        OnClipboardChange("GetClipboardPath", ShowClipboard)
 
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
@@ -106,12 +105,28 @@ Loop {
         ValidateKey("MainKey", MainKey,, "On")
         
         if (DialogAction = 1) {
-            ; AutoSwitch if all paths are recieved            
+            ; Perform AutoSwitch after preparation
             if (AutoSwitchTarget = "MenuStack")                
-                CreateMenu()
+                CreateMenu()  ; create MenuStack
+            
+            if IsDialogClosed {
+                ; Add delay between actions to prevent accidental dialog closing (issue #77)
+                SetWinDelay, 120
+                SetKeyDelay, 120
+                try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
+                try ControlSend,, % "{end}{space}",   % "ahk_id " EditId             
+            }
+              
+            ; AutoSwitch if all paths are recieved.
             if (%AutoSwitchTarget%.Length())                
                 SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
+            
+            if IsDialogClosed {
+                SetWinDelay, -1
+                SetKeyDelay, -1
+            }
         }
+        IsDialogClosed := false
         
         ; Activate hidden script window to prevent Menu stuck on screen
         ; https://github.com/samhocevar-forks/ahk/blob/master/source/script_menu.cpp#L1273
