@@ -10,7 +10,7 @@ SwitchPath(ByRef path, _fromMenu := "") {
     local _ex, _winPid, _log := ""
     loop % SelectPathAttempts {
         try {
-            if FillDialog(EditId, path, SelectPathAttempts)
+            if FillDialog(EditId, path)
                 return true
 
         } catch _ex {

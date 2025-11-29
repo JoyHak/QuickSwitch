@@ -1,23 +1,21 @@
-FillDialog(ByRef editId, ByRef path, ByRef attempts := 3) {
+FillDialog(ByRef editId, ByRef path) {
     ; Fills Edit field by specified handle with "path".
     ; Read the current text in the "File Name"
     ControlGetText, _fileName,, % "ahk_id " editId
 
-    Loop, % attempts {
-        ; Change current path
-        ControlFocus,,            % "ahk_id " editId
-        ControlSetText,, % path,  % "ahk_id " editId
-        ControlGetText, _path,,   % "ahk_id " editId
+    ; Change current path
+    ControlFocus,,            % "ahk_id " editId
+    ControlSetText,, % path,  % "ahk_id " editId
+    ControlGetText, _path,,   % "ahk_id " editId
 
-        if (_path = path) {
-            ; Successfully changed
-            ControlSend,, % "{Enter}", % "ahk_id " editId
+    if (_path = path) {
+        ; Successfully changed
+        ControlSend,, % "{Enter}", % "ahk_id " editId
 
-            ; Restore filename
-            ControlFocus,, % "ahk_id " editId
-            ControlSetText,, % _fileName, % "ahk_id " editId
-            return true
-        }
+        ; Restore filename
+        ControlFocus,, % "ahk_id " editId
+        ControlSetText,, % _fileName, % "ahk_id " editId
+        return true
     }
     return false
 }
@@ -53,7 +51,7 @@ IsFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0) {
         if (_class := classes[A_LoopField])
             _f += _class
     }
-    
+
     ; Check if enough controls found
     return _f >= 13 || _f = 1
 }
