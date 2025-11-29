@@ -51,11 +51,13 @@ LogException(_ex, _offset := 1, _silent := false) {
 LogInfo(_text, _silent := false) {
     global ErrorsLog, ScriptName
 
-    FormatTime, _date,, dd.MM HH:mm:ss
+    FormatTime, _date,, % "dd.MM HH:mm:ss"
     try FileAppend, % _date "    " _text "`n", % ErrorsLog
 
-    if !_silent
+    if !_silent {        
+        ; ToolTip % _text
         TrayTip, % ScriptName " log", % _text
+    }
     
     return ""
 }
