@@ -39,7 +39,7 @@ LogException(_ex, _offset := 1, _silent := false) {
     _what := _ex.what
     _msg  := _ex.message
 
-    FormatTime, _date,, dd.MM HH:mm:ss
+    FormatTime, _date,, % "dd.MM HH:mm:ss"
     try FileAppend, % _date "    [" _stack _what "]    " _msg "    " _ex.extra "`n", % ErrorsLog
     
     if !_silent
@@ -62,38 +62,81 @@ LogInfo(_text, _silent := false) {
     return ""
 }
 
-InitLog() {
-    global INI, ErrorsLog, ScriptName
+LogHeader() {
+    ; Header with information about OS and script
+    global ErrorsLog
+    
+    static REPORT_LINK := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
+    static NT_VERSION  := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+    
+    _name    := A_OSType
+    _version := ""
+    _build   := A_OSVersion
+    _lang    := A_Language
+    _bitness := A_Is64bitOS ? "64-bit" : "32-bit"
+    
+    try RegRead, _name,    % NT_VERSION, % "ProductName"
+    try RegRead, _version, % NT_VERSION, % "DisplayVersion"
+    try RegRead, _build,   % NT_VERSION, % "CurrentBuild"
+    try RegRead, _lang, % "HKEY_CURRENT_USER\Control Panel\International", % "LocaleName"
+    
+    FileAppend, % "
+    (LTrim
+    Report about error: " REPORT_LINK "
+    AHK " A_AhkVersion "
+    " _name " " _version " | " _build " " _bitness " " _lang "
 
-    ; Clean log
-    if IsFile(ErrorsLog) {
-        FileGetSize, _size, % ErrorsLog, K
-        if (_size > 8) {
-            FileRecycle, % ErrorsLog
-            Sleep, 500
-        }
-    }
-
-    ; Create again after cleanup / first launch
-    if !IsFile(ErrorsLog) {
-        try FileAppend, % "
-        (LTrim
-            Report about error: https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml
-            AHK " A_AhkVersion "
-            " A_ScriptName "
-            
-        )", % ErrorsLog
         
-        return
-    }
+    )", % ErrorsLog
+}
 
-    ; Does the cur. dir. match the dir. of the script
-    ; That previously created this log?
-    _curPath := A_ScriptFullPath
-    IniRead, _lastPath, % INI, % "App", % "LastPath", % A_Space
-    if (_lastPath && (_lastPath != _curPath)) {
-        ; New info about the script
-        try IniWrite, % _curPath, % INI, % "App", % "LastPath"
-        try FileAppend, % "`n`n`n" A_ScriptName "`n`n", % ErrorsLog
+ClearLog(_enforce := false) {
+    global ErrorsLog
+
+    try {       
+        _size := 0
+        FileGetSize, _size, % ErrorsLog, K
+        if (_size < 7 && !_enforce)
+            return ""
+        
+        _date := ""
+        try {                
+            FileGetTime, _date, % ErrorsLog, M
+            FormatTime, _date, % _date, % "dd.MM HH:mm:ss"
+        }
+        
+        FileRecycle, % ErrorsLog
+        Sleep, 500
+        return Format("The previous log has been deleted "
+                    . "({} KB, last modified {}). See Recycle Bin"
+                    , _size, _date)
+        
+    } catch _ex {
+        return LogError("Unable to clean the log"  
+                      , "Log cleanup"
+                      , _ex.what " " _ex.message " " _ex.extra)
+    }  
+}
+
+InitLog() {
+    global INI, ErrorsLog
+
+    try {
+        ; Clear the log
+        _logClearedMsg := ""
+        if IsFile(ErrorsLog)            
+            _logClearedMsg := ClearLog()
+            
+        ; Create log after cleanup / first launch
+        if !IsFile(ErrorsLog)
+            LogHeader() 
+        
+        if _logClearedMsg
+            LogInfo(_logClearedMsg, "NoTrayTip")
+            
+    } catch _ex {
+        LogError("Unable to initialize the log"  
+               , "Log init"
+               , _ex.what " " _ex.message " " _ex.extra)
     }
 }
