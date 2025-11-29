@@ -166,12 +166,12 @@ ExitApp
     CreateMenu()
     ShowMenu()
 return
-
+    
 ; Disable special keys
 DisableKey() {
     global
 
-    if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog) {
+    if (RegisteredSpecialKeys[A_ThisHotkey] && !IsDialogClosed) {
         ; This key is chosen by the user in the settings and the file dialog is open.
         ; Its standard functionality must be disabled.
         SendInput, % "{Blind}{vkFF}"
@@ -184,6 +184,6 @@ DisableKey() {
 ~Space::DisableKey()
 ~RButton::DisableKey()
 ~Capslock::
-    if (RegisteredSpecialKeys[A_ThisHotkey] && FileDialog)
+    if (RegisteredSpecialKeys[A_ThisHotkey] && !IsDialogClosed)
         SetCapsLockState, % "Off"
 return
