@@ -91,15 +91,19 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
         if (Get('#800')) {                          ; Second pane is enabled
             $allPaths .= '|' . <get tabs | i>`;     ; Get tabs from second pane
         }
+        
         $realPaths = ''`;
         $activePath = ''`;
         $activeIndex = Tab('get')`;
         $index = 0`;
         
         ForEach($path, $allPaths, '|') {            ; Path separator is |
-            $index++`;
-            if (IsSet($hideLockedTabs) && (Tab('get', 'flags', $index) % 4 > 0)) {
-                continue`;                          ; Exclude locked tabs
+            $index++`; 
+
+            if (!Exists($path) 
+             || IsSet($hideLockedTabs) 
+             && (Tab('get', 'flags', $index) % 4 > 0)) {
+                continue`;                          ; Exclude this tab
             }
             if ($index == $activeIndex) {
                 $activePath = '|' . PathReal($path)`;  ; Save the active tab to insert it as first later
@@ -107,6 +111,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
             }            
             $realPaths .= '|' . PathReal($path)`;   ; Get the real path (XY has special and virtual paths)
         }
+        
         if ($realPaths) {
             $realPaths = Trim($activePath . $realPaths, '|', 'L')`;
             CopyText $realPaths`;                   ; Place to the clipboard. It's faster then CopyData
@@ -117,7 +122,9 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     
     static getCurPath := "
     ( LTrim Join
-        if (IsSet($hideLockedTabs) && (Tab('get', 'flags') % 4 > 0)) { 
+        if (!Exists(<curpath>)
+         || IsSet($hideLockedTabs) 
+         && (Tab('get', 'flags') % 4 > 0)) { 
             CopyText 'unset'`;
         } else { 
             CopyText <curpath>`; 
