@@ -72,33 +72,40 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     ; $hideLockedTabs is unset by default
     static getAllPaths := "
     ( LTrim Join Comments
-        $paths = <get tabs_sf | a>, 'r'`;           ; Get tabs from the active panel, resolve native variables
-        if (get('#800')) {                          ; Second panel is enabled
-            $paths .= '|' . <get tabs_sf | i>`;     ; Get tabs from second panels
+        $paths = <get tabs | a>, 'r'`;              ; Get tabs from the active panel, resolve native variables
+        if (Get('#800')) {                          ; Second pane is enabled
+            $paths .= '|' . <get tabs | i>`;        ; Get tabs from second pane
         }
         $reals = ''`;
         $count = 0`;
-        foreach($path, $paths, '|') {               ; Path separator is |
-            $count++;
-            if (IsSet($hideLockedTabs) && (tab('get', 'flags', $count) % 4 > 0)) {
+        $activeTab = ''`;
+        $activeIndex = Tab('get')`;
+        
+        ForEach($path, $paths, '|') {               ; Path separator is |
+            $count++`;
+            if (IsSet($hideLockedTabs) && (Tab('get', 'flags', $count) % 4 > 0)) {
                 continue`;                          ; Exclude locked tabs
             }
-            $reals .= '|' . pathreal($path)`;       ; Get the real path (XY has special and virtual paths)
+            if ($count == $activeIndex) {
+                $activeTab = '|' . PathReal($path)`;  ; Save the active tab to insert it as first later
+                continue`;
+            }            
+            $reals .= '|' . PathReal($path)`;       ; Get the real path (XY has special and virtual paths)
         }
-        if !($reals) {
-            copytext 'unset'`;                      ; No available tabs
+        if ($reals) {
+            $reals = Trim($activeTab . $reals, '|', 'L')`;
+            CopyText $reals`;                       ; Place $reals to the clipboard. It's faster then CopyData
         } else {
-            $reals = trim($reals, '|', 'L')`;       ; Remove the extra  | from the beginning of $reals
-            copytext $reals`;                       ; Place $reals to the clipboard, faster then copydata
+            CopyText 'unset'`;                      ; No available tabs
         }
     )"
     
     static getCurPath := "
     ( LTrim Join
-        if (IsSet($hideLockedTabs) && (tab('get', 'flags') % 4 > 0)) { 
-            copytext 'unset'`;
+        if (IsSet($hideLockedTabs) && (Tab('get', 'flags') % 4 > 0)) { 
+            CopyText 'unset'`;
         } else { 
-            copytext <curpath>`; 
+            CopyText <curpath>`; 
         }
     )"
     
