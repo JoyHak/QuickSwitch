@@ -72,29 +72,29 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     ; $hideLockedTabs is unset by default
     static getAllPaths := "
     ( LTrim Join Comments
-        $paths = <get tabs | a>, 'r'`;              ; Get tabs from the active panel, resolve native variables
+        $allPaths = <get tabs | a>, 'r'`;           ; Get tabs from the active panel, resolve native variables
         if (Get('#800')) {                          ; Second pane is enabled
-            $paths .= '|' . <get tabs | i>`;        ; Get tabs from second pane
+            $allPaths .= '|' . <get tabs | i>`;     ; Get tabs from second pane
         }
-        $reals = ''`;
-        $count = 0`;
-        $activeTab = ''`;
+        $realPaths = ''`;
+        $activePath = ''`;
         $activeIndex = Tab('get')`;
+        $index = 0`;
         
-        ForEach($path, $paths, '|') {               ; Path separator is |
-            $count++`;
-            if (IsSet($hideLockedTabs) && (Tab('get', 'flags', $count) % 4 > 0)) {
+        ForEach($path, $allPaths, '|') {            ; Path separator is |
+            $index++`;
+            if (IsSet($hideLockedTabs) && (Tab('get', 'flags', $index) % 4 > 0)) {
                 continue`;                          ; Exclude locked tabs
             }
-            if ($count == $activeIndex) {
-                $activeTab = '|' . PathReal($path)`;  ; Save the active tab to insert it as first later
+            if ($index == $activeIndex) {
+                $activePath = '|' . PathReal($path)`;  ; Save the active tab to insert it as first later
                 continue`;
             }            
-            $reals .= '|' . PathReal($path)`;       ; Get the real path (XY has special and virtual paths)
+            $realPaths .= '|' . PathReal($path)`;   ; Get the real path (XY has special and virtual paths)
         }
-        if ($reals) {
-            $reals = Trim($activeTab . $reals, '|', 'L')`;
-            CopyText $reals`;                       ; Place $reals to the clipboard. It's faster then CopyData
+        if ($realPaths) {
+            $realPaths = Trim($activePath . $realPaths, '|', 'L')`;
+            CopyText $realPaths`;                   ; Place to the clipboard. It's faster then CopyData
         } else {
             CopyText 'unset'`;                      ; No available tabs
         }
