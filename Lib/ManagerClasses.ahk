@@ -24,8 +24,9 @@ CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs
         for _win in ComObjCreate("Shell.Application").windows {
             if (winId != _win.hwnd)
                 continue            
-            
+        
             if (_activeTabOnly && _activeTab) {
+                ; Skip other tabs
                 static IID_IShellBrowser := "{000214E2-0000-0000-C000-000000000046}"
                 _shell := ComObjQuery(_win, IID_IShellBrowser, IID_IShellBrowser)
                 
@@ -39,11 +40,25 @@ CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs
                 
                 ObjRelease(_shell)
             }
-            
-            _path := _win.document.folder.self.path
-            if InStr(_path, "::{")
+
+            if !_win.locationURL
                 continue
             
+            _path := ""
+            try {
+                _path := SubStr(_win.locationURL, 9)  ; remove "file:///"
+                _path := StrReplace(_path, "%20", " ")
+                _path := StrReplace(_path, "/", "\")
+                _path := RTrim(_path, "\")
+            }
+            if !_path
+                continue 
+                ; try _path := RTrim(_win.document.folder.self.path, "\")
+            
+            ; Skip system / special paths
+            ; if InStr(_path, "::{")
+                ; continue
+                
             paths.push([_path, "Explorer.ico", 1, ""])
             if _activeTabOnly
                 return 1
