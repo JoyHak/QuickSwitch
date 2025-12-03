@@ -14,62 +14,62 @@ CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs
     ; Returns number of added paths
     _count := 0
     _activeTab := 0
-    
+
     try
-        ControlGet, _activeTab, % "hwnd",, % "ShellTabWindowClass1", % "ahk_id " winId    
+        ControlGet, _activeTab, % "hwnd",, % "ShellTabWindowClass1", % "ahk_id " winId
     catch
-        ControlGet, _activeTab, % "hwnd",, % "TabWindowClass1", % "ahk_id " winId
+        try ControlGet, _activeTab, % "hwnd",, % "TabWindowClass1", % "ahk_id " winId
     
     try {
-        for _win in ComObjCreate("Shell.Application").windows {
-            if (winId != _win.hwnd)
-                continue            
+        _shellApp := 0
+        _shellApp := ComObjCreate("Shell.Application")
         
+        for _win in _shellApp.windows {
+            if (winId != _win.hwnd)
+                continue
+    
             if (_activeTabOnly && _activeTab) {
                 ; Skip other tabs
-                static IID_IShellBrowser := "{000214E2-0000-0000-C000-000000000046}"
-                _shell := ComObjQuery(_win, IID_IShellBrowser, IID_IShellBrowser)
-                
-                ; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=109907
-                ; Invoke the method from the vtable of the _shell object, which represents the IShellBrowser interface, 
-                ; to retrieve the current tab in Windows Explorer. 
-                DllCall(NumGet(NumGet(_shell + 0), 3 * A_PtrSize), "ptr", _shell, "ptr*", _currentTab := 0)
-                
-                if (_currentTab != _activeTab)
-                    continue
-                
-                ObjRelease(_shell)
+                try {                    
+                    static IID_IShellBrowser := "{000214E2-0000-0000-C000-000000000046}"
+                    _shell := 0
+                    _shell := ComObjQuery(_win, IID_IShellBrowser, IID_IShellBrowser)
+        
+                    ; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=109907
+                    ; Invoke the method from the vtable of the _shell object, which represents the IShellBrowser interface,
+                    ; to retrieve the current tab in Windows Explorer.
+                    DllCall(NumGet(NumGet(_shell + 0), 3 * A_PtrSize), "ptr", _shell, "ptr*", _currentTab := 0)
+        
+                    if (_currentTab != _activeTab)
+                        continue
+                } finally {
+                    if _shell
+                        ObjRelease(_shell)                    
+                }
             }
-
+    
             if !_win.locationURL
                 continue
-            
+    
             _path := ""
-            try {
-                _path := SubStr(_win.locationURL, 9)  ; remove "file:///"
-                _path := StrReplace(_path, "%20", " ")
-                _path := StrReplace(_path, "/", "\")
-                _path := RTrim(_path, "\")
-            }
+            _path := SubStr(_win.locationURL, 9)  ; remove "file:///"
+            _path := StrReplace(_path, "/", "\")
+            _path := StrReplace(_path, "%20", " ")
+            _path := Trim(_path, " `t/\")
+    
             if !_path
-                continue 
-                ; try _path := RTrim(_win.document.folder.self.path, "\")
-            
-            ; Skip system / special paths
-            ; if InStr(_path, "::{")
-                ; continue
-                
+                continue
+    
             paths.push([_path, "Explorer.ico", 1, ""])
+            _count++  
+            
             if _activeTabOnly
-                return 1
-                    
-            _count++
-        }  
-        
-        if _count
-            ObjRelease(_win)        
+                break        
+        }
+    } finally {   
+        if _shellApp
+            ObjRelease(_shellApp)
     }
-                
     return _count
 }
 
@@ -79,11 +79,11 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
     ; Returns number of added paths.
-    
+
     ; Save clipboard to restore later
     _clipSaved := ClipboardAll
     A_Clipboard  := ""
-    
+
     ; $hideLockedTabs is unset by default
     static getAllPaths := "
     ( LTrim Join Comments
@@ -91,27 +91,27 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
         if (Get('#800')) {                          ; Second pane is enabled
             $allPaths .= '|' . <get tabs | i>`;     ; Get tabs from second pane
         }
-        
+
         $realPaths = ''`;
         $activePath = ''`;
         $activeIndex = Tab('get')`;
         $index = 0`;
-        
-        ForEach($path, $allPaths, '|') {            ; Path separator is |
-            $index++`; 
 
-            if (!Exists($path) 
-             || IsSet($hideLockedTabs) 
+        ForEach($path, $allPaths, '|') {            ; Path separator is |
+            $index++`;
+
+            if (!Exists($path)
+             || IsSet($hideLockedTabs)
              && (Tab('get', 'flags', $index) % 4 > 0)) {
                 continue`;                          ; Exclude this tab
             }
             if ($index == $activeIndex) {
                 $activePath = '|' . PathReal($path)`;  ; Save the active tab to insert it as first later
                 continue`;
-            }            
+            }
             $realPaths .= '|' . PathReal($path)`;   ; Get the real path (XY has special and virtual paths)
         }
-        
+
         if ($realPaths) {
             $realPaths = Trim($activePath . $realPaths, '|', 'L')`;
             CopyText $realPaths`;                   ; Place to the clipboard. It's faster then CopyData
@@ -119,18 +119,18 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
             CopyText 'unset'`;                      ; No available tabs
         }
     )"
-    
+
     static getCurPath := "
     ( LTrim Join
         if (!Exists(<curpath>)
-         || IsSet($hideLockedTabs) 
-         && (Tab('get', 'flags') % 4 > 0)) { 
+         || IsSet($hideLockedTabs)
+         && (Tab('get', 'flags') % 4 > 0)) {
             CopyText 'unset'`;
-        } else { 
-            CopyText <curpath>`; 
+        } else {
+            CopyText <curpath>`;
         }
     )"
-    
+
     _script := _activeTabOnly ? getCurPath : getAllPaths
     _prefix := _showLockedTabs ? "::" : "::$hideLockedTabs = true`;"
     SendXyplorerScript(winId, _prefix . _script)
@@ -146,20 +146,20 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
         attempts++
         return ThunderRT6FormDC(winId, paths, _activeTabOnly, _showLockedTabs)
     }
-    
+
     if (!_clip || (_clip = "unset"))
         return 0
-    
+
     _count := attempts := 0
     Loop, parse, _clip, `|
     {
         paths.push([A_LoopField, "Xyplorer.ico", 1, ""])
         if _activeTabOnly
             return 1
-            
+
         _count++
     }
-    
+
     return _count
 }
 
@@ -213,7 +213,7 @@ Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := fals
     _count := _paths.length()
     if _paths.hasKey(_active)
         paths.push(_paths.removeAt(_active))
-    
+
     paths.push(_paths*)
     return _count
 }
