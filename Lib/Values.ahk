@@ -447,27 +447,27 @@ ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
     ; Restores or saves the "paths" array depending on the flags.
     ; Returns the number of paths in the array after processing.
     global INI, WritePinnedPaths
-    
+
     _length := paths.length()
     if (WritePinnedPaths || !_state && _length) {
         WritePinnedPaths := false
         _paths := ""
-        
-        if _length {        
+
+        if _length {
             for _, _arr in GetUniqPaths(paths)
                 _paths .= "|" . _arr[1]
-            
+
             _paths := LTrim(_paths, "|")
         }
         try IniWrite, % _paths, % INI, % "App", % _paramName
-        
+
         if !_state {
             paths := []
             return 0
         }
         return _length
     }
-    
+
     if (_state && !_length) {
         IniRead, _paths, % INI, % "App", % _paramName, % A_Space
         if _paths {
