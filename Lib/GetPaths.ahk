@@ -8,7 +8,7 @@ GetPaths(ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
         WinGet, _winPid, % "pid", % "ahk_id " _winId
-    
+
         if IsAppElevated(_winPid)
             continue
 
@@ -32,7 +32,7 @@ GetPaths(ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
         try {
             if !(%_winClass%(_winId, paths, _activeTabOnly, _showLockedTabs))
                 AddElevatedName(_winPid)
-                
+
         } catch _ex {
             ; Assume that the file manager is elevated
             if AddElevatedName(_winPid)
@@ -119,26 +119,26 @@ GetShortPath(ByRef path) {
 ;
 GetClipboardPath(_dataType) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; If the clipboard contents is text, cuts the path where the file is stored. 
+    ; If the clipboard contents is text, cuts the path where the file is stored.
     ; If the path is valid, adds to the array and returns true
-    global ClipboardPaths  
+    global ClipboardPaths
     Sleep 150
 
     _clip := A_Clipboard
     if ((_dataType != 1) || !_clip)
         return
-    
+
     try {
-        Loop, parse, _clip, `n 
-        {   
+        Loop, parse, _clip, `n
+        {
             _path := A_LoopField
-            
+
             if ValidateDirectory("", _path) {
                 ClipboardPaths.push([_path, "Clipboard.ico", 1, ""])
                 return true
             }
         }
-        
+
         return false
     } catch _ex {
         LogException(_ex)
@@ -152,24 +152,24 @@ GetFavoritePaths(ByRef paths) {
     ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
     ; Returns the number of added paths.
     global FavoritesDir
-    
+
     _count := 0
     Loop, files, % FavoritesDir "\*.lnk", R
-	{   
+	{
         try {
             FileGetShortcut, % A_LoopFileFullPath, _path, _workingDir,, _title, _icon, _iconNumber
-                    
+
             if !(_path && ValidateDirectory("", _path))
                 _path := _workingDir
-                
+
             if !ValidateDirectory("", _path)
                 continue
-            
+
             if _icon
                 ExpandVariables(_icon)
-            else    
+            else
                 _icon := "Favorite.ico"
-                
+
             ExpandVariables(_title)
             paths.push([_path, _icon, _iconNumber, _title])
             _count++
@@ -177,7 +177,7 @@ GetFavoritePaths(ByRef paths) {
             LogException(_ex)
         }
 	}
-    
+
     return _count
 }
 

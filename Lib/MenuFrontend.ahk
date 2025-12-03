@@ -23,7 +23,7 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
         if ShowIcons {
             if !IsFile(_icon)
                 _icon := IconsDir "\" _icon
-                
+
             Menu, % "ContextMenu", % "Icon",  % _title, % _icon, % _iconNumber, % IconsSize
         } else {
             Menu, % "ContextMenu", % _isToggle ? "Check" : "UnCheck", % _title
@@ -118,9 +118,9 @@ CreateMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 ShowMenu() {
-;─────────────────────────────────────────────────────────────────────────────    
+;─────────────────────────────────────────────────────────────────────────────
     global DialogId
-    
+
     try {
         ; Manually calc pos, because the file dialog is not active
         WinGetPos, _posX, _posY,,, % "ahk_id " DialogId

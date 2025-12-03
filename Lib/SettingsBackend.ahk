@@ -73,7 +73,7 @@ DeleteSections() {
     if (DeleteFavorites
      && MsgWarn("Do you want to delete the favorites?`n" FavoritesDir "\*.lnk")) {
         RunWait, % A_ComSpec " /c del /s /q """ FavoritesDir "\*.lnk""",, % "Hide"
-        if !ErrorLevel       
+        if !ErrorLevel
             LogInfo("Favorites has been placed in the Recycle Bin")
     }
 
@@ -104,12 +104,12 @@ InitSections(_all := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Clear / Init global arrays to remove sections from the menu
     global
-    
+
     if _all
         PinnedPaths := []
-    
+
     ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
-    
+
     if (!ShowFavorites || _all)
         FavoritePaths  := []
     if (!ShowManagers  || _all)

@@ -156,7 +156,7 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
- 
+
     local _button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings  := false
 
@@ -172,7 +172,7 @@ ShowSettings() {
     GuiControl, % "ChooseString", % "PinMouseListBox",      % PinMousePlaceholder
     GuiControl, % "ChooseString", % "MainMouseListBox",     % MainMousePlaceholder
     GuiControl, % "ChooseString", % "RestartMouseListBox",  % RestartMousePlaceholder
-    
+
     ; Current checkbox state
     ToggleShowAlways()
     ToggleIcons()
@@ -192,7 +192,7 @@ ShowSettings() {
         , _posX := ""
         , _posY := ""
     WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-    
+
     if (_posX && _posY)
         _pos := " x" _posX " y" _posY + 100
     else

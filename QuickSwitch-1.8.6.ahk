@@ -103,37 +103,37 @@ Loop {
         try Menu, % "ContextMenu", % "Delete"
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
-        
+
         if (DialogAction = 1) {
             ; Perform AutoSwitch after preparation
-            if (AutoSwitchTarget = "MenuStack")                
+            if (AutoSwitchTarget = "MenuStack")
                 CreateMenu()  ; create MenuStack
-            
+
             if IsDialogClosed {
                 ; Add delay between actions to prevent accidental dialog closing (issue #77)
                 SetWinDelay, 120
                 SetKeyDelay, 120
                 try ControlFocus, % "SysTreeView321", % "ahk_id " DialogId
-                try ControlSend,, % "{end}{space}",   % "ahk_id " EditId             
+                try ControlSend,, % "{end}{space}",   % "ahk_id " EditId
             }
-              
+
             ; AutoSwitch if all paths are recieved.
-            if (%AutoSwitchTarget%.Length())                
+            if (%AutoSwitchTarget%.Length())
                 SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
-            
+
             if IsDialogClosed {
                 SetWinDelay, -1
                 SetKeyDelay, -1
             }
         }
         IsDialogClosed := false
-        
+
         ; Activate hidden script window to prevent Menu stuck on screen
         ; https://github.com/samhocevar-forks/ahk/blob/master/source/script_menu.cpp#L1273
         if IsMenuReady() {
             DetectHiddenWindows, On
-            
-            if (WinActive("ahk_id " DialogId) 
+
+            if (WinActive("ahk_id " DialogId)
              || WinActive("ahk_id " A_ScriptHwnd)) {
                 WinActivate, % "ahk_id " A_ScriptHwnd
                 ShowMenu()
@@ -141,9 +141,9 @@ Loop {
                 WinMoveBottom(A_ScriptHwnd)
             }
             DetectHiddenWindows, Off
-        } 
+        }
         LogElevatedNames()
-        
+
     } catch GlobalEx {
         LogException(GlobalEx)
     }
@@ -181,7 +181,7 @@ ExitApp
     CreateMenu()
     ShowMenu()
 return
-    
+
 ; Disable special keys
 DisableKey() {
     global
