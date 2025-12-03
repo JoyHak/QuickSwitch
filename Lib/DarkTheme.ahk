@@ -142,3 +142,53 @@ SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
     Sleep 1000
     return true
 }
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+InitMenuFont() {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Sets font and font attributes for all menus in the system.
+    ; Prevents multiple font changes. Shows warning.
+    
+    global ScriptName, INI, MenuFont, MenuFontSize
+    
+    _warningMsg := "The font "
+    if !(MenuFont || MenuFontSize)
+        _warningMsg .= "will be reset to system defaults "        
+    
+    if MenuFont
+        _warningMsg .= "will be set to '" MenuFont "' "
+    if (MenuFont && MenuFontSize)
+        _warningMsg .= "and its "
+    if MenuFontSize
+        _warningMsg .= "size will be set to " MenuFontSize " "
+        
+    _warningMsg .= "
+    (LTrim Join`s
+    for all menus in the system. 
+    `n`nThe font in the tray menu and context menu will be changed; 
+    the font in the " ScriptName " menu will be changed.
+    `n`nDo you want to continue?
+    )"
+    
+    _restartMsg := "
+    (LTrim Join`s
+    The font has been changed. To roll back changes, open the settings, 
+    make the field empty and set the size next to 0.
+    `n`nRestart the " ScriptName " manually.
+    )"
+    
+    IniRead, _opt, % INI, % "App", % "MenuFont", % "_0"    
+    _options := MenuFont "_" MenuFontSize 
+    
+    if (_opt = _options)
+        return
+        
+    try IniWrite, % _options, % INI, % "App", % "MenuFont"
+    if !MsgWarn(_warningMsg)
+        return
+    
+    SetMenuFont(MenuFont, MenuFontSize)
+    MsgBox % _restartMsg
+    ExitApp
+}

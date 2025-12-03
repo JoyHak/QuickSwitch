@@ -15,6 +15,7 @@ ResetSettings() {
     InitAutoStartup()
     InitDarkTheme()
     InitSections()
+    InitMenuFont()
     ShowSettings()
 }
 
@@ -31,6 +32,7 @@ SaveSettings() {
     InitAutoStartup()
     InitDarkTheme()
     InitSections()
+    InitMenuFont()
 }
 
 RestartApp() {
