@@ -74,12 +74,17 @@ LogHeader() {
     _build   := A_OSVersion
     _lang    := A_Language
     _bitness := A_Is64bitOS ? "64-bit" : "32-bit"
-    
-    try RegRead, _name,    % NT_VERSION, % "ProductName"
+       
     try RegRead, _version, % NT_VERSION, % "DisplayVersion"
     try RegRead, _build,   % NT_VERSION, % "CurrentBuild"
     try RegRead, _lang, % "HKEY_CURRENT_USER\Control Panel\International", % "LocaleName"
     
+    ; "ProductName" registry key shows incorrect OS name
+    ; https://dennisbabkin.com/blog/?t=how-to-tell-the-real-version-of-windows-your-app-is-running-on#ver_string
+    try if !(_name := DllCall("winbrand.dll\BrandingFormatString", "str", "%WINDOWS_LONG%", "str")) {
+        try RegRead, _name, % NT_VERSION, % "ProductName"
+    }
+             
     FileAppend, % "
     (LTrim
     Report about error: " REPORT_LINK "
@@ -89,6 +94,7 @@ LogHeader() {
         
     )", % ErrorsLog
 }
+       
 
 ClearLog(_enforce := false) {
     global ErrorsLog
