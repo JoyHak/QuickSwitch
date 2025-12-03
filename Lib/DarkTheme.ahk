@@ -79,3 +79,66 @@ InvertColor(color) {
 
     return Format("{:x}", c1 + c2 + c3)
 }
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Sets font and font attributes for all menus in the system. 
+    ; Returns true on success
+
+    static SPI_GETNONCLIENTMETRICS := 0x29
+    static SPI_SETNONCLIENTMETRICS := 0x2A
+    static SPI_SETICONTITLELOGFONT := 0x22
+    static SPIF_UPDATEINIFILE      := 0x1
+    static SPIF_SENDCHANGE         := 0x2
+
+    static LOGFONT_SIZE := 92
+    static NONCLIENTMETRICS_SIZE := 40 + 5 * LOGFONT_SIZE
+
+    VarSetCapacity(NONCLIENTMETRICS, NONCLIENTMETRICS_SIZE, 0)
+    NumPut(NONCLIENTMETRICS_SIZE, &NONCLIENTMETRICS, 0, "UInt")
+
+    if !DllCall("SystemParametersInfoW"
+        , "UInt", SPI_GETNONCLIENTMETRICS
+        , "UInt", NONCLIENTMETRICS_SIZE
+        , "Ptr",  &NONCLIENTMETRICS
+        , "UInt", 0) {
+        return LogError("Unable to retrieve system font"
+                      , "menu font"
+                      , "Result: " A_LastError)
+    }
+
+    _offset  := 40 + 2 * LOGFONT_SIZE
+    _address := &NONCLIENTMETRICS + _offset
+
+    if _name
+        StrPut(_name, _address + 28, 32)
+
+    if _size {
+        _height := -DllCall("MulDiv"
+            , "Int", _size
+            , "Int", A_ScreenDPI
+            , "Int", 72)
+        NumPut(_height, _address + 0, "Int")
+    }
+
+    if _weight
+        NumPut(_weight, _address + 16, "Int")
+
+    if (_isItalic = 1) || (_isItalic = 0)
+        NumPut(_isItalic, &_address + 20, "UChar")
+
+    if !DllCall("SystemParametersInfoW"
+        , "UInt", SPI_SETNONCLIENTMETRICS
+        , "UInt", NONCLIENTMETRICS_SIZE
+        , "Ptr",  &NONCLIENTMETRICS
+        , "UInt", SPIF_UPDATEINIFILE | SPIF_SENDCHANGE) {
+        return LogError("Unable to set system font"
+                      , "menu font"
+                      , "Result: " A_LastError)
+    }
+    
+    Sleep 1000
+    return true
+}
