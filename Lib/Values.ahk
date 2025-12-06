@@ -71,12 +71,17 @@ SetDefaultValues() {
     ShowFirstSeparator  :=  false
 
     IconsSize     := 25
+    MainFontSize  := 10
+    MenuFontSize  := 0
+
     DirsCount     := 3
     DirNameLength := 20
     PathLimit     := 9
     PathSeparator := "\"
     RestartWhere  := "ahk_exe notepad++.exe"
     MainFont      := "Tahoma"
+    MenuFont      := ""
+    
     ShortNameIndicator := ".."
 
     PinMousePlaceholder     := "Right"
@@ -142,12 +147,15 @@ WriteValues() {
     ShowDriveLetter="         ShowDriveLetter         "
     ShowFirstSeparator="      ShowFirstSeparator      "
     IconsSize="               IconsSize               "
+    MainFontSize="            MainFontSize            "
+    MenuFontSize="            MenuFontSize            "
     DirsCount="               DirsCount               "
     DirNameLength="           DirNameLength           "
     PathLimit="               PathLimit               "
     PathSeparator="           PathSeparator           "
     RestartWhere="            RestartWhere            "
     MainFont="                MainFont                "
+    MenuFont="                MenuFont                "
     ShortNameIndicator="      ShortNameIndicator      "
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
