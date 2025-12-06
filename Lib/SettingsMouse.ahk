@@ -30,6 +30,13 @@ InitKeybdMode(_type := "Main", _toggle := true) {
 
 InitMouseMode(_type := "Main", _toggle := false) {
     ; Changes the visibility of mouse buttons selection controls
+    global
+    
+    if _toggle {
+        ; Pre-select key in the ListBox        
+        GuiControl, % "ChooseString", % _type "MouseListBox", % %_type%MousePlaceholder
+    }
+        
     GuiControl, % "Show" _toggle, % _type "MousePlaceholder"
     GuiControl, % "Hide",         % _type "MouseListBox"
     GuiControl, % "Hide" _toggle, % _type "Key"  ; Hotkey control
@@ -46,9 +53,13 @@ TogglePinMouse(_control := 0) {
     ; Hide controls below to select mouse key from listbox
     GuiControl, % "Hide" toggle, % "MainKey"
     GuiControl, % "Hide" toggle, % "MainMousePlaceholder"
+;@Ahk2Exe-IgnoreBegin
     GuiControl, % "Hide" toggle, % "RestartKey"
     GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
-    
+;@Ahk2Exe-IgnoreEnd
+/*@Ahk2Exe-Keep
+    GuiControl, % "Hide" toggle, % "MainIcon"
+*/    
     GuiControl, % "Show" toggle, % "PinMouseListbox"
 }
 
@@ -65,10 +76,12 @@ ToggleMainMouse(_control := 0) {
     ; Set button caption
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
 
-    ; Hide control below to select mouse key from listbox   
+    ; Hide control below to select mouse key from listbox  
+;@Ahk2Exe-IgnoreBegin    
     GuiControl, % "Hide" toggle, % "RestartKey"
     GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
-    GuiControl, % "Hide" toggle, % "RestartWhere"
+;@Ahk2Exe-IgnoreEnd
+    GuiControl, % "Hide" toggle, % "MainIcon"
     
     if !toggle
         return InitKeybdMode("Main")
@@ -79,10 +92,8 @@ ToggleMainMouse(_control := 0) {
     GuiControl, % "Hide" toggle, % "MainKey" ; Hotkey control
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
+;@Ahk2Exe-IgnoreBegin
 ToggleRestartMouse(_control := 0) {
-;─────────────────────────────────────────────────────────────────────────────
     static toggle := false
 
     ; Toggle mouse input controls and set button caption
@@ -104,6 +115,7 @@ ToggleRestartMouse(_control := 0) {
     GuiControl, % "Show" toggle, % "RestartMousePlaceholder"
     GuiControl, % "Show" toggle, % "RestartMouseListbox"    
 }
+;@Ahk2Exe-IgnoreEnd
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;

@@ -18,9 +18,15 @@ ResetSettings() {
     InitMenuFont()
     ShowSettings()
 }
-
+    
 SaveSettings() {
     ; Write current GUI (global) values
+    
+;@Ahk2Exe-IgnoreBegin  
+    global SaveUiPosition, SettingsId, UiPosX, UiPosY 
+    if SaveUiPosition
+        try WinGetPos, UiPosX, UiPosY,,, % "ahk_id " SettingsId
+;@Ahk2Exe-IgnoreEnd    
     Gui, Submit
 
     DeleteSections()
@@ -35,14 +41,19 @@ SaveSettings() {
     InitMenuFont()
 }
 
+;@Ahk2Exe-IgnoreBegin 
 RestartApp() {
-    global RestartWhere
+    global RestartWhere, ShowUiAfterRestart
+
+    if ShowUiAfterRestart
+        SaveSettings()
 
     if !RestartWhere
         Reload
     if WinActive(RestartWhere)
         Reload
 }
+;@Ahk2Exe-IgnoreEnd
 
 GuiEscape() {
     Gui, Destroy

@@ -14,7 +14,7 @@ ShowSettings() {
     ; Options that affects subsequent controls
     ; Hide window border and header
     Gui, Destroy
-    Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop
+    Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
     Gui, Color, % GuiColor, % GuiColor
     
     local _options := "q5"
@@ -62,6 +62,7 @@ ShowSettings() {
     Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
     Gui, Add, Text,         ys+4                            vCenteredText         Section,                          path from
     Gui, Add, DropDownList, ys-3  w%MarginW%                vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack
+    GuiControl, % "ChooseString", % "AutoSwitchTarget",   % AutoSwitchTarget
     
     GuiControlGet, Center, pos, CenteredText
     Gui, Add, CheckBox,     y+%MarginH% x%MarginX%          vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
@@ -82,8 +83,8 @@ ShowSettings() {
     Gui, Add, Text,         y+12,                                                                                   &Settings font
     Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Sho&w icons from
 
-    Gui, Add, Edit,         ys-4  %short% Limit8             vMenuColor            Section,                         %MenuColor%
-    Gui, Add, Edit,         y+4   %short% Limit8             vGuiColor,                                             %GuiColor%
+    Gui, Add, Edit,         ys-4  %short% Limit8            vMenuColor            Section,                          %MenuColor%
+    Gui, Add, Edit,         y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
 
     Gui, Add, Edit,         y+4   %short%                   vMenuFont,                                              %MenuFont%
     Gui, Add, Edit,     x+m yp    %updown%      
@@ -131,7 +132,6 @@ ShowSettings() {
 
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Pin path (hold && click)
     Gui, Add, Text,         y+%MarginH%,                                                                            &Show menu by
-    Gui, Add, Text,         y+%MarginH%,                                                                            &Restart app by
     /*
         Keyboard input or selecting mouse keys is performed by 4 elements:
         - Hotkey: allows to input keyboard shortcut.
@@ -150,18 +150,26 @@ ShowSettings() {
     Gui, Add, Hotkey,    xs y+8   %short%                   vMainKey              Section,                        % MainKey
     Gui, Add, Edit,      xp yp    %short%    ReadOnly       vMainMousePlaceholder,                                % MainMousePlaceholder
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vMainMouseListBox,                                    % GetMouseList("mouseList")
-    Gui, Add, Button,    hs   ys             gToggleMainMouse vMainMouseButton,                                     mouse
-    
+    Gui, Add, Button,    hs   ys           gToggleMainMouse vMainMouseButton,                                       mouse
+
+;@Ahk2Exe-IgnoreBegin
     Gui, Add, Hotkey,    xs y+8   %short%                   vRestartKey           Section,                        % RestartKey
     Gui, Add, Edit,         xp yp %short%    ReadOnly       vRestartMousePlaceholder,                             % RestartMousePlaceholder
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vRestartMouseListBox,                                 % GetMouseList("mouseList")
     Gui, Add, Button,       ys          gToggleRestartMouse vRestartMouseButton,                                    mouse
-    
-    Gui, Add, Edit,xs y+%MarginH% %long%                    vRestartWhere         Section,                        % RestartWhere    
-    Gui, Add, Edit,               %long%                    vMainIcon,                                            % MainIcon
-    
-    Gui, Add, Text,x%MarginX% ys+4,                                                                                 R&estart only in
-    Gui, Add, Text,,                                                                                                Icon (t&ray)
+    Gui, Add, Text,    x%MarginX% ys+4,                                                                             &Restart app by
+;@Ahk2Exe-IgnoreEnd       
+    Gui, Add, Edit,xs y+%MarginH% %long%                    vMainIcon             Section,                        % MainIcon
+    Gui, Add, Text,    x%MarginX% ys+4,                                                                             Icon (t&ray)
+;@Ahk2Exe-IgnoreBegin 
+    Gui, Add, Edit,        xs y+8 %long%                    vRestartWhere,                                        % RestartWhere        
+    Gui, Add, Text,    x%MarginX% yp+4,                                                                             R&estart only in
+    Gui, Add, CheckBox,y+%MarginH%                          vShowAfterRestart     checked%ShowAfterRestart%,        Show &Menu after restart
+    Gui, Add, CheckBox,                                     vShowNearCursor       checked%ShowNearCursor%,          Show Menu near the mouse cursor
+    Gui, Add, CheckBox,                                     vShowUiAfterRestart   checked%ShowUiAfterRestart%,      Show &settings after restart
+    Gui, Add, CheckBox,                                     vSaveLastTab          checked%SaveLastTab%,             Open &last settings tab after restart
+    Gui, Add, CheckBox,                                     vSaveUiPosition       checked%SaveUiPosition%,          Save settings window position
+;@Ahk2Exe-IgnoreEnd 
     
     Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -176,20 +184,14 @@ ShowSettings() {
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     local button := NukeSettings ? "Nuke" : "Reset"
-    NukeSettings  := false
+    NukeSettings := false
 
-    Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings Default",  % "&OK"
+    Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings Default",                       % "&OK"
     Gui, Add, Button, % "x+" CenterH " yp wp                gGuiEscape",                                          % "&Cancel"
     Gui, Add, Button, % "x+" CenterH " yp wp                g" button "Settings",                                 % "&" button
     Gui, Add, Button, % "x+" CenterH " yp wp                gShowDebug",                                          % "Debu&g"
 
-
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-    ; Pre-select ListBox items
-    GuiControl, % "ChooseString", % "AutoSwitchTarget",    % AutoSwitchTarget
-    GuiControl, % "ChooseString", % "PinMouseListBox",     % PinMousePlaceholder
-    GuiControl, % "ChooseString", % "MainMouseListBox",    % MainMousePlaceholder
-    GuiControl, % "ChooseString", % "RestartMouseListBox", % RestartMousePlaceholder
 
     ; Current checkbox state
     ToggleShowAlways()
@@ -205,16 +207,20 @@ ShowSettings() {
     if DarkTheme
         SetDarkTheme("&OK|&Cancel|&Nuke|&Debug|&Reset|msctls_hotkey321")
 
-    ; Get dialog position
+    ; Set settings window position
     local _pos  := ""
         , _posX := ""
         , _posY := ""
-    WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-
-    if (_posX && _posY)
-        _pos := " x" _posX " y" _posY + 100
-    else
-        _pos := " x0 y100"
-
+;@Ahk2Exe-IgnoreBegin
+    if SaveUiPosition && UiPosX && UiPosY       
+        _pos := "x" UiPosX " y" UiPosY
+;@Ahk2Exe-IgnoreEnd
+    if !_pos {
+        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId        
+        if (_posX && _posY)
+            _pos := "x" _posX " y" _posY + 100
+        else
+            _pos := "x0 y100"        
+    }
     Gui, Show, % "AutoSize " _pos, Settings
 }
