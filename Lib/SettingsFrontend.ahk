@@ -16,7 +16,14 @@ ShowSettings() {
     Gui, Destroy
     Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop
     Gui, Color, % GuiColor, % GuiColor
-    Gui, Font, % "q5 " (DarkTheme ? "c" InvertColor(GuiColor) : ""), % MainFont
+    
+    local _options := "q5"
+    if DarkTheme
+        _options .= " c" InvertColor(GuiColor)
+    if MainFontSize
+        _options .= " s" MainFontSize
+    
+    Gui, Font, % _options, % MainFont
 
     ; Edit fields: fixed width, one row, max 6 symbols, no multi-line word wrap and vertical scrollbar
     local edit := "w63 r1 -Wrap -vscroll"
@@ -60,12 +67,24 @@ ShowSettings() {
 
     Gui, Add, CheckBox,           gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+13                                                  Section,                          &Menu back color (HEX)
-    Gui, Add, Text,         y+13,                                                                                   Settings &back color (HEX)
+    Gui, Add, Text,         y+13,                                                                                   Settings &back color (HEX) 
+    Gui, Add, Text,         y+15,                                                                                   &Settings font
+    Gui, Add, Text,         y+15,                                                                                   &Menu font
     Gui, Add, CheckBox,     y+13  gToggleIcons              vShowIcons            checked%ShowIcons%,               &Show icons from
 
-    Gui, Add, Edit,         ys-6  %edit% w153 Limit8        vMenuColor,                                             %MenuColor%
+    Gui, Add, Edit,         ys-6  %edit% w153 Limit8        vMenuColor            Section,                          %MenuColor%
     Gui, Add, Edit,         y+4   %edit% wp   Limit8        vGuiColor,                                              %GuiColor%
-    Gui, Add, Edit,         y+4   %edit% w100               vIconsDir             Section,                          %IconsDir%
+    
+    Gui, Add, Edit,         y+4   %edit%    w100            vMainFont,                                              %MainFont%    
+    Gui, Add, Edit,     x+m yp    %edit%    w40  Limit2     
+    Gui, Add, UpDown,       Range0-99                       vMainFontSize,                                          %MainFontSize%
+    
+    Gui, Add, Edit,      xs y+4   %edit%    w100            vMenuFont,                                              %MenuFont%
+    Gui, Add, Edit,     x+m yp    %edit%    w40  Limit2     
+    Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
+    
+    
+    Gui, Add, Edit,      xs y+4   %edit% w100               vIconsDir             Section,                          %IconsDir%
 
     Gui, Add, Edit,         ys    %edit% w40  Limit3        vIconsSizePlaceholder
     Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
@@ -106,7 +125,6 @@ ShowSettings() {
     Gui, Add, Text,         y+17,                                                                                   &Show menu by
     Gui, Add, Text,         y+17,                                                                                   &Restart app by
     Gui, Add, Text,         y+23,                                                                                   R&estart only in
-    Gui, Add, Text,         y+13,                                                                                   &Font (GUI)
     Gui, Add, Text,         y+13,                                                                                   Icon (t&ray)
     /*
         Entering each key and the choice of one mouse button consists of two parts:
@@ -116,7 +134,7 @@ ShowSettings() {
     */
     ; Keyboard input controls
     edit := "w120 r1 -Wrap -vscroll"
-    Gui, Add, Edit,         ys-4  %edit%    ReadOnly        vPinKey               Section                           ; Dummy for positioning
+    Gui, Add, Edit,         ys-4  %edit%    ReadOnly        vPinKey               Section                         ; Dummy for positioning
     Gui, Add, Hotkey,             %edit%                    vMainKey,                                               %MainKey%
     Gui, Add, Hotkey,             %edit%                    vRestartKey,                                            %RestartKey%
 
@@ -127,9 +145,8 @@ ShowSettings() {
     Gui, Add, Button,           wp   gToggleRestartMouse    vRestartMouseButton,                                    mouse
 
     ; Non-mouse: add after previous controls at the left edge X
-    Gui, Add, Edit,         xs    %edit%    w185            vRestartWhere,                                          %RestartWhere%
-    Gui, Add, Edit,         y+4   %edit%    wp              vMainFont,                                              %MainFont%
-    Gui, Add, Edit,         y+4   %edit%    wp              vMainIcon,                                              %MainIcon%
+    Gui, Add, Edit,         xs    %edit%    w185            vRestartWhere,                                          %RestartWhere%    
+    Gui, Add, Edit,     xs y+4    %edit%    w185            vMainIcon,                                              %MainIcon%
 
     ; ListBox: allows user to select the mouse buttons
     static buttons  := GetMouseList("specialList") . "|" . GetMouseList("buttonsList")
