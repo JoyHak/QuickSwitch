@@ -14,7 +14,7 @@ ShowSettings() {
     ; Options that affects subsequent controls
     ; Hide window border and header
     Gui, Destroy
-    Gui, -E0x200 -SysMenu -DPIScale +AlwaysOnTop
+    Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop
     Gui, Color, % GuiColor, % GuiColor
     
     local _options := "q5"
@@ -24,9 +24,17 @@ ShowSettings() {
         _options .= " s" MainFontSize
     
     Gui, Font, % _options, % MainFont
+    
+    ; The larger the font size and DPI, the wider the input fields
+    local scale := (MainFontSize != 0) ? (MainFontSize - 8) : 0
 
-    ; Edit fields: fixed width, one row, max 6 symbols, no multi-line word wrap and vertical scrollbar
-    local edit := "w63 r1 -Wrap -vscroll"
+    ; Edit fields: one row, no multi-line word wrap, no vertical scrollbar
+    local fieldDefault := "r1 -Wrap -vscroll w"
+    local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
+    local tiny   := fieldDefault . 5  * (10 + scale)
+    local short  := fieldDefault . 10 * (10 + scale)
+    local list   := "r4 w"       . 10 * (10 + scale)
+    local long   := fieldDefault . 14 * (10 + scale)
 
     ; Split settings to the tabs
     Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
@@ -42,60 +50,60 @@ ShowSettings() {
     ;         Control,    [ Coordinates / Callback          Variable              State / Section                ], Title
     Gui, Tab, 1 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui, Add, Text,,                                                                                                Show menu after:
+    Gui, Add, Text,                                         vShowMenuAfterText,                                     Show menu after:
     Gui, Add, CheckBox,                                     vShowNoSwitch         checked%ShowNoSwitch%,            &Disabling Auto Switch
     Gui, Add, CheckBox,                                     vShowAfterSettings    checked%ShowAfterSettings%,       Leaving &settings
     Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Selecting &path
     Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always
-
-    Gui, Add, Text,         y+20                                                  Section,                          Auto Switch
-    Gui, Add, Edit,         ys-5 w40 r1 -Wrap -vscroll      Limit2
+    
+    GuiControlGet, Margin, pos, ShowMenuAfterText
+    Gui, Add, Text,         y+%MarginH%                                           Section,                          Auto Switch
+    Gui, Add, Edit,         ys-4  %updown%      
     Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
-    Gui, Add, Text,         ys+5                            vCenteredText         Section,                          path from
-    Gui, Add, DropDownList, ys-5 w120                       vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack
-
-    Gui, Add, CheckBox,     y+10 xm+15                      vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
+    Gui, Add, Text,         ys+4                            vCenteredText         Section,                          path from
+    Gui, Add, DropDownList, ys-3  w%MarginW%                vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack
+    
+    GuiControlGet, Center, pos, CenteredText
+    Gui, Add, CheckBox,     y+%MarginH% x%MarginX%          vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
     Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
 
-    Gui, Add, Text,         y+13                                                  Section,                          &Limit of displayed paths
-    Gui, Add, Edit,         ys-4  %edit% Limit4
+    Gui, Add, Text,         y+%MarginH%                                           Section,                          &Limit of displayed paths
+    Gui, Add, Edit,         ys-4  %updown%
     Gui, Add, UpDown,       Range1-9999                     vPathLimit,                                             %PathLimit%
 
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, Add, CheckBox,           gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
-    Gui, Add, Text,         y+13                                                  Section,                          &Menu back color (HEX)
-    Gui, Add, Text,         y+13,                                                                                   Settings &back color (HEX) 
-    Gui, Add, Text,         y+15,                                                                                   &Settings font
-    Gui, Add, Text,         y+15,                                                                                   &Menu font
-    Gui, Add, CheckBox,     y+13  gToggleIcons              vShowIcons            checked%ShowIcons%,               &Show icons from
+    Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
+    Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX) 
+    Gui, Add, Text,         y+12,                                                                                   &Menu font
+    Gui, Add, Text,         y+12,                                                                                   &Settings font
+    Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Sho&w icons from
 
-    Gui, Add, Edit,         ys-6  %edit% w153 Limit8        vMenuColor            Section,                          %MenuColor%
-    Gui, Add, Edit,         y+4   %edit% wp   Limit8        vGuiColor,                                              %GuiColor%
-    
-    Gui, Add, Edit,         y+4   %edit%    w100            vMainFont,                                              %MainFont%    
-    Gui, Add, Edit,     x+m yp    %edit%    w40  Limit2     
+    Gui, Add, Edit,         ys-4  %short% Limit8             vMenuColor            Section,                         %MenuColor%
+    Gui, Add, Edit,         y+4   %short% Limit8             vGuiColor,                                             %GuiColor%
+
+    Gui, Add, Edit,         y+4   %short%                   vMenuFont,                                              %MenuFont%
+    Gui, Add, Edit,     x+m yp    %updown%      
+    Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%    
+    Gui, Add, Edit,     xs  y+4   %short%                   vMainFont,                                              %MainFont%    
+    Gui, Add, Edit,     x+m yp    %updown%      
     Gui, Add, UpDown,       Range0-99                       vMainFontSize,                                          %MainFontSize%
     
-    Gui, Add, Edit,      xs y+4   %edit%    w100            vMenuFont,                                              %MenuFont%
-    Gui, Add, Edit,     x+m yp    %edit%    w40  Limit2     
-    Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
-    
-    
-    Gui, Add, Edit,      xs y+4   %edit% w100               vIconsDir             Section,                          %IconsDir%
-
-    Gui, Add, Edit,         ys    %edit% w40  Limit3        vIconsSizePlaceholder
+    Gui, Add, Edit,      xs y+4   %short%                   vIconsDir             Section,                          %IconsDir%
+    Gui, Add, Edit,         ys    %updown%                  vIconsSizePlaceholder
     Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
-    Gui, Add, Edit,      xs y+40  %edit% w153               vFavoritesDir         Section,                          %FavoritesDir%
-
-    Gui, Add, Text,         ys-20 xm+15,                                                                            Show sections in Menu:
-    Gui, Add, CheckBox,     y+10  gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           &Favorites from
-    Gui, Add, CheckBox,                                     vShowPinned           checked%ShowPinned%,              &Pinned paths
+    
+    Gui, Add, Text,         y+%MarginH%  x%MarginX%,                                                                Show sections in Menu:
+    Gui, Add, CheckBox,           gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           Fa&vorites from
+    Gui, Add, Edit,      xs yp-5  %long%                    vFavoritesDir,                                          %FavoritesDir%
+    
+    Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
-    Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            Fil&e managers paths
-    Gui, Add, CheckBox,     xp+20 y+10                      vActiveTabOnly        checked%ActiveTabOnly%,           only the &active tab
+    Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
+    Gui, Add, CheckBox,     y+10         xp+%MarginH%       vActiveTabOnly        checked%ActiveTabOnly%,           only the &active tab
     Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          &locked tabs
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -105,90 +113,83 @@ ShowSettings() {
     Gui, Add, Text,         y+13                            vPathSeparatorText,                                     Path &separator
     Gui, Add, Text,         y+13                            vDirsCountText,                                         Number of &dirs displayed
     Gui, Add, Text,         y+13                            vDirNameLengthText,                                     &Length of dir names
-    Gui, Add, Checkbox,     y+20                            vShowDriveLetter        checked%ShowDriveLetter%,       Show &drive letter
+    Gui, Add, Checkbox,     y+%MarginH%                     vShowDriveLetter        checked%ShowDriveLetter%,       Show &drive letter
     Gui, Add, Checkbox,                                     vShowFirstSeparator     checked%ShowFirstSeparator%,    Show &first separator
     Gui, Add, Checkbox,                                     vShortenEnd             checked%ShortenEnd%,            Shorten the &end
 
-    Gui, Add, Edit,         ys-4 %edit%                     vShortNameIndicator,                                    %ShortNameIndicator%
-    Gui, Add, Edit,         y+4  %edit%                     vPathSeparator,                                         %PathSeparator%
+    Gui, Add, Edit,         ys-4 %tiny%                     vShortNameIndicator,                                    %ShortNameIndicator%
+    Gui, Add, Edit,         y+4  %tiny%                     vPathSeparator,                                         %PathSeparator%
 
-    Gui, Add, Edit,         y+4  %edit%     Limit4
+    Gui, Add, Edit,         y+4  %tiny%     Limit4
     Gui, Add, UpDown,       Range1-9999                     vDirsCount,                                             %DirsCount%
-    Gui, Add, Edit,         y+4  %edit%     Limit4
+    Gui, Add, Edit,         y+4  %tiny%     Limit4
     Gui, Add, UpDown,       Range1-9999                     vDirNameLength,                                         %DirNameLength%
 
     Gui, Tab, 4 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, Add, CheckBox,                                     vAutoStartup          checked%AutoStartup%,             Launch at &system startup
 
-    Gui, Add, Text,         y+20                                                  Section,                          &Pin path holding
-    Gui, Add, Text,         y+17,                                                                                   &Show menu by
-    Gui, Add, Text,         y+17,                                                                                   &Restart app by
-    Gui, Add, Text,         y+23,                                                                                   R&estart only in
-    Gui, Add, Text,         y+13,                                                                                   Icon (t&ray)
+    Gui, Add, Text,         y+%MarginH%                                           Section,                          &Pin path (hold && click)
+    Gui, Add, Text,         y+%MarginH%,                                                                            &Show menu by
+    Gui, Add, Text,         y+%MarginH%,                                                                            &Restart app by
     /*
-        Entering each key and the choice of one mouse button consists of two parts:
-        - Hotkey control (Keyboard input mode)
-        - Several mouse buttons choice controls (Mouse input mode).
-        See the implementation and documentation in Lib\SettingsMouse)
+        Keyboard input or selecting mouse keys is performed by 4 elements:
+        - Hotkey: allows to input keyboard shortcut.
+        - Listbox: allows to select the mouse buttons or shortcuts.
+        - Placeholder: displays the mouse button selected in Listbox.
+        - Button: toggles Listbox and Placeholder visibility
+        See the implementation and documentation in Lib\SettingsMouse
     */
-    ; Keyboard input controls
-    edit := "w120 r1 -Wrap -vscroll"
-    Gui, Add, Edit,         ys-4  %edit%    ReadOnly        vPinKey               Section                         ; Dummy for positioning
-    Gui, Add, Hotkey,             %edit%                    vMainKey,                                               %MainKey%
-    Gui, Add, Hotkey,             %edit%                    vRestartKey,                                            %RestartKey%
+    local listbox := list  " wp xp yp+" MarginH + 9
 
-    ; Button (keybd / mouse): toggles between Keyboard / Mouse input modes
-    ; Add at section Y and after Hotkey X pos
-    Gui, Add, Button,       ys w22   gTogglePinMouse,                                                               mouse
-    Gui, Add, Button,           wp   gToggleMainMouse       vMainMouseButton,                                       mouse
-    Gui, Add, Button,           wp   gToggleRestartMouse    vRestartMouseButton,                                    mouse
-
-    ; Non-mouse: add after previous controls at the left edge X
-    Gui, Add, Edit,         xs    %edit%    w185            vRestartWhere,                                          %RestartWhere%    
-    Gui, Add, Edit,     xs y+4    %edit%    w185            vMainIcon,                                              %MainIcon%
-
-    ; ListBox: allows user to select the mouse buttons
-    static buttons  := GetMouseList("specialList") . "|" . GetMouseList("buttonsList")
-    static mouse    := GetMouseList("specialList") . "|" . GetMouseList("mouseList")
-
-    Gui, Add, ListBox,   xs ys+25 w120 h45  gGetMouseKey    vPinMouseListBox,                                       %buttons%
-    Gui, Add, ListBox,   xs ys+60 wp hp     gGetMouseKey    vMainMouseListBox,                                      %mouse%
-    Gui, Add, ListBox,   xs ys+90 wp hp     gGetMouseKey    vRestartMouseListBox,                                   %mouse%
-
-    ; Placeholder (edit): displays the mouse button selected in Listbox.
-    ; Placed exactly in the position of the Hotkey and corresponds to its width and height.
-    Gui, Add, Edit,         xs ys %edit%    ReadOnly        vPinMousePlaceholder,                                   %PinMousePlaceholder%
-    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vMainMousePlaceholder,                                  %MainMousePlaceholder%
-    Gui, Add, Edit,         y+8   %edit%    ReadOnly        vRestartMousePlaceholder,                               %RestartMousePlaceholder%
-
+    Gui, Add, Edit,         ys-4  %short%    ReadOnly       vPinKey               Section                         ; Dummy for positioning
+    Gui, Add, Edit,      xp yp    %short%    ReadOnly       vPinMousePlaceholder,                                 % PinMousePlaceholder
+    Gui, Add, ListBox,            %listbox%  gGetMouseKey   vPinMouseListBox,                                     % GetMouseList("pinList")
+    Gui, Add, Button,       ys               gTogglePinMouse,                                                       mouse
+    
+    Gui, Add, Hotkey,    xs y+8   %short%                   vMainKey              Section,                        % MainKey
+    Gui, Add, Edit,      xp yp    %short%    ReadOnly       vMainMousePlaceholder,                                % MainMousePlaceholder
+    Gui, Add, ListBox,            %listbox%  gGetMouseKey   vMainMouseListBox,                                    % GetMouseList("mouseList")
+    Gui, Add, Button,    hs   ys             gToggleMainMouse vMainMouseButton,                                     mouse
+    
+    Gui, Add, Hotkey,    xs y+8   %short%                   vRestartKey           Section,                        % RestartKey
+    Gui, Add, Edit,         xp yp %short%    ReadOnly       vRestartMousePlaceholder,                             % RestartMousePlaceholder
+    Gui, Add, ListBox,            %listbox%  gGetMouseKey   vRestartMouseListBox,                                 % GetMouseList("mouseList")
+    Gui, Add, Button,       ys          gToggleRestartMouse vRestartMouseButton,                                    mouse
+    
+    Gui, Add, Edit,xs y+%MarginH% %long%                    vRestartWhere         Section,                        % RestartWhere    
+    Gui, Add, Edit,               %long%                    vMainIcon,                                            % MainIcon
+    
+    Gui, Add, Text,x%MarginX% ys+4,                                                                                 R&estart only in
+    Gui, Add, Text,,                                                                                                Icon (t&ray)
+    
     Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, Add, Text,,                                                                                                Delete from configuration:
-    Gui, Add, CheckBox,     y+20                            vDeleteDialogs,                                         &Black List and Auto Switch
+    Gui, Add, CheckBox,     y+%MarginH%                     vDeleteDialogs,                                         &Black List and Auto Switch
     Gui, Add, CheckBox,                                     vDeleteFavorites,                                       &Favorite paths
     Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
     Gui, Add, CheckBox,                                     vDeleteClipboard,                                       &Clipboard paths
     Gui, Add, CheckBox,                                     vDeleteKeys,                                            &Hotkeys and mouse buttons
-    Gui, Add, CheckBox,     y+20                            vNukeSettings,                                          &Nuke configration
+    Gui, Add, CheckBox,     y+%MarginH%                     vNukeSettings,                                          &Nuke configration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    local _button := NukeSettings ? "Nuke" : "Reset"
+    local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings  := false
 
-    Gui, Add, Button,       x142  w74                       gGuiEscape              Section,                        &Cancel
-    Gui, Add, Button,       x+20  yp wp                     g%_button%Settings,                                     &%_button%
-    Gui, Add, Button,       xs-94 yp wp                     gSaveSettings           Default,                        &OK
-    Gui, Add, Button,       x314  ym-4                      gShowDebug,                                             Debu&g
+    Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings Default",  % "&OK"
+    Gui, Add, Button, % "x+" CenterH " yp wp                gGuiEscape",                                          % "&Cancel"
+    Gui, Add, Button, % "x+" CenterH " yp wp                g" button "Settings",                                 % "&" button
+    Gui, Add, Button, % "x+" CenterH " yp wp                gShowDebug",                                          % "Debu&g"
 
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ; Pre-select ListBox items
-    GuiControl, % "ChooseString", % "AutoSwitchTarget",     % AutoSwitchTarget
-    GuiControl, % "ChooseString", % "PinMouseListBox",      % PinMousePlaceholder
-    GuiControl, % "ChooseString", % "MainMouseListBox",     % MainMousePlaceholder
-    GuiControl, % "ChooseString", % "RestartMouseListBox",  % RestartMousePlaceholder
+    GuiControl, % "ChooseString", % "AutoSwitchTarget",    % AutoSwitchTarget
+    GuiControl, % "ChooseString", % "PinMouseListBox",     % PinMousePlaceholder
+    GuiControl, % "ChooseString", % "MainMouseListBox",    % MainMousePlaceholder
+    GuiControl, % "ChooseString", % "RestartMouseListBox", % RestartMousePlaceholder
 
     ; Current checkbox state
     ToggleShowAlways()

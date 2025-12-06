@@ -39,12 +39,16 @@ InitMouseMode(_type := "Main", _toggle := false) {
 ;
 TogglePinMouse(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
+    global MainMousePlaceholder, RestartMousePlaceholder
     static toggle := false
     toggle := !toggle
 
     ; Hide controls below to select mouse key from listbox
     GuiControl, % "Hide" toggle, % "MainKey"
     GuiControl, % "Hide" toggle, % "MainMousePlaceholder"
+    GuiControl, % "Hide" toggle, % "RestartKey"
+    GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
+    
     GuiControl, % "Show" toggle, % "PinMouseListbox"
 }
 
@@ -61,10 +65,10 @@ ToggleMainMouse(_control := 0) {
     ; Set button caption
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
 
-    ; Hide control below to select mouse key from listbox
-    ; If the mouse button is selected -> hide Hotkey control and vice versa
-    GuiControlGet, _mouse,, % "RestartMousePlaceholder"     
-    GuiControl, % "Hide" toggle, % "Restart" . (_mouse ? "MousePlaceholder" : "Key")
+    ; Hide control below to select mouse key from listbox   
+    GuiControl, % "Hide" toggle, % "RestartKey"
+    GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
+    GuiControl, % "Hide" toggle, % "RestartWhere"
     
     if !toggle
         return InitKeybdMode("Main")
@@ -91,6 +95,7 @@ ToggleRestartMouse(_control := 0) {
     ; Hide controls below to select mouse key from listbox
     GuiControl, % "Hide" toggle, % "RestartKey"
     GuiControl, % "Hide" toggle, % "RestartWhere"
+    GuiControl, % "Hide" toggle, % "MainIcon"
 
     if !toggle
         return InitKeybdMode("Restart")
@@ -131,17 +136,12 @@ GetMouseList(_action, _sequence := "") {
     static specialList  := "Tab|Capslock|LWin|Space"
     
     static mouseList    := buttonsList "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward"
-    static keysList     := "Ctrl|Shift|Alt+Space|Shift+Space|Ctrl+Win|Ctrl+Alt|Ctrl+Shift|Win+Alt|Win+Shift|Alt+Shift"
-    
+   
     switch (_action) {  
-        case "buttonsList":
-            return buttonsList
-        case "specialList":
-            return specialList
+        case "pinList":
+            return specialList "|" buttonsList
         case "mouseList":
-            return mouseList
-        case "keysList":
-            return keysList 
+            return specialList "|" mouseList
         
         case "isMouse":
             return InStr(_sequence, "Button") || InStr(mouseList, _sequence)
