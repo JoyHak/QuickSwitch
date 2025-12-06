@@ -124,7 +124,13 @@ ShowMenu() {
     try {
         ; Manually calc pos, because the file dialog is not active
         WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-        ; Halt main thread
+
+;@Ahk2Exe-IgnoreBegin   Halt main thread
+        global ShowNearCursor
+        if ShowNearCursor
+            Menu, % "ContextMenu", % "Show" 
+        else
+;@Ahk2Exe-IgnoreEnd
         Menu, % "ContextMenu", % "Show", % _posX, % _posY + 100
         return true
     } catch {

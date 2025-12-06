@@ -12,7 +12,7 @@
 #Persistent
 #SingleInstance force
 #KeyHistory 0
-ListLines Off
+; ListLines Off
 SetBatchLines, -1
 SetWinDelay, -1
 SetKeyDelay, -1
@@ -57,11 +57,18 @@ else
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "ShowMenu")
-ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 
 InitAutoStartup()
 InitDarkTheme()
 InitSections("All")
+
+;@Ahk2Exe-IgnoreBegin
+ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
+if ShowUiAfterRestart
+    ShowSettings()
+if ShowAfterRestart 
+    GoSub ^#+0
+;@Ahk2Exe-IgnoreEnd
 
 Loop {
     ; Wait for any "Open/Save as" file dialog
@@ -75,7 +82,7 @@ Loop {
         }
 
         ; If there is any GUI left from previous calls...
-        Gui, Destroy
+        ; Gui, Destroy
 
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
@@ -175,7 +182,9 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 
 ExitApp
 
-
+;@Ahk2Exe-IgnoreBegin Alt + Tilde ~ (or backtick `)
+!sc029::
+;@Ahk2Exe-IgnoreEnd
 ^#+0::
     DialogId := WinActive("A")
     CreateMenu()

@@ -69,6 +69,13 @@ SetDefaultValues() {
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
+;@Ahk2Exe-IgnoreBegin    
+    ShowAfterRestart    :=  false
+    ShowNearCursor      :=  false
+    ShowUiAfterRestart  :=  false
+    SaveUiPosition      :=  false
+    SaveLastTab         :=  true
+;@Ahk2Exe-IgnoreEnd    
 
     IconsSize     := 25
     MainFontSize  := 10
@@ -78,7 +85,6 @@ SetDefaultValues() {
     DirNameLength := 20
     PathLimit     := 9
     PathSeparator := "\"
-    RestartWhere  := "ahk_exe notepad++.exe"
     MainFont      := "Tahoma"
     MenuFont      := ""
     
@@ -95,7 +101,7 @@ SetDefaultValues() {
     ; Requires validation
     PinKey       := "RButton"
     MainKey      := "^sc10"
-    RestartKey   := "^sc1F"
+    RestartKey   := ""
     IconsDir     := "Icons"
     FavoritesDir := "Favorites"
     MainIcon     := ""
@@ -103,9 +109,12 @@ SetDefaultValues() {
     GuiColor     := ""
     SetDefaultColors()
 
-    ;@Ahk2Exe-IgnoreBegin
-    MainIcon := IconsDir "\QuickSwitch.ico"
-    ;@Ahk2Exe-IgnoreEnd
+;@Ahk2Exe-IgnoreBegin
+    MainIcon     := IconsDir "\QuickSwitch.ico"
+    RestartKey   := "^sc1F"
+    RestartWhere := "ahk_exe notepad++.exe" 
+    UiPosX := UiPosY := 0   
+;@Ahk2Exe-IgnoreEnd
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -153,24 +162,42 @@ WriteValues() {
     DirNameLength="           DirNameLength           "
     PathLimit="               PathLimit               "
     PathSeparator="           PathSeparator           "
-    RestartWhere="            RestartWhere            "
     MainFont="                MainFont                "
     MenuFont="                MenuFont                "
     ShortNameIndicator="      ShortNameIndicator      "
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
-    RestartMousePlaceholder=" RestartMousePlaceholder "
     )"
 
     _values .= "`n"
     . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),     "",   "Off", "Dummy")  ; Init and dont use this key
     . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),    "",   "Off", "ShowMenu")
-    . ValidateKey(      "RestartKey",    (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
     . ValidateDirectory("IconsDir",      IconsDir)
     . ValidateDirectory("FavoritesDir",  FavoritesDir)
+
+
+;@Ahk2Exe-IgnoreBegin  
+    _values .= "
+    (LTrim
+    RestartWhere="            RestartWhere            "
+    RestartMousePlaceholder=" RestartMousePlaceholder "
+    ShowAfterRestart="        ShowAfterRestart        "
+    ShowNearCursor="          ShowNearCursor          "    
+    ShowUiAfterRestart="      ShowUiAfterRestart      "
+    SaveLastTab="             SaveLastTab             "
+    SaveUiPosition="          SaveUiPosition          "
+    UiPosX="                  UiPosX                  "
+    UiPosY="                  UiPosY                  "
+    )"
+    
+    _values .= "`n"
+    . ValidateKey(      "RestartKey",    (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
+    . (SaveLastTab ? ("LastTabSettings=" LastTabSettings "`n") : "")
+;@Ahk2Exe-IgnoreEnd
+
 
     try {
         IniWrite, % _values, % INI, % "Global"
