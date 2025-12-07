@@ -76,7 +76,9 @@ Loop {
 
     try {
         DialogId := WinActive("A")
-        if !IsFileDialog(DialogId, EditId) {
+        
+        IniRead, SendEnter, % INI, % "Global", % "SendEnter", 0
+        if !IsFileDialog(DialogId, EditId, , SendEnter) {
             WinWaitNotActive, % "ahk_id " DialogId
             Continue
         }
@@ -94,6 +96,7 @@ Loop {
         IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0               ; -1 or 0
         IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch    ; -1, 0 or 1
         DialogAction |= BlackList
+        
 
         ; Get paths for Menu sections
         if ShowFavorites

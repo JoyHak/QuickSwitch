@@ -58,6 +58,7 @@ SetDefaultValues() {
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     BlackListProcess    :=  false
+    SendEnter           :=  false
 
     ActiveTabOnly       :=  false
     ShowLockedTabs      :=  false
@@ -149,6 +150,7 @@ WriteValues() {
     AutoSwitchIndex="         AutoSwitchIndex         "
     AutoSwitchTarget="        AutoSwitchTarget        "
     BlackListProcess="        BlackListProcess        "
+    SendEnter="               SendEnter               "
     ActiveTabOnly="           ActiveTabOnly           "
     ShowLockedTabs="          ShowLockedTabs          "
     ShowFavorites="           ShowFavorites           "

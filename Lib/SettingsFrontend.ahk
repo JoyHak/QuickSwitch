@@ -67,6 +67,7 @@ ShowSettings() {
     GuiControlGet, Center, pos, CenteredText
     Gui, Add, CheckBox,     y+%MarginH% x%MarginX%          vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
+    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
     Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
     Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
 
