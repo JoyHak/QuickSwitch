@@ -53,21 +53,31 @@ WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 3) {
 ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
     ; Parses tabsFile.
     ; Searches for the active tab using the "activetab" parameter
-
-    ; Tabs index starts with 0, array index starts with 1
-    IniRead, _active, % tabsFile, % "activetabs", % "activetab", 0
-    _active += 1
     _paths  := []
+    _active := _last := 0
+    
+    IniRead, _tabs, % tabsFile, % "activetabs"    
+    if true { ; reserved for future _activePaneOnly
+        IniRead, _tabsI, % tabsFile, % "inactivetabs"
+        _tabs .= "`n" _tabsI
+    }      
 
-    Loop, read, % tabsFile
+    Loop, parse, % _tabs, `n, `r
     {
-        _line := A_LoopReadLine
+        _line := A_LoopField
 
         ; Get path, omit the "path=" key
         if (_path := InStr(_line, "path=")) {
             _path := RTrim(SubStr(_line, _path + 5), "\")
             _paths.push([_path, "TotalCmd.ico", 1, ""])
             continue
+        }
+        
+        ; Get active tab index, omit the "activetab=" key
+        if (_num := InStr(_line, "activetab=")) {
+            ; Skip next active tab by saving last
+            _active := _last
+            _last   := 1 + SubStr(_line, _num + 10)
         }
 
         ; Get previous path options, omit the "options=" key
