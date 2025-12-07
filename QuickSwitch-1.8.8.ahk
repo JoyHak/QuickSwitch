@@ -12,7 +12,7 @@
 #Persistent
 #SingleInstance force
 #KeyHistory 0
-; ListLines Off
+ListLines Off
 SetBatchLines, -1
 SetWinDelay, -1
 SetKeyDelay, -1
