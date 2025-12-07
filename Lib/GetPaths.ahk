@@ -1,7 +1,6 @@
 GetPaths(ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
-    global DialogId, EditId
 
     ; Get manager uniq IDs
     WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
