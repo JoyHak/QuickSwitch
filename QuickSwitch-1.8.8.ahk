@@ -183,7 +183,14 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 ExitApp
 
 ;@Ahk2Exe-IgnoreBegin Alt + Tilde ~ (or backtick `)
-!sc029::
+!sc029::     
+   if ShowOpenDialog {
+       SendEvent ^!o
+       return 
+   } else if ShowSaveAsDialog {
+       SendEvent ^!s  
+       return     
+   }
 ;@Ahk2Exe-IgnoreEnd
 ^#+0::
     DialogId := WinActive("A")
