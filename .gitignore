@@ -2,6 +2,7 @@
 *.log
 *.ini
 *.csv
+*.ttf
 /old*/
 /reserv*/
 /Releas*/
