@@ -163,12 +163,15 @@ ShowSettings() {
     Gui, Add, Text,    x%MarginX% ys+4,                                                                             Icon (t&ray)
 ;@Ahk2Exe-IgnoreBegin 
     Gui, Add, Edit,        xs y+8 %long%                    vRestartWhere,                                        % RestartWhere        
-    Gui, Add, Text,    x%MarginX% yp+4,                                                                             R&estart only in
+    Gui, Add, Text,    x%MarginX% yp+4,                                                                             &Restart only in
     Gui, Add, CheckBox,y+%MarginH%                          vShowAfterRestart     checked%ShowAfterRestart%,        Show &Menu after restart
     Gui, Add, CheckBox,                                     vShowNearCursor       checked%ShowNearCursor%,          Show Menu near the mouse cursor
     Gui, Add, CheckBox,                                     vShowUiAfterRestart   checked%ShowUiAfterRestart%,      Show &settings after restart
     Gui, Add, CheckBox,                                     vSaveLastTab          checked%SaveLastTab%,             Open &last settings tab after restart
     Gui, Add, CheckBox,                                     vSaveUiPosition       checked%SaveUiPosition%,          Save settings window position
+
+    Gui, Add, CheckBox,y+%MarginH%                          vShowOpenDialog       checked%ShowOpenDialog%,          Open "Op&en" dialog before Menu
+    Gui, Add, CheckBox,                                     vShowSaveAsDialog     checked%ShowSaveAsDialog%,        Open "&Save As" dialog before Menu
 ;@Ahk2Exe-IgnoreEnd 
     
     Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

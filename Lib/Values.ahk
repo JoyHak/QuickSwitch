@@ -74,6 +74,9 @@ SetDefaultValues() {
     ShowNearCursor      :=  false
     ShowUiAfterRestart  :=  false
     SaveUiPosition      :=  false
+    ShowOpenDialog      :=  false
+    ShowSaveAsDialog    :=  false
+    
     SaveLastTab         :=  true
 ;@Ahk2Exe-IgnoreEnd    
 
@@ -191,10 +194,12 @@ WriteValues() {
     SaveUiPosition="          SaveUiPosition          "
     UiPosX="                  UiPosX                  "
     UiPosY="                  UiPosY                  "
+    ShowOpenDialog="          ShowOpenDialog          "
+    ShowSaveAsDialog="        ShowSaveAsDialog        "
     )"
     
     _values .= "`n"
-    . ValidateKey(      "RestartKey",    (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
+    . ValidateKey(    "RestartKey",     (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
     . (SaveLastTab ? ("LastTabSettings=" LastTabSettings "`n") : "")
 ;@Ahk2Exe-IgnoreEnd
 
