@@ -174,7 +174,7 @@ InitMenuFont() {
     _restartMsg := "
     (LTrim Join`s
     The font has been changed. To roll back changes, open the settings, 
-    make the field empty and set the size next to 0.
+    make the field empty and set the size to 0.
     `n`nRestart the " ScriptName " manually.
     )"
     
