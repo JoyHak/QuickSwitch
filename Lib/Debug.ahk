@@ -4,7 +4,7 @@
     (other than logging) should be stored here.
     Library must be imported first to be used in other libraries!
 */
-
+;@Ahk2Exe-IgnoreBegin 
 Timer(R := 0) {
     /*
         Measure script performance
@@ -15,6 +15,7 @@ Timer(R := 0) {
     static P := 0, F := 0, Q := DllCall("QueryPerformanceFrequency", "Int64P", F)
     return !DllCall("QueryPerformanceCounter", "Int64P", Q) + (R ? (P := Q) / F : (Q - P) / F)
 }
+;@Ahk2Exe-IgnoreEnd
 
 CancelLV() {
     LV_Delete()
