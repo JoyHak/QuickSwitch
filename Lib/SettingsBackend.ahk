@@ -93,7 +93,7 @@ DeleteSections() {
     if DeleteKeys {
         PinKey := MainKey := RestartKey := ""
         PinMousePlaceholder := RestartMouselaceholder := MainMouselaceholder := ""
-        RegisteredSpecialKeys := {}
+        RegisteredKeys := {}
     }
 
     if DeleteClipboard

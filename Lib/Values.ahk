@@ -29,7 +29,7 @@ DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
 
-RegisteredSpecialKeys := {}
+RegisteredKeys := {}
 
 SetDefaultValues() {
     /*
@@ -371,65 +371,59 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         If converted, returns the string of the form "paramName=result",
         otherwise returns value from config
     */
-    global INI, RegisteredSpecialKeys
+    global INI, RegisteredKeys
 
     try {
         if !_sequence
             return _paramName "=`n"
-
-        _isSpecial := false
+        
+        ; Early return: set state for existing hotkey
+        if (!_function && RegisteredKeys.HasKey(_sequence)) {
+            Hotkey, % RegisteredKeys[_sequence], % _state
+            return ""
+        }
+        
         if (_sequence ~= "i)sc[a-f0-9]+") {
-            ; Already converted
+            ; Already converted to Scan Code
             _key := _sequence
         } else if (GetMouseList("isMouse", _sequence)) {
-            ; Convert to mouse buttons
+            ; Convert mouse button from friendly to internal name
             _key := GetMouseList("convertMouse", _sequence)
-
         } else if (GetMouseList("isSpecial", _sequence)) {
-            ; Don't change, use hook
-            _key       :=  _sequence
-            _prefix    :=  "$"
-            _isSpecial :=  true
+            ; Don't convert, use hook
+            _key    := _sequence
+            _prefix := "$"
         } else {
-            ; Convert sequence to Scan Codes (if not converted)
+            ; Convert sequence to Scan Code
             _key := ""
             Loop, parse, _sequence
             {
                 if (!(A_LoopField ~= "[\!\^\+\#<>]")
-                    && _code := GetKeySC(A_LoopField)) {
+                  && _code := GetKeySC(A_LoopField)) {
                     ; Not a modifier, found scancode
                     _key .= Format("sc{:x}", _code)
                 } else {
-                    ; Don't change
+                    ; Don't convert
                     _key .= A_LoopField
                 }
             }
         }
 
-        if _function {
-            ; Register new hotkey
-            Hotkey, % _prefix . _key, % _function, % _state
-            if _isSpecial
-                RegisteredSpecialKeys[_key] := true
+        ; Register new hotkey
+        Hotkey, % _prefix . _key, % _function, % _state        
+        RegisteredKeys[_sequence] := _prefix . _key
+        
+        if !_paramName
+            return ""
 
-            if !_paramName
-                return ""
-
-            try {
-                ; Remove old if exist
-                IniRead, _old, % INI, % "Global", % _paramName, % A_Space
-                if (_old && (_old != _key)) {
-                    Hotkey, % _prefix . _old, % "Off"
-                    Hotkey, % _old, % "Off"
-
-                    if _isSpecial
-                        RegisteredSpecialKeys[_old] := false
-                }
-            }
-
-        } else {
-            ; Set state for existing hotkey
-            Hotkey, % _prefix . _key, % _state
+        ; Remove old key if it exist
+        IniRead, _old, % INI, % "Global", % _paramName, % A_Space
+        try if (_old && (_old != _key)) {
+            Hotkey, % _prefix . _old, % "Off"
+            Hotkey, % _old, % "Off"
+            LogInfo("Deleted " _old, true)
+            
+            try registeredKeys.Delete(_old)
         }
 
         return _paramName "=" _key "`n"
