@@ -84,7 +84,7 @@ Loop {
         }
 
         ; If there is any GUI left from previous calls...
-        ; Gui, Destroy
+        Gui, Destroy
 
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
