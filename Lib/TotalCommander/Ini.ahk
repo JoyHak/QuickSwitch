@@ -10,9 +10,8 @@
 
 GetTotalConsoleIni(ByRef totalPid) {
     ; Searches the ini through the console, throws readable error
-    ; Save clipboard to restore later
-    _clipSaved   := ClipboardAll
-    A_Clipboard  := ""
+    
+    SaveRestoreClipboard("save")
 
     ; Create new console process and get its PID
     SendTotalInternalCmd(totalPid, 511)
@@ -26,15 +25,13 @@ GetTotalConsoleIni(ByRef totalPid) {
     Sleep 150
     SendConsoleCommand(_consolePid, command " | clip")         ; Copy
 
-    ClipWait 5
-    _clip       := A_Clipboard
-    A_Clipboard := _clipSaved
+    _clip := SaveRestoreClipboard("restore", 5)
     try Process, Close, % _consolePid
 
     ; Parse the result
     _log := "TotalCmd PID: " totalPid " Console PID: " _consolePid
     
-    if _clip {
+    if (_clip && IsFile(_clip)) {
         LogInfo(_log " The result is copied to the clipboard.", "NoTraytip")
         return _clip
     }

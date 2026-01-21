@@ -100,9 +100,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     ; Sends script to XYplorer and parses the clipboard.
     ; Returns number of added paths.
 
-    ; Save clipboard to restore later
-    _clipSaved := ClipboardAll
-    A_Clipboard  := ""
+    SaveRestoreClipboard("save")
 
     ; $hideLockedTabs is unset by default
     static getAllPaths := "
@@ -155,22 +153,18 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
     _prefix := _showLockedTabs ? "::" : "::$hideLockedTabs = true`;"
     SendXyplorerScript(winId, _prefix . _script)
 
-    ; Try to fetch clipboard data
-    ClipWait 1
-    _clip       := A_Clipboard
-    A_Clipboard := _clipSaved
-
+    _clip := SaveRestoreClipboard("restore")
+    
     ; Retry if empty
-    static attempts := 0
-    if !(_clip || (attempts = 3)) {
-        attempts++
+    static attempts := 3
+    if (!_clip && attempts--)
         return ThunderRT6FormDC(winId, paths, _activeTabOnly, _showLockedTabs)
-    }
 
-    if (!_clip || (_clip = "unset"))
+    if (!_clip || _clip = "unset")
         return 0
 
-    _count := attempts := 0
+    _count := 0
+    attempts := 3
     Loop, parse, _clip, `|
     {
         paths.push([A_LoopField, "Xyplorer.ico", 1, ""])

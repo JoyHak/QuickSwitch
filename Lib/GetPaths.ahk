@@ -146,6 +146,26 @@ GetClipboardPath(_dataType) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
+SaveRestoreClipboard(_action := "", _timeoutSec := 1) { 
+;─────────────────────────────────────────────────────────────────────────────
+
+    static clipSaved := ""
+    
+    switch _action {
+        case "save":
+            clipSaved   := ClipboardAll
+            A_Clipboard := "" 
+        case "restore":
+            ClipWait % _timeoutSec
+            SetTimer, SaveRestoreClipboard, -300
+            return A_Clipboard
+        default:
+            A_Clipboard := clipSaved
+    }
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
 GetFavoritePaths(ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
