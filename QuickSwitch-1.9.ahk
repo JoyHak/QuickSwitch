@@ -111,8 +111,6 @@ Loop {
 
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
-        ; Turn on registered hotkey
-        ValidateKey("MainKey", MainKey,, "On")
 
         if (DialogAction = 1) {
             ; Perform AutoSwitch after preparation
@@ -140,18 +138,22 @@ Loop {
 
         ; Activate hidden script window to prevent Menu stuck on screen
         ; https://github.com/samhocevar-forks/ahk/blob/master/source/script_menu.cpp#L1273
-        if IsMenuReady() {
-            DetectHiddenWindows, On
+        DetectHiddenWindows % "On"
+        WinActivate % "ahk_id " A_ScriptHwnd
+         
+        ; Turn on registered hotkey
+        ValidateKey("MainKey", MainKey,, "On")
+        
+        if (IsMenuReady()
+        && (WinActive("ahk_id " A_ScriptHwnd)
+         || WinActive("ahk_id " DialogId))) {
+            ShowMenu()
+        }   
 
-            if (WinActive("ahk_id " DialogId)
-             || WinActive("ahk_id " A_ScriptHwnd)) {
-                WinActivate, % "ahk_id " A_ScriptHwnd
-                ShowMenu()
-                WinActivate, % "ahk_id " DialogId
-                WinMoveBottom(A_ScriptHwnd)
-            }
-            DetectHiddenWindows, Off
-        }
+        WinActivate % "ahk_id " DialogId
+        WinMoveBottom(A_ScriptHwnd)
+        DetectHiddenWindows % "Off"
+        
         LogElevatedNames()
 
     } catch GlobalEx {
