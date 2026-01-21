@@ -54,7 +54,7 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vShowNoSwitch         checked%ShowNoSwitch%,            &Disabling Auto Switch
     Gui, Add, CheckBox,                                     vShowAfterSettings    checked%ShowAfterSettings%,       Leaving &settings
     Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Selecting &path
-    Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Always
+    Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Al&ways
     
     GuiControlGet, Margin, pos, ShowMenuAfterText
     Gui, Add, Text,         y+%MarginH%                                           Section,                          Auto Switch
@@ -66,9 +66,9 @@ ShowSettings() {
     
     GuiControlGet, Center, pos, CenteredText
     Gui, Add, CheckBox,     y+%MarginH% x%MarginX%          vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
-    Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add process names to &Black list
-    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after selecting path
-    Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Path numbers &with shortcuts 0-9
+    Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add file dialog owner process name to &Black List
+    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after switching path
+    Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Show paths &numbers && switch them with keys 0-9
     Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
 
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Limit of displayed paths
@@ -166,7 +166,7 @@ ShowSettings() {
     Gui, Add, Edit,        xs y+8 %long%                    vRestartWhere,                                        % RestartWhere        
     Gui, Add, Text,    x%MarginX% yp+4,                                                                             &Restart only in
     Gui, Add, CheckBox,y+%MarginH%                          vShowAfterRestart     checked%ShowAfterRestart%,        Show &Menu after restart
-    Gui, Add, CheckBox,                                     vShowNearCursor       checked%ShowNearCursor%,          Show Menu near the mouse cursor
+    Gui, Add, CheckBox,                                     vShowNearCursor       checked%ShowNearCursor%,          Show Menu near the mouse &cursor
     Gui, Add, CheckBox,                                     vShowUiAfterRestart   checked%ShowUiAfterRestart%,      Show &settings after restart
     Gui, Add, CheckBox,                                     vSaveLastTab          checked%SaveLastTab%,             Open &last settings tab after restart
     Gui, Add, CheckBox,                                     vSaveUiPosition       checked%SaveUiPosition%,          Save settings window position
