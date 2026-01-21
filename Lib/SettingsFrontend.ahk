@@ -209,7 +209,7 @@ ShowSettings() {
     InitMouseMode("Restart", RestartMousePlaceholder != "")
 
     if DarkTheme
-        SetDarkTheme("&OK|&Cancel|&Nuke|&Debug|&Reset|msctls_hotkey321")
+        SetDarkTheme("&OK|&Cancel|&Nuke|Debu&g|&Reset|msctls_hotkey321|msctls_hotkey322")
 
     ; Set settings window position
     local _pos  := ""
