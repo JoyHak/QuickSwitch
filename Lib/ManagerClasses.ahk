@@ -127,13 +127,13 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
             }
             if ($index == $activeIndex) {
                 $activePath = '|' . PathReal($path)`;  ; Save the active tab to insert it as first later
-                continue`;
+            } else {
+                $realPaths .= '|' . PathReal($path)`;  ; Get the real path (XY has special and virtual paths)                
             }
-            $realPaths .= '|' . PathReal($path)`;   ; Get the real path (XY has special and virtual paths)
         }
 
+        $realPaths = Trim($activePath . $realPaths, '| ')`;
         if ($realPaths) {
-            $realPaths = Trim($activePath . $realPaths, '|', 'L')`;
             CopyText $realPaths`;                   ; Place to the clipboard. It's faster then CopyData
         } else {
             CopyText 'unset'`;                      ; No available tabs
