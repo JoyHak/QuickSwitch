@@ -34,7 +34,7 @@ GetTotalConsoleIni(ByRef totalPid) {
     ; Parse the result
     _log := "TotalCmd PID: " totalPid " Console PID: " _consolePid
     
-    if _clip {
+    if (_clip && IsFile(_clip)) {
         LogInfo(_log " The result is copied to the clipboard.", "NoTraytip")
         return _clip
     }
