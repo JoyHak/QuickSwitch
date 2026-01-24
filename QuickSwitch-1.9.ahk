@@ -32,6 +32,7 @@ ErrorsLog  := "Errors.log"
 #Include <FileDialogs>
 
 #Include <Elevated>
+#Include <Windows>
 #Include <Processes>
 #Include <ManagerMessages>
 #Include <ManagerClasses>
@@ -143,7 +144,7 @@ Loop {
         In rare cases, script window will suddenly appear in the middle of the screen, closing the file dialog.
         This occurs inside WinActivate() after WinShow() call if IsIconic() is `true`:
         https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
-        To prevent this we must use different approach, see SetForegroundWindow() in Lib\Processes.ahk
+        To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
         */
         IsScriptActive := SetForegroundWindow(A_ScriptHwnd)
         ; Turn on registered hotkey
