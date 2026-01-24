@@ -138,31 +138,22 @@ Loop {
         
         /*
         To prevent the Menu from stuck on the screen, we must first activate the hidden (main) script window by its handle (A_ScriptHwnd):
-        ; https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1429
+        https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1429
         
         In rare cases, script window will suddenly appear in the middle of the screen, closing the file dialog.
-        This occurs due to a call to WinShow() if IsIconic() is `true`:
-        ; https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
-        To prevent this we must check IsIconic() before activating the window.
+        This occurs inside WinActivate() after WinShow() call if IsIconic() is `true`:
+        https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
+        To prevent this we must use different approach, see SetForegroundWindow() in Lib\Processes.ahk
         */
-        DetectHiddenWindows % "On"
-        if (DllCall("IsIconic", "ptr", A_ScriptHwnd))
-            Sleep 300
-            
-        WinActivate % "ahk_id " A_ScriptHwnd
-         
+        IsScriptActive := SetForegroundWindow(A_ScriptHwnd)
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
-        
-        if (IsMenuReady()
-        && (WinActive("ahk_id " A_ScriptHwnd)
-         || WinActive("ahk_id " DialogId))) {
-            ShowMenu()
-        }   
+    
+        if (IsMenuReady() && IsScriptActive)
+            ShowMenu()  ; halt main thread
 
         WinActivate % "ahk_id " DialogId
         WinMoveBottom(A_ScriptHwnd)
-        DetectHiddenWindows % "Off"
         
         LogElevatedNames()
 
