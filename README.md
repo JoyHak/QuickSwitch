@@ -73,19 +73,19 @@ In addition to the paths from the file managers, you can add additional paths to
 
 If you want some paths to appear permanently in the Menu, you can pin them. To do this, enable the `Settings > Theme > Show pinned paths`  option and select a key or mouse button at  `Settings > App > Pin path...`. Close the settings and open the Menu. Hold down the selected key and left click on any path. Now it is pinned and it will be stored in the configuration. You will see this path on every restart. 
 
-If you turn this option off, the paths will no longer be displayed. If you turn it on, all pinned paths will be displayed again. If you want to delete all pinned paths, check `Settings > Reset > Delete favorite paths` and press `Enter`.
+If you turn this option *off*, the pinned paths will no longer be displayed. If you turn this option *on* again, all pinned paths will be displayed again. If you want to delete all pinned paths, check `Settings > Reset > Delete favorite paths` and press `Enter`.
 
-If you want to see the same paths in the list of fixed paths and from file managers *(for example, it is easier for you to find a path by knowing the icon of a file manager)*, disable the `Settings > Menu > Delete duplicate paths` option.
+If you want to see the duplicate paths disable the `Settings > Menu > Delete duplicate paths` option *(e.g. if you have a pinned path, but also want to quickly find it visually in the Menu by file manager icon)*.
 
 </details>
 
 <details><summary>Paths from clipboard (temporary, for a single file dialog)</summary> 
 
-You can copy any file or directory path (or any [variable](https://github.com/JoyHak/QuickSwitch#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you switch between file dialogs of different applications, the copied paths will disappear after switching. If you do not want a path to disappear, pin it. 
+You can copy any file or directory path (or any [variable](https://github.com/JoyHak/QuickSwitch#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
 
 <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/0014e6fc-74df-4936-b683-9c35a2d95068" />
 
-Copied paths will not disappear if you force the Menu to appear using `Ctrl+Shift+Win+0` combination. It can help you open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
+Copied paths will not disappear if you force the Menu to appear using `Ctrl+Shift+Win+0` combination. It can help you to open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
 
 <img width="614" height="593" alt="clipboard2" src="https://github.com/user-attachments/assets/09237a63-2264-4050-9a8c-b0501536fd27" />
 
@@ -232,6 +232,7 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
 
