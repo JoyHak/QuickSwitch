@@ -4,13 +4,13 @@ The getter of paths from Total Commander is not in [ManagerClasses.ahk](https://
 
 | Library          | Purpose                                  | Description                                                  |
 | ---------------- | ---------------------------------------- | ------------------------------------------------------------ |
-| Log              | Export all special info and errors       | Functions to determine the cause of an unexpected problem. All **thrown / catched / not catched errors** should be sent as `ExceptionObj` to the `LogError()` instead of `MsgBox()` |
-| Debug            | Analyze code and dialogs                 | GUI: shows info about dialog controls. Contains functions for debugging and testing code. |
-| Values           | Declare, validate and save global values | Contains all global variables necessary for the application, functions that validate values and read / write to the `INI` configuration. If `INI` can't be created, app always uses the default values. |
-| FileDialogs      | Get dialog type, feed dialog             | Contains setters. `GetFileDialog()`  returns the `FuncObj` to call it later and feed the current dialog. |
-| Elevated         | Get and store process permission         | Contains functions for determing and saving PID of elevated process in the dictionary. |
-| Windows          | Interact with other windows              | Contains functions for interacting with windows.             |
-| Processes        | Interact with other processes            | Contains getters.                                            |
+| Log              | Write errors to the log file       | Contains functions to determine the cause of any issue. All unexpected exceptions are passed to `LogException()` in the `catch {}` block. All expected exceptions are passed to `LogError()` with a short friendly message, brief reason and technical details.  |
+| Debug            | Show info about active file dialog                 | GUI: shows info about file dialog controls. Allows to export all info. |
+| Values           | Declare, validate and save global values | Contains all global variables necessary for the application; validators of values; functions for read / write to the `INI` configuration. If `INI` can't be created, app always uses the default values. |
+| FileDialogs      | Get dialog type, fill the dialog             | Contains functions for determining whether an open window is a file dialog; for filling it with the specified path. |
+| Elevated         | Get and store process status         | Contains functions for determing and saving PID of elevated process in the dictionary. |
+| Windows          | Interact with other windows            | Contains functions for interacting with windows. |
+| Processes        | Interact with other processes            | Contains functions for getting information about the process; terminating process. |
 | ManagerMessages  | Send message to other process            | Contains functions for communication between different processes. |
 | ManagerClasses   | Get paths from a specific file manager   | Contains functions for getting paths from specific file manager. The name of each function corresponds to the class of the file manager window. |
 | GetPaths         | Get all possible paths                            | Contains functions for getting different [types of paths](https://github.com/JoyHak/QuickSwitch#menu-sections), including all possible paths from file managers. |
