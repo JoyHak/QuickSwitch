@@ -14,7 +14,8 @@ FillDialog(ByRef editId, ByRef path, _sendEnter := false) {
             return true
         
         ControlSend,, % "{Enter}", % "ahk_id " editId
-
+        Sleep 50
+        
         ; Restore filename
         ControlFocus,, % "ahk_id " editId
         ControlSetText,, % _fileName, % "ahk_id " editId

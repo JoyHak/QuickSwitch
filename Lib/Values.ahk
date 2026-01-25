@@ -17,6 +17,7 @@ EditId              :=  0
 LastDialogProcess   :=  ""
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
+IsScriptActive      :=  false
 
 WriteDialogAction   :=  false
 WritePinnedPaths    :=  false

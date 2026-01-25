@@ -32,6 +32,7 @@ ErrorsLog  := "Errors.log"
 #Include <FileDialogs>
 
 #Include <Elevated>
+#Include <Windows>
 #Include <Processes>
 #Include <ManagerMessages>
 #Include <ManagerClasses>
@@ -84,7 +85,7 @@ Loop {
         }
 
         ; If there is any GUI left from previous calls...
-        ; Gui, Destroy
+        Gui, Destroy
 
         WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
         WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
@@ -111,8 +112,6 @@ Loop {
 
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
-        ; Turn on registered hotkey
-        ValidateKey("MainKey", MainKey,, "On")
 
         if (DialogAction = 1) {
             ; Perform AutoSwitch after preparation
@@ -137,21 +136,26 @@ Loop {
             }
         }
         IsDialogClosed := false
+        
+        /*
+        To prevent the Menu from stuck on the screen, we must first activate the hidden (main) script window by its handle (A_ScriptHwnd):
+        https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1429
+        
+        In rare cases, script window will suddenly appear in the middle of the screen, closing the file dialog.
+        This occurs inside WinActivate() after WinShow() call if IsIconic() is `true`:
+        https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
+        To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
+        */
+        IsScriptActive := SetForegroundWindow(A_ScriptHwnd)
+        ; Turn on registered hotkey
+        ValidateKey("MainKey", MainKey,, "On")
+    
+        if (IsMenuReady() && IsScriptActive)
+            ShowMenu()  ; halt main thread
 
-        ; Activate hidden script window to prevent Menu stuck on screen
-        ; https://github.com/samhocevar-forks/ahk/blob/master/source/script_menu.cpp#L1273
-        if IsMenuReady() {
-            DetectHiddenWindows, On
-
-            if (WinActive("ahk_id " DialogId)
-             || WinActive("ahk_id " A_ScriptHwnd)) {
-                WinActivate, % "ahk_id " A_ScriptHwnd
-                ShowMenu()
-                WinActivate, % "ahk_id " DialogId
-                WinMoveBottom(A_ScriptHwnd)
-            }
-            DetectHiddenWindows, Off
-        }
+        WinActivate % "ahk_id " DialogId
+        WinMoveBottom(A_ScriptHwnd)
+        
         LogElevatedNames()
 
     } catch GlobalEx {
