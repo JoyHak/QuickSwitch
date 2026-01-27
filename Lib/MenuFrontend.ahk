@@ -157,10 +157,13 @@ ShowMenu() {
     
     if (_cmd) { 
         ; Execute menu action (send WM_COMMAND)
-        return DllCall("SendMessageW", "Ptr", A_ScriptHwnd, "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
-    } else {
-        ; Activate file dialog again 
-        return SetForegroundWindow(DialogId)
-    }
+        DllCall("SendMessageW", "Ptr", A_ScriptHwnd, "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
+    } 
+    
+    ; Activate file dialog again 
+    WinActivate % "ahk_id " DialogId 
+    WinMoveBottom(A_ScriptHwnd)
+
+    return true
 }
 
