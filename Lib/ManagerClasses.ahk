@@ -169,13 +169,13 @@ Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := fals
     _previousId := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
     _startId    := _previousId
     _paths      := []
-    _active     := 1
+    _active     := 0
 
     loop, 100 {
         ; Pass every HWND to GetWindowText() and get the content
         ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
         if DllCall("GetWindowTextW", "ptr", _previousId, "str", _text, "int", WINDOW_TEXT_SIZE) {
-            if InStr(_text, _title) {
+            if (!_active && InStr(_text, _title)) {
                 if _activeTabOnly {
                     paths.push([_text, "Dopus.ico", 1, ""])
                     return 1
