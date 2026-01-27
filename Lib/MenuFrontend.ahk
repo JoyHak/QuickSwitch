@@ -90,7 +90,6 @@ AddMenuPaths(ByRef paths, _function) {
 CreateMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
-    FromSettings := false
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
 
     MenuStack := []
@@ -130,7 +129,7 @@ ShowMenu() {
     https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
     To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
     */
-    global DialogId
+    global DialogId    
     WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
     ; Check coordinates for emptiness, not zero
     if (_posX = "" || _posY = "")

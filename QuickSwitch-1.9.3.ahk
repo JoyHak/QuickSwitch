@@ -139,8 +139,10 @@ Loop {
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
     
-        if IsMenuReady()
+        if IsMenuReady() {
+            FromSettings := false
             ShowMenu()  ; halt main thread
+        }
         
         LogElevatedNames()
 
