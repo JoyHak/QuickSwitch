@@ -21,6 +21,7 @@ Process, % "Priority", , % "A"
 FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
+CoordMode, % "Mouse", % "Screen"
 
 ScriptName := "QuickSwitch"
 INI        := ScriptName ".ini"
@@ -146,15 +147,16 @@ Loop {
         https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
         To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
         */
-        IsScriptActive := SetForegroundWindow(A_ScriptHwnd)
+        ; IsScriptActive := SetForegroundWindow(A_ScriptHwnd)
+        IsScriptActive := true
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
     
         if (IsMenuReady() && IsScriptActive)
             ShowMenu()  ; halt main thread
 
-        WinActivate % "ahk_id " DialogId
-        WinMoveBottom(A_ScriptHwnd)
+        ; WinActivate % "ahk_id " DialogId
+        ; WinMoveBottom(A_ScriptHwnd)
         
         LogElevatedNames()
 
