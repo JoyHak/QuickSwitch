@@ -186,6 +186,7 @@ ExitApp
     }
 ;@Ahk2Exe-IgnoreEnd
 ^#+0::
+    IsDialogClosed := true
     DialogId := DllCall("GetForegroundWindow", "Ptr")
     CreateMenu()
     ShowMenu()
