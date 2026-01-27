@@ -47,7 +47,7 @@ SetForegroundWindow(_winId) {
     https://github.com/AutoHotkey/AutoHotkey/blob/d21b7f538f4273a871e248be26a92bd6f8622cda/source/window.cpp#L88
     */
     
-    _oldWinId := DllCall("GetForegroundWindow")
+    _oldWinId := DllCall("GetForegroundWindow", "Ptr")
     if (_winId = _oldWinId)
         return _winId
     
@@ -109,7 +109,7 @@ SetForegroundWindow(_winId) {
     }
     BlockInput % "Off"
     
-    _newWinId := DllCall("GetForegroundWindow")
+    _newWinId := DllCall("GetForegroundWindow", "Ptr")
     if (_winId = _newWinId)
         return _winId
     

@@ -76,7 +76,7 @@ Loop {
     WinWaitActive, % "ahk_class #32770"
 
     try {
-        DialogId := WinActive("A")
+        DialogId := DllCall("GetForegroundWindow", "Ptr")
         
         IniRead, SendEnter, % INI, % "Global", % "SendEnter", 0
         if !IsFileDialog(DialogId, EditId, , SendEnter) {
@@ -177,16 +177,16 @@ ExitApp
 
 ;@Ahk2Exe-IgnoreBegin Alt + Tilde ~ (or backtick `)
 !sc029::     
-   if ShowOpenDialog {
-       SendEvent ^!o
-       return 
-   } else if ShowSaveAsDialog {
-       SendEvent ^!s  
-       return     
-   }
+    if ShowOpenDialog {
+        SendEvent ^!o
+        return 
+    } else if ShowSaveAsDialog {
+        SendEvent ^!s  
+        return     
+    }
 ;@Ahk2Exe-IgnoreEnd
 ^#+0::
-    DialogId := WinActive("A")
+    DialogId := DllCall("GetForegroundWindow", "Ptr")
     CreateMenu()
     ShowMenu()
 return
