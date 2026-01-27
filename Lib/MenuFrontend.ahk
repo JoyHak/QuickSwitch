@@ -119,17 +119,45 @@ CreateMenu() {
 ;
 ShowMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
+    /*
+    Rafaello: to prevent the Menu from stuck on the screen (issue #88), 
+    we must first activate the hidden (main) script window by its handle (A_ScriptHwnd):
+    https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1389
+    https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1429
+    
+    In rare cases, script window will suddenly appear in the middle of the screen, closing the file dialog.
+    This occurs inside WinActivate() after WinShow() call if IsIconic() is `true`:
+    https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
+    To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
+    */
     global DialogId
+    WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+    SetForegroundWindow(A_ScriptHwnd)  ; file dialog is not active anymore!
 
-    try {
-        ; Manually calc pos, because the file dialog is not active
-        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-        MouseMove, % _posX + 100, % _posY + 120, 0
-        Menu, % "ContextMenu", % "Show", % _posX, % _posY + 100
-        return true
-    } catch {
-        CreateMenu()
-        return ShowMenu()
+    _menuId := MenuGetHandle("ContextMenu")
+    if (!_menuId) {
+        ; The Menu doesn't exist yet
+        CreateMenu()  
+        _menuId := MenuGetHandle("ContextMenu")
+    }
+    /*
+    FuPeiJiang: the return value is the menu-item identifier of the item that the user selected. 
+    If the user cancels the Menu without making a selection, or if an error occurs, the return value is zero.
+    https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenuex
+    */
+    _cmd := DllCall("TrackPopupMenuEx"
+                  , "Ptr", _menuId
+                  , "Uint", 0x100  ; TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD
+                  , "int", _posX, "int", _posY + 100
+                  , "Ptr", A_ScriptHwnd  ; handle to the activated script window that will own the Menu
+                  , "Ptr", 0) 
+    
+    if (_cmd) { 
+        ; Execute menu action (send WM_COMMAND)
+        return DllCall("SendMessageW", "Ptr", A_ScriptHwnd, "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
+    } else {
+        ; Activate file dialog again 
+        return SetForegroundWindow(DialogId)
     }
 }
 
