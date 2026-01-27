@@ -124,7 +124,7 @@ ShowMenu() {
     try {
         ; Manually calc pos, because the file dialog is not active
         WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-
+        MouseMove, % _posX + 100, % _posY + 120, 0
         Menu, % "ContextMenu", % "Show", % _posX, % _posY + 100
         return true
     } catch {
