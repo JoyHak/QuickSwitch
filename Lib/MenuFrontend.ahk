@@ -132,6 +132,10 @@ ShowMenu() {
     */
     global DialogId
     WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+    ; Check coordinates for emptiness, not zero
+    if (_posX = "" || _posY = "")
+        return false
+        
     SetForegroundWindow(A_ScriptHwnd)  ; file dialog is not active anymore!
 
     _menuId := MenuGetHandle("ContextMenu")
