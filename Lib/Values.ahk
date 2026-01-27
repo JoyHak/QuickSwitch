@@ -73,7 +73,6 @@ SetDefaultValues() {
     ShowFirstSeparator  :=  false
 ;@Ahk2Exe-IgnoreBegin    
     ShowAfterRestart    :=  false
-    ShowNearCursor      :=  false
     ShowUiAfterRestart  :=  false
     SaveUiPosition      :=  false
     ShowOpenDialog      :=  false
@@ -191,7 +190,6 @@ WriteValues() {
     RestartWhere="            RestartWhere            "
     RestartMousePlaceholder=" RestartMousePlaceholder "
     ShowAfterRestart="        ShowAfterRestart        "
-    ShowNearCursor="          ShowNearCursor          "    
     ShowUiAfterRestart="      ShowUiAfterRestart      "
     SaveLastTab="             SaveLastTab             "
     SaveUiPosition="          SaveUiPosition          "
