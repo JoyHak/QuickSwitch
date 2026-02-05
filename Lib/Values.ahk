@@ -61,6 +61,7 @@ SetDefaultValues() {
     BlackListProcess    :=  false
     SendEnter           :=  false
 
+    ActivePaneOnly      :=  false
     ActiveTabOnly       :=  false
     ShowLockedTabs      :=  false
     ShowFavorites       :=  false
@@ -151,6 +152,7 @@ WriteValues() {
     AutoSwitchTarget="        AutoSwitchTarget        "
     BlackListProcess="        BlackListProcess        "
     SendEnter="               SendEnter               "
+    ActivePaneOnly="          ActivePaneOnly          "
     ActiveTabOnly="           ActiveTabOnly           "
     ShowLockedTabs="          ShowLockedTabs          "
     ShowFavorites="           ShowFavorites           "
@@ -508,7 +510,7 @@ ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
         if _paths {
             loop, parse, _paths, `|
             {
-                paths.push([A_LoopField, "Pin.ico", 1, ""])
+                paths.push([A_LoopField, "Pin.ico"])
             }
         }
     }

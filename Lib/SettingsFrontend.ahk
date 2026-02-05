@@ -105,8 +105,9 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
-    Gui, Add, CheckBox,     y+10         xp+%MarginH%       vActiveTabOnly        checked%ActiveTabOnly%,           only the &active tab
-    Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          &locked tabs
+    Gui, Add, CheckBox,     y+10         xp+%MarginH%       vActivePaneOnly       checked%ActivePaneOnly%,          only from &active pane
+    Gui, Add, CheckBox,                                     vActiveTabOnly        checked%ActiveTabOnly%,           only &the active tab
+    Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          show &locked tabs
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 

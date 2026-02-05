@@ -50,7 +50,7 @@ WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 3) {
         . ValidateFile(tabsFile))
 }
 
-ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
+ParseTotalTabs(ByRef tabsFile, ByRef paths, _activePaneOnly := false, _showLockedTabs := false) {
     /*
     Parses tabsFile (must be UTF-16 INI file):
     - "activetab" key contains active tab index (zero-based).
@@ -61,7 +61,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
     _length := paths.length() + 1
 
     IniRead, _tabs, % tabsFile, % "activetabs"    
-    if true { ; reserved for future _activePaneOnly
+    if !_activePaneOnly {
         IniRead, _tabsI, % tabsFile, % "inactivetabs"
         _tabs .= "`n" _tabsI
     }      

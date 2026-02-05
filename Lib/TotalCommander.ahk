@@ -4,7 +4,7 @@
 #Include Create.ahk
 #Include Tabs.ahk
 
-TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
+TTOTAL_CMD(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
     /*
         Requests tabs file.
 
@@ -29,7 +29,7 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
         if _activeTabOnly
             return GetTotalUnlockedTab(tabsFile, paths)
         
-        return ParseTotalTabs(tabsFile, paths, _showLockedTabs)
+        return ParseTotalTabs(tabsFile, paths, _activePaneOnly, _showLockedTabs)
         
     } catch _ex {
         ; Get proccess permissions
@@ -40,10 +40,10 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
                           , _ex.what " " _ex.message " " _ex.extra)
         
         ; Check if required dir exists
-        dirWasCreated := false 
+        _dirWasCreated := false 
         if !FileExist(tabsDir) {
             FileCreateDir % tabsDir
-            dirWasCreated := true
+            _dirWasCreated := true
         }
         
         ; Create user command and retry
@@ -55,8 +55,8 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs :=
         
         ; Retry if user command or new dir was successfully created
         if (CreateTotalUserCmd(userIni, userCmd, internalCmd, tabsFile)
-         || dirWasCreated) {
-            return TTOTAL_CMD(winId, paths, _activeTabOnly, _showLockedTabs)
+         || _dirWasCreated) {
+            return TTOTAL_CMD(winId, paths, _activePaneOnly, _activeTabOnly, _showLockedTabs)
         }
         
         ; The user command already exists. Re-throw exception to the caller      
