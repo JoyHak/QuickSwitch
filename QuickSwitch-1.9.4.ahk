@@ -106,7 +106,7 @@ Loop {
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
-            GetPaths(ManagersPaths := [], ActiveTabOnly, ShowLockedTabs)
+            GetPaths(ManagersPaths := [], ActivePaneOnly, ActiveTabOnly, ShowLockedTabs)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
         
