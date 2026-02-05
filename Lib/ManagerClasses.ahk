@@ -156,53 +156,59 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
 ;
 Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Analyzes the text of address bars of each tab using windows functions.
-    ; Searches for active tab using DOpus window title.
-    ; Returns number of added paths.
-    WinGetTitle, _title, % "ahk_id " winId
-
-    ; Each tab has its own address bar, so we can use it to determine the path of each tab
+    /*
+    Analyzes the address bars of each tab using WinApi functions:
+    - if the text matches the window title => this is the active tab;
+    - if the position of others match the pos. of the active one => this is the active pane.
+    Returns number of added paths.
+    
+    Each tab has its own address bar, so we can use it to determine the path of each tab
+    */    
     static ADDRESS_BAR_CLASS := "dopus.filedisplaycontainer"
+    ; Find the first address bar ID
+    ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
+    if !(_startId := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0))
+        return 0
+        
     ; Defined in AutoHotkey source
     static WINDOW_TEXT_SIZE := 32767
-    VarSetCapacity(_text, WINDOW_TEXT_SIZE * 2)
+    VarSetCapacity(_text,  WINDOW_TEXT_SIZE << 1)
+    VarSetCapacity(_title, WINDOW_TEXT_SIZE << 1)
 
-    ; Find the first address bar HWND
-    ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw
-    _previousId := DllCall("FindWindowExW", "ptr", winId, "ptr", 0, "str", ADDRESS_BAR_CLASS, "ptr", 0)
-    _startId    := _previousId
-    _paths      := []
-    _active     := 1
+    ; Get window title (fast)
+    ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
+    DllCall("GetWindowTextW", "ptr", winId, "str", _title, "int", WINDOW_TEXT_SIZE)
 
-    loop, 100 {
-        ; Pass every HWND to GetWindowText() and get the content
-        ; https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw
-        if DllCall("GetWindowTextW", "ptr", _previousId, "str", _text, "int", WINDOW_TEXT_SIZE) {
-            if InStr(_text, _title) {
-                if _activeTabOnly {
-                    paths.push([_text, "Dopus.ico", 1, ""])
-                    return 1
-                }
-                _active := A_Index
+    _length := paths.length()
+    _activePath := false
+    _activePosX := _activePosY := 0    
+    _currentId  := _startId
+    
+    loop {   
+        ; Pass every address bar ID to GetWindowTextW() and get it's text
+        if !(DllCall("GetWindowTextW", "ptr", _currentId, "str", _text, "int", WINDOW_TEXT_SIZE))
+            continue
+        
+        _path := [_text, "Dopus.ico"]
+        if (!_activePath
+          && _title == SubStr(_text, 1 + InStr(_text, "\",, -1))) {                 
+            if _activeTabOnly {
+                paths.push(_path)
+                return 1
             }
-            _paths.push([_text, "Dopus.ico", 1, ""])
+            
+            _activePath := _path            
+            continue          
         }
-        _nextId := DllCall("FindWindowExW", "ptr", winId, "ptr", _previousId, "str", ADDRESS_BAR_CLASS, "ptr", 0)
+        
+        if !activeTabOnly
+            paths.push(_path)
+        
+        ; The loop iterates through all the tabs over and over again, so we must stop when it repeats
+    } until (_startId = (_currentId := DllCall("FindWindowExW", "ptr", winId, "ptr", _currentId, "str", ADDRESS_BAR_CLASS, "ptr", 0)))
 
-        ; The loop iterates through all the tabs over and over again,
-        ; so we must stop when it repeats
-        if (_nextId = _startId)
-            break
+    if _activePath
+        paths.insertAt(_length + 1, _activePath)
 
-        _previousId := _nextId
-    }
-
-    ; Push the active tab to the global array first
-    ; Remove duplicate and add the remaining tabs
-    _count := _paths.length()
-    if _paths.hasKey(_active)
-        paths.push(_paths.removeAt(_active))
-
-    paths.push(_paths*)
-    return _count
+    return paths.length() - _length
 }
