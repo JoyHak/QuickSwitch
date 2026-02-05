@@ -9,7 +9,7 @@ GroupAdd, ManagerClasses, ahk_class CabinetWClass
 GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
 
-CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
+CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
     ; Analyzes the attributes of the Explorer COM object. 
     ; Searches for active tab using Explorer window title. 
     ; Returns number of added paths
@@ -64,20 +64,22 @@ CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
+ThunderRT6FormDC(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Sends script to XYplorer and parses the clipboard.
     ; Returns number of added paths.
 
     ; Save clipboard to restore later
-    _clipSaved := ClipboardAll
-    A_Clipboard  := ""
+    _clipSaved  := ClipboardAll
+    A_Clipboard := ""
 
-    ; $hideLockedTabs is unset by default
-    static getAllPaths := "
-    ( LTrim Join Comments
+    _script := !_activeTabOnly ? "
+    ( LTrim Join Comments 
+      ::$activePaneOnly = " _activePaneOnly "`;
+        $showLockedTabs = " _showLockedTabs "`;
+        
         $allPaths = <get tabs | a>, 'r'`;           ; Get tabs from the active panel, resolve native variables
-        if (Get('#800')) {                          ; Second pane is enabled
+        if (!$activePaneOnly && Get('#800')) {      ; Second pane is enabled
             $allPaths .= '|' . <get tabs | i>`;     ; Get tabs from second pane
         }
 
@@ -90,7 +92,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
             $index++`;
 
             if (!Exists($path)
-             || IsSet($hideLockedTabs)
+             || !$showLockedTabs
              && (Tab('get', 'flags', $index) % 4 > 0)) {
                 continue`;                          ; Exclude this tab
             }
@@ -107,54 +109,50 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedT
         } else {
             CopyText 'unset'`;                      ; No available tabs
         }
-    )"
-
-    static getCurPath := "
-    ( LTrim Join
+    )" : "
+    ( LTrim Join        
+      ::$showLockedTabs = " _showLockedTabs ";
+        
         if (!Exists(<curpath>)
-         || IsSet($hideLockedTabs)
+         || !$showLockedTabs
          && (Tab('get', 'flags') % 4 > 0)) {
-            CopyText 'unset'`;
+            CopyText 'unset';
         } else {
-            CopyText <curpath>`;
+            CopyText <curpath>;
         }
     )"
 
-    _script := _activeTabOnly ? getCurPath : getAllPaths
-    _prefix := _showLockedTabs ? "::" : "::$hideLockedTabs = true`;"
-    SendXyplorerScript(winId, _prefix . _script)
-
-    ; Try to fetch clipboard data
+    SendXyplorerScript(winId, _script)
     ClipWait 1
+    
     _clip       := A_Clipboard
     A_Clipboard := _clipSaved
 
     ; Retry if empty
     static attempts := 0
-    if !(_clip || (attempts = 3)) {
-        attempts++
-        return ThunderRT6FormDC(winId, paths, _activeTabOnly, _showLockedTabs)
-    }
+    if (!_clip && (++attempts != 4))
+        return ThunderRT6FormDC(winId, paths, _activePaneOnly, _activeTabOnly, _showLockedTabs)
 
     if (!_clip || (_clip = "unset"))
         return 0
 
-    _count := attempts := 0
+    attempts := 0
+    _length  := paths.Length() + 1
+    
     Loop, parse, _clip, `|
     {
-        paths.push([A_LoopField, "Xyplorer.ico", 1, ""])
+        paths.push([A_LoopField, "Xyplorer.ico"])
         if _activeTabOnly
             return 1
-
-        _count++
     }
-
-    return _count
+    
+    paths[_length].tip := "Active tab"
+    return paths.length() - _length + 1
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
+Dopus(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
     Analyzes the address bars of each tab using WinApi functions:
@@ -181,11 +179,13 @@ Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := fals
 
     _length := paths.length()
     _activePath := false
-    _activePosX := _activePosY := 0    
+    _activePosX := _activePosY := 0
+    
+    ; Pass every address bar ID to GetWindowTextW() and get it's text
+    GetWindowText:
     _currentId  := _startId
     
     loop {   
-        ; Pass every address bar ID to GetWindowTextW() and get it's text
         if !(DllCall("GetWindowTextW", "ptr", _currentId, "str", _text, "int", WINDOW_TEXT_SIZE))
             continue
         
@@ -198,11 +198,34 @@ Dopus(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := fals
             }
             
             _activePath := _path            
-            continue          
+            if !_activePaneOnly 
+                continue
+                
+            ; Store the position and restart the loop to compare it with the others position
+            try ControlGetPos, _activePosX, _activePosY,,,, % "ahk_id " _currentId
+            if (_activePosX = "" || _activePosY = "") {
+                ; Unable to get                
+                _activePaneOnly := false
+            }
+            goto GetWindowText            
         }
         
-        if !activeTabOnly
-            paths.push(_path)
+        if _activeTabOnly
+            continue
+            
+        if _activePaneOnly { 
+            ; Compare the position of the active one with the current one
+            if (_activePosX = 0 || _activePosY = 0 
+             || _activePath[1] = _path[1]) {
+                ; Not found yet              
+                continue
+            }
+            ControlGetPos, _posX, _posY,,,, % "ahk_id " _currentId            
+            if (_posX != _activePosX || _posY != _activePosY)
+                continue
+        }
+        
+        paths.push(_path)
         
         ; The loop iterates through all the tabs over and over again, so we must stop when it repeats
     } until (_startId = (_currentId := DllCall("FindWindowExW", "ptr", winId, "ptr", _currentId, "str", ADDRESS_BAR_CLASS, "ptr", 0)))

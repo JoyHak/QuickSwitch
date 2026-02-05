@@ -38,10 +38,10 @@ SwitchPath(ByRef path, _fromMenu := "") {
 
 SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
     global
-    
+
     if (ShowPinned && GetKeyState(PinKey)) {
         if (_pos > PinnedPaths.Length())
-            PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico", 1, ""])
+            PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico"])
         else
             PinnedPaths.RemoveAt(_pos)
 
