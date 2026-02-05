@@ -51,11 +51,15 @@ WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 3) {
 }
 
 ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
-    ; Parses tabsFile.
-    ; Searches for the active tab using the "activetab" parameter
-    _paths  := []
-    _active := _last := 0
-    
+    /*
+    Parses tabsFile (must be UTF-16 INI file):
+    - "activetab" key contains active tab index (zero-based).
+    - "activetabs" section contains tabs from active pane.    
+    Returns number of added paths.    
+    */
+    _activeIdx := 0
+    _length := paths.length() + 1
+
     IniRead, _tabs, % tabsFile, % "activetabs"    
     if true { ; reserved for future _activePaneOnly
         IniRead, _tabsI, % tabsFile, % "inactivetabs"
@@ -66,63 +70,66 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _showLockedTabs := false) {
     {
         _line := A_LoopField
 
-        ; Get path, omit the "path=" key
+        ; Get the path, omit the "path=" key
         if (_path := InStr(_line, "path=")) {
-            _path := RTrim(SubStr(_line, _path + 5), "\")
-            _paths.push([_path, "TotalCmd.ico", 1, ""])
+            paths.push([RTrim(SubStr(_line, _path + 5), "\ "), "TotalCmd.ico"])
             continue
         }
         
         ; Get active tab index, omit the "activetab=" key
-        if (_num := InStr(_line, "activetab=")) {
-            ; Skip next active tab by saving last
-            _active := _last
-            _last   := 1 + SubStr(_line, _num + 10)
+        if (!_activeIdx && (_num := InStr(_line, "activetab="))) {
+            _activeIdx := _length + SubStr(_line, _num + 10)
+            continue
         }
 
         ; Get previous path options, omit the "options=" key
         if (!_showLockedTabs && (_bits := InStr(_line, "options="))) {
-            _bits := SubStr(_line, _bits + 8)    ; bits 1|0|0...
-            _lock := 0 + SubStr(_bits, 11, 1)    ; Integer at 11 pos.
+            _bits := SubStr(_line, _bits + 8)  ; bits 1|0|0...
+            _lock := SubStr(_bits, 11, 1)      ; 11th bit
+            if (_lock = "0")
+               continue 
+            
+            ; Remove previous path because it's locked
+            paths.pop() 
 
-            if (_lock > 0) {
-                _paths.pop()
-
-                ; If the element is removed to the left of _active,
-                ; then shift _active to the left
-                if (_paths.length() < _active)
-                    _active--
-            }
+            ; If the element is removed to the left of activeIdx,
+            ; then shift activeIdx to the left
+            if (paths.length() < _activeIdx)
+                _activeIdx--
         }
     }
 
-    ; Push the active tab to the array first.
-    ; Remove duplicate and add the remaining tabs
-    _count := _paths.length()
-    if _paths.hasKey(_active)
-        paths.push(_paths.removeAt(_active))
+    ; Move active path to the top
+    if paths.hasKey(_activeIdx) {
+        _active := paths[_activeIdx]
+        paths[_activeIdx] := paths[_length]
+        paths[_length] := _active
+    }
 
-    paths.push(_paths*)
-    return _count
+    return paths.length() - _length + 1
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 GetTotalUnlockedTab(ByRef tabsFile, ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Get active tab number (starts from 0)
+    /*
+    Parses tabsFile (must be UTF-16 INI file):
+    - "activetab" key contains active tab index that will be used to read other keys.
+    - "{index}_options" key contains bits that allows to determine whether the active tab is unlocked.
+    */
     IniRead, _active, % tabsFile, % "activetabs", % "activetab", 0
+    IniRead, _bits,   % tabsFile, % "activetabs", % _active "_options", % A_Space
+    _lock := SubStr(_bits, 11, 1)  ; 11th bit
 
-    ; Get active tab options, omit the "options=" key
-    IniRead, _bits, % tabsFile, % "activetabs", % _active "_options", % A_Space
-    _lock := 0 + SubStr(_bits, 11, 1)    ; Integer at 11 pos.
-
-    if (_lock > 0)
+    if (_lock != "0")
         return 0
 
-    IniRead, _path, % tabsFile, % "activetabs", % _active "_path", 0
-    paths.push([_path, "TotalCmd.ico", 1, ""])
-
+    IniRead, _path,   % tabsFile, % "activetabs", % _active "_path", 0
+    if !(_path := RTrim(_path, "\ "))
+        return 0
+    
+    paths.push([_path, "TotalCmd.ico"])
     return 1
 }
 
@@ -130,9 +137,24 @@ GetTotalUnlockedTab(ByRef tabsFile, ByRef paths) {
 ;
 GetTotalActiveTab(ByRef winId, ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ControlGetText, _text, % "Window4", % "ahk_id " winId
-    _text := SubStr(_text, 1, -1)  ; RTrim ">" char
-    paths.push([_text, "TotalCmd.ico", 1, ""])
+    ; Sends script to TotalCmd and parses the clipboard.
+    _clipSaved  := ClipboardAll
+    A_Clipboard := ""
+    
+    loop, 2 {
+        if !SendMessage(winId, 1075, 2028 + A_Index)  ; copy source/target path   
+            continue
+        
+        ClipWait 1
+        if !A_Clipboard
+            continue
+        
+        paths.push([A_Clipboard, "TotalCmd.ico"])
+        A_Clipboard := _clipSaved
 
-    return 1
+        return 1
+    }
+    
+    A_Clipboard := _clipSaved
+    return 0
 }
