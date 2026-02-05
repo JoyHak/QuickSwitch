@@ -10,87 +10,56 @@ GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
 
 CabinetWClass(ByRef winId, ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
-    ; Analyzes open Explorer windows (tabs) and looks for non-virtual paths
+    ; Analyzes the attributes of the Explorer COM object. 
+    ; Searches for active tab using Explorer window title. 
     ; Returns number of added paths
-    _activeTab := 0
-    _active := 1
-    _count  := 0
-    _paths  := []
-
-    try
-        ControlGet, _activeTab, % "hwnd",, % "ShellTabWindowClass1", % "ahk_id " winId
-    catch
-        try ControlGet, _activeTab, % "hwnd",, % "TabWindowClass1", % "ahk_id " winId
+    WinGetTitle, _title, % "ahk_id " winId
+    
+    _activeIdx := 0
+    _length := paths.length() + 1
 
     try {
         _shellApp := 0
         _shellApp := ComObjCreate("Shell.Application")
-
+        
         for _win in _shellApp.windows {
             if (winId != _win.hwnd)
                 continue
             
-            _count++
-            if _activeTab {
-                ; Get active tab index
-                try {
-                    static IID_IShellBrowser := "{000214E2-0000-0000-C000-000000000046}"
-                    _shell := 0
-                    _shell := ComObjQuery(_win, IID_IShellBrowser, IID_IShellBrowser)
-
-                    ; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=109907
-                    ; Invoke the method from the vtable of the _shell object, which represents the IShellBrowser interface,
-                    ; to retrieve the current tab in Windows Explorer.
-                    DllCall(NumGet(NumGet(_shell + 0), 3 * A_PtrSize), "ptr", _shell, "ptr*", _currentTab := 0)
-
-                    if (_currentTab = _activeTab) {
-                        _active    := _count
-                        _activeTab := 0  ; don't fall into this if-block again
-                    } else if _activeTabOnly {
-                        continue  ; skip other tabs
+            ; Get current path. 
+            ; System path (e.g. This PC) have an empty `locationURL` property and we must skip it.   
+            _path := _win.locationURL ? [_win.document.folder.self.path, "Explorer.ico"] : false
+            
+            ; Get active tab           
+            if (!_activeIdx && (_title == _win.locationName)) {
+                if _activeTabOnly {
+                    if _path {
+                        paths.push(_path)
+                        return 1
                     }
-                } finally {
-                    if _shell
-                        ObjRelease(_shell)
+                    return 0
                 }
+                
+                ; If the path is empty, the index of the previous added path will be considered as active
+                _activeIdx := paths.length() + !!_path                
             }
-
-            ; Get current path                        
-            _path := ""
-            if _win.locationURL {                
-                _path := SubStr(_win.locationURL, 9)  ; remove "file:///"
-                _path := StrReplace(_path, "/", "\")
-                _path := StrReplace(_path, "%20", " ")
-                _path := Trim(_path, " `t/\")
-            }
-            if !_path {
-                if (_active = _count)
-                    _active--
-                    
-                _count--
-                continue
-            }
-
-            ; Early return
-            if _activeTabOnly {
-                paths.push([_path, "Explorer.ico", 1, ""])
-                return 1
-            }
-
-            _paths.push([_path, "Explorer.ico", 1, ""])
+            
+            if (!_activeTabOnly && _path)
+                paths.push(_path)
         }
     } finally {
         if _shellApp
             ObjRelease(_shellApp)
     }
+    
+    ; Move active path to the top
+    if paths.hasKey(_activeIdx) {
+        _active := paths[_activeIdx]
+        paths[_activeIdx] := paths[_length]
+        paths[_length] := _active
+    }
 
-    ; Push the active tab to the global array first
-    ; Remove duplicate and add the remaining tabs
-    if (_paths.hasKey(_active))
-        paths.push(_paths.removeAt(_active))
-
-    paths.push(_paths*)
-    return _count
+    return paths.length() - _length + 1
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
