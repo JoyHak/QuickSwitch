@@ -14,7 +14,8 @@ SwitchPath(ByRef path, _fromMenu := "") {
                 return true
 
         } catch _ex {
-            if !WinActive("ahk_id " DialogId)
+            ; See CreateMenu()
+            if (A_ScriptHwnd != DllCall("GetForegroundWindow", "Ptr"))
                 return false
         
             if (A_Index = SelectPathAttempts)
@@ -63,9 +64,12 @@ SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
 SendPath(path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send path to the current file manager / active window
-    WinGet, _id,  % "id", % "A"
-    WinGet, _exe, % "ProcessPath", % "A"
-    WinGetClass, _class, % "A"
+    global DialogId
+    
+    WinGet, _id,  % "id", % "ahk_id " DialogId
+    WinGet, _exe, % "ProcessPath", % "ahk_id " DialogId
+    WinGetClass, _class, % "ahk_id " DialogId
+    
     path := """" path """"
 
     switch (_class) {
@@ -129,5 +133,7 @@ ToggleBlackList() {
         FingerPrint := DialogProcess
 
     if IsMenuReady()
-       ShowMenu()
+        ShowMenu()
+    else
+        SetForegroundWindow(DialogId)
 }

@@ -21,7 +21,6 @@ Process, % "Priority", , % "A"
 FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
-CoordMode, % "Mouse", % "Screen"
 
 ScriptName := "QuickSwitch"
 INI        := ScriptName ".ini"
@@ -77,7 +76,7 @@ Loop {
     WinWaitActive, % "ahk_class #32770"
 
     try {
-        DialogId := WinActive("A")
+        DialogId := DllCall("GetForegroundWindow", "Ptr")
         
         IniRead, SendEnter, % INI, % "Global", % "SendEnter", 0
         if !IsFileDialog(DialogId, EditId, , SendEnter) {
@@ -110,7 +109,7 @@ Loop {
             GetPaths(ManagersPaths := [], ActiveTabOnly, ShowLockedTabs)
         }
         OnClipboardChange("GetClipboardPath", ShowClipboard)
-
+        
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
 
@@ -118,7 +117,7 @@ Loop {
             ; Perform AutoSwitch after preparation
             if (AutoSwitchTarget = "MenuStack")
                 CreateMenu()  ; create MenuStack
-
+                
             if IsDialogClosed {
                 ; Add delay between actions to prevent accidental dialog closing (issue #77)
                 SetWinDelay, 120
@@ -132,38 +131,28 @@ Loop {
                 SwitchPath(%AutoSwitchTarget%[AutoSwitchIndex][1])
 
             if IsDialogClosed {
+                ; Remove delay
                 SetWinDelay, -1
                 SetKeyDelay, -1
             }
         }
         IsDialogClosed := false
         
-        /*
-        To prevent the Menu from stuck on the screen, we must first activate the hidden (main) script window by its handle (A_ScriptHwnd):
-        https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1429
-        
-        In rare cases, script window will suddenly appear in the middle of the screen, closing the file dialog.
-        This occurs inside WinActivate() after WinShow() call if IsIconic() is `true`:
-        https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
-        To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
-        */
-        ; IsScriptActive := SetForegroundWindow(A_ScriptHwnd)
-        IsScriptActive := true
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
     
-        if (IsMenuReady() && IsScriptActive)
+        if IsMenuReady() {
+            FromSettings := false
             ShowMenu()  ; halt main thread
-
-        ; WinActivate % "ahk_id " DialogId
-        ; WinMoveBottom(A_ScriptHwnd)
+        }
         
         LogElevatedNames()
 
     } catch GlobalEx {
         LogException(GlobalEx)
     }
-
+    
+    Sleep 200
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
     ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
@@ -193,16 +182,16 @@ ExitApp
 
 ;@Ahk2Exe-IgnoreBegin Alt + Tilde ~ (or backtick `)
 !sc029::     
-   if ShowOpenDialog {
-       SendEvent ^!o
-       return 
-   } else if ShowSaveAsDialog {
-       SendEvent ^!s  
-       return     
-   }
+    if ShowOpenDialog {
+        SendEvent ^!o
+        return 
+    } else if ShowSaveAsDialog {
+        SendEvent ^!s  
+        return     
+    }
 ;@Ahk2Exe-IgnoreEnd
 ^#+0::
-    DialogId := WinActive("A")
+    DialogId := DllCall("GetForegroundWindow", "Ptr")
     CreateMenu()
     ShowMenu()
 return
