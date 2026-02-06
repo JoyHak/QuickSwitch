@@ -83,7 +83,7 @@ AddMenuPaths(ByRef paths, _function) {
 
         if (PathNumbers && (_index < 10))
             _title .= _index " "
-        if _options[4]
+        if (_options.hasKey(4) && _options[4])
             _title .= _options[4]
         else if ShortPath
             _title .= GetShortPath(_options[1])
@@ -91,7 +91,10 @@ AddMenuPaths(ByRef paths, _function) {
             _title .= _options[1]
 
         Menu, % "ContextMenu", % "Insert",, % _title, % _function
-        AddMenuIcon(_title, _options[2], _options[3] + 0)
+        if _options.hasKey(3)
+            AddMenuIcon(_title, _options[2], _options[3] + 0)
+        else
+            AddMenuIcon(_title, _options[2])
     }
 }
 
