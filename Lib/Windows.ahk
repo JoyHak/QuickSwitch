@@ -37,7 +37,7 @@ WinMoveBottom(_winId) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SetForegroundWindow(_winId) {
+SetForegroundWindow(ByRef winId) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
     FuPeiJiang: moves the specified window to the top of stack and activates it.
@@ -48,73 +48,69 @@ SetForegroundWindow(_winId) {
     */
     
     _oldWinId := DllCall("GetForegroundWindow", "Ptr")
-    if (_winId = _oldWinId)
-        return _winId
+    if (winId = _oldWinId)
+        return winId
     
-    if (DllCall("AllowSetForegroundWindow", "Uint", DllCall("GetCurrentProcessId"))  
-     && DllCall("SetForegroundWindow", "Ptr", _winId)) {        
-        return _winId
+    static processId := DllCall("GetCurrentProcessId")
+    if (DllCall("AllowSetForegroundWindow", "UInt", processId)  
+     && DllCall("SetForegroundWindow", "Ptr", winId)) {        
+        return winId
     }
-
-    LCtrlDown := GetKeyState("LCtrl")
-    RCtrlDown := GetKeyState("RCtrl")
-    LShiftDown := GetKeyState("LShift")
-    RShiftDown := GetKeyState("RShift")
-    LWinDown := GetKeyState("LWin")
-    RWinDown := GetKeyState("RWin")
-    LAltDown := GetKeyState("LAlt")
-    RAltDown := GetKeyState("RAlt")
-    if ((LCtrlDown || RCtrlDown) && (LWinDown || RWinDown)) {
-        toRelease := ""
-        if (LShiftDown) {
-            toRelease .= "{LShift Up}"
-        }
-        if (RShiftDown) {
-            toRelease .= "{RShift Up}"
-        }
-        if (toRelease) {
-            Send % "{Blind}" toRelease
-        }
+    
+    _LCtrlDown  :=  GetKeyState("LCtrl")
+    _RCtrlDown  :=  GetKeyState("RCtrl")
+    _LShiftDown :=  GetKeyState("LShift")
+    _RShiftDown :=  GetKeyState("RShift")
+    _LWinDown   :=  GetKeyState("LWin")
+    _RWinDown   :=  GetKeyState("RWin")
+    _LAltDown   :=  GetKeyState("LAlt")
+    _RAltDown   :=  GetKeyState("RAlt")
+    
+    if ((_LCtrlDown || _RCtrlDown) 
+     && (_LWinDown  || _RWinDown)) {
+        _toRelease := ""
+        if _LShiftDown
+            _toRelease .= "{LShift Up}"
+        if _RShiftDown
+            _toRelease .= "{RShift Up}" 
+            
+        if _toRelease
+            Send % "{Blind}" _toRelease
     }
+    
     BlockInput % "On"
     Send % "{LAlt Down}{LAlt Down}"
-    DllCall("SetForegroundWindow", "Ptr", _winId)
-    toAppend := ""
-    if (!LAltDown) {
-        toAppend .= "{LAlt Up}"
-    }
-    if (RAltDown) {
-        toAppend .= "{RAlt Down}"
-    }
-    if (LCtrlDown) {
-        toAppend .= "{LCtrl Down}"
-    }
-    if (RCtrlDown) {
-        toAppend .= "{RCtrl Down}"
-    }
-    if (LShiftDown) {
-        toAppend .= "{LShift Down}"
-    }
-    if (RShiftDown) {
-        toAppend .= "{RShift Down}"
-    }
-    if (LWinDown) {
-        toAppend .= "{LWin Down}"
-    }
-    if (RWinDown) {
-        toAppend .= "{RWin Down}"
-    }
-    if (toAppend) {
-        Send % "{Blind}" toAppend
-    }
+    DllCall("SetForegroundWindow", "Ptr", winId)
+    
+    _toAppend := ""
+    if !_LAltDown
+        _toAppend .= "{LAlt Up}"
+    if _RAltDown
+        _toAppend .= "{RAlt Down}"    
+    if _LCtrlDown
+        _toAppend .= "{LCtrl Down}"    
+    if _RCtrlDown
+        _toAppend .= "{RCtrl Down}"    
+    if _LShiftDown
+        _toAppend .= "{LShift Down}"    
+    if _RShiftDown 
+        _toAppend .= "{RShift Down}"    
+    if _LWinDown 
+        _toAppend .= "{LWin Down}"    
+    if _RWinDown 
+        _toAppend .= "{RWin Down}"    
+        
+    if _toAppend 
+        Send % "{Blind}" _toAppend
+    
     BlockInput % "Off"
     
     _newWinId := DllCall("GetForegroundWindow", "Ptr")
-    if (_winId = _newWinId)
-        return _winId
+    if (winId = _newWinId)
+        return winId
     
-    _ownerId := DllCall("GetWindow", "ptr", _winId, "uint", 4)
-    if (_newWinId != _oldWinId && _winId = _ownerId)
+    _ownerId := DllCall("GetWindow", "Ptr", winId, "UInt", 4)
+    if (_newWinId != _oldWinId && winId = _ownerId)
         return _newWinId
     
     return false
