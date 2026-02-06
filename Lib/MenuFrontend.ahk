@@ -24,13 +24,23 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
             if !IsFile(_icon)
                 _icon := IconsDir "\" _icon
 
-            Menu, % "ContextMenu", % "Icon",  % _title, % _icon, % _iconNumber, % IconsSize
+            Menu, % "ContextMenu", % "Icon", % _title, % _icon, % _iconNumber, % IconsSize
         } else {
             Menu, % "ContextMenu", % _isToggle ? "Check" : "UnCheck", % _title
         }
     } catch _ex {
-        LogError("Wrong path to the icon: '" _ex.Extra "'", "icon")
         ShowIcons := false
+
+        _what  := "icon"
+        _extra := "`n" _ex.Message " (" _icon ") [" _title "]"
+                
+        _msg := "Wrong icon path: '" _ex.Extra "'. "
+        if !FileExist(IconsDir)
+            _msg .= "Make sure the icon directory exists."
+        else if !FileExist(_icon)
+            _msg .= "Make sure the icon file exists."
+            
+        return LogError(_msg, _what, _extra)
     }
 }
 
