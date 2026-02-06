@@ -135,7 +135,7 @@ ShowMenu() {
         ; Unable to get position
         return false
     }
-        
+
     SetForegroundWindow(A_ScriptHwnd)  ; file dialog is not active anymore!
 
     _menuId := MenuGetHandle("ContextMenu")
@@ -158,10 +158,17 @@ ShowMenu() {
     
     if (_cmd) { 
         ; Execute menu action (send WM_COMMAND)
-        DllCall("SendMessageW", "Ptr", A_ScriptHwnd, "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
+        return DllCall("SendMessageW", "Ptr", A_ScriptHwnd, "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
+    }
+    
+    ; Switch windows focus
+    _activeId := DllCall("GetForegroundWindow", "Ptr")
+    if (_activeId != A_ScriptHwnd) {
+        ; Activate current visible window
+        SetForegroundWindow(_activeId) 
     } else {
         ; Activate file dialog again
-        SetForegroundWindow(DialogId)
+        SetForegroundWindow(DialogId)   
     }
 }
 
