@@ -145,7 +145,7 @@ ShowSettings() {
     Gui, Add, Edit,         ys-4  %short%    ReadOnly       vPinKey               Section                         ; Dummy for positioning
     Gui, Add, Edit,      xp yp    %short%    ReadOnly       vPinMousePlaceholder,                                 % PinMousePlaceholder
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vPinMouseListBox,                                     % GetMouseList("pinList")
-    Gui, Add, Button,       ys               gTogglePinMouse,                                                       mouse
+    Gui, Add, Button,       ys              gTogglePinMouse vPinMouseButton,                                        mouse
     
     Gui, Add, Hotkey,    xs y+8   %short%                   vMainKey              Section,                        % MainKey
     Gui, Add, Edit,      xp yp    %short%    ReadOnly       vMainMousePlaceholder,                                % MainMousePlaceholder
@@ -181,17 +181,17 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
     Gui, Add, CheckBox,                                     vDeleteClipboard,                                       &Clipboard paths
     Gui, Add, CheckBox,                                     vDeleteKeys,                                            &Hotkeys and mouse buttons
-    Gui, Add, CheckBox,     y+%MarginH%                     vNukeSettings,                                          &Nuke configration
+    Gui, Add, CheckBox,     y+%MarginH%                     vNukeSettings,                                          Nuke &configration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
-
-    Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings Default",                       % "&OK"
-    Gui, Add, Button, % "x+" CenterH " yp wp                gGuiEscape",                                          % "&Cancel"
-    Gui, Add, Button, % "x+" CenterH " yp wp                g" button "Settings",                                 % "&" button
-    Gui, Add, Button, % "x+" CenterH " yp wp                gShowDebug",                                          % "Debu&g"
+    
+    Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
+    Gui, Add, Button, % "x+" CenterH " yp wp                        gGuiEscape          vCancelButton",          % "&Cancel"
+    Gui, Add, Button, % "x+" CenterH " yp wp                        g" button "Settings vResetButton",           % "&" button
+    Gui, Add, Button, % "x+" CenterH " yp wp                        gShowDebug          vDebugButton",           % "Debu&g"
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -205,9 +205,6 @@ ShowSettings() {
     InitMouseMode("Pin",     true)  ; Mouse buttons only
     InitMouseMode("Main",    MainMousePlaceholder    != "")
     InitMouseMode("Restart", RestartMousePlaceholder != "")
-
-    if DarkTheme
-        SetDarkTheme("&OK|&Cancel|&Nuke|Debu&g|&Reset|msctls_hotkey321|msctls_hotkey322")
 
     ; Set settings window position
     local _pos  := ""
@@ -225,4 +222,7 @@ ShowSettings() {
             _pos := "x0 y100"        
     }
     Gui, Show, % "AutoSize " _pos, Settings
+    
+    if DarkTheme
+        SetDarkControls(SettingsId)     
 }

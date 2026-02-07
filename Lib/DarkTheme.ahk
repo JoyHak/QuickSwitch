@@ -1,16 +1,27 @@
 ; Contains functions for switching Menu and GUI to dark / light mode
 
-SetDarkTheme(_controls) {
-    ; Sets dark theme for controls names list
+SetDarkControls(_winId) { 
+    ; Sets dark theme for all non-text window controls.
     static SetWindowTheme := DllCall("GetProcAddress"
-                                    , "ptr", DllCall("GetModuleHandle", "str", "uxtheme", "ptr")
-                                    , "astr", "SetWindowTheme", "ptr")
+        , "ptr", DllCall("GetModuleHandle", "str", "uxtheme", "ptr")
+        , "astr", "SetWindowTheme", "ptr")
 
-    Loop, parse, _controls, |
-    {
-        GuiControlGet, _id, hwnd, % A_LoopField
-        if (_id)
-            DllCall(SetWindowTheme, "ptr", _id, "str", "DarkMode_Explorer", "ptr", 0)
+    WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId    
+    Loop, parse, _ctrlIdList, `n 
+    {    
+        WinGetClass, _ctrlClass, % "ahk_id " A_LoopField        
+        switch _ctrlClass {
+        case "SysListView32", "SysHeader32":
+            DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_ItemsView", "ptr", 0) 
+        case "msctls_hotkey32", "ComboBox", "Edit":
+            DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_CFD", "ptr", 0)
+        case "msctls_updown32", "ListBox":
+            DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_Explorer", "ptr", 0)        
+        case "Button":
+            GuiControlGet, _name, % "name", % A_LoopField
+            if InStr(_name, "button")
+                DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_Explorer", "ptr", 0)
+        }
     }
 }
 
