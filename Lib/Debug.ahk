@@ -108,7 +108,7 @@ ShowDebug() {
     global DialogId, MainFont, GuiColor, DarkTheme, FingerPrintActive
     
     Gui, Destroy
-    Gui, -DPIScale
+    Gui, -DPIScale +HwndDebugId
     Gui, Color, % GuiColor, % GuiColor
     Gui, Font, q5, % MainFont           ; Clean quality
 
@@ -134,13 +134,11 @@ ShowDebug() {
     LV_ModifyCol()
     LV_ModifyCol(3, "Integer")
     LV_ModifyCol(4, "Integer")
-
-    Gui, Add, Button, x438 y+20 w74 gExportDebug,    &Export
-    Gui, Add, Button, x+20 wp       gCancelLV,       &Cancel
     
-    if DarkTheme {
-        SetDarkTheme("&Export|&Cancel|SysListView321")
-    }
+    static ExportButton, CancelButton
+    Gui, Add, Button, x438 y+20 w74 gExportDebug vExportButton,    &Export
+    Gui, Add, Button, x+20 wp       gCancelLV vCancelButton,       &Cancel
+    
     
     WinGetTitle, _title, % "ahk_id " DialogId
     WinGetClass, _class, % "ahk_id " DialogId    
@@ -148,4 +146,7 @@ ShowDebug() {
     
     FingerPrintActive := _process "___" _class "___" _title    
     Gui, Show,, % FingerPrintActive
+    
+    if DarkTheme
+        SetDarkControls(DebugId)
 }
