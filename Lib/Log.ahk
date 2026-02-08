@@ -95,13 +95,12 @@ LogHeader() {
     )", % ErrorsLog
 }
 
-ClearLog(_enforce := false) {
+ClearLog(_maxSize := 7000, _enforce := false) {
     global ErrorsLog
 
     try {
-        _size := 0
-        FileGetSize, _size, % ErrorsLog, K
-        if (_size < 7 && !_enforce)
+        FileGetSize, _size, % ErrorsLog, B
+        if (_size < _maxSize && !_enforce)
             return ""
 
         _date := ""
@@ -144,4 +143,54 @@ InitLog() {
                , "Log init"
                , _ex.what " " _ex.message " " _ex.extra)
     }
+}
+
+InitWelcomeMessage(_errorsLogMinSizeBytes := 160) {
+    ; Displays welcome notification if no errors occured
+    global IsNewUser, ErrorsLog, ScriptName, INI
+    static REG_PATH := "HKEY_CURRENT_USER\Software\QuickSwitch"
+    
+    if !IsNewUser {
+        try RegWrite, % "REG_DWORD", % REG_PATH, % "SuppressWelcomeMessage", 1
+        return true
+    }
+    
+    try FileGetSize, _size, % ErrorsLog, B
+    if !_size
+        _size := 0
+        
+    if (_size > _errorsLogMinSizeBytes) {
+        /*
+        At least one error occurred during the current or previous run. 
+        If the current log size matches the previous log size, no more errors occurred 
+        and the installation was successful.
+        */
+        _rsize := 0
+        try RegRead, _rsize, % REG_PATH, % "ErrorsLogSize"
+        
+        if (_size != _rsize) {
+            try RegWrite, % "REG_DWORD", % REG_PATH, % "ErrorsLogSize", % _size
+            return false
+        }
+    }
+    
+    _key := ""
+    try RegRead, _key, % REG_PATH, % "SuppressWelcomeMessage"
+    if _key
+        return true
+    
+    try {        
+        TrayTip, % ScriptName " installed successfully", % "
+        (LTrim Join`s
+        Launch any file manager first. 
+        Open any file dialog (e.g. open notepad.exe and press Ctrl+Shift+S).`n`n
+        Press Ctrl+Q to open the Menu.
+        )", 100
+        
+        IsNewUser := false
+        try IniWrite, 0, % INI, % "Global", % "IsNewUser"
+        try RegWrite, % "REG_DWORD", % REG_PATH, % "SuppressWelcomeMessage", 1
+        return true
+    }
+    return false
 }
