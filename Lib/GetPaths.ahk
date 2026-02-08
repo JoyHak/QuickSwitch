@@ -130,14 +130,12 @@ GetClipboardPath(_dataType) {
     try {
         Loop, parse, _clip, `n
         {
-            _path := A_LoopField
-
-            if ValidateDirectory("", _path) {
+            if ((_path := A_LoopField)             
+             && ValidateDirectory("", _path)) {
                 ClipboardPaths.push([_path, "Clipboard.ico"])
                 return true
             }
         }
-
         return false
     } catch _ex {
         LogException(_ex)
@@ -161,22 +159,25 @@ GetFavoritePaths(ByRef paths) {
             if !(_path && ValidateDirectory("", _path))
                 _path := _workingDir
 
-            if !ValidateDirectory("", _path)
+            if !(_path && ValidateDirectory("", _path))
                 continue
 
             if _icon
                 ExpandVariables(_icon)
             else
                 _icon := "Favorite.ico"
-
-            ExpandVariables(_title)
-            paths.push([_path, _icon, _iconNumber, _title])
+            
+            if (_title := Trim(_title, " `t")) {
+                ExpandVariables(_title)
+                paths.push([_path, _icon, _iconNumber, _title])
+            } else {
+                paths.push([_path, _icon, _iconNumber])                
+            }
             _count++
         } catch _ex {
             LogException(_ex)
         }
 	}
-
     return _count
 }
 
