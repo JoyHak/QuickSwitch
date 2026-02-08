@@ -17,7 +17,6 @@ EditId              :=  0
 LastDialogProcess   :=  ""
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
-IsScriptActive      :=  false
 
 WriteDialogAction   :=  false
 WritePinnedPaths    :=  false
@@ -72,6 +71,7 @@ SetDefaultValues() {
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
+    IsNewUser           :=  false
 ;@Ahk2Exe-IgnoreBegin    
     ShowAfterRestart    :=  false
     ShowUiAfterRestart  :=  false
@@ -142,7 +142,6 @@ WriteValues() {
     AutoStartup="             AutoStartup             "
     PathNumbers="             PathNumbers             "
     DeleteDuplicates="        DeleteDuplicates        "
-    ShowIcons="               ShowIcons               "
     ShowNoSwitch="            ShowNoSwitch            "
     ShowAfterSettings="       ShowAfterSettings       "
     ShowAlways="              ShowAlways              "
@@ -155,13 +154,13 @@ WriteValues() {
     ActivePaneOnly="          ActivePaneOnly          "
     ActiveTabOnly="           ActiveTabOnly           "
     ShowLockedTabs="          ShowLockedTabs          "
-    ShowFavorites="           ShowFavorites           "
     ShowPinned="              ShowPinned              "
     ShowClipboard="           ShowClipboard           "
     ShortPath="               ShortPath               "
     ShortenEnd="              ShortenEnd              "
     ShowDriveLetter="         ShowDriveLetter         "
     ShowFirstSeparator="      ShowFirstSeparator      "
+    IsNewUser="               IsNewUser               "
     IconsSize="               IconsSize               "
     MainFontSize="            MainFontSize            "
     MenuFontSize="            MenuFontSize            "
@@ -182,8 +181,8 @@ WriteValues() {
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
-    . ValidateDirectory("IconsDir",      IconsDir)
-    . ValidateDirectory("FavoritesDir",  FavoritesDir)
+    . ValidateDirectory("IconsDir",      IconsDir,      "ShowIcons",     ShowIcons)
+    . ValidateDirectory("FavoritesDir",  FavoritesDir,  "ShowFavorites", ShowFavorites)
 
 
 ;@Ahk2Exe-IgnoreBegin  
@@ -210,7 +209,7 @@ WriteValues() {
     try {
         IniWrite, % _values, % INI, % "Global"
     } catch {
-        LogError("Please create INI with UTF-16 LE BOM encoding manually: `'" INI "`'"
+        LogError("Please create INI with UTF-16 LE BOM encoding manually: '" INI "'"
                , "config"
                , ValidateFile(INI))
     }
@@ -263,42 +262,70 @@ ExpandVariables(ByRef path) {
             ++_count
         }
     }
+    return _count
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateDirectory(_paramName, ByRef path) {
+ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef associatedParam := false) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; If the dir exists, returns a string of the form "paramName=result",
-    ; otherwise returns value from config
-    ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
+    /*
+    Resolves variables in path, filters it, checks if its exists. 
+    If not, sets `associatedParam` value to 0.
+    Returns 2-line string which depends on path existence: 
+   "paramName=path or config value
+    associatedParamName=it's value"
+    
+    Returns an empty string if `paramName` is empty and path doesn't exist.     
+    */
     global INI
 
+    ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
-
+        
     ; Filter the path
-    path := Trim(path, " `t\/.")
+    path := Trim(path, " `t\/.")        
     path := StrReplace(path, "/" , "\")
     ExpandVariables(path)
-
+    _path := path
+    
     loop, 2 {
-        ; Сheck the correctness of the directory
-        if (DllCall(IsPath, "str", path))
-            return _paramName "=" path "`n"
+        ; Сheck the existence
+        if DllCall(IsPath, "str", path) {
+            if _associatedParamName  
+               _associatedParamName .= "=" associatedParam "`n"
 
-        ; If this is a file or an incorrect directory, get the parent
-        path := SubStr(path, 1, InStr(path, "\",, -1))
+            return _paramName "=" path "`n" _associatedParamName
+        }
+
+        ; If this is a file or an incorrect directory, slice the path 
+        if !(_len := InStr(path, "\",, -1))
+            break
+
+        path := SubStr(path, 1, _len - 1)
     }
-
+    
     if !_paramName
         return ""
+    
+    ; If path is empty, assume it's intentional and skip this block
+    _default := ""
+    if path {
+        IniRead, _default, % INI, % "Global", % _paramName
+        if ((_default != "ERROR") && associatedParam)
+            LogError("Directory not found: '" _path "'", _paramName, "Specify the full path to the directory")
+    }
+        
+    if DllCall(IsPath, "str", _default)
+        path := _default 
+    else
+        associatedParam := false
+        
+    if _associatedParamName
+       _associatedParamName .= "=" associatedParam "`n"
 
-    LogError("Directory not found: `'" path "`'", _paramName, "Specify the full path to the directory")
-
-    ; Return value from config
-    IniRead, _default, % INI, % "Global", % _paramName, % A_Space
-    return _paramName "=" _default "`n"
+    return _paramName "=" path "`n" _associatedParamName
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -311,7 +338,10 @@ ValidateTrayIcon(_paramName, ByRef icon) {
         otherwise returns value from config
     */
     global INI
-
+    
+    icon := Trim(icon, " `t\/.")        
+    icon := StrReplace(icon, "/" , "\")  
+    
     if !icon {
         Menu, % "Tray", % "Icon", *
         return _paramName "=`n"
@@ -326,9 +356,10 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     if !_paramName
         return ""
 
-    LogError("Icon `'" icon "`' not found", "tray icon", "Specify the full path to the file")
+    LogError("Icon '" icon "' not found", "tray icon", "Specify the full path to the file")
 
     IniRead, _default, % INI, % "Global", % _paramName, % A_Space
+    icon :=  _default
     return _paramName "=" _default "`n"
 }
 
@@ -351,9 +382,10 @@ ValidateColor(_paramName, ByRef color) {
         if !_paramName
             return ""
 
-        LogError("Wrong color: `'" color "`'. Enter the HEX value", _paramName)
+        LogError("Wrong color: '" color "'. Enter the HEX value", _paramName)
 
         IniRead, _default, % INI, % "Global", % _paramName, % A_Space
+        color := _default
         return _paramName "=" _default "`n"
     }
 
@@ -424,9 +456,8 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         try if (_old && (_old != _key)) {
             Hotkey, % _prefix . _old, % "Off"
             Hotkey, % _old, % "Off"
-            LogInfo("Deleted " _old, true)
             
-            try registeredKeys.Delete(_old)
+            try RegisteredKeys.Delete(_old)
         }
 
         return _paramName "=" _key "`n"
@@ -474,7 +505,7 @@ ValidateFile(ByRef filePath) {
         }
     }
 
-    return "`'" filePath "`' - " _extra "`n"
+    return "'" filePath "' - " _extra "`n"
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
