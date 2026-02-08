@@ -50,10 +50,12 @@ ErrorsLog  := "Errors.log"
 InitLog()
 SetDefaultValues()
 
-if IsFile(INI)
+if IsFile(INI) {    
     ReadValues()
-else
+} else {
+    IsNewUser := true
     WriteValues()
+}
 
 ValidateTrayIcon("MainIcon",    MainIcon)
 ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
@@ -62,6 +64,7 @@ ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 InitAutoStartup()
 InitDarkTheme()
 InitSections("All")
+InitWelcomeMessage()
 
 ;@Ahk2Exe-IgnoreBegin
 ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
