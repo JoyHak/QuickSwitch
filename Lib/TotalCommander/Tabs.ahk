@@ -1,7 +1,7 @@
 /*
-    Contains tabs getters for different cases.
-    All functions add options to the array and return the number of added paths.
-    See options and documentation in Lib\MenuFrontend
+Contains tabs getters for different cases. All functions are called from Lib\TotalCommander.ahk
+All functions add options to the array by reference and return the number of added paths.
+See options and documentation in Lib\MenuFrontend.ahk
 */
 
 WaitForTabs(ByRef tabsDir, ByRef tabsFile, _attempts := 3) {

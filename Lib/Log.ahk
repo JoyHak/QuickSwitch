@@ -1,8 +1,12 @@
 /*
-    Contains functions for getting information about the app's operation and additional information.
-    Any user notification functions should be placed here.
-    "ErrorsLog" param must be a path to a write-accessible file (with any extension)
-    Library must be imported first!
+LIBRARY MUST BE IMPORTED FIRST!
+
+Contains functions for displaying and dumping errors, tracing application execution.
+Any user notification functions should be placed here.
+All unexpected exceptions should passed to `LogException()` in the `catch {}` block. 
+All expected exceptions should be passed to `LogError()` with a short friendly message, brief reason and technical details.
+
+"ErrorsLog" param must be a path to a write-accessible file (with any extension).
  */
 
 MsgWarn(_text) {

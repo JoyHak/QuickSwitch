@@ -22,9 +22,9 @@ FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
 
-ScriptName := "QuickSwitch"
-INI        := ScriptName ".ini"
-ErrorsLog  := "Errors.log"
+ScriptName := "QuickSwitch"         ; internal name, reserved for beta and release versions
+INI        := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini 
+ErrorsLog  := "Errors.log"          ; file for error dumps and tracing
 
 #Include <Log>
 #Include <Debug>

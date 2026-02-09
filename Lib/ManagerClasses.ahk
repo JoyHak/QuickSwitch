@@ -1,7 +1,7 @@
 /*
-    Contains getters whose names correspond to classes of known file managers.
-    All functions add options to the array. See implementation and documentation in Lib\MenuFrontend
-    "winId" param must be existing window uniq ID (window handle / HWND)
+Contains getters whose names correspond to classes of known file managers.
+All functions add options to the array by reference. See implementation and documentation in Lib\MenuFrontend.ahk
+"winId" param must be existing window uniq ID (window handle / HWND)
 */
 
 GroupAdd, ManagerClasses, ahk_class TTOTAL_CMD
