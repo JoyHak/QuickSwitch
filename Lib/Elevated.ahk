@@ -35,17 +35,22 @@ LogElevatedNames(_silent := false) {
                 _names .= _info["name"] . ", "
 
         } catch _ex {
-            return LogException(_ex, 1, _silent)
+            LogException(_ex, 1, _silent)
         }
     }
     
-    return LogError("Unable to obtain paths: " _names, "admin permission", "
-        (LTrim
+    _names := RTrim(_names, ", ")
 
-            Unable to send messages to these processes: " _names "
-            Run them as non-admin or run " ScriptName " as admin | with UI access
-
-        )", _silent)
+    LogError("
+     (LTrim
+       Unable to obtain paths from: " _names "
+       Run this apps as non-admin or run " ScriptName " as admin | with UI access
+     )"
+    , "admin permission"
+    , "`nUnable to send messages to these processes"
+    , _silent)
+    
+    return _names
 }
 
 IsAppElevated(ByRef winPid) {
