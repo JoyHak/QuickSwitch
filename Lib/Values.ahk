@@ -1,14 +1,19 @@
 /*
-    Contains all global variables necessary for the application,
-    functions that read/write INI configuration,
-    functions that check (validate) values for compliance
-    with the requirements of different libraries.
+Contains all global variables necessary for the application. 
+Objects are intentionally not used due to their inconsistent behavior on v1.1.
 
-    "INI" param must be a path to a write-accessible file (with any extension)
- */
+Сontains functions for reading and writing to disk (to the .ini file). 
+"INI" param must be a path to a write-accessible file with UTF-16 LE BOM encoding: 
+https://www.autohotkey.com/docs/v1/lib/IniRead.htm
 
-; These parameters are not saved in the INI
-; You can find the meaning of each option in the Main and Lib\SettingsBackend files
+Contains validators that are responsible for parsing and rolling back incorrect values from settings 
+back to values from the INI; disabling certain options when values are empty.
+Validators return a string "paramName=value", which will be written to INI. 
+It is not recommended to write values directly via IniWrite as they may be incorrect.
+*/
+
+; These parameters are not saved in the INI.
+; You can find the meaning of each option in the Main and Lib\SettingsBackend.ahk files
 LastTabSettings     :=  1
 SelectPathAttempts  :=  3
 DialogAction        :=  0
@@ -33,14 +38,13 @@ RegisteredKeys := {}
 
 SetDefaultValues() {
     /*
-        Sets defaults without overwriting existing INI.
+    Sets defaults without overwriting existing INI.
+    These values are used if:
+    - INI settings are invalid;
+    - INI doesn't exist (yet);
+    - the values must be reset;
 
-        These values are used if:
-        - INI settings are invalid
-        - INI doesn't exist (yet)
-        - the values must be reset
-
-        You can find the meaning of each option in Lib\SettingsFrontend
+    You can find the meaning of each option in Lib\SettingsFrontend.ahk
     */
     global
 
@@ -126,12 +130,12 @@ SetDefaultValues() {
 ;
 WriteValues() {
 ;─────────────────────────────────────────────────────────────────────────────
-      /*
-          Calls validators and writes values to INI
+    /*
+    Calls validators and writes global variables to INI.
 
-          The boolean (checkbox) values is writed immediately.
-          The individual special values are checked before writing.
-      */
+    The boolean (checkbox) values is writed immediately.
+    The individual special values are checked before writing.
+    */
     global
 
     local _values := "
@@ -219,7 +223,7 @@ WriteValues() {
 ;
 ReadValues() {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Reads values from INI
+    ; Reads values from INI and updates global variables
     global
 
     local _values, _array, _variable, _value
@@ -333,9 +337,8 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
 ValidateTrayIcon(_paramName, ByRef icon) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        If the file exists, changes the tray icon
-        and returns a string of the form "paramName=result",
-        otherwise returns value from config
+    If the file exists, changes the tray icon and returns "paramName=icon".
+    If icon path is incorrect, reads it from INI
     */
     global INI
     
@@ -368,10 +371,10 @@ ValidateTrayIcon(_paramName, ByRef icon) {
 ValidateColor(_paramName, ByRef color) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        Searches for a HEX number in any form, e.g. 0x, #, h
+    Searches for a HEX number in any form: 0x, #, h, ...
 
-        If found, returns the string of the form "paramName=result",
-        otherwise returns empty color
+    If found, returns "paramName=color".
+    If color is incorrect, reads it from INI
     */
     global INI
 
@@ -397,14 +400,12 @@ ValidateColor(_paramName, ByRef color) {
 ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-        Replaces modifier names with
-        standard modifiers ! ^ + #
+    Converts `sequence` to scancodes or internal mouse buttons.
+    Replaces modifier names to standard modifiers symbols:  ! ^ + #
 
-        Replaces chars / letters in sequence with
-        scan codes, e.g. Q -> sc10
-
-        If converted, returns the string of the form "paramName=result",
-        otherwise returns value from config
+    If converted, returns "paramName=key", creates a new key in `RegisteredKeys`.
+    Disables old key bound to `function` (if any) and removes it from `RegisteredKeys`.
+    If key is incorrect, reads it from INI
     */
     global INI, RegisteredKeys
 
@@ -477,7 +478,8 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 ValidateFile(ByRef filePath) {
-;─────────────────────────────────────────────────────────────────────────────
+;─────────────────────────────────────────────────────────────────────────────    
+    ; Collects debugging information about the file and attempts to read it.
     _extra := "Cant write data to the file"
 
     if !filePath {
