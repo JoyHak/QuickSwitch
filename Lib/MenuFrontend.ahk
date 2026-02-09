@@ -101,22 +101,41 @@ CreateMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
-
+    
     MenuStack := []
     MenuStack.Push(PinnedPaths*)
     MenuStack.Push(FavoritePaths*)
     MenuStack.Push(ManagersPaths*)
     MenuStack.Push(ClipboardPaths*)
 
-    if (stackLength := MenuStack.Length()) {
+    if MenuStack.Length() {
+        if (ShowPinned && !PinnedPaths.length())
+             AddMenuTitle("Hold " PinKey " and click on any path to pin it")
+        if (ShowFavorites && !FavoritePaths.length())
+             AddMenuTitle("Create .lnk in '" FavoritesDir "' dir to make it favorite")
+    
         if DeleteDuplicates
             MenuStack := GetUniqPaths(MenuStack)
 
-        MenuStack.RemoveAt(PathLimit + 1, stackLength)
+        MenuStack.RemoveAt(PathLimit + 1, MenuStack.Length())
         AddMenuPaths(MenuStack, Func("SelectPath").Bind(MenuStack))
         AddMenuOptions()
     } else {
         AddMenuTitle("No available paths")
+        
+        if LogElevatedNames() {            
+            AddMenuTitle("Restart as admin")
+        } else if ShowManagers {
+            local _winIdList := ""
+            WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
+            if _winIdList {
+                AddMenuTitle("Close locked tabs")
+                AddMenuTitle("Close special tabs like 'This PC'")                
+            } else {                
+                AddMenuTitle("Open any file manager first")
+            }
+        }
+        
         AddMenuOption("Settings", "ShowSettings")
     }
 
