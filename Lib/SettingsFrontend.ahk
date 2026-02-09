@@ -1,8 +1,8 @@
 /*
-    GUI updates global variables after user actions
-    and displays their values as checkboxes, options, etc.
+GUI updates global variables after user actions
+and displays their values as checkboxes, options, etc.
 
-    All values are saved to the INI only after clicking OK
+All values are saved to the INI only after clicking OK
 */
 
 ShowSettings() {
@@ -133,12 +133,12 @@ ShowSettings() {
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Pin path (hold && click)
     Gui, Add, Text,         y+%MarginH%,                                                                            &Show menu by
     /*
-        Keyboard input or selecting mouse keys is performed by 4 elements:
-        - Hotkey: allows to input keyboard shortcut.
-        - Listbox: allows to select the mouse buttons or shortcuts.
-        - Placeholder: displays the mouse button selected in Listbox.
-        - Button: toggles Listbox and Placeholder visibility
-        See the implementation and documentation in Lib\SettingsMouse
+    Keyboard input or selecting mouse keys is performed by 4 elements:
+    - Hotkey: allows to input keyboard shortcut.
+    - Listbox: allows to select the mouse buttons or shortcuts.
+    - Placeholder: displays the mouse button selected in Listbox.
+    - Button: toggles Listbox and Placeholder visibility
+    See the implementation and documentation in Lib\SettingsMouse.ahk
     */
     local listbox := list  " wp xp yp+" MarginH + 9
 

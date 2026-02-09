@@ -1,7 +1,7 @@
 /*
-    This is the Context Menu which allows to select the desired path.
-    Displayed and actual paths are independent of each other,
-    which allows menu to display anything (e.g. short path)
+This is the Context Menu which allows to select the any path/option.
+Displayed and actual paths are independent of each other,
+which allows menu to display anything (e.g. short path)
 */
 
 AddMenuTitle(_title) {
