@@ -120,9 +120,10 @@ The option works in the background and analyzes the clipboard for the presence o
 Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > Show file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
 
 </details>
-<a name="favorites"></a>
 <details><summary>Favorite paths (with customizable icons and names)</summary>  
- 
+
+<a name="favorites"></a>
+
 If you have many paths and want to customize how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. The option works with `.lnk` shortcuts (links) from the directory you specified in the input field next to it. [Create a shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file in it (in this case the directory it is in will be used). From the context Menu, open the shortcut's "properties" and click on the "shortcut" tab. 
 
 <img width="1920" height="1920" alt="properties" src="https://github.com/user-attachments/assets/ec65e78b-26cb-4989-a71b-a14c6ea964bf" />
@@ -250,6 +251,7 @@ You can change application metadata, such as version and description by changing
 > - Ability to add resources to the compiled script.
 > - Ability to tweak several miscellaneous aspects of compilation.
 > - Ability to remove code sections from the compiled script and vice versa.
+
 
 
 
