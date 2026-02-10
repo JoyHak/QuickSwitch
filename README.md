@@ -1,7 +1,7 @@
 <div align="center">
     
-### Quickly Switch to your favorite folder.<br><br>
-
+<a href="#installation">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a>
 Forum threads<br>
 <a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/AutoHotkey.svg" alt="AutoHotkey"></a>
@@ -33,22 +33,17 @@ Installation sources<br>
 <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 </div>
 
-Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the directory on your system. QuickSwitch lets you automatically switch to the path you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/white.png)
+Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
+![](/Images/menu.gif)
 
-**Menu** displays a list of opened paths (tabs from file managers). Select any path to change path in file dialog:
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/menu.gif)
+Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching. You can [pin and save favorite paths](#appearance) and [open them later](#enforce-menu) in any file manager or application. Press `Ctrl+Q` to start.
 
-Enable **Auto Switch** option to automatically change path in file dialog. If the file manager was active before opening the dialog, QuickSwitch opens it's directory immediately:
+Enable "AutoSwitch" option to automatically change path in file dialog:
 
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/autoswitch.gif)
-
-You can add specific file dialog to the **Black List** to disable QuickSwitch in web browser or another app. Use `Ctr+Q` to access the Menu if needed.
-
-These options work separately for each window, which makes it possible to customize the application for each dialog.
+![](/Images/autoswitch.gif)
 
 And of course you can customize the Menu:
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.gif)
+![](/Images/settings.gif)
 
 Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) QuickSwitch or [explore](#appearance) advanced customization options!
 
@@ -61,11 +56,13 @@ Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) Qu
       alt="NewBug"></a><br><br>
 
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
-2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps update the app. The configuration will never be replaced. Run `QuickSwitch.exe`.
-3. Open different directories in a supported file manager. E.g., open `C:\` in `Explorer`.
+2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps to update the app. The `.ini` configuration will never be replaced. 
+3. Run `QuickSwitch.exe`. Open some tabs in a supported file manager or create `.lnk` files in `.\Favorites`.
 4. Open any application and try to open\save a file using it. E.g., open `Notepad` then `File - Open...` (or press `Ctrl+Shift+S`).
 5. Press `Ctrl+Q` and look at the paths in the Menu that opens. All directories opened in supported file managers will be displayed here.
 6. Explore the available options in the _"Menu settings"_ and experiment with them. Choose a convenient style and logic of the menu!
+
+<video src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/installation.mp4" width="1280" height="720" controls></video>
 
 ## Appearance
 ### Short path
@@ -78,7 +75,7 @@ Enter number `3` in the `Length of dir names` field on the same tab to limit the
 
 Also you can include the disk letter at the beginning or change the separator between directories to anything, e.g. tilda `~`: `W:~Windows~System32`
 
-The first letter of the path (or selected tilda `~`) will be <ins>underlined</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underlined</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](https://github.com/JoyHak/QuickSwitch/edit/main/README.md#keyboard)).
+The first letter of the path (or selected tilda `~`) will be <ins>underlined</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underlined</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](#keyboard)).
 
 <details><summary>Underlined letters examples</summary>
 
@@ -109,7 +106,7 @@ If you want to see the duplicate paths disable the `Settings > Menu > Delete dup
 
 <details><summary>Paths from clipboard (temporary, for a single file dialog)</summary> 
 
-You can copy any file or directory path (or any [variable](https://github.com/JoyHak/QuickSwitch#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
+You can copy any file or directory path (or any [variable](#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
 
 <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/0014e6fc-74df-4936-b683-9c35a2d95068" />
 
@@ -135,7 +132,7 @@ You will see editable fields that will directly affect the display of the shortc
 - Comment
 - Change icon (button)
 
-The "target" field is the main path you will see. The "start in" field will only be used if the "target" field is empty. Even if the "target" points to a file, QuickSwitch will use the file directory by removing everything after the last slash `\`. You can change the displayed path and give it any name you want in the "comment" field. This field takes precedence over displaying the full or short path (`Settings > Short path`). All fields support [variables](https://github.com/JoyHak/QuickSwitch#variables).
+The "target" field is the main path you will see. The "start in" field will only be used if the "target" field is empty. Even if the "target" points to a file, QuickSwitch will use the file directory by removing everything after the last slash `\`. You can change the displayed path and give it any name you want in the "comment" field. This field takes precedence over displaying the full or short path (`Settings > Short path`). All fields support [variables](#variables).
 
 Let's put the `ScriptName` variable in the "comment" field. The Menu will show the internal QuickSwitch name for the shortcut named "MyFavoritePath". 
 
@@ -156,7 +153,7 @@ You can hide some shortcuts by changing or removing their extension. If there ar
 </details>
 
 #### Variables
-In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch/Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](https://github.com/JoyHak/QuickSwitch/blob/main/Lib/Values.ahk). Enclose the variables in percent signs `%`.
+In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch/Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
 
 <details><summary>Examples</summary>
 
@@ -197,6 +194,7 @@ You can select keys or mouse buttons on `Settings > App` tab. You can even selec
 
 **I really need your feedback!** If something is not working for you, please [let me know](https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml). If you think that app can be improved, [write to me](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml).
 
+<a name="enforce-menu"></a>
 You can enforce the Menu in any application using the keyboard shortcut: `Ctrl+Shift+Win+0`. The menu will display the **paths obtained after the last opening of the file dialog** and will not change them until the next opening. The menu will be empty the first time it is opened.
 
 You can use this feature to test whether QuickSwitch is working correctly in the (target) app in which Menu appears. **If it really works**, click _"Settings > Debug > Export"_ to export the app info file. [Open a suggestion](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml) to add this app to QuickSwitch, attach exported file. 
@@ -238,7 +236,7 @@ Optional `7zG.exe` to create an archives with the required files: https://7-zip.
 
 </details>
 
-To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Open the [.\Utilities\Build.ahk](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](https://github.com/JoyHak/QuickSwitch/blob/main/Utilities/Build.ahk).
+To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Open the [.\Utilities\Build.ahk](/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](/Utilities/Build.ahk).
 
 > [!NOTE]
 > The builder is designed for different scripts regardless of their interpreter. It will automatically select the interpreter based on the script name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
