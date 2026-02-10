@@ -1,8 +1,34 @@
-This is an improved version of the [QuickSwitch script v0.5](https://github.com/gepruts/QuickSwitch) from Gepruts. [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) first improved it to [v0.5dw9a](https://www.voidtools.com/forum/download/file.php?id=2235).
-
-[New versions](https://github.com/JoyHak/QuickSwitch/releases) displays all open tabs and contains new powerful options. 
-
-## About
+<p align="center">
+    <a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
+        <img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge"
+            alt="WinGet"></a>
+     <a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
+        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/AutoHotkey.svg"
+            alt="AutoHotkey"></a>
+     <a href="https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d">
+        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/Xyplorer.svg"
+            alt="Xyplorer"></a>
+     <a href="https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d">
+        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/TotalCommander.svg"
+            alt="TotalCommander"></a>
+      <a href="https://resource.dopus.com/t/quickswitch/40965/20">
+        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/DirectoryOpus.svg"
+            alt="DirectoryOpus"></a>
+      <a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
+        <img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=orange&color=915031"
+            alt="Everything"></a>
+</p>
+<p align="center">
+      <a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
+        <img src="https://img.shields.io/github/issues/JoyHak/QuickSwitch?style=flat&logo=TickTick&logoColor=white&label=New%20Bug"
+            alt="NewBug"></a>
+       <a href="https://github.com/JoyHak/QuickSwitch/discussions">
+        <img src="https://img.shields.io/github/discussions/JoyHak/QuickSwitch?style=flat&logo=TheConversation&logoColor=white&logoSize=128&label=Ask%20Question"
+            alt="Discussions"></a>
+      <a href="https://deepwiki.com/JoyHak/QuickSwitch">
+        <img src="https://deepwiki.com/badge.svg"
+            alt="Ask DeepWiki"></a>
+</p>
 
 Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the directory on your system. QuickSwitch lets you automatically switch to the path you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
 ![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/white.png)
@@ -232,6 +258,7 @@ You can change application metadata, such as version and description by changing
 - `QTTabBar` (get all tabs)
 - `Autohotkey v2` port
 - New file managers support
+
 
 
 
