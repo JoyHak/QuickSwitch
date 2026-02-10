@@ -36,14 +36,15 @@ Installation sources<br>
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
 ![](/Images/menu.gif)
 
-Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching. You can [pin and save favorite paths](#appearance) and [open them later](#enforce-menu) in any file manager or application. Press `Ctrl+Q` to start.
+Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching. You can [pin and save favorite paths](#favorites) and [open them later](#enforce-menu) in any file manager or application. Press `Ctrl+Q` to start.
 
 Enable "AutoSwitch" option to automatically change path in file dialog:
 
 ![](/Images/autoswitch.gif)
 
-And of course you can customize the Menu:
-![](/Images/settings.gif)
+And of course you can customize the Menu:<br>
+
+<img src="/Images/settings.gif" width=720>
 
 Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) QuickSwitch or [explore](#appearance) advanced customization options!
 
@@ -62,7 +63,7 @@ Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) Qu
 5. Press `Ctrl+Q` and look at the paths in the Menu that opens. All directories opened in supported file managers will be displayed here.
 6. Explore the available options in the _"Menu settings"_ and experiment with them. Choose a convenient style and logic of the menu!
 
-<video src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/installation.mp4" width="1280" height="720" controls></video>
+<video src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/installation.mp4" width="1280" height="720" controls></video>
 
 ## Appearance
 ### Short path
@@ -93,7 +94,7 @@ The path shortening settings on the `ShortPath`‬ tab allows you to completely 
 
 #### Menu sections
 In addition to the paths from the file managers, you can add additional paths to the Menu on `Settings > Theme` tab.
-
+<a name="pinned"></a>
 <details><summary>Pinned paths (that are always visible)</summary> 
 
 If you want some paths to appear permanently in the Menu, you can pin them. To do this, enable the `Settings > Theme > Show pinned paths`  option and select a key or mouse button at  `Settings > App > Pin path...`. Close the settings and open the Menu. Hold down the selected key and left click on any path. Now it is pinned and it will be stored in the configuration. You will see this path on every restart. 
@@ -103,7 +104,7 @@ If you turn this option *off*, the pinned paths will no longer be displayed. If 
 If you want to see the duplicate paths disable the `Settings > Menu > Delete duplicate paths` option *(e.g. if you have a pinned path, but also want to quickly find it visually in the Menu by file manager icon)*.
 
 </details>
-
+<a name="clipboard"></a>
 <details><summary>Paths from clipboard (temporary, for a single file dialog)</summary> 
 
 You can copy any file or directory path (or any [variable](#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
@@ -119,7 +120,7 @@ The option works in the background and analyzes the clipboard for the presence o
 Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > Show file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
 
 </details>
-
+<a name="favorites"></a>
 <details><summary>Favorite paths (with customizable icons and names)</summary>  
  
 If you have many paths and want to customize how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. The option works with `.lnk` shortcuts (links) from the directory you specified in the input field next to it. [Create a shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file in it (in this case the directory it is in will be used). From the context Menu, open the shortcut's "properties" and click on the "shortcut" tab. 
@@ -249,5 +250,6 @@ You can change application metadata, such as version and description by changing
 > - Ability to add resources to the compiled script.
 > - Ability to tweak several miscellaneous aspects of compilation.
 > - Ability to remove code sections from the compiled script and vice versa.
+
 
 
