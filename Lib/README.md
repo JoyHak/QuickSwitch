@@ -1,3 +1,5 @@
+<a href="https://deepwiki.com/JoyHak/QuickSwitch">
+<img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a><br>
 QuickSwitch is divided into many libraries that interact closely with each other. Each library is not an independent separate unit, as it can depend on other libraries. The correct initialization order for each library is written in the main file, with the name `QuickSwitch-v1.0*.ahk`.
 
 The getter of paths from Total Commander is not in [ManagerClasses.ahk](https://github.com/JoyHak/QuickSwitch/blob/main/Lib/ManagerClasses.ahk), but in a [separate file](https://github.com/JoyHak/QuickSwitch/blob/main/Lib/TotalCommander.ahk), see documentation [here](https://github.com/JoyHak/QuickSwitch/tree/main/Lib/TotalCommander).
@@ -20,3 +22,4 @@ The getter of paths from Total Commander is not in [ManagerClasses.ahk](https://
 | DarkTheme        | Set theme and font for Menu and GUI                | Contains functions for changing theme and font for Menu and GUI. Contains initialization for default theme. |
 | SettingsFrontend | Change global variables                  | GUI: shows app settings. Uses global variables.              |
 | MenuFrontend     | Select paths and options                 | Menu: shows paths and options. Displayed and actual paths are independent of each other, which allows Menu to display anything *(e.g. short path)* |
+
