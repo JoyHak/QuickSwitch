@@ -1,34 +1,37 @@
-<p align="center">
-    <a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
-        <img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge"
-            alt="WinGet"></a>
-     <a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
-        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/AutoHotkey.svg"
-            alt="AutoHotkey"></a>
-     <a href="https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d">
-        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/Xyplorer.svg"
-            alt="Xyplorer"></a>
-     <a href="https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d">
-        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/TotalCommander.svg"
-            alt="TotalCommander"></a>
-      <a href="https://resource.dopus.com/t/quickswitch/40965/20">
-        <img src="https://github.com/JoyHak/QuickSwitch/blob/main/Images/badges/DirectoryOpus.svg"
-            alt="DirectoryOpus"></a>
-      <a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
-        <img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=orange&color=915031"
-            alt="Everything"></a>
-</p>
-<p align="center">
-      <a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
-        <img src="https://img.shields.io/github/issues/JoyHak/QuickSwitch?style=flat&logo=TickTick&logoColor=white&label=New%20Bug"
-            alt="NewBug"></a>
-       <a href="https://github.com/JoyHak/QuickSwitch/discussions">
-        <img src="https://img.shields.io/github/discussions/JoyHak/QuickSwitch?style=flat&logo=TheConversation&logoColor=white&logoSize=128&label=Ask%20Question"
-            alt="Discussions"></a>
-      <a href="https://deepwiki.com/JoyHak/QuickSwitch">
-        <img src="https://deepwiki.com/badge.svg"
-            alt="Ask DeepWiki"></a>
-</p>
+<div align="center">
+    
+### Quickly Switch to your favorite folder.<br><br>
+
+Forum threads<br>
+<a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/AutoHotkey.svg" alt="AutoHotkey"></a>
+<a href="https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Xyplorer.svg" alt="Xyplorer"></a>
+<a href="https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/TotalCommander.svg" alt="TotalCommander"></a>
+<a href="https://resource.dopus.com/t/quickswitch/40965/20">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/DirectoryOpus.svg" alt="DirectoryOpus"></a>
+<a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
+<img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=orange&color=915031" alt="Everything"></a>
+</div>
+
+<div align="center">
+Installation sources<br>
+<a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
+<img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
+<a href="#installation">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
+</div>
+
+<div align="center">    
+<small>Quick help</small><br>
+<a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
+<img src="https://img.shields.io/github/issues/JoyHak/QuickSwitch?style=flat&logo=TickTick&logoColor=white&label=New%20Bug" alt="NewBug"></a>
+<a href="https://github.com/JoyHak/QuickSwitch/discussions">
+<img src="https://img.shields.io/github/discussions/JoyHak/QuickSwitch?style=flat&logo=TheConversation&logoColor=white&logoSize=128&label=Ask%20Question" alt="Discussions"></a>
+<a href="https://deepwiki.com/JoyHak/QuickSwitch">
+<img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+</div>
 
 Imagine you want to open/save a file. A dialog box appears, allowing you to manually select the directory on your system. QuickSwitch lets you automatically switch to the path you need if it's open in any of the supported file managers (File Explorer, Directory Opus, Total Commander, XYPlorer). 
 ![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/white.png)
@@ -44,26 +47,25 @@ You can add specific file dialog to the **Black List** to disable QuickSwitch in
 
 These options work separately for each window, which makes it possible to customize the application for each dialog.
 
-And of course you can customize the display of paths in the Menu:
-![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.png)
+And of course you can customize the Menu:
 ![](https://github.com/JoyHak/QuickSwitch/blob/main/Images/settings.gif)
 
-As an addition I recommend the [BigSur](https://www.deviantart.com/niivu/art/Big-Sur-2-Windows-10-Themes-861727886) or [CakeOS](https://www.deviantart.com/niivu/art/cakeOS-2-0-for-Windows-11-953541433) themes from Niivu and [XYplorer](https://www.xyplorer.com/index.php) file manager.
+Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) QuickSwitch or [explore](#appearance) advanced customization options!
 
-## Keyboard
+## Installation
+<a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
+   <img src="https://img.shields.io/github/v/release/JoyHak/QuickSwitch?display_name=tag&style=flat"
+      alt="NewBug"></a>
+<a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
+   <img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat"
+      alt="NewBug"></a><br><br>
 
-Each option and button in the settings has a corresponding key.
-Take a closer look: each name has an u̲n̲d̲e̲r̲l̲i̲n̲e̲d̲ l̲e̲t̲t̲e̲r̲. Press this letter on the keyboard to jump to the option. For example:
- _C̲ancel_ – `C`; _Path s̲eparator_  – `S`.
-
-Here is a short list of the main keys:
-- Path: `0-9`.
-- Auto switch: `A`
-- Black list: `B`
-- Settings: `S`
-- Hide menu: `Esc` / `click` anywhere
-
-You can select keys or mouse buttons on `Settings > App` tab. You can even select the `CapsLock` or `Win` key in the settings or the middle mouse button to show the Menu. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them.
+1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
+2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps update the app. The configuration will never be replaced. Run `QuickSwitch.exe`.
+3. Open different directories in a supported file manager. E.g., open `C:\` in `Explorer`.
+4. Open any application and try to open\save a file using it. E.g., open `Notepad` then `File - Open...` (or press `Ctrl+Shift+S`).
+5. Press `Ctrl+Q` and look at the paths in the Menu that opens. All directories opened in supported file managers will be displayed here.
+6. Explore the available options in the _"Menu settings"_ and experiment with them. Choose a convenient style and logic of the menu!
 
 ## Appearance
 ### Short path
@@ -177,6 +179,20 @@ C:\%IconsDir%
 
 </details>
 
+## Keyboard
+Each option and button in the settings has a corresponding key.
+Take a closer look: each name has an u̲n̲d̲e̲r̲l̲i̲n̲e̲d̲ l̲e̲t̲t̲e̲r̲. Press this letter on the keyboard to jump to the option. For example:
+ _C̲ancel_ – `C`; _Path s̲eparator_  – `S`.
+
+Here is a short list of the main keys:
+- Path: `0-9`.
+- Auto switch: `A`
+- Black list: `B`
+- Settings: `S`
+- Hide menu: `Esc` / `click` anywhere
+
+You can select keys or mouse buttons on `Settings > App` tab. You can even select the `CapsLock` or `Win` key in the settings or the middle mouse button to show the Menu. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them. 
+
 ## Feedback
 
 **I really need your feedback!** If something is not working for you, please [let me know](https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml). If you think that app can be improved, [write to me](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml).
@@ -202,22 +218,6 @@ QuickSwitch is written in AutoHotkey, which uses WinAPI. It sends messages to ot
 
 You can also [disable UAC](https://superuser.com/a/1773044) and use low-level or powerful antivirus _(Crowdstrike, Eset Endpoint Security)_ for full control over running applications. Modern viruses [does not require admin privileges](https://security.stackexchange.com/a/183149) to interact with the system. However, they can obtain admin rights by [exploiting Windows vulnerability](https://community.spiceworks.com/t/how-does-malware-actually-gain-admin-access-to-a-pc-without-av/329471).
 </details>
-
-## Installation
-Subscribe to releases so you don't miss critical updates!
-![Subscribe](https://github.com/user-attachments/assets/57eb9a93-fc9d-4dfd-bfb0-00720c2911f1)
-
-1. [Download](https://github.com/JoyHak/QuickSwitch/releases) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
-
-2. Create a directory, copy downloaded archive here and select "extract here" from the context menu. With each subsequent update, select "extract here" to update the old files with the new ones. The configuration is never deleted or replaced. Run `QuickSwitch.exe`.
-
-3. Open different directories in a supported file manager. E.g., open `C:\` in `Explorer`.
-
-4. Open any application and try to open\save a file using it. E.g., open `Notepad` then `File - Open...`. Or try to [download](https://github.com/JoyHak/QuickSwitch/releases) any file.
-
-5. Press `Ctrl+Q` and look at the paths in the Menu that opens. All directories opened in supported file managers will be displayed here.
-
-6. Explore the available options in the _"Menu settings"_ and experiment with them. Choose a convenient style and logic of the menu!
 
 ## Compiling	
 
@@ -251,22 +251,5 @@ You can change application metadata, such as version and description by changing
 > - Ability to add resources to the compiled script.
 > - Ability to tweak several miscellaneous aspects of compilation.
 > - Ability to remove code sections from the compiled script and vice versa.
-
-## Need help with
-- Auto-check for update (lib and setting)
-- New GUI design.
-- `QTTabBar` (get all tabs)
-- `Autohotkey v2` port
-- New file managers support
-
-
-
-
-
-
-
-
-
-
 
 
