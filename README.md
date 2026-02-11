@@ -12,7 +12,7 @@ Forum threads<br>
 <a href="https://resource.dopus.com/t/quickswitch/40965/20">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/DirectoryOpus.svg" alt="DirectoryOpus"></a>
 <a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
-<img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=orange&color=915031" alt="Everything"></a>
+<img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=ff8000&color=6c4028" alt="Everything"></a>
 </div>
 
 <div align="center">
@@ -25,12 +25,10 @@ Installation sources<br>
 
 <div align="center">    
 <small>Quick help</small><br>
+<a href="https://github.com/JoyHak/QuickSwitch/discussions/new/choose">
+<img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
-<img src="https://img.shields.io/github/issues/JoyHak/QuickSwitch?style=flat&logo=TickTick&logoColor=white&label=New%20Bug" alt="NewBug"></a>
-<a href="https://github.com/JoyHak/QuickSwitch/discussions">
-<img src="https://img.shields.io/github/discussions/JoyHak/QuickSwitch?style=flat&logo=TheConversation&logoColor=white&logoSize=128&label=Ask%20Question" alt="Discussions"></a>
-<a href="https://deepwiki.com/JoyHak/QuickSwitch">
-<img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+<img src="https://img.shields.io/github/issues-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="NewBug"></a>
 </div>
 
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
@@ -51,10 +49,10 @@ Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) Qu
 ## Installation
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
    <img src="https://img.shields.io/github/v/release/JoyHak/QuickSwitch?display_name=tag&style=flat"
-      alt="NewBug"></a>
+      alt="Release"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
-   <img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat"
-      alt="NewBug"></a><br><br>
+   <img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat&color=fb9233"
+      alt="Downloads"></a><br><br>
 
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
 2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps to update the app. The `.ini` configuration will never be replaced. 
@@ -221,7 +219,10 @@ You can also [disable UAC](https://superuser.com/a/1773044) and use low-level or
 
 ## Compiling	
 
-This script is written on  [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey) and cannot be compiled. However, it can be built into a single file using a special script.
+<a href="https://deepwiki.com/JoyHak/QuickSwitch/11.1-build-system">
+<img src="https://deepwiki.com/badge.svg" alt="Build system"></a>
+
+This app is written on  [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey) and cannot be compiled. However, it can be built into a single file using a special script.
 
 <details><summary>Dependencies</summary>
 
@@ -241,16 +242,14 @@ Optional `7zG.exe` to create an archives with the required files: https://7-zip.
 To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Open the [.\Utilities\Build.ahk](/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](/Utilities/Build.ahk).
 
 > [!NOTE]
-> The builder is designed for different scripts regardless of their interpreter. It will automatically select the interpreter based on the script name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
+> The builder is designed for different AHK apps regardless of their interpreter. It will automatically select the interpreter based on the app name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
 
-You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8.....ahk`. After completing the configuration process, run the `Build.ahk`.
-
-> Directives allow the user to specify details of how a script is to be builded via [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
->
-> - Ability to change the version information (such as the name, description, version...).
-> - Ability to add resources to the compiled script.
-> - Ability to tweak several miscellaneous aspects of compilation.
-> - Ability to remove code sections from the compiled script and vice versa.
+You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8...ahk`. After completing the configuration process, run the `Build.ahk`.
+Directives allow the user to specify how app should be builded by [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
+- Ability to change the version information (such as the name, description, version...).
+- Ability to add resources to the compiled script.
+- Ability to tweak several miscellaneous aspects of compilation.
+- Ability to remove code sections from the compiled script and vice versa.
 
 
 
