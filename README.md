@@ -34,7 +34,7 @@ Installation sources<br>
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
 ![](/Images/menu.gif)
 
-Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching. You can [pin and save favorite paths](#favorites) and [open them later](#enforce-menu) in any file manager or application. Press `Ctrl+Q` to start.
+Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. You can [pin and save favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
 
 Enable "AutoSwitch" option to automatically change path in file dialog:
 
@@ -44,7 +44,7 @@ And of course you can customize the Menu:<br>
 
 <img src="/Images/settings.gif" width=720>
 
-Now you can [download](https://github.com/JoyHak/QuickSwitch/releases/latest) QuickSwitch or [explore](#appearance) advanced customization options!
+Now you can install QuickSwitch or [explore](#appearance) advanced customization options!
 
 ## Installation
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
@@ -91,7 +91,7 @@ W̲indows\System32 – press `W` to activate this path.
 The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underlined in your Menu.
 
 #### Menu sections
-In addition to the paths from the file managers, you can add additional paths to the Menu on `Settings > Theme` tab.
+In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab.
 <a name="pinned"></a>
 <details><summary>Pinned paths (that are always visible)</summary> 
 
@@ -122,7 +122,9 @@ Background analysis is temporarily disabled when requesting paths from other fil
 
 <a name="favorites"></a>
 
-If you have many paths and want to customize how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. The option works with `.lnk` shortcuts (links) from the directory you specified in the input field next to it. [Create a shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file in it (in this case the directory it is in will be used). From the context Menu, open the shortcut's "properties" and click on the "shortcut" tab. 
+If you have many paths and you want to change how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. This option works with `.lnk` shortcuts (links). In the input field next to it, enter the directory from which the shortcuts will be taken. You can use [variables](#variables).
+
+Press `Enter` and open specified directory. [Create .lnk shortcut](https://www.thewindowsclub.com/create-desktop-shortcut-windows-10) to any directory or file. If the shortcut points to a file, its location will be shown in the Menu. Right click on created shortcut, select "properties" and click on the "shortcut" tab. 
 
 <img width="1920" height="1920" alt="properties" src="https://github.com/user-attachments/assets/ec65e78b-26cb-4989-a71b-a14c6ea964bf" />
 
@@ -153,7 +155,7 @@ You can hide some shortcuts by changing or removing their extension. If there ar
 </details>
 
 #### Variables
-In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch/Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
+In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch\Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
 
 <details><summary>Examples</summary>
 
@@ -250,6 +252,7 @@ Directives allow the user to specify how app should be builded by [Ahk2Exe](http
 - Ability to add resources to the compiled script.
 - Ability to tweak several miscellaneous aspects of compilation.
 - Ability to remove code sections from the compiled script and vice versa.
+
 
 
 
