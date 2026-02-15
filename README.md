@@ -253,7 +253,22 @@ Directives allow the user to specify how app should be builded by [Ahk2Exe](http
 - Ability to tweak several miscellaneous aspects of compilation.
 - Ability to remove code sections from the compiled script and vice versa.
 
+## Credits
 
+Many people helped make QuickSwitch better! **Thank you all very much for your help and testing!** If you know how to improve QuickSwitch, [write about it here](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml).
 
+The history of QuickSwitch begins with [Gepruts](https://github.com/gepruts), who laid the foundation for switching between file dialogs and supported this project [until version 0.5](https://github.com/gepruts/QuickSwitch).
 
+After that, [DaWolfi, NotNull and Tuska](https://www.voidtools.com/forum/viewtopic.php?t=9881) added the first settings, color change options, and extended support for file managers.
 
+That's how the thread appeared on the Everything forum, and the version [v0.5dw9a](https://www.voidtools.com/forum/download/file.php?id=2235) was released, which I have continued to improved.
+
+The next version was [1.0](https://github.com/JoyHak/QuickSwitch/releases/tag/v1.0): source code was reduced and support for all XYplorer tabs was added. The function from [highend](https://www.xyplorer.com/xyfc/viewtopic.php?p=179654#p179654) helped with this.
+
+Up until version [1.5](https://github.com/JoyHak/QuickSwitch/releases/tag/1.5), active work was underway to optimize performance and display all tabs from all file managers. I had great difficulty with Total Commander and [Dalai](https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238) suggested the algorithm for obtaining all tabs from Total Commander. [Horst](https://www.ghisler.ch/board/viewtopic.php?t=76254&start=105#p471017) patiently tested the algorithm over several days of work on it. Together, we laid the foundation for the Total Commander support that is still in use today.
+
+After the release, [Arsiendle](https://github.com/Arsiendle) sent a detailed report on the app's behavior. He helped identify minor and critical errors. His participation in testing helped to significantly improve the app.
+
+[Noticz](https://github.com/noticz) suggested algorithms for a dark theme, switching tabs in file managers using QuickSwitch, and extending the Black List for the [big 1.8 release](https://github.com/JoyHak/QuickSwitch/releases/tag/1.8). During the testing by [eddablin](https://github.com/eddablin) some issues was fixed.
+
+I also posted a message on the AutoHotkey discord server asking for help in fixing an ancient bug that caused the Menu to stuck on the screen, which has been known since 2007. [FuPeiJiang](https://github.com/FuPeiJiang) responded and helped resolve many issues with Menu. He helped make the main Menu stable and predictable.
