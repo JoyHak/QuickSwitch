@@ -2,10 +2,5 @@
 *.log
 *.ini
 *.csv
-*.ttf
-/old*/
-/reserv*/
 /Releas*/
 /Favorites/
-/Font*/
-source.ahk

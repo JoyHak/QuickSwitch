@@ -68,10 +68,10 @@ LogInfo(_text, _silent := false) {
 
 LogHeader() {
     ; Header with information about OS and script
-    global ErrorsLog
+    global ErrorsLog, ScriptRepo
 
-    static REPORT_LINK := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
-    static NT_VERSION  := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+    REPORT_LINK := ScriptRepo "/issues/new?template=bug-report.yaml"
+    NT_VERSION  := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
 
     _name    := A_OSType
     _version := ""
@@ -94,9 +94,23 @@ LogHeader() {
     Report about error: " REPORT_LINK "
     AHK " A_AhkVersion "
     " _name " " _version " | " _build " " _bitness " " _lang "
-
-
     )", % ErrorsLog
+}
+
+LogVersion(_enforce := false) {
+    global INI, ErrorsLog, ScriptVersion
+    
+    _version := A_ScriptName " x" (A_PtrSize * 8) " v" ScriptVersion
+    _lastVersion := ""
+    
+    if IsFile(INI) {
+        IniRead, _lastVersion, % INI, % "App", % "Version", % A_Space
+        IniWrite, % _version,  % INI, % "App", % "Version"
+    }
+    
+    if (_enforce || _lastVersion != _version) {
+        FileAppend, % "`n`n" _version "`n`n", % ErrorsLog
+    }
 }
 
 ClearLog(_maxSize := 7000, _enforce := false) {
@@ -136,8 +150,12 @@ InitLog() {
             _logClearedMsg := ClearLog()
 
         ; Create log after cleanup / first launch
-        if !IsFile(ErrorsLog)
+        if !IsFile(ErrorsLog) {
             LogHeader()
+            LogVersion(true)
+        } else {            
+            LogVersion(false)
+        }
 
         if _logClearedMsg
             LogInfo(_logClearedMsg, "NoTrayTip")
@@ -149,7 +167,7 @@ InitLog() {
     }
 }
 
-InitWelcomeMessage(_errorsLogMinSizeBytes := 160) {
+InitWelcomeMessage(_errorsLogMinSizeBytes := 190) {
     ; Displays welcome notification if no errors occured
     global IsNewUser, ErrorsLog, ScriptName, INI
     static REG_PATH := "HKEY_CURRENT_USER\Software\QuickSwitch"
