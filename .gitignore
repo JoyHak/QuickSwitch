@@ -3,9 +3,13 @@
 *.ini
 *.csv
 *.ttf
+*.pem
+*.key
 /old*/
 /reserv*/
 /Releas*/
 /Favorites/
 /Font*/
 source.ahk
+Build.ps1
+Compile.ps1

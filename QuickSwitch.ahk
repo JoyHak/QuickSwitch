@@ -1,10 +1,13 @@
-;@Ahk2Exe-SetDescription https://github.com/JoyHak/QuickSwitch
-;@Ahk2Exe-SetProductName QuickSwitch
+ScriptName    := "QuickSwitch"
+;@Ahk2Exe-SetProductName %A_PriorLine~.*"(.*)"~$1%
+ScriptVersion := "1.10"
+;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
+ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
+;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
 ;@Ahk2Exe-SetMainIcon Icons\QuickSwitch.ico
 ;@Ahk2Exe-SetCopyright Rafaello
 ;@Ahk2Exe-SetCompanyName ToYu studio
 ;@Ahk2Exe-SetLegalTrademarks GPL-3.0 license
-;@Ahk2Exe-SetVersion %A_ScriptName~[^\d\.]+%
 
 #Requires AutoHotkey v1.1.37.02 Unicode
 #Warn
@@ -22,7 +25,6 @@ FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
 
-ScriptName := "QuickSwitch"         ; internal name, reserved for beta and release versions
 INI        := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini 
 ErrorsLog  := "Errors.log"          ; file for error dumps and tracing
 
