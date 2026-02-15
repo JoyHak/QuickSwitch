@@ -15,13 +15,15 @@ The user has the right not to send the collected data and errors, and the user i
 You can verify that the downloaded file was compiled by me and has not been altered by anyone else. Ensure that the archive checksum matches the release checksum (see below how to obtain it). 
 <img width="1300" height="367" alt="checksum" src="https://github.com/user-attachments/assets/322ec4d7-78ca-4710-b9a2-04cf2515377f" />
 
-If checksum is correct, [install `certificate.cer`](https://learn.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate) from the archive and check that the digital signature is installed during subsequent updates. 
+If checksum is correct, [install `certificate.cer`](https://learn.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate) from the archive.
 
 <img width="786" height="301" alt="certificate" src="https://github.com/user-attachments/assets/251df47e-2a65-4ecc-8f34-c274270cbef3" />
 
-After each update open `QuickSwitch.exe` properties, then `Digital dignature` tab. Double click on the signature row. If you installed the certificate previously there will be valid icon.
+After each update you need to verify digital signature. Open `QuickSwitch.exe` properties, then `Digital dignature` tab. Double click on the signature row. If you have previously installed the certificate, the correct icon will appear here.
 
 <img width="2058" height="831" alt="signature2" src="https://github.com/user-attachments/assets/a670fd45-ed68-4354-a396-2025b7876b80" />
+
+A red icon indicates that you have not yet installed the certificate or that someone has modified the executable file after release.
 
 See [detailed guide here](https://github.com/JoyHak/chocolatey/blob/main/QuickSwitch/tools/VERIFICATION.md). If you have Chocolatey, you can [download verification script](https://github.com/JoyHak/chocolatey/blob/main/QuickSwitch/tools/verifysignature.ps1). The software can be verified manually by doing the following:
 1.   Verify sha256 checksums with GitHub (you can also find them on [release page](https://api.github.com/repos/JoyHak/QuickSwitch/releases/latest)):
