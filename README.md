@@ -19,6 +19,8 @@ Forum threads<br>
 Installation sources<br>
 <a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
 <img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
+<a href="https://push.chocolatey.org/packages/quickswitch">
+<img src="https://img.shields.io/chocolatey/v/quickswitch?style=for-the-badge" alt="Chocolatey"></a>
 <a href="#installation">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
 </div>
@@ -54,6 +56,26 @@ Now you can install QuickSwitch or [explore](#appearance) advanced customization
    <img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat&color=fb9233"
       alt="Downloads"></a><br><br>
 
+You can install and upgrade QuickSwitch automatically through package manager or [download it manually](#manual-installation). 
+
+### [Winget](https://learn.microsoft.com/en-us/windows/package-manager)
+```powershell
+winget install JoyHak.QuickSwitch
+winget upgrade JoyHak.QuickSwitch
+winget uninstall JoyHak.QuickSwitch
+```
+### [Chocolatey](https://docs.chocolatey.org/en-us/why)
+```powershell
+choco install quickswitch
+choco upgrade quickswitch
+choco uninstall quickswitch
+```
+### [Scoop](https://github.com/ScoopInstaller/Scoop/wiki/So-What)
+> We need more than 100⭐ GitHub stars to satisfy the [package requirements](https://github.com/ScoopInstaller/Extras/discussions/11588#discussioncomment-6454332).
+
+After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter` to launch installed package.
+
+### Manual installation
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
 2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps to update the app. The `.ini` configuration will never be replaced. 
 3. Run `QuickSwitch.exe`. Open some tabs in a supported file manager or create `.lnk` files in `.\Favorites`.
