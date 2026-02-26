@@ -49,7 +49,7 @@ Stability over features. QuickSwitch interacts with external processes via WinAP
 #### 2. Extend File Managers Support
 QuickSwitch retrieves paths from several file managers, each implemented as a dedicated getter function in [ManagerClasseses](Lib/ManagerClasses.ahk). Adding support for new file managers, or improving the robustness of existing ones, is a high-value contribution. If you use some file manager and you know it's API, this is the area to contribute to.
 #### 3. Extend File Dialogs Support
-QuickSwitch detects and interacts with Windows file dialogs. The current detection logic lives in [FileDialogs](Lib/FileDialogs.ahk). Many applications use non-standard or atypical dialogs (like MS Office 2003 or ABBY Pdf Reader) that QuickSwitch may fail to detect. If you have encountered unusual file dialogs and you know can integrate them effectively and you are familiar with the concept of "window control", this area is great for you. 
+QuickSwitch detects and interacts with Windows file dialogs. The current detection logic lives in [FileDialogs](Lib/FileDialogs.ahk). Many applications use non-standard or atypical dialogs (like MS Office 2003 or ABBYY FineReader) that QuickSwitch may fail to detect. If you have encountered unusual file dialogs and you know can integrate them effectively and you are familiar with the concept of "window control", this area is great for you. 
 
 > A fast and reliable QuickSwitch that works perfectly with the software it currently supports is worth far more than a feature-rich one that is unpredictable.
 
