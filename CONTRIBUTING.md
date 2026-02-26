@@ -36,8 +36,7 @@ Key concepts you will use in QuickSwitch:
 - [Discord](https://discord.gg/autohotkey)
 - [Reddit](https://www.reddit.com/r/AutoHotkey/)
 
-> [!CAUTION]
-> Read the documentation and use forum searching before asking any question! To quicly find any detail use "advanced forum searching" and search by topic title or use google/SearX/PreSearch with search operators, e.g.
+> Read the documentation and use forum searching before asking any question! To quickly find any detail use "advanced forum searching" and search by topic title or use google/SearX/PreSearch with search operators, e.g.
 `site:autohotkey.com bound function`
 
 </details>
@@ -45,12 +44,12 @@ Key concepts you will use in QuickSwitch:
 ## Project Priorities
 
 QuickSwitch has **core goals** that must guide all development decisions:
-1. Improve Stability and Reliability
+#### 1. Improve Stability and Reliability
 Stability over features. QuickSwitch interacts with external processes via WinAPI, COM, and clipboard. This makes it inherently fragile. Fixing edge cases, improving error handling (see [logging](Lib/Log.ahk) and [validation](Lib/Values.ahk)), and ensuring correct behavior across Windows versions are the most impactful contributions you can make.
-2. Extend File Managers Support
-QuickSwitch retrieves paths from several file managers, each implemented as a dedicated getter function in [Lib/ManagerClasses.ahk](Lib/ManagerClasses.ahk). Adding support for new file managers, or improving the robustness of existing ones, is a high-value contribution. If you use some file manager and you know it's API, this is the area to contribute to.
-3. Extend File Dialogs Support
-QuickSwitch detects and interacts with Windows file dialogs. The current detection logic lives in [Lib/FileDialogs.ahk](Lib/FileDialogs.ahk). Many applications use non-standard or atypical dialogs (like MS Office 2003 or ABBY Pdf Reader) that QuickSwitch may fail to detect. If you have encountered unusual file dialogs and you know can integrate them effectively and you are familiar with the concept of "window control", this area is great for you. 
+#### 2. Extend File Managers Support
+QuickSwitch retrieves paths from several file managers, each implemented as a dedicated getter function in [ManagerClasseses](Lib/ManagerClasses.ahk). Adding support for new file managers, or improving the robustness of existing ones, is a high-value contribution. If you use some file manager and you know it's API, this is the area to contribute to.
+#### 3. Extend File Dialogs Support
+QuickSwitch detects and interacts with Windows file dialogs. The current detection logic lives in [FileDialogs](Lib/FileDialogs.ahk). Many applications use non-standard or atypical dialogs (like MS Office 2003 or ABBY Pdf Reader) that QuickSwitch may fail to detect. If you have encountered unusual file dialogs and you know can integrate them effectively and you are familiar with the concept of "window control", this area is great for you. 
 
 > A fast and reliable QuickSwitch that works perfectly with the software it currently supports is worth far more than a feature-rich one that is unpredictable.
 
@@ -62,9 +61,9 @@ The following smaller contributions are always appreciated:
 
 - Fixing typos or improving comments in the source code.
 - Refactoring or simplifying existing code without changing behavior.
-- Improving path parsing edge cases in [Lib/GetPaths.ahk](Lib/GetPaths.ahk).
-- Improving INI validation logic in [Lib/Values.ahk](Lib/Values.ahk).
-- Adding or improving error messages in [Lib/Log.ahk](Lib/Log.ahk).
+- Improving path parsing edge cases in [GetPaths](Lib/GetPaths.ahk).
+- Improving INI validation logic in [Values](Lib/Values.ahk).
+- Adding or improving error messages in [Log](Lib/Log.ahk).
 
 Also you can open Issues tracker and focus on the following labels:
 
@@ -97,7 +96,7 @@ The best way to start working with the GitHub is to [install GitButler](https://
    git checkout -b feature/add-freecommander-support
    ```
 3. **Make your changes** and test them manually by running the script.
-4. **Check `Errors.log`** in the QuickSwitch directory after testing — it records all exceptions caught by `LogException()` in [Lib/Log.ahk](Lib/Log.ahk).
+4. **Check `Errors.log`** in the QuickSwitch directory after testing — it records all exceptions caught by `LogException()` in [Log](Lib/Log.ahk).
 5. **Open a Pull Request** against the `main` branch with a clear description of what you changed and why.
 
 </details>
@@ -111,7 +110,7 @@ If you're not familiar with Git or GitHub, you can [start here](https://docs.git
 - **Global variables:** PascalCase (e.g., `ShowManagers`, `AutoSwitch`).
 - **Static variables, VarRefs:** camelCase (e.g., `winId`, `sendEnter`).
 - **Strings and constants:** should be passed as `VarRef`s to the functions (functions must accept parameter by reference: `&variable`). E.g. path or window handle.
-- **Error handling:** wrap risky WinAPI/COM calls in `try/catch` and call `LogException()` from [Lib/Log.ahk](Lib/Log.ahk) in the `catch` block. Pass non-terminating errors to the `LogError()`.
+- **Error handling:** wrap risky WinAPI/COM calls in `try/catch` and call `LogException()` from [Log](Lib/Log.ahk) in the `catch` block. Pass non-terminating errors to the `LogError()`.
 - **Comments:** should explain why such code is needed/complicated ideas of the code. Comments must not duplicate code, **code must be self-documented**, i.e. consise and readable!
 
 
