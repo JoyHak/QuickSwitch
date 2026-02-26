@@ -1,8 +1,7 @@
-<div align="center">
-    
+<div align="center">    
 <a href="#installation">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a>
-Forum threads<br>
+<br>Forum threads<br>
 <a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/AutoHotkey.svg" alt="AutoHotkey"></a>
 <a href="https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d">
@@ -13,20 +12,14 @@ Forum threads<br>
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/DirectoryOpus.svg" alt="DirectoryOpus"></a>
 <a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
 <img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=ff8000&color=6c4028" alt="Everything"></a>
-</div>
-
-<div align="center">
-Installation sources<br>
+<br>Installation sources<br>
 <a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
 <img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
 <a href="https://push.chocolatey.org/packages/quickswitch">
 <img src="https://img.shields.io/chocolatey/v/quickswitch?style=for-the-badge" alt="Chocolatey"></a>
 <a href="#installation">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
-</div>
-
-<div align="center">    
-<small>Quick help</small><br>
+<br>Quick help<br>
 <a href="https://github.com/JoyHak/QuickSwitch/discussions/new/choose">
 <img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
@@ -50,28 +43,51 @@ Now you can install QuickSwitch or [explore](#appearance) advanced customization
 
 ## Installation
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
-   <img src="https://img.shields.io/github/v/release/JoyHak/QuickSwitch?display_name=tag&style=flat"
-      alt="Release"></a>
+<img src="https://img.shields.io/github/v/release/JoyHak/QuickSwitch?display_name=tag&style=flat" alt="Release"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
-   <img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat&color=fb9233"
-      alt="Downloads"></a><br><br>
+<img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat&color=fb9233" alt="Downloads"></a>
+<br><br>
 
-You can install and upgrade QuickSwitch automatically through package manager or [download it manually](#manual-installation). 
+You can install and upgrade QuickSwitch automatically through package manager or [download it manually](#manual-installation).
+```ahk
+winget install JoyHak.QuickSwitch
+```
 
-### [Winget](https://learn.microsoft.com/en-us/windows/package-manager)
+<details>
+  <summary>
+    <a name="winget" href="https://learn.microsoft.com/en-us/windows/package-manager">
+      winget
+    </a>
+  </summary>
+
 ```powershell
 winget install JoyHak.QuickSwitch
 winget upgrade JoyHak.QuickSwitch
 winget uninstall JoyHak.QuickSwitch
 ```
-### [Chocolatey](https://docs.chocolatey.org/en-us/why)
+
+</details>
+
+<details>
+  <summary>
+    <a name="chocolatey" href="https://docs.chocolatey.org/en-us/why">
+      chocolatey
+    </a>
+  </summary>
+
 ```powershell
 choco install quickswitch
 choco upgrade quickswitch
 choco uninstall quickswitch
 ```
-### [Scoop](https://github.com/ScoopInstaller/Scoop/wiki/So-What)
-> We need more than 100⭐ GitHub stars to satisfy the [package requirements](https://github.com/ScoopInstaller/Extras/discussions/11588#discussioncomment-6454332).
+
+</details>
+
+\* <a name="scoop" href="https://github.com/ScoopInstaller/Scoop/wiki/So-What">
+      scoop
+    </a>
+
+> We need more than 100⭐ GitHub stars to satisfy the [Scoop package requirements](https://github.com/ScoopInstaller/Extras/discussions/11588#discussioncomment-6454332).
 
 After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter` to launch installed package.
 
@@ -83,7 +99,7 @@ After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter
 5. Press `Ctrl+Q` and look at the paths in the Menu that opens. All directories opened in supported file managers will be displayed here.
 6. Explore the available options in the _"Menu settings"_ and experiment with them. Choose a convenient style and logic of the menu!
 
-<video src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/installation.mp4" width="1280" height="720" controls></video>
+![installation video](Images/installation.avif)
 
 ## Appearance
 ### Short path
@@ -294,3 +310,4 @@ After the release, [Arsiendle](https://github.com/Arsiendle) sent a detailed rep
 [Noticz](https://github.com/noticz) suggested algorithms for a dark theme, switching tabs in file managers using QuickSwitch, and extending the Black List for the [big 1.8 release](https://github.com/JoyHak/QuickSwitch/releases/tag/1.8). During the testing by [eddablin](https://github.com/eddablin) some issues was fixed.
 
 I also posted a message on the AutoHotkey discord server asking for help in fixing an ancient bug that caused the Menu to stuck on the screen, which has been known since 2007. [FuPeiJiang](https://github.com/FuPeiJiang) responded and helped resolve many issues with Menu. He helped make the main Menu stable and predictable.
+
