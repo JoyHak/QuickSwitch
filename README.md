@@ -243,7 +243,7 @@ Open any file manager and press this shortcut. If you have tabs open in one file
 
 Another example: open Notepad++ and press this shortcut. Select any path from the Menu. Notepad++ will open all files from that path.
 
-<details>
+</details>
   
 The menu will display the **paths obtained after the last opening of the file dialog** and will not change them until the next opening. The menu will be empty the first time it is opened. [Pin and save your favorite paths](#menu-sections) so you can always see them. 
 
@@ -254,7 +254,7 @@ To ensure that the correct current paths always appear in the menu:
 - Periodically open the file manager you need *(a big number of windows makes it difficult to find the last open manager).*
 - Do not keep virtual folders open *(e.g. coll://, Desktop, Rapid Access, ...).*
 
-QuickSwitch interacts with other applications, but the system may [restrict its access](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/user-account-control-allow-uiaccess-applications-to-prompt-for-elevation-without-using-the-secure-desktop). To avoid this, run QuickSwitch as an administrator, copy it to the `C:\Program Files` _(just paste `%ProgramFiles%` to the addressbar)_. You can also [disable UAC](https://superuser.com/a/1773044) to avoid similar problems with all applications.
+QuickSwitch interacts with other applications, but the system may [restrict its access](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/user-account-control-allow-uiaccess-applications-to-prompt-for-elevation-without-using-the-secure-desktop). To avoid this, run QuickSwitch as an administrator or copy it to the `C:\Program Files` (just paste `%ProgramFiles%` to the addressbar). You can also [disable UAC](https://superuser.com/a/1773044) to avoid similar problems with all applications.
 
 <details><summary>Details</summary>
 
@@ -318,5 +318,6 @@ After the release, [Arsiendle](https://github.com/Arsiendle) sent a detailed rep
 [Noticz](https://github.com/noticz) suggested algorithms for a dark theme, switching tabs in file managers using QuickSwitch, and extending the Black List for the [big 1.8 release](https://github.com/JoyHak/QuickSwitch/releases/tag/1.8). During the testing by [eddablin](https://github.com/eddablin) some issues was fixed.
 
 I also posted a message on the AutoHotkey discord server asking for help in fixing an ancient bug that caused the Menu to stuck on the screen, which has been known since 2007. [FuPeiJiang](https://github.com/FuPeiJiang) responded and helped resolve many issues with Menu. He helped make the main Menu stable and predictable.
+
 
 
