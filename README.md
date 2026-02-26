@@ -29,7 +29,7 @@
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
 ![](/Images/menu.gif)
 
-Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. You can [pin and save favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
+Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. [Pin and save your favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
 
 Enable "AutoSwitch" option to automatically change path in file dialog:
 
@@ -147,7 +147,7 @@ You can copy any file or directory path (or any [variable](#variables)) and it w
 
 <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/0014e6fc-74df-4936-b683-9c35a2d95068" />
 
-Copied paths will not disappear if you force the Menu to appear using `Ctrl+Shift+Win+0` combination. It can help you to open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
+Copied paths will not disappear if you enforce the Menu to appear using [`Ctrl+Shift+Win+0`](#enforce-menu). It can help you to open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
 
 <img width="614" height="593" alt="clipboard2" src="https://github.com/user-attachments/assets/09237a63-2264-4050-9a8c-b0501536fd27" />
 
@@ -232,12 +232,20 @@ You can select keys or mouse buttons on `Settings > App` tab. You can even selec
 
 ## Feedback
 
-**I really need your feedback!** If something is not working for you, please [let me know](https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml). If you think that app can be improved, [write to me](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml).
+**I really need your feedback!** If something is not working for you, please [let me know](https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml). If you think that app can be improved, [write to me](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml) or read the [contribution guide](CONTRIBUTING.md).
 
 <a name="enforce-menu"></a>
-You can enforce the Menu in any application using the keyboard shortcut: `Ctrl+Shift+Win+0`. The menu will display the **paths obtained after the last opening of the file dialog** and will not change them until the next opening. The menu will be empty the first time it is opened.
+You can enforce the Menu in any application using the keyboard shortcut: `Ctrl+Shift+Win+0`. You can use this feature to change the path in any application, including supported file manager.
 
-You can use this feature to test whether QuickSwitch is working correctly in the (target) app in which Menu appears. **If it really works**, click _"Settings > Debug > Export"_ to export the app info file. [Open a suggestion](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml) to add this app to QuickSwitch, attach exported file. 
+<details><summary>Examples</summary>
+
+Open any file manager and press this shortcut. If you have tabs open in one file manager, you can open them in active manager using the Menu.
+
+Another example: open Notepad++ and press this shortcut. Select any path from the Menu. Notepad++ will open all files from that path.
+
+<details>
+  
+The menu will display the **paths obtained after the last opening of the file dialog** and will not change them until the next opening. The menu will be empty the first time it is opened. [Pin and save your favorite paths](#menu-sections) so you can always see them. 
 
 ## Limitations
 
@@ -293,7 +301,7 @@ Directives allow the user to specify how app should be builded by [Ahk2Exe](http
 
 ## Credits
 
-Many people helped make QuickSwitch better! **Thank you all very much for your help and testing!** If you know how to improve QuickSwitch, [write about it here](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml).
+Many people helped make QuickSwitch better! **Thank you all very much for your help and testing!** [You can become a valuable part of the project too](CONTRIBUTING.md).
 
 The history of QuickSwitch begins with [Gepruts](https://github.com/gepruts), who laid the foundation for switching between file dialogs and supported this project [until version 0.5](https://github.com/gepruts/QuickSwitch).
 
@@ -310,4 +318,5 @@ After the release, [Arsiendle](https://github.com/Arsiendle) sent a detailed rep
 [Noticz](https://github.com/noticz) suggested algorithms for a dark theme, switching tabs in file managers using QuickSwitch, and extending the Black List for the [big 1.8 release](https://github.com/JoyHak/QuickSwitch/releases/tag/1.8). During the testing by [eddablin](https://github.com/eddablin) some issues was fixed.
 
 I also posted a message on the AutoHotkey discord server asking for help in fixing an ancient bug that caused the Menu to stuck on the screen, which has been known since 2007. [FuPeiJiang](https://github.com/FuPeiJiang) responded and helped resolve many issues with Menu. He helped make the main Menu stable and predictable.
+
 
