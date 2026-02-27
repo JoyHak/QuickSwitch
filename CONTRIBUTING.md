@@ -79,29 +79,47 @@ When picking an issue:
 
 QuickSwitch is organized as a main script that `#Include`s files from `Lib` directory. The purpose of each file is described in the [table](Lib/README.md). The project's architecture described in detail and visualized on [DeepWiki](https://deepwiki.com/JoyHak/QuickSwitch), there is also an AI assistant that will instantly answer any question.
 
-You can also ask me any technical questions and I will try to explain everything in detail:
-- [discord](https://discord.com/users/450899199010144267)
-- [email](mailto:rafaello@disroot.org)
+You can <a name="contacts">send me a message</a> and I will try to explain everything in detail:
+- <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/forums/AutoHotkey.svg" width="24" height="24"/> [AutoHotkey](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d)
+- <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/forums/Discord.svg" width="24" height="24"/> [Discord](https://discord.com/users/450899199010144267)   
+- <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/forums/Mail.svg" width="24" height="24"/> [E-mail](mailto:rafaello@disroot.org)   
 
 ## How to Contribute
 
+You can send your ideas and changes [directly to me](#contacts).
+
+But if you want to learn about GitHub, you can [start here](https://docs.github.com/ru/get-started/start-your-journey/hello-world).<br><br>
+
+<a href="https://community.chocolatey.org/packages/gitbutler">
+<img src="https://img.shields.io/chocolatey/v/gitbutler?style=flat&label=gitbutler&labelColor=cyan&color=white&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMzkiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAzOSAyOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTI1LjIxNDUgMTIuMTk5N0wyLjg3MTA3IDEuMzg5MTJDMS41NDI5NSAwLjc0NjUzMiAwIDEuNzE0MDYgMCAzLjE4OTQ3VjI0LjgxMDVDMCAyNi4yODU5IDEuNTQyOTUgMjcuMjUzNSAyLjg3MTA3IDI2LjYxMDlMMjUuMjE0NSAxNS44MDAzQzI2LjcxOTcgMTUuMDcyMSAyNi43MTk3IDEyLjkyNzkgMjUuMjE0NSAxMi4xOTk3WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTEzLjc4NTUgMTIuMTk5N0wzNi4xMjg5IDEuMzg5MTJDMzcuNDU3MSAwLjc0NjUzMiAzOSAxLjcxNDA2IDM5IDMuMTg5NDdWMjQuODEwNUMzOSAyNi4yODU5IDM3LjQ1NzEgMjcuMjUzNSAzNi4xMjg5IDI2LjYxMDlMMTMuNzg1NSAxNS44MDAzQzEyLjI4MDMgMTUuMDcyMSAxMi4yODAzIDEyLjkyNzkgMTMuNzg1NSAxMi4xOTk3WiIgZmlsbD0idXJsKCNwYWludDBfcmFkaWFsXzMxMF8xMjkpIi8%2BCjxkZWZzPgo8cmFkaWFsR3JhZGllbnQgaWQ9InBhaW50MF9yYWRpYWxfMzEwXzEyOSIgY3g9IjAiIGN5PSIwIiByPSIxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgxNi41NzAxIDE0KSBzY2FsZSgxOS44NjQxIDE5LjgzODMpIj4KPHN0b3Agb2Zmc2V0PSIwLjMwMTA1NiIgc3RvcC1vcGFjaXR5PSIwIi8%2BCjxzdG9wIG9mZnNldD0iMSIvPgo8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM%2BCjwvc3ZnPgo%3D"></a>
+<a href="https://community.chocolatey.org/packages/git">
+<img src="https://img.shields.io/chocolatey/v/git?style=flat&logo=git&logoColor=red&label=git&color=red"></a>
+<br>
+
 The best way to start working with the GitHub is to [install GitButler](https://github.com/gitbutlerapp/gitbutler/). Read it's [short documentation](https://docs.gitbutler.com), [clone the project](https://docs.gitbutler.com/guide#importing-a-local-repository) and start making changes to the files. If you're a big fan of Git, I highly recommend giving this client a try – it solves many problems and simplifies your work by creating more functional branches.
 
-<details><summary>If you want to use Git</summary>
+<details><summary>If you have GitHub CLI</summary>
+   
+Execute this script in your terminal:
 
-1. **Fork** the repository on GitHub.
-2. **Create a branch** for your work:
-   ```
-   git checkout -b fix/dialog-detection-edge-case
-   git checkout -b feature/add-freecommander-support
-   ```
-3. **Make your changes** and test them manually by running the script.
-4. **Check `Errors.log`** in the QuickSwitch directory after testing — it records all exceptions caught by `LogException()` in [Log](Lib/Log.ahk).
-5. **Open a Pull Request** against the `main` branch with a clear description of what you changed and why.
+```powershell
+# under construction
+```
 
 </details>
 
-If you're not familiar with Git or GitHub, you can [start here](https://docs.github.com/ru/get-started/start-your-journey/hello-world).
+Once you've cloned your repository, follow these steps for each development session (fixing a bug, introducing a new feature, etc.):
+1. **Create a branch** for your work: `fix/dialog-detection-edge-case` or `feat/add-freecommander-support`.
+2. **Make your changes** and test them manually by running the main [QuickSwitch-1.9.ahk](QuickSwitch-1.9.ahk) script.
+3. **Check `Errors.log`** in the root directory after testing — it records all exceptions caught by `LogException()` in [Log](Lib/Log.ahk).
+4. **Check Menu**, all paths must work correctly. Press `Ctrl+Shift+Win+0` or **Alt + \`** (backtick or `~` tilde) to display the Menu everywhere.
+> You can tweak pre-display actions and `Restart` hotkey on `Settings > App` tab. If you're working on the [Settings UI](Lib/SettingsFrontend.ahk), check `Show settings after restart`.
+5. **Commit changes**, group a set of logically related changes into a single commit with the short name in the present tense: `Add new option`, `Fix Menu flick`.
+> Never make one big commit from all the changes, but don't make micro commits either (see [project commit history](https://github.com/JoyHak/QuickSwitch/commits/main/) for examples).
+6. **Open a Pull Request** against the `main` branch with a clear description of what you changed and wwhy
+> If there's **a lot of commits**, open up multiple requests and logically group commits for each request: `Added new option` or `Fixed critical bug`. GitButler provides powerful cherry-picking for this purpose.
+
+</details>
 
 ## Code Style & Conventions
 
