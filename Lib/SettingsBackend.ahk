@@ -223,8 +223,8 @@ ToggleManagersTabs() {
     ; Hide or display tabs checkboxes
     global ShowManagers
     Gui, Submit, NoHide
-    GuiControl,  % "Enable" ShowManagers, % "ActiveListerOnly"
-    GuiControl,  % "Enable" ShowManagers, % "LastListerOnly"
+    GuiControl,  % "Enable" ShowManagers, % "ListerIndex"
+    GuiControl,  % "Enable" ShowManagers, % "ShowAllDesktops"
     GuiControl,  % "Enable" ShowManagers, % "ActivePaneOnly"
     GuiControl,  % "Enable" ShowManagers, % "ActiveTabOnly"
     GuiControl,  % "Enable" ShowManagers, % "ShowLockedTabs"
