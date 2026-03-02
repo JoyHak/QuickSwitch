@@ -212,7 +212,6 @@ ToggleFavorites() {
     global ShowFavorites
     Gui, Submit, NoHide
     GuiControl,, % "ShowFavorites", % "&Favorites" . (ShowFavorites ? " from" : "")
-
     GuiControl,  % "Show" ShowFavorites, % "FavoritesDir"
 }
 
@@ -224,6 +223,10 @@ ToggleManagersTabs() {
     global ShowManagers
     Gui, Submit, NoHide
     GuiControl,  % "Enable" ShowManagers, % "ListerIndex"
+    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText0"
+    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText1"
+    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText2"    
+    
     GuiControl,  % "Enable" ShowManagers, % "ShowAllDesktops"
     GuiControl,  % "Enable" ShowManagers, % "ActivePaneOnly"
     GuiControl,  % "Enable" ShowManagers, % "ActiveTabOnly"

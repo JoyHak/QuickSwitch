@@ -104,10 +104,10 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
      
-    Gui, Add, Text,         y+10         xp+%MarginH%                             Section,                          only from 
-    Gui, Add, Edit,         ys-4  %updown%      
+    Gui, Add, Text,         y+10         xp+%MarginH%       vListerIndexText0     Section,                          only from 
+    Gui, Add, Edit,         ys-4  %updown%                  vListerIndexText1
     Gui, Add, UpDown,       Range0-999                      vListerIndex,                                           %ListerIndex%
-    Gui, Add, Text,         ys,                                                                                     lister (&Z-order)
+    Gui, Add, Text,         ys                              vListerIndexText2,                                      lister (&Z-order)
     
     Gui, Add, CheckBox,     xs y+8                          vShowAllDesktops      checked%ShowAllDesktops%,         from all &virtual desktops
     Gui, Add, CheckBox,                                     vActivePaneOnly       checked%ActivePaneOnly%,          only &from active pane
@@ -207,6 +207,7 @@ ShowSettings() {
     ToggleIcons()
     ToggleFavorites()
     ToggleShortPath()
+    ToggleManagersTabs()
 
     ; Toggle between mouse and keyboard input mode
     InitMouseMode("Pin",     true)  ; Mouse buttons only
