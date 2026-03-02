@@ -1,6 +1,6 @@
 ScriptName    := "QuickSwitch"
 ;@Ahk2Exe-SetProductName %A_PriorLine~.*"(.*)"~$1%
-ScriptVersion := "1.9.11"
+ScriptVersion := "1.9.12"
 ;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
 ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
 ;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
@@ -112,8 +112,8 @@ Loop {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
             GetPaths(ManagersPaths := []
-                   , ActiveListerOnly, LastListerOnly
-                   , ActivePaneOnly,   ActiveTabOnly, ShowLockedTabs)
+                   , ListerIndex,    ShowAllDesktops
+                   , ActivePaneOnly, ActiveTabOnly, ShowLockedTabs)
         }
         
         OnClipboardChange("GetClipboardPath", ShowClipboard)

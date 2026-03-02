@@ -103,8 +103,13 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
-    Gui, Add, Radio,        y+10         xp+%MarginH%       vActiveListerOnly     checked%ActiveListerOnly%,        only current a&ctive lister
-    Gui, Add, Radio,                                        vLastListerOnly       checked%LastListerOnly%,          only &last active lister
+     
+    Gui, Add, Text,         y+10         xp+%MarginH%                             Section,                          only from 
+    Gui, Add, Edit,         ys-4  %updown%      
+    Gui, Add, UpDown,       Range0-999                      vListerIndex,                                           %ListerIndex%
+    Gui, Add, Text,         ys,                                                                                     lister (&Z-order)
+    
+    Gui, Add, CheckBox,     xs y+8                          vShowAllDesktops      checked%ShowAllDesktops%,         from all &virtual desktops
     Gui, Add, CheckBox,                                     vActivePaneOnly       checked%ActivePaneOnly%,          only &from active pane
     Gui, Add, CheckBox,                                     vActiveTabOnly        checked%ActiveTabOnly%,           only &the active tab
     Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          show lock&ed tabs
@@ -116,9 +121,9 @@ ShowSettings() {
     Gui, Add, Text,         y+13                            vPathSeparatorText,                                     Path &separator
     Gui, Add, Text,         y+13                            vDirsCountText,                                         Number of &dirs displayed
     Gui, Add, Text,         y+13                            vDirNameLengthText,                                     &Length of dir names
-    Gui, Add, Checkbox,     y+%MarginH%                     vShowDriveLetter        checked%ShowDriveLetter%,       Show &drive letter
-    Gui, Add, Checkbox,                                     vShowFirstSeparator     checked%ShowFirstSeparator%,    Show &first separator
-    Gui, Add, Checkbox,                                     vShortenEnd             checked%ShortenEnd%,            Shorten the &end
+    Gui, Add, Checkbox,     y+%MarginH%                     vShowDriveLetter      checked%ShowDriveLetter%,         Show &drive letter
+    Gui, Add, Checkbox,                                     vShowFirstSeparator   checked%ShowFirstSeparator%,      Show &first separator
+    Gui, Add, Checkbox,                                     vShortenEnd           checked%ShortenEnd%,              Shorten the &end
 
     Gui, Add, Edit,         ys-4 %tiny%                     vShortNameIndicator,                                    %ShortNameIndicator%
     Gui, Add, Edit,         y+4  %tiny%                     vPathSeparator,                                         %PathSeparator%
