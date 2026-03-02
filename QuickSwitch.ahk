@@ -1,6 +1,6 @@
 ScriptName    := "QuickSwitch"
 ;@Ahk2Exe-SetProductName %A_PriorLine~.*"(.*)"~$1%
-ScriptVersion := "1.10"
+ScriptVersion := "1.9.11"
 ;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
 ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
 ;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
@@ -111,8 +111,11 @@ Loop {
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
-            GetPaths(ManagersPaths := [], ActivePaneOnly, ActiveTabOnly, ShowLockedTabs)
+            GetPaths(ManagersPaths := []
+                   , ActiveListerOnly, LastListerOnly
+                   , ActivePaneOnly,   ActiveTabOnly, ShowLockedTabs)
         }
+        
         OnClipboardChange("GetClipboardPath", ShowClipboard)
         
         ; Force menu re-creation on first hotkey press
