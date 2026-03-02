@@ -1,13 +1,14 @@
-GetPaths(ByRef paths, _activeListerOnly := false, _lastListerOnly := false, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
+GetPaths(ByRef paths, _listerIndex := 0, _allDesktops := false, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
     
-    _detectHiddenWindows := A_DetectHiddenWindows
-    if (_activeListerOnly || _lastListerOnly) {   
+    if _allDesktops {   
         ; Display all file managers windows from all virtual desktops
+        _detectHiddenWindows := A_DetectHiddenWindows
         DetectHiddenWindows % "On"
-        _classes := {}
     }
+    if _listerIndex
+        _classes := {}
     
     ; Get file managers uniq IDs
     WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"    
@@ -36,15 +37,17 @@ GetPaths(ByRef paths, _activeListerOnly := false, _lastListerOnly := false, _act
         }
 
         try {
-            if _classes.hasKey(_winClass)
-                _classes[_winClass] += 1
-            else
-                _classes[_winClass] := 1
-                
-            if (_activeListerOnly && _classes[_winClass] != 1)
-                continue                
-            else if (_lastListerOnly && _classes[_winClass] != 2)
-                continue
+            if _listerIndex {  
+                ; Skip this lister if it's current Z-order 
+                ; doesn't matches with the required Z-index
+                if _classes.hasKey(_winClass)
+                    _classes[_winClass] += 1
+                else
+                    _classes[_winClass] := 1
+                    
+                if (_listerIndex != _classes[_winClass])
+                    continue 
+            }
                 
             if !(%_winClass%(_winId, paths, _activePaneOnly, _activeTabOnly, _showLockedTabs))
                 AddElevatedName(_winPid)
@@ -58,7 +61,8 @@ GetPaths(ByRef paths, _activeListerOnly := false, _lastListerOnly := false, _act
         }
     }
     
-    DetectHiddenWindows % _detectHiddenWindows
+    if _allDesktops  
+        DetectHiddenWindows % _detectHiddenWindows    
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

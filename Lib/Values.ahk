@@ -65,9 +65,9 @@ SetDefaultValues() {
     SendEnter           :=  false
 
     ActiveListerOnly    :=  false
-    LastListerOnly      :=  false
     ActivePaneOnly      :=  false
     ActiveTabOnly       :=  false
+    ShowAllDesktops     :=  false
     ShowLockedTabs      :=  false    
     
     ShowFavorites       :=  false
@@ -92,6 +92,7 @@ SetDefaultValues() {
     IconsSize     := 25
     MainFontSize  := 10
     MenuFontSize  := 0
+    ListerIndex   :=  0
 
     DirsCount     := 3
     DirNameLength := 20
@@ -158,8 +159,8 @@ WriteValues() {
     AutoSwitchTarget="        AutoSwitchTarget        "
     BlackListProcess="        BlackListProcess        "
     SendEnter="               SendEnter               "
-    ActiveListerOnly="        ActiveListerOnly        "
-    LastListerOnly="          LastListerOnly          "
+    ListerIndex="             ListerIndex             "
+    ShowAllDesktops="         ShowAllDesktops         "
     ActivePaneOnly="          ActivePaneOnly          "
     ActiveTabOnly="           ActiveTabOnly           "
     ShowLockedTabs="          ShowLockedTabs          "
