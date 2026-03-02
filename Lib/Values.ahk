@@ -64,9 +64,12 @@ SetDefaultValues() {
     BlackListProcess    :=  false
     SendEnter           :=  false
 
+    ActiveListerOnly    :=  false
+    LastListerOnly      :=  false
     ActivePaneOnly      :=  false
     ActiveTabOnly       :=  false
-    ShowLockedTabs      :=  false
+    ShowLockedTabs      :=  false    
+    
     ShowFavorites       :=  false
     ShowPinned          :=  false
     ShowClipboard       :=  false
@@ -155,6 +158,8 @@ WriteValues() {
     AutoSwitchTarget="        AutoSwitchTarget        "
     BlackListProcess="        BlackListProcess        "
     SendEnter="               SendEnter               "
+    ActiveListerOnly="        ActiveListerOnly        "
+    LastListerOnly="          LastListerOnly          "
     ActivePaneOnly="          ActivePaneOnly          "
     ActiveTabOnly="           ActiveTabOnly           "
     ShowLockedTabs="          ShowLockedTabs          "

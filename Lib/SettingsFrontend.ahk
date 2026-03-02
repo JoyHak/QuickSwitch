@@ -80,7 +80,7 @@ ShowSettings() {
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX) 
     Gui, Add, Text,         y+12,                                                                                   &Menu font
     Gui, Add, Text,         y+12,                                                                                   &Settings font
-    Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Sho&w icons from
+    Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Show &icons from
 
     Gui, Add, Edit,         ys-4  %short% Limit8            vMenuColor            Section,                          %MenuColor%
     Gui, Add, Edit,         y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
@@ -103,9 +103,11 @@ ShowSettings() {
     Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
-    Gui, Add, CheckBox,     y+10         xp+%MarginH%       vActivePaneOnly       checked%ActivePaneOnly%,          only from &active pane
+    Gui, Add, Radio,        y+10         xp+%MarginH%       vActiveListerOnly     checked%ActiveListerOnly%,        only current a&ctive lister
+    Gui, Add, Radio,                                        vLastListerOnly       checked%LastListerOnly%,          only &last active lister
+    Gui, Add, CheckBox,                                     vActivePaneOnly       checked%ActivePaneOnly%,          only &from active pane
     Gui, Add, CheckBox,                                     vActiveTabOnly        checked%ActiveTabOnly%,           only &the active tab
-    Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          show &locked tabs
+    Gui, Add, CheckBox,                                     vShowLockedTabs       checked%ShowLockedTabs%,          show lock&ed tabs
 
     Gui, Tab, 3 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
