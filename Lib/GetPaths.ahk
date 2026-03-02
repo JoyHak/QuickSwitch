@@ -1,9 +1,16 @@
-GetPaths(ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
+GetPaths(ByRef paths, _activeListerOnly := false, _lastListerOnly := false, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
     ; Requests paths from all applications whose window class
     ; is recognized as a known file manager class (in Z-order).
-
-    ; Get manager uniq IDs
-    WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
+    
+    _detectHiddenWindows := A_DetectHiddenWindows
+    if (_activeListerOnly || _lastListerOnly) {   
+        ; Display all file managers windows from all virtual desktops
+        DetectHiddenWindows % "On"
+        _classes := {}
+    }
+    
+    ; Get file managers uniq IDs
+    WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"    
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
         WinGet, _winPid, % "pid", % "ahk_id " _winId
@@ -29,6 +36,16 @@ GetPaths(ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLo
         }
 
         try {
+            if _classes.hasKey(_winClass)
+                _classes[_winClass] += 1
+            else
+                _classes[_winClass] := 1
+                
+            if (_activeListerOnly && _classes[_winClass] != 1)
+                continue                
+            else if (_lastListerOnly && _classes[_winClass] != 2)
+                continue
+                
             if !(%_winClass%(_winId, paths, _activePaneOnly, _activeTabOnly, _showLockedTabs))
                 AddElevatedName(_winPid)
 
@@ -40,6 +57,8 @@ GetPaths(ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLo
             LogException(_ex)
         }
     }
+    
+    DetectHiddenWindows % _detectHiddenWindows
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
