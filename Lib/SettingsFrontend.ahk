@@ -224,7 +224,7 @@ ShowSettings() {
 ;@Ahk2Exe-IgnoreEnd
     if !_pos {
         WinGetPos, _posX, _posY,,, % "ahk_id " DialogId        
-        if (_posX && _posY)
+        if (_posX != "" && _posY != "")
             _pos := "x" _posX " y" _posY + 100
         else
             _pos := "x0 y100"        
