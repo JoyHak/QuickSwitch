@@ -171,9 +171,19 @@ GetFavoritePaths(ByRef paths) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
     ; Returns the number of added paths.
-    global FavoritesDir
-
+    global FavoritesDir, FromSettings
     _count := 0
+    
+    static time := ""
+    _time := ""
+    try {       
+        FileGetTime, _time, % FavoritesDir, M
+        if (!FromSettings && _time != "" && _time = time)
+            return 0
+    }    
+    time  := _time  
+    paths := []
+
     Loop, files, % FavoritesDir "\*.lnk", R
 	{
         try {
