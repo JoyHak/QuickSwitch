@@ -106,7 +106,7 @@ Loop {
 
         ; Get paths for Menu sections
         if ShowFavorites
-            GetFavoritePaths(FavoritePaths := [])
+            GetFavoritePaths(FavoritePaths)
 
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
