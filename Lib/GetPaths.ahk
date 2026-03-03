@@ -29,8 +29,9 @@ GetPaths(ByRef paths, _activeTabOnly := false, _showLockedTabs := false) {
         }
 
         try {
-            if !(%_winClass%(_winId, paths, _activeTabOnly, _showLockedTabs))
-                AddElevatedName(_winPid)
+            ; Call the appropriate function for this file manager class
+            ; Returns the number of paths added (0 if no unlocked tabs, not an error)
+            %_winClass%(_winId, paths, _activeTabOnly, _showLockedTabs)
 
         } catch _ex {
             ; Assume that the file manager is elevated
