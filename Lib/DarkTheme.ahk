@@ -68,11 +68,11 @@ IsDarkTheme() {
         
         RegRead, _theme,    % reg,                % "CurrentTheme" 
         RegRead, _appLight, % reg "\Personalize", % "AppsUseLightTheme" 
-        RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme" 
-        
-        return !_appLight || !_sysLight || InStr(_theme, "dark|night|gray")
+        ; RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme" 
+
+        return (_appLight = 0)
+            && !(_theme ~= "Ui).*\b(dark|night|gray)\b.*")
     } 
-    
     return false
 }
 
