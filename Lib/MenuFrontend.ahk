@@ -176,21 +176,37 @@ ShowMenu() {
         CreateMenu()  
         _menuId := MenuGetHandle("ContextMenu")
     }
+    
     /*
-    FuPeiJiang: the return value is the menu-item identifier of the item that the user selected. 
+    FuPeiJiang: to fix menu problems, TrackPopupMenuEx() is called directly.
+    The return value is the menu-item identifier of the item that the user selected. 
     If the user cancels the Menu without making a selection, or if an error occurs, the return value is zero.
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenuex
-    */
-    _cmd := DllCall("TrackPopupMenuEx"
-                  , "Ptr", _menuId
-                  , "Uint", 0x100  ; TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD
-                  , "int", _posX, "int", _posY + 100
-                  , "Ptr", A_ScriptHwnd  ; handle to the activated script window that will own the Menu
-                  , "Ptr", 0) 
     
+    Rafaello: to enforce returning from TrackPopupMenuEx() to ShowMenu(), 
+    polling is used using SetTimer() which calls HideMenu(). 
+    If the menu does not respond for a long time and the active window has already changed, 
+    the menu will be hidden automatically.
+    */
+    DllCall("SetTimer"
+        , "Ptr", A_ScriptHwnd, "Ptr", _timerId := 1
+        , "UInt", 1000  ; polling time in milliseconds
+        , "Ptr", RegisterCallback("HideMenu", "F"))
+          
+    _cmd := DllCall("TrackPopupMenuEx"
+        , "Ptr", _menuId
+        , "Uint", 0x100  ; TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD
+        , "int", _posX, "int", _posY + 100
+        , "Ptr", A_ScriptHwnd  ; handle to the activated script window that will own the Menu
+        , "Ptr", 0) 
+    
+    DllCall("KillTimer", "Ptr", A_ScriptHwnd, "Ptr", _timerId)
+
     if (_cmd) { 
         ; Execute menu action (send WM_COMMAND)
-        return DllCall("SendMessageW", "Ptr", A_ScriptHwnd, "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
+        return DllCall("SendMessageW"
+            , "Ptr", A_ScriptHwnd
+            , "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
     }
     
     ; Switch windows focus
@@ -204,3 +220,16 @@ ShowMenu() {
     }
 }
 
+HideMenu(_winId, _wmTimer, _timerId, _tickCount) {
+    ; Menu, % "ContextMenu", % "Enable", % "&AutoSwitch"
+    ; Menu, % "ContextMenu", % "Disable", % "&BlackList"
+    _id := DllCall("GetForegroundWindow", "Ptr")
+    if (_id = _winId)
+        return _winId        
+
+    _newId := SetForegroundWindow(_winId) 
+    if (_newId = _winId)
+        DllCall("KillTimer", "Ptr", _winId, "Ptr", _timerId)
+        
+    return _newId
+}
