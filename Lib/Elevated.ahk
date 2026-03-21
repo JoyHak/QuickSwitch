@@ -26,14 +26,16 @@ LogElevatedNames(_silent := false) {
     _names := ""
     for _pid, _info in ElevatedApps {
         try {
-            if !WinExist("ahk_pid " _pid) {
-                ElevatedApps.delete(_pid)
-                continue
-            }
-
+            _isClosed := !WinExist("ahk_pid " _pid)
+            if _isClosed
+                _info["name"] .= " [closed]"
+            
             if _info["elevated"]
                 _names .= _info["name"] . ", "
-
+                
+            if _isClosed
+                ElevatedApps.delete(_pid)
+            
         } catch _ex {
             LogException(_ex, 1, _silent)
         }
