@@ -21,7 +21,7 @@
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
 <br>Quick help<br>
 <a href="https://github.com/JoyHak/QuickSwitch/discussions/new/choose">
-<img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
+<img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
 <img src="https://img.shields.io/github/issues-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="NewBug"></a>
 </div>
