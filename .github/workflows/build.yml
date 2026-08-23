@@ -1,31 +1,46 @@
-name: Build, Sign and Release
-
+name: Build and Sign
 on: workflow_dispatch
 
 jobs:
   build:
     runs-on: windows-latest
-    
-    steps:
-      - uses: actions/checkout@v3
+    env:
+      destination: '${{ github.workspace }}\bin\unsigned'
+      artifact: 'QuickSwitch'
       
+    steps:
+      - uses: actions/checkout@v7
+      - uses: milliewalky/setup-7-zip@v2
+      - uses: holy-tao/install-autohotkey@v2.1.0
+        with:
+          version: '1.1.37.02'
+          compiler: 'latest'
+          destination: '${{ runner.temp }}'
+    
       - name: Build archives
-        run: ./Utilities/Build.ps1
+        run: |
+          .\Utilities\Build.ps1  `
+            -scriptPath "${{ github.workspace }}\QuickSwitch.ahk" `
+            -outDir "${{ env.destination }}"  `
+            -autoHotkeyDir "${{ runner.temp }}\autohotkey"  `
+            -sevenZip "${{ runner.temp }}\7-Zip\7z.exe"
         shell: pwsh
       
       - name: Upload unsigned artifacts
         id: upload-unsigned-artifact
         uses: actions/upload-artifact@v7
         with:
-          path: ./Releases/*.zip
+          name: '${{ env.artifact }}'
+          path: '${{ env.destination }}\*.zip'
     
-      - name: submit signing request
+      - name: Submit signing request
         uses: signpath/github-action-submit-signing-request@v2
         with:
           api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
           organization-id: 'f97ad3de-7a89-48bd-afaf-462eaec01c1e'
           project-slug: 'QuickSwitch'
+          artifact-configuration-slug: 'nested-archives'
           signing-policy-slug: 'test-signing'
           github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
           wait-for-completion: true
-          output-artifact-directory: './Signed'
+          output-artifact-directory: '${{ github.workspace }}\bin\signed'
