@@ -1,0 +1,31 @@
+name: Build, Sign and Release
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build archives
+        run: ./Utilities/Build.ps1
+        shell: pwsh
+      
+      - name: Upload unsigned artifacts
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: ./Releases/*.zip
+    
+      - name: submit signing request
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+          organization-id: 'f97ad3de-7a89-48bd-afaf-462eaec01c1e'
+          project-slug: 'QuickSwitch'
+          signing-policy-slug: 'test-signing'
+          github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
+          wait-for-completion: true
+          output-artifact-directory: './Signed'
