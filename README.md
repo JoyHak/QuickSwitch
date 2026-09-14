@@ -267,10 +267,9 @@ You can also [disable UAC](https://superuser.com/a/1773044) and use low-level or
 
 ## Compiling	
 
-<a href="https://deepwiki.com/JoyHak/QuickSwitch/11.1-build-system">
-<img src="https://deepwiki.com/badge.svg" alt="Build system"></a>
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/JoyHak/QuickSwitch)
 
-This app is written on  [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey) and cannot be compiled. However, it can be built into a single file using a special script.
+This app is written on [Autohotkey language](https://en.m.wikipedia.org/wiki/AutoHotkey) and cannot be compiled. However, it can be built into a single file using a special script.
 
 <details><summary>Dependencies</summary>
 
