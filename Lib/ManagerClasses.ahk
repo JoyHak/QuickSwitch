@@ -26,9 +26,18 @@ CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly
             if (winId != _win.hwnd)
                 continue
             
-            ; Get current path. 
-            ; System path (e.g. This PC) have an empty `locationURL` property and we must skip it.   
-            _path := _win.locationURL ? [_win.document.folder.self.path, "Explorer.ico"] : false
+            ; Get current path.
+            ; System paths (e.g. This PC) have an empty `locationURL` property and we must skip them.
+            ; Some virtual folders (e.g. This PC on some systems) instead have a non-empty
+            ; pseudo-URL like "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}", so `locationURL` alone
+            ; isn't a reliable check: accessing `.document.folder.self.path` for those throws a
+            ; COM error (0x8000FFFF), which used to abort this whole loop and get logged on every
+            ; poll. Treat that failure the same as an empty `locationURL`: skip just this window.
+            _path := false
+            if _win.locationURL {
+                try
+                    _path := [_win.document.folder.self.path, "Explorer.ico"]
+            }
             
             ; Get active tab           
             if (!_activeIdx && (_title == _win.locationName)) {
