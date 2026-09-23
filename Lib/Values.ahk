@@ -1,14 +1,14 @@
 /*
-Contains all global variables necessary for the application. 
+Contains all global variables necessary for the application.
 Objects are intentionally not used due to their inconsistent behavior on v1.1.
 
-Сontains functions for reading and writing to disk (to the .ini file). 
-"INI" param must be a path to a write-accessible file with UTF-16 LE BOM encoding: 
+Сontains functions for reading and writing to disk (to the .ini file).
+"INI" param must be a path to a write-accessible file with UTF-16 LE BOM encoding:
 https://www.autohotkey.com/docs/v1/lib/IniRead.htm
 
-Contains validators that are responsible for parsing and rolling back incorrect values from settings 
+Contains validators that are responsible for parsing and rolling back incorrect values from settings
 back to values from the INI; disabling certain options when values are empty.
-Validators return a string "paramName=value", which will be written to INI. 
+Validators return a string "paramName=value", which will be written to INI.
 It is not recommended to write values directly via IniWrite as they may be incorrect.
 */
 
@@ -66,8 +66,8 @@ SetDefaultValues() {
     ActivePaneOnly      :=  false
     ActiveTabOnly       :=  false
     ShowAllDesktops     :=  false
-    ShowLockedTabs      :=  false    
-    
+    ShowLockedTabs      :=  false
+
     ShowFavorites       :=  false
     ShowPinned          :=  false
     ShowClipboard       :=  false
@@ -78,14 +78,14 @@ SetDefaultValues() {
     ShowFirstSeparator  :=  false
     IsNewUser           :=  false
     SaveUiPosition      :=  false
-;@Ahk2Exe-IgnoreBegin    
+;@Ahk2Exe-IgnoreBegin
     ShowAfterRestart    :=  false
     ShowUiAfterRestart  :=  false
     ShowOpenDialog      :=  false
     ShowSaveAsDialog    :=  false
-    
+
     SaveLastTab         :=  true
-;@Ahk2Exe-IgnoreEnd    
+;@Ahk2Exe-IgnoreEnd
 
     IconsSize     := 25
     MainFontSize  := 10
@@ -98,7 +98,7 @@ SetDefaultValues() {
     PathSeparator := "\"
     MainFont      := "Tahoma"
     MenuFont      := ""
-    
+
     ShortNameIndicator := ".."
 
     PinMousePlaceholder     := "Right"
@@ -124,8 +124,8 @@ SetDefaultValues() {
 
 ;@Ahk2Exe-IgnoreBegin
     RestartKey   := "^sc1F"
-    RestartWhere := "ahk_exe notepad++.exe" 
-    UiPosX := UiPosY := 0   
+    RestartWhere := "ahk_exe notepad++.exe"
+    UiPosX := UiPosY := 0
 ;@Ahk2Exe-IgnoreEnd
 }
 
@@ -196,7 +196,7 @@ WriteValues() {
     . ValidateDirectory("FavoritesDir",  FavoritesDir,  "ShowFavorites", ShowFavorites)
 
 
-;@Ahk2Exe-IgnoreBegin  
+;@Ahk2Exe-IgnoreBegin
     _values .= "
     (LTrim
     RestartWhere="            RestartWhere            "
@@ -210,7 +210,7 @@ WriteValues() {
     ShowOpenDialog="          ShowOpenDialog          "
     ShowSaveAsDialog="        ShowSaveAsDialog        "
     )"
-    
+
     _values .= "`n"
     . ValidateKey(    "RestartKey",     (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~", "On", "RestartApp")
     . (SaveLastTab ? ("LastTabSettings=" LastTabSettings "`n") : "")
@@ -281,45 +281,45 @@ ExpandVariables(ByRef path) {
 ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef associatedParam := false) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-    Resolves variables in path, filters it, checks if its exists. 
+    Resolves variables in path, filters it, checks if its exists.
     If not, sets `associatedParam` value to 0.
-    Returns 2-line string which depends on path existence: 
+    Returns 2-line string which depends on path existence:
    "paramName=path or config value
     associatedParamName=it's value"
-    
-    Returns an empty string if `paramName` is empty and path doesn't exist.     
+
+    Returns an empty string if `paramName` is empty and path doesn't exist.
     */
     global INI
 
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
-        
+
     ; Filter the path
-    path := Trim(path, " `t\/.")        
+    path := Trim(path, " `t\/.")
     path := StrReplace(path, "/" , "\")
     ExpandVariables(path)
     _path := path
-    
+
     loop, 2 {
         ; Сheck the existence
         if DllCall(IsPath, "str", path) {
-            if _associatedParamName  
+            if _associatedParamName
                _associatedParamName .= "=" associatedParam "`n"
 
             return _paramName "=" path "`n" _associatedParamName
         }
 
-        ; If this is a file or an incorrect directory, slice the path 
+        ; If this is a file or an incorrect directory, slice the path
         if !(_len := InStr(path, "\",, -1))
             break
 
         path := SubStr(path, 1, _len - 1)
     }
-    
+
     if !_paramName
         return ""
-    
+
     ; If path is empty, assume it's intentional and skip this block
     _default := ""
     if path {
@@ -327,12 +327,12 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
         if ((_default != "ERROR") && associatedParam)
             LogError("Directory not found: '" _path "'", _paramName, "Specify the full path to the directory")
     }
-        
+
     if DllCall(IsPath, "str", _default)
-        path := _default 
+        path := _default
     else
         associatedParam := false
-        
+
     if _associatedParamName
        _associatedParamName .= "=" associatedParam "`n"
 
@@ -382,17 +382,17 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
     */
     global INI
     static registeredKeys := {}
-    
+
     try {
         if !_sequence
             return _paramName "=`n"
-        
+
         ; Early return: set state for existing hotkey
         if (!_function && registeredKeys.HasKey(_sequence)) {
             Hotkey, % registeredKeys[_sequence], % _state
             return ""
         }
-        
+
         if (_sequence ~= "i)sc[a-f0-9]+") {
             ; Already converted to Scan Code
             _key := _sequence
@@ -420,9 +420,9 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         }
 
         ; Register new hotkey
-        Hotkey, % _prefix . _key, % _function, % _state        
+        Hotkey, % _prefix . _key, % _function, % _state
         registeredKeys[_sequence] := _prefix . _key
-        
+
         if !_paramName
             return ""
 
@@ -431,7 +431,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         try if (_old && (_old != _key)) {
             Hotkey, % _prefix . _old, % "Off"
             Hotkey, % _old, % "Off"
-            
+
             try registeredKeys.Delete(_old)
         }
 
@@ -452,7 +452,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 ValidateFile(ByRef filePath) {
-;─────────────────────────────────────────────────────────────────────────────    
+;─────────────────────────────────────────────────────────────────────────────
     ; Collects debugging information about the file and attempts to read it.
     _extra := "Cant write data to the file"
 

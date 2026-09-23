@@ -15,7 +15,7 @@ InitTrayMenu() {
     AddTrayItem("&Suspend",      "TraySuspend",         "Suspend.ico")
     AddTrayItem("E&xit",         "TrayExit",            "Close.ico")
 
-    Menu, % "Tray", % "Default", % "&Menu"      
+    Menu, % "Tray", % "Default", % "&Menu"
     Menu, % "Tray", % "Click", 1    ; single click = open the Menu
     Menu, % "Tray", % "NoMainWindow"
 }
@@ -26,10 +26,10 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     If icon path is incorrect, reads it from INI
     */
     global INI
-    
-    icon := Trim(icon, " `t\/.")        
-    icon := StrReplace(icon, "/" , "\")  
-    
+
+    icon := Trim(icon, " `t\/.")
+    icon := StrReplace(icon, "/" , "\")
+
     if !icon {
         Menu, % "Tray", % "Icon", *
         return _paramName "=`n"
@@ -53,7 +53,7 @@ ValidateTrayIcon(_paramName, ByRef icon) {
 
 AddTrayItem(_title, _function, _icon, _options := "") {
     global ShowIcons, IconsDir, IconsSize
-    
+
     Menu, % "Tray", % "Add", % _title, % _function, % _options
 
     if ShowIcons {

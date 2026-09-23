@@ -18,15 +18,15 @@ ResetSettings() {
     InitMenuFont()
     ShowSettings()
 }
-    
+
 SaveSettings() {
     ; Write current GUI (global) values
-    
-;@Ahk2Exe-IgnoreBegin  
-    global SaveUiPosition, SettingsId, UiPosX, UiPosY 
+
+;@Ahk2Exe-IgnoreBegin
+    global SaveUiPosition, SettingsId, UiPosX, UiPosY
     if SaveUiPosition
         try WinGetPos, UiPosX, UiPosY,,, % "ahk_id " SettingsId
-;@Ahk2Exe-IgnoreEnd    
+;@Ahk2Exe-IgnoreEnd
     Gui, Submit
 
     DeleteSections()
@@ -41,7 +41,7 @@ SaveSettings() {
     InitMenuFont()
 }
 
-;@Ahk2Exe-IgnoreBegin 
+;@Ahk2Exe-IgnoreBegin
 RestartApp() {
     global RestartWhere, ShowUiAfterRestart
 
@@ -224,8 +224,8 @@ ToggleManagersTabs() {
     GuiControl,  % "Enable" ShowManagers, % "ListerIndex"
     GuiControl,  % "Enable" ShowManagers, % "ListerIndexText0"
     GuiControl,  % "Enable" ShowManagers, % "ListerIndexText1"
-    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText2"    
-    
+    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText2"
+
     GuiControl,  % "Enable" ShowManagers, % "ShowAllDesktops"
     GuiControl,  % "Enable" ShowManagers, % "ActivePaneOnly"
     GuiControl,  % "Enable" ShowManagers, % "ActiveTabOnly"
