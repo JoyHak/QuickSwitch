@@ -3,6 +3,7 @@ ScriptName    := "QuickSwitch"
 ScriptVersion := "1.9.17"
 ;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
 ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
+IssueTracker  := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 ;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
 ;@Ahk2Exe-SetMainIcon Icons\QuickSwitch.ico
 ;@Ahk2Exe-SetCopyright Rafaello
@@ -29,6 +30,7 @@ INI        := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini
 ErrorsLog  := "Errors.log"          ; file for error dumps and tracing
 
 #Include <Log>
+#Include <Tray>
 #Include <Debug>
 #Include <Values>
 #Include <FileDialogs>
@@ -59,9 +61,7 @@ if IsFile(INI) {
     WriteValues()
 }
 
-ValidateTrayIcon("MainIcon",    MainIcon)
 InitTrayMenu()
-
 ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 

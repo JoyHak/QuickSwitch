@@ -5,13 +5,6 @@ and displays their values as checkboxes, options, etc.
 All values are saved to the INI only after clicking OK
 */
 
-UiEnforcedPosition := false
-EnforceShowSettings() {
-    ; Enforces settings display. Used by Tray menu.
-    global UiEnforcedPosition := true
-    ShowSettings()
-}
-
 ShowSettings() {
     global
     FromSettings := true
@@ -226,8 +219,8 @@ ShowSettings() {
         , _posX := ""
         , _posY := ""
            
-    if (UiEnforcedPosition && !SaveUiPosition) {
-        UiEnforcedPosition := false
+    if (IsEnforcedUi && !SaveUiPosition) {
+        IsEnforcedUi := false
         
         ; Show window contents above the cursor.
         ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
