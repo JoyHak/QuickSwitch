@@ -292,11 +292,19 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
         
-    ; Filter the path
-    path := Trim(path, " `t\/.")        
+    ; Filter the path without trimming the leading UNC separator.
+    path := Trim(path, " `t.")
     path := StrReplace(path, "/" , "\")
     ExpandVariables(path)
-    _path := path
+
+    path := (SubStr(path, 1, 2) = "\\") 
+          ? RTrim(path, "\") 
+          : Trim(path, "\")
+
+    ; Resolve relative paths against the current app directory.
+    if (path != "" && path != "."
+    && !(path ~= "i)^([A-Z]:)?\\"))
+        path := A_ScriptDir "\" path
     
     loop, 2 {
         ; Сheck the existence
