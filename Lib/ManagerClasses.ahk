@@ -155,7 +155,6 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabO
             return 1
     }
     
-    paths[_length].tip := "Active tab"
     return paths.length() - _length + 1
 }
 

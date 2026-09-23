@@ -34,8 +34,6 @@ DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
 
-RegisteredKeys := {}
-
 SetDefaultValues() {
     /*
     Sets defaults without overwriting existing INI.
@@ -409,19 +407,20 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
     Converts `sequence` to scancodes or internal mouse buttons.
     Replaces modifier names to standard modifiers symbols:  ! ^ + #
 
-    If converted, returns "paramName=key", creates a new key in `RegisteredKeys`.
-    Disables old key bound to `function` (if any) and removes it from `RegisteredKeys`.
+    If converted, returns "paramName=key", creates a new key in `registeredKeys`.
+    Disables old key bound to `function` (if any) and removes it from `registeredKeys`.
     If key is incorrect, reads it from INI
     */
-    global INI, RegisteredKeys
-
+    global INI
+    static registeredKeys := {}
+    
     try {
         if !_sequence
             return _paramName "=`n"
         
         ; Early return: set state for existing hotkey
-        if (!_function && RegisteredKeys.HasKey(_sequence)) {
-            Hotkey, % RegisteredKeys[_sequence], % _state
+        if (!_function && registeredKeys.HasKey(_sequence)) {
+            Hotkey, % registeredKeys[_sequence], % _state
             return ""
         }
         
@@ -453,7 +452,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 
         ; Register new hotkey
         Hotkey, % _prefix . _key, % _function, % _state        
-        RegisteredKeys[_sequence] := _prefix . _key
+        registeredKeys[_sequence] := _prefix . _key
         
         if !_paramName
             return ""
@@ -464,7 +463,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             Hotkey, % _prefix . _old, % "Off"
             Hotkey, % _old, % "Off"
             
-            try RegisteredKeys.Delete(_old)
+            try registeredKeys.Delete(_old)
         }
 
         return _paramName "=" _key "`n"
