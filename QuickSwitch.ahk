@@ -60,6 +60,8 @@ if IsFile(INI) {
 }
 
 ValidateTrayIcon("MainIcon",    MainIcon)
+InitTrayMenu()
+
 ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
 ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 
@@ -73,7 +75,7 @@ ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 if ShowUiAfterRestart
     ShowSettings()
 if ShowAfterRestart 
-    GoSub ^#+0
+    EnforceShowMenu()
 ;@Ahk2Exe-IgnoreEnd
 
 Loop {
@@ -199,14 +201,5 @@ ExitApp
     }
 ;@Ahk2Exe-IgnoreEnd
 ^#+0::
-    ForegroundId := DllCall("GetForegroundWindow", "Ptr")
-    
-    if (ForegroundId != DialogId
-     && ForegroundId != A_ScriptHwnd) {
-        DialogId := ForegroundId    
-        IsDialogClosed := true
-    }
-    
-    CreateMenu()
-    ShowMenu()
+    EnforceShowMenu()
 return

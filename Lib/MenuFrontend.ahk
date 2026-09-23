@@ -148,7 +148,7 @@ CreateMenu() {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ShowMenu() {
+ShowMenu(_posX := "", _posY := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
     Rafaello: to prevent the Menu from stuck on the screen (issue #88), 
@@ -161,8 +161,12 @@ ShowMenu() {
     https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
     To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
     */
-    global DialogId    
-    WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+    global DialogId
+    
+    if (_posX = "" || _posY = "") {
+        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+        _posY += 100  ; position just below the dialog title
+    }
     if (_posX = "" || _posY = "") {
         ; Unable to get position
         return false
@@ -196,7 +200,7 @@ ShowMenu() {
     _cmd := DllCall("TrackPopupMenuEx"
         , "Ptr", _menuId
         , "Uint", 0x100  ; TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD
-        , "int", _posX, "int", _posY + 100
+        , "int", _posX, "int", _posY
         , "Ptr", A_ScriptHwnd  ; handle to the activated script window that will own the Menu
         , "Ptr", 0) 
     
@@ -218,6 +222,24 @@ ShowMenu() {
         ; Activate file dialog again
         SetForegroundWindow(DialogId)   
     }
+}
+
+EnforceShowMenu() {
+    ; Enforces menu display. Used by Tray menu and special global shortcut.
+    global DialogId, IsDialogClosed
+    
+    CoordMode, % "Mouse", % "Screen"
+    MouseGetPos, _mouseX, _mouseY
+    
+    _foreId := DllCall("GetForegroundWindow", "Ptr")
+    if (_foreId != DialogId
+     && _foreId != A_ScriptHwnd) {
+        DialogId := _foreId    
+        IsDialogClosed := true
+    }
+    
+    CreateMenu()
+    ShowMenu(_mouseX, _mouseY)
 }
 
 HideMenu(_winId, _wmTimer, _timerId, _tickCount) {

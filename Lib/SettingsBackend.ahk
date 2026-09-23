@@ -1,6 +1,29 @@
 ; These functions are responsible for the GUI Settings functionality and its Controls
 ; Also contains additional out-of-category functions needed for the app
 
+InitTrayMenu() {
+    Menu, % "Tray", % "NoStandard"
+    Menu, % "Tray", % "Add", % "&Settings", % "ShowSettings"
+    Menu, % "Tray", % "Add", % "&Menu", % "EnforceShowMenu"
+    Menu, % "Tray", % "Add"
+    Menu, % "Tray", % "Add", % "&Restart", % "TrayRestart"
+    Menu, % "Tray", % "Add", % "&Pause", % "TraySuspend"
+    Menu, % "Tray", % "Add", % "&Exit", % "TrayExit"
+    Menu, % "Tray", % "Default", % "&Settings"
+}
+
+TrayRestart() {
+    Reload
+}
+
+TraySuspend() {
+    Suspend
+}
+
+TrayExit() {
+    ExitApp
+}
+
 ResetSettings() {
     ; Show "Nuke" button once after pressing "Reset" button
     if (A_GuiControl = "&Reset")
