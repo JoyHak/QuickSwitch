@@ -103,6 +103,7 @@ SetDefaultValues() {
 
     PinMousePlaceholder     := "Right"
     MainMousePlaceholder    := ""
+    EnforceMousePlaceholder := "Ctrl+Shift+Win+0"
     RestartMousePlaceholder := ""
 
     AutoSwitch       := false
@@ -112,16 +113,16 @@ SetDefaultValues() {
     ; Requires validation
     PinKey       := "RButton"
     MainKey      := "^sc10"
+    EnforceKey   := "^#+0"
     RestartKey   := ""
     IconsDir     := "Icons"
     FavoritesDir := "Favorites"
-    MainIcon     := ""
+    MainIcon     := IconsDir "\QuickSwitch.ico"
     MenuColor    := ""
     GuiColor     := ""
     SetDefaultColors()
 
 ;@Ahk2Exe-IgnoreBegin
-    MainIcon     := IconsDir "\QuickSwitch.ico"
     RestartKey   := "^sc1F"
     RestartWhere := "ahk_exe notepad++.exe" 
     UiPosX := UiPosY := 0   
@@ -181,11 +182,13 @@ WriteValues() {
     ShortNameIndicator="      ShortNameIndicator      "
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
+    EnforceMousePlaceholder=" EnforceMousePlaceholder "
     )"
 
     _values .= "`n"
-    . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),     "",   "Off", "Dummy")  ; Init and dont use this key
-    . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),    "",   "Off", "ShowMenu")
+    . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),      "",  "Off",  "Dummy")  ; Init and dont use this key
+    . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),     "",  "Off",  "ShowMenu")
+    . ValidateKey(      "EnforceKey",    (EnforceMousePlaceholder ? EnforceMousePlaceholder : EnforceKey),  "",  "On",   "EnforceShowMenu")
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
@@ -209,7 +212,7 @@ WriteValues() {
     )"
     
     _values .= "`n"
-    . ValidateKey(    "RestartKey",     (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~",  "On",  "RestartApp")
+    . ValidateKey(    "RestartKey",     (RestartMousePlaceholder ? RestartMousePlaceholder : RestartKey), "~", "On", "RestartApp")
     . (SaveLastTab ? ("LastTabSettings=" LastTabSettings "`n") : "")
 ;@Ahk2Exe-IgnoreEnd
 

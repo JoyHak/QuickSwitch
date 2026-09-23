@@ -46,20 +46,15 @@ InitMouseMode(_type := "Main", _toggle := false) {
 ;
 TogglePinMouse(_control := 0) {
 ;─────────────────────────────────────────────────────────────────────────────
-    global MainMousePlaceholder, RestartMousePlaceholder
     static toggle := false
     toggle := !toggle
 
     ; Hide controls below to select mouse key from listbox
     GuiControl, % "Hide" toggle, % "MainKey"
     GuiControl, % "Hide" toggle, % "MainMousePlaceholder"
-;@Ahk2Exe-IgnoreBegin
-    GuiControl, % "Hide" toggle, % "RestartKey"
-    GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
-;@Ahk2Exe-IgnoreEnd
-/*@Ahk2Exe-Keep
-    GuiControl, % "Hide" toggle, % "MainIcon"
-*/    
+    GuiControl, % "Hide" toggle, % "EnforceKey"
+    GuiControl, % "Hide" toggle, % "EnforceMousePlaceholder"
+  
     GuiControl, % "Show" toggle, % "PinMouseListbox"
 }
 
@@ -76,13 +71,18 @@ ToggleMainMouse(_control := 0) {
     ; Set button caption
     GuiControl,, % "MainMouseButton", % (toggle ? "keybd" : "mouse")
 
-    ; Hide control below to select mouse key from listbox  
-;@Ahk2Exe-IgnoreBegin    
+    ; Hide control below to select mouse key from listbox 
+    GuiControl, % "Hide" toggle, % "EnforceKey"
+    GuiControl, % "Hide" toggle, % "EnforceMousePlaceholder"
+;@Ahk2Exe-IgnoreBegin
     GuiControl, % "Hide" toggle, % "RestartKey"
     GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
 ;@Ahk2Exe-IgnoreEnd
-    GuiControl, % "Hide" toggle, % "MainIcon"
-    
+/*@Ahk2Exe-Keep
+    GuiControl, % "Hide" toggle, % "MainIcon"    
+*/
+
+
     if !toggle
         return InitKeybdMode("Main")
 
@@ -90,6 +90,35 @@ ToggleMainMouse(_control := 0) {
     GuiControl, % "Show" toggle, % "MainMousePlaceholder"
     GuiControl, % "Show" toggle, % "MainMouseListbox"
     GuiControl, % "Hide" toggle, % "MainKey" ; Hotkey control
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+ToggleEnforceMouse(_control := 0) {
+;─────────────────────────────────────────────────────────────────────────────
+    static toggle := false
+
+    ; Toggle mouse input controls and set button caption
+    toggle := !toggle
+    InitMouseMode("Enforce", toggle)
+
+    ; Set button caption
+    GuiControl,, % "EnforceMouseButton", % (toggle ? "keybd" : "mouse")
+
+    ; Hide control below to select mouse key from listbox
+;@Ahk2Exe-IgnoreBegin    
+    GuiControl, % "Hide" toggle, % "RestartKey"
+    GuiControl, % "Hide" toggle, % "RestartMousePlaceholder"
+;@Ahk2Exe-IgnoreEnd
+    GuiControl, % "Hide" toggle, % "MainIcon"
+    
+    if !toggle
+        return InitKeybdMode("Enforce")
+
+    ; Set visibility
+    GuiControl, % "Show" toggle, % "EnforceMousePlaceholder"
+    GuiControl, % "Show" toggle, % "EnforceMouseListbox"
+    GuiControl, % "Hide" toggle, % "EnforceKey" ; Hotkey control
 }
 
 ;@Ahk2Exe-IgnoreBegin
@@ -147,7 +176,7 @@ GetMouseList(_action, _sequence := "") {
     static buttonsList  := "Middle|Backward|Forward|Right"
     static specialList  := "Tab|Capslock|LWin|Space"
     
-    static mouseList    := buttonsList "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward"
+    static mouseList    := buttonsList "|Ctrl+Left|Ctrl+Right|Ctrl+Middle|Ctrl+Backward|Ctrl+Forward|Shift+Left|Shift+Right|Shift+Middle|Shift+Backward|Shift+Forward|Win+Left|Win+Right|Win+Middle|Win+Backward|Win+Forward|Alt+Left|Alt+Right|Alt+Middle|Alt+Backward|Alt+Forward|Ctrl+Shift+Win+0"
    
     switch (_action) {  
         case "pinList":
