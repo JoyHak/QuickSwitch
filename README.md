@@ -1,6 +1,16 @@
 <div align="center">    
 <a href="#installation">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a>
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a><br>
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
+<a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
+<img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
+<a href="https://push.chocolatey.org/packages/quickswitch">
+<img src="https://img.shields.io/chocolatey/v/quickswitch?style=for-the-badge" alt="Chocolatey"></a>
+<br><br>Quick help<br>
+<a href="https://github.com/JoyHak/QuickSwitch/discussions/new/choose">
+<img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
+<a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
+<img src="https://img.shields.io/github/issues-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="NewBug"></a>
 <br>Forum threads<br>
 <a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/AutoHotkey.svg" alt="AutoHotkey"></a>
@@ -12,18 +22,7 @@
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/DirectoryOpus.svg" alt="DirectoryOpus"></a>
 <a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
 <img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=ff8000&color=6c4028" alt="Everything"></a>
-<br>Installation sources<br>
-<a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
-<img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
-<a href="https://push.chocolatey.org/packages/quickswitch">
-<img src="https://img.shields.io/chocolatey/v/quickswitch?style=for-the-badge" alt="Chocolatey"></a>
-<a href="#installation">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
-<br>Quick help<br>
-<a href="https://github.com/JoyHak/QuickSwitch/discussions/new/choose">
-<img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
-<a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
-<img src="https://img.shields.io/github/issues-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="NewBug"></a>
+<br><br>Translations: <a href="https://github.com/xsnowfoxcode/QuickSwitch/blob/main/README.zh-CN.md">项目简介</a> 
 </div>
 
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
@@ -42,6 +41,7 @@ And of course you can customize the Menu:<br>
 Now you can install QuickSwitch or [explore](#appearance) advanced customization options!
 
 ## Installation
+
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
 <img src="https://img.shields.io/github/v/release/JoyHak/QuickSwitch?display_name=tag&style=flat" alt="Release"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
@@ -49,6 +49,7 @@ Now you can install QuickSwitch or [explore](#appearance) advanced customization
 <br><br>
 
 You can install and upgrade QuickSwitch automatically through package manager or [download it manually](#manual-installation).
+
 ```ahk
 winget install JoyHak.QuickSwitch
 ```
@@ -92,6 +93,7 @@ choco uninstall quickswitch
 After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter` to launch installed package.
 
 ### Manual installation
+
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
 2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps to update the app. The `.ini` configuration will never be replaced. 
 3. Run `QuickSwitch.exe`. Open some tabs in a supported file manager or create `.lnk` files in `.\Favorites`.
@@ -102,7 +104,9 @@ After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter
 ![installation video](Images/installation.avif)
 
 ## Appearance
+
 ### Short path
+
 Any path can shortened to a specified number of directories with limited name length. For example, enter number `2` in the `Number of dirs` field on the `ShortPath` tab. If the path to the menu will contain more than 2 directories (`C:\Windows\System32\Resources`), it will be shortened to 2 directories: `System32\Resources`
 
 > [!NOTE]
@@ -123,15 +127,17 @@ W̲indows\System32 – press `W` to activate this path.
 .̲.̲Windows – press `.` to activate this path.
 
 ~̲Windows – press `~` to activate this path.
- 
+
 </details>
 
 The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underlined in your Menu.
 
 #### Menu sections
+
 In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab.
 <a name="pinned"></a>
-<details><summary>Pinned paths (that are always visible)</summary> 
+
+<details><summary>Pinned paths (that are always visible)</summary>
 
 If you want some paths to appear permanently in the Menu, you can pin them. To do this, enable the `Settings > Theme > Show pinned paths`  option and select a key or mouse button at  `Settings > App > Pin path...`. Close the settings and open the Menu. Hold down the selected key and left click on any path. Now it is pinned and it will be stored in the configuration. You will see this path on every restart. 
 
@@ -141,7 +147,7 @@ If you want to see the duplicate paths disable the `Settings > Menu > Delete dup
 
 </details>
 <a name="clipboard"></a>
-<details><summary>Paths from clipboard (temporary, for a single file dialog)</summary> 
+<details><summary>Paths from clipboard (temporary, for a single file dialog)</summary>
 
 You can copy any file or directory path (or any [variable](#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
 
@@ -156,7 +162,7 @@ The option works in the background and analyzes the clipboard for the presence o
 Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > Show file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
 
 </details>
-<details><summary>Favorite paths (with customizable icons and names)</summary>  
+<details><summary>Favorite paths (with customizable icons and names)</summary>
 
 <a name="favorites"></a>
 
@@ -167,6 +173,7 @@ Press `Enter` and open specified directory. [Create .lnk shortcut](https://www.t
 <img width="1920" height="1920" alt="properties" src="https://github.com/user-attachments/assets/ec65e78b-26cb-4989-a71b-a14c6ea964bf" />
 
 You will see editable fields that will directly affect the display of the shortcut in QuickSwitch:
+
 - Target
 - Start in (working dir.)
 - Comment
@@ -193,6 +200,7 @@ You can hide some shortcuts by changing or removing their extension. If there ar
 </details>
 
 #### Variables
+
 In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch\Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
 
 <details><summary>Examples</summary>
@@ -202,26 +210,29 @@ Icons
 %AppData%\Icons
 %A_ScriptDir%\Icons
 ```
+
 ```rust
 %SYSTEM_PATH%\%IconsDir%\SubDir
-```  
+```
+
 ```ruby
 C:\%IconsDir%
 ```
 
  If you have enabled the `Settings > Theme > Show paths from clipboard`, all copied variables will also be expanded. For example, if you have [Cmder](https://github.com/cmderdev/cmder) or [ConEmu](https://github.com/Maximus5/ConEmu) installed you can copy the `%ConEmuDir%` text to always see the path `C:\Users\...\cmder\vendor\conemu-maximus5` in the Menu. For permanent use you can pin this path and it will be visible in the menu always (enable `Settings > Theme > Show pinned paths`).
- 
- <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/80ea3b3d-9eec-4629-aa64-38b35a28ab92" />
 
+<img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/80ea3b3d-9eec-4629-aa64-38b35a28ab92" />
 
 </details>
 
 ## Keyboard
+
 Each option and button in the settings has a corresponding key.
 Take a closer look: each name has an u̲n̲d̲e̲r̲l̲i̲n̲e̲d̲ l̲e̲t̲t̲e̲r̲. Press this letter on the keyboard to jump to the option. For example:
  _C̲ancel_ – `C`; _Path s̲eparator_  – `S`.
 
 Here is a short list of the main keys:
+
 - Path: `0-9`.
 - Auto switch: `A`
 - Black list: `B`
@@ -244,12 +255,13 @@ Open any file manager and press this shortcut. If you have tabs open in one file
 Another example: open Notepad++ and press this shortcut. Select any path from the Menu. Notepad++ will open all files from that path.
 
 </details>
-  
+
 The menu will display the **paths obtained after the last opening of the file dialog** and will not change them until the next opening. The menu will be empty the first time it is opened. [Pin and save your favorite paths](#menu-sections) so you can always see them. 
 
 ## Limitations
 
 To ensure that the correct current paths always appear in the menu:
+
 - Disable localized folder names *(e.g. C:\Users, C:\Användare, ...).*                       
 - Periodically open the file manager you need *(a big number of windows makes it difficult to find the last open manager).*
 - Do not keep virtual folders open *(e.g. coll://, Desktop, Rapid Access, ...).*
@@ -263,9 +275,10 @@ QuickSwitch is written in AutoHotkey, which uses WinAPI. It sends messages to ot
 > User Interface Privilege Isolation (UIPI) implements restrictions in the Windows subsystem that prevent lower-privilege applications from sending messages or installing hooks in higher-privilege processes. Higher-privilege applications are permitted to send messages to lower-privilege processes. UIPI doesn't interfere with or change the behavior of messages between applications at the same privilege (or integrity) level.
 
 You can also [disable UAC](https://superuser.com/a/1773044) and use low-level or powerful antivirus _(Crowdstrike, Eset Endpoint Security)_ for full control over running applications. Modern viruses [does not require admin privileges](https://security.stackexchange.com/a/183149) to interact with the system. However, they can obtain admin rights by [exploiting Windows vulnerability](https://community.spiceworks.com/t/how-does-malware-actually-gain-admin-access-to-a-pc-without-av/329471).
+
 </details>
 
-## Compiling	
+## Compiling
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/JoyHak/QuickSwitch)
 
@@ -274,11 +287,12 @@ This app is written on [Autohotkey language](https://en.m.wikipedia.org/wiki/Aut
 <details><summary>Dependencies</summary>
 
 Required applications:
+
 - `Autohotkey` interpreter (v1.1.37.02 Unicode and v2.0.19): https://www.autohotkey.com/download
 - `Ahk2Exe` builder to create EXE from AHK. It's included in AHK installer: `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe`</br>
-    - Can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
-    - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
-    *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
+  - Can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
+  - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
+      *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
 
 > Autohotkey v1.1.37.02 is an **outdated version.** If you want to start learning this language, learn `v2.0.19+`. QuickSwitch needs to be updated from `v1` to `v2`! 
 
@@ -293,6 +307,7 @@ To build the application, clone or [download this repository](https://github.com
 
 You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8...ahk`. After completing the configuration process, run the `Build.ahk`.
 Directives allow the user to specify how app should be builded by [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
+
 - Ability to change the version information (such as the name, description, version...).
 - Ability to add resources to the compiled script.
 - Ability to tweak several miscellaneous aspects of compilation.
@@ -318,5 +333,11 @@ After the release, [Arsiendle](https://github.com/Arsiendle) sent a detailed rep
 
 I also posted a message on the AutoHotkey discord server asking for help in fixing an ancient bug that caused the Menu to stuck on the screen, which has been known since 2007. [FuPeiJiang](https://github.com/FuPeiJiang) responded and helped resolve many issues with Menu. He helped make the main Menu stable and predictable.
 
+After [1.9](https://github.com/JoyHak/QuickSwitch/releases/tag/1.9) QuickSwitch project supports Simplified Chinese localization, provided by [xsnowfoxcode](https://github.com/xsnowfoxcode). If you want to open pull requests in Chinese, feel free to contribute to his fork!
 
+## License
 
+This project is licensed under the GNU General Public License v3.0 License.
+
+- [GPL-3.0 (English)](LICENSE)
+- [GPL-3.0 (中文)](LICENSE.zh-CN.md)
