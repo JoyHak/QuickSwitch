@@ -62,8 +62,9 @@ if IsFile(INI) {
 }
 
 InitTrayMenu()
-ValidateKey(     "PinKey",      PinKey,      "",   "Off",  "Dummy")  ; Init and dont use this key
-ValidateKey(     "MainKey",     MainKey,     "",   "Off",  "ShowMenu")
+ValidateKey("PinKey",      PinKey,      "",   "Off",  "Dummy")
+ValidateKey("MainKey",     MainKey,     "",   "Off",  "ShowMenu")
+ValidateKey("EnforceKey",  EnforceKey,  "",   "On",   "EnforceShowMenu")
 
 InitAutoStartup()
 InitDarkTheme()
@@ -71,7 +72,7 @@ InitSections("All")
 InitWelcomeMessage()
 
 ;@Ahk2Exe-IgnoreBegin
-ValidateKey(     "RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
+ValidateKey("RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 if ShowUiAfterRestart
     ShowSettings()
 if ShowAfterRestart 
@@ -199,7 +200,6 @@ ExitApp
         SendEvent ^!s  
         return     
     }
-;@Ahk2Exe-IgnoreEnd
-^#+0::
     EnforceShowMenu()
 return
+;@Ahk2Exe-IgnoreEnd

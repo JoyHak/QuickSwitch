@@ -138,7 +138,8 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vAutoStartup          checked%AutoStartup%,             Launch at &system startup
 
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Pin path (hold && click)
-    Gui, Add, Text,         y+%MarginH%,                                                                            &Show menu by
+    Gui, Add, Text,,                                                                                                &Show menu in dialog
+    Gui, Add, Text,,                                                                                                Show menu every&where
     /*
     Keyboard input or selecting mouse keys is performed by 4 elements:
     - Hotkey: allows to input keyboard shortcut.
@@ -158,6 +159,11 @@ ShowSettings() {
     Gui, Add, Edit,      xp yp    %short%    ReadOnly       vMainMousePlaceholder,                                % MainMousePlaceholder
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vMainMouseListBox,                                    % GetMouseList("mouseList")
     Gui, Add, Button,    hs   ys           gToggleMainMouse vMainMouseButton,                                       mouse
+
+    Gui, Add, Hotkey,    xs y+8   %short%                   vEnforceKey           Section,                        % EnforceKey
+    Gui, Add, Edit,      xp yp    %short%    ReadOnly       vEnforceMousePlaceholder,                             % EnforceMousePlaceholder
+    Gui, Add, ListBox,            %listbox%  gGetMouseKey   vEnforceMouseListBox,                                 % GetMouseList("mouseList")
+    Gui, Add, Button,    hs   ys        gToggleEnforceMouse vEnforceMouseButton,                                    mouse
 
 ;@Ahk2Exe-IgnoreBegin
     Gui, Add, Hotkey,    xs y+8   %short%                   vRestartKey           Section,                        % RestartKey
@@ -212,7 +218,7 @@ ShowSettings() {
     ; Toggle between mouse and keyboard input mode
     InitMouseMode("Pin",     true)  ; Mouse buttons only
     InitMouseMode("Main",    MainMousePlaceholder    != "")
-    InitMouseMode("Restart", RestartMousePlaceholder != "")
+    InitMouseMode("Enforce", EnforceMousePlaceholder != "")
 
     ; Set settings window position
     local _pos  := ""
@@ -251,6 +257,8 @@ ShowSettings() {
     }
         
 ;@Ahk2Exe-IgnoreBegin
+    InitMouseMode("Restart", RestartMousePlaceholder != "")
+
     ; This option should override any enforced coordinates
     if SaveUiPosition && UiPosX && UiPosY       
         _pos := "x" UiPosX " y" UiPosY
