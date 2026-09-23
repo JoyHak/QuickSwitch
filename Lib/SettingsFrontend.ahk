@@ -230,7 +230,7 @@ ShowSettings() {
         
         ; Show window contents above the cursor.
         ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
-        ; Show in the bottom right corner if the window part would be not visible (overflow)
+        ; Show near the screen edge if the window part would be not visible (overflow)
         CoordMode, % "Mouse", % "Screen"
         MouseGetPos, MouseX, MouseY
         GuiControlGet, Bottom, pos, ResetButton
@@ -242,15 +242,19 @@ ShowSettings() {
         local _height    := BottomY * scaleY    ; contents height (without buttons and title height)
         
         if (MouseX + _widthHalf > A_ScreenWidth) {
-            _posX := A_ScreenWidth - _widthHalf * 2
+            _posX := A_ScreenWidth - _widthHalf * 2     ; right edge
+        } else if (MouseX - _widthHalf < 0) {
+            _posX := 0                                  ; left edge
         } else {
-            _posX := MouseX - _widthHalf
+            _posX := MouseX - _widthHalf                ; cursor in the window center (X axis)
         }
             
         if (MouseY - _height > A_ScreenHeight) {
-            _posY := A_ScreenHeight - _height * 1.2
+            _posY := A_ScreenHeight - _height * 1.2     ; bottom edge
+        } else if (MouseY - _height < 0) {
+            _posY := 0                                  ; top edge
         } else {
-            _posY := MouseY - _height
+            _posY := MouseY - _height                   ; cursor above buttons
         }
         
         _pos := "x" _posX " y" _posY
