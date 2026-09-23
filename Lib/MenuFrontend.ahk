@@ -33,13 +33,13 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
 
         _what  := "icon"
         _extra := "`n" _ex.Message " (" _icon ") [" _title "]"
-                
+
         _msg := "Wrong icon path: '" _ex.Extra "'. "
         if !FileExist(IconsDir)
             _msg .= "Make sure the icon directory exists."
         else if !FileExist(_icon)
             _msg .= "Make sure the icon file exists."
-            
+
         return LogError(_msg, _what, _extra)
     }
 }
@@ -104,7 +104,7 @@ CreateMenu() {
 ;─────────────────────────────────────────────────────────────────────────────
     global
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
-    
+
     MenuStack := []
     MenuStack.Push(PinnedPaths*)
     MenuStack.Push(FavoritePaths*)
@@ -116,7 +116,7 @@ CreateMenu() {
              AddMenuTitle("Hold " PinKey " and click on any path to pin it")
         if (ShowFavorites && !FavoritePaths.length())
              AddMenuTitle("Create .lnk in '" FavoritesDir "' dir to make it favorite")
-    
+
         if DeleteDuplicates
             MenuStack := GetUniqPaths(MenuStack)
 
@@ -125,20 +125,20 @@ CreateMenu() {
         AddMenuOptions()
     } else {
         AddMenuTitle("No available paths")
-        
-        if LogElevatedNames() {            
+
+        if LogElevatedNames() {
             AddMenuTitle("Restart as admin")
         } else if ShowManagers {
             local _winIdList := ""
             WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"
             if _winIdList {
                 AddMenuTitle("Close locked tabs")
-                AddMenuTitle("Close special tabs like 'This PC'")                
-            } else {                
+                AddMenuTitle("Close special tabs like 'This PC'")
+            } else {
                 AddMenuTitle("Open any file manager first")
             }
         }
-        
+
         AddMenuOption("Settings", "ShowSettings")
     }
 
@@ -151,18 +151,18 @@ CreateMenu() {
 ShowMenu(_posX := "", _posY := "") {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
-    Rafaello: to prevent the Menu from stuck on the screen (issue #88), 
+    Rafaello: to prevent the Menu from stuck on the screen (issue #88),
     we must first activate the hidden (main) script window by its handle (A_ScriptHwnd):
     https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1389
     https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/script_menu.cpp#L1429
-    
+
     In rare cases, script window will suddenly appear in the middle of the screen, closing the file dialog.
     This occurs inside WinActivate() after WinShow() call if IsIconic() is `true`:
     https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
     To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
     */
     global DialogId
-    
+
     if (_posX = "" || _posY = "") {
         WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
         _posY += 100  ; position just below the dialog title
@@ -177,67 +177,67 @@ ShowMenu(_posX := "", _posY := "") {
     _menuId := MenuGetHandle("ContextMenu")
     if (!_menuId) {
         ; The Menu doesn't exist yet
-        CreateMenu()  
+        CreateMenu()
         _menuId := MenuGetHandle("ContextMenu")
     }
-    
+
     /*
     FuPeiJiang: to fix menu problems, TrackPopupMenuEx() is called directly.
-    The return value is the menu-item identifier of the item that the user selected. 
+    The return value is the menu-item identifier of the item that the user selected.
     If the user cancels the Menu without making a selection, or if an error occurs, the return value is zero.
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenuex
-    
-    Rafaello: to enforce returning from TrackPopupMenuEx() to ShowMenu(), 
-    polling is used using SetTimer() which calls HideMenu(). 
-    If the menu does not respond for a long time and the active window has already changed, 
+
+    Rafaello: to enforce returning from TrackPopupMenuEx() to ShowMenu(),
+    polling is used using SetTimer() which calls HideMenu().
+    If the menu does not respond for a long time and the active window has already changed,
     the menu will be hidden automatically.
     */
     DllCall("SetTimer"
         , "Ptr", A_ScriptHwnd, "Ptr", _timerId := 1
         , "UInt", 1000  ; polling time in milliseconds
         , "Ptr", RegisterCallback("HideMenu", "F"))
-          
+
     _cmd := DllCall("TrackPopupMenuEx"
         , "Ptr", _menuId
         , "Uint", 0x100  ; TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD
         , "int", _posX, "int", _posY
         , "Ptr", A_ScriptHwnd  ; handle to the activated script window that will own the Menu
-        , "Ptr", 0) 
-    
+        , "Ptr", 0)
+
     DllCall("KillTimer", "Ptr", A_ScriptHwnd, "Ptr", _timerId)
 
-    if (_cmd) { 
+    if (_cmd) {
         ; Execute menu action (send WM_COMMAND)
         return DllCall("SendMessageW"
             , "Ptr", A_ScriptHwnd
             , "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
     }
-    
+
     ; Switch windows focus
     _activeId := DllCall("GetForegroundWindow", "Ptr")
     if (_activeId != A_ScriptHwnd) {
         ; Activate current visible window
-        SetForegroundWindow(_activeId) 
+        SetForegroundWindow(_activeId)
     } else {
         ; Activate file dialog again
-        SetForegroundWindow(DialogId)   
+        SetForegroundWindow(DialogId)
     }
 }
 
 EnforceShowMenu() {
     ; Enforces menu display. Used by Tray menu and special global shortcut.
     global DialogId, IsDialogClosed, IsEnforcedUi := true
-    
+
     CoordMode, % "Mouse", % "Screen"
     MouseGetPos, _mouseX, _mouseY
-    
+
     _foreId := DllCall("GetForegroundWindow", "Ptr")
     if (_foreId != DialogId
      && _foreId != A_ScriptHwnd) {
-        DialogId := _foreId    
+        DialogId := _foreId
         IsDialogClosed := true
     }
-    
+
     CreateMenu()
     ShowMenu(_mouseX, _mouseY)
 }
@@ -247,11 +247,11 @@ HideMenu(_winId, _wmTimer, _timerId, _tickCount) {
     ; Menu, % "ContextMenu", % "Disable", % "&BlackList"
     _id := DllCall("GetForegroundWindow", "Ptr")
     if (_id = _winId)
-        return _winId        
+        return _winId
 
-    _newId := SetForegroundWindow(_winId) 
+    _newId := SetForegroundWindow(_winId)
     if (_newId = _winId)
         DllCall("KillTimer", "Ptr", _winId, "Ptr", _timerId)
-        
+
     return _newId
 }

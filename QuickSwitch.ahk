@@ -26,7 +26,7 @@ FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
 
-INI        := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini 
+INI        := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini
 ErrorsLog  := "Errors.log"          ; file for error dumps and tracing
 
 #Include <Log>
@@ -54,7 +54,7 @@ ErrorsLog  := "Errors.log"          ; file for error dumps and tracing
 InitLog()
 SetDefaultValues()
 
-if IsFile(INI) {    
+if IsFile(INI) {
     ReadValues()
 } else {
     IsNewUser := true
@@ -75,7 +75,7 @@ InitWelcomeMessage()
 ValidateKey("RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
 if ShowUiAfterRestart
     ShowSettings()
-if ShowAfterRestart 
+if ShowAfterRestart
     EnforceShowMenu()
 ;@Ahk2Exe-IgnoreEnd
 
@@ -85,7 +85,7 @@ Loop {
 
     try {
         DialogId := DllCall("GetForegroundWindow", "Ptr")
-        
+
         IniRead, SendEnter, % INI, % "Global", % "SendEnter", 0
         if !IsFileDialog(DialogId, EditId, , SendEnter) {
             WinWaitNotActive, % "ahk_id " DialogId
@@ -105,7 +105,7 @@ Loop {
         IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0               ; -1 or 0
         IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch    ; -1, 0 or 1
         DialogAction |= BlackList
-        
+
 
         ; Get paths for Menu sections
         if ShowFavorites
@@ -118,9 +118,9 @@ Loop {
                    , ListerIndex,    ShowAllDesktops
                    , ActivePaneOnly, ActiveTabOnly, ShowLockedTabs)
         }
-        
+
         OnClipboardChange("GetClipboardPath", ShowClipboard)
-        
+
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
 
@@ -128,7 +128,7 @@ Loop {
             ; Perform AutoSwitch after preparation
             if (AutoSwitchTarget = "MenuStack")
                 CreateMenu()  ; create MenuStack
-                
+
             if IsDialogClosed {
                 ; Add delay between actions to prevent accidental dialog closing (issue #77)
                 SetWinDelay, 120
@@ -148,21 +148,21 @@ Loop {
             }
         }
         IsDialogClosed := false
-        
+
         ; Turn on registered hotkey
         ValidateKey("MainKey", MainKey,, "On")
-    
+
         if IsMenuReady() {
             FromSettings := false
             ShowMenu()  ; halt main thread
         }
-        
+
         LogElevatedNames()
 
     } catch GlobalEx {
         LogException(GlobalEx)
     }
-    
+
     Sleep 200
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
@@ -192,13 +192,13 @@ LogError("An error occurred while waiting for the file dialog to appear. Restart
 ExitApp
 
 ;@Ahk2Exe-IgnoreBegin Alt + Tilde ~ (or backtick `)
-!sc029::     
+!sc029::
     if ShowOpenDialog {
         SendEvent ^!o
-        return 
+        return
     } else if ShowSaveAsDialog {
-        SendEvent ^!s  
-        return     
+        SendEvent ^!s
+        return
     }
     EnforceShowMenu()
 return

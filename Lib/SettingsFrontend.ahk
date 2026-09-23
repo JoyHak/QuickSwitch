@@ -14,15 +14,15 @@ ShowSettings() {
     Gui, Destroy
     Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
     Gui, Color, % GuiColor, % GuiColor
-    
+
     local _options := "q5"
     if DarkTheme
         _options .= " c" InvertColor(GuiColor)
     if MainFontSize
         _options .= " s" MainFontSize
-    
+
     Gui, Font, % _options, % MainFont
-    
+
     ; The larger the font size and DPI, the wider the input fields
     local scale := (MainFontSize != 0) ? (MainFontSize - 8) : 0
 
@@ -53,15 +53,15 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vShowAfterSettings    checked%ShowAfterSettings%,       Leaving &settings
     Gui, Add, CheckBox,                                     vShowAfterSelect      checked%ShowAfterSelect%,         Selecting &path
     Gui, Add, CheckBox,     gToggleShowAlways               vShowAlways           checked%ShowAlways%,              Al&ways
-    
+
     GuiControlGet, Margin, pos, ShowMenuAfterText
     Gui, Add, Text,         y+%MarginH%                                           Section,                          Auto Switch
-    Gui, Add, Edit,         ys-4  %updown%      
+    Gui, Add, Edit,         ys-4  %updown%
     Gui, Add, UpDown,       Range1-99                       vAutoSwitchIndex      Section,                          %AutoSwitchIndex%
     Gui, Add, Text,         ys+4                            vCenteredText         Section,                          path from
     Gui, Add, DropDownList, ys-3  w%MarginW%                vAutoSwitchTarget,                                      PinnedPaths|FavoritePaths|ManagersPaths|ClipboardPaths|MenuStack
     GuiControl, % "ChooseString", % "AutoSwitchTarget",   % AutoSwitchTarget
-    
+
     GuiControlGet, Center, pos, CenteredText
     Gui, Add, CheckBox,     y+%MarginH% x%MarginX%          vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
     Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add file dialog owner process name to &Black List
@@ -77,7 +77,7 @@ ShowSettings() {
 
     Gui, Add, CheckBox,           gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
-    Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX) 
+    Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Menu font
     Gui, Add, Text,         y+12,                                                                                   &Settings font
     Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Show &icons from
@@ -86,29 +86,29 @@ ShowSettings() {
     Gui, Add, Edit,         y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
 
     Gui, Add, Edit,         y+4   %short%                   vMenuFont,                                              %MenuFont%
-    Gui, Add, Edit,     x+m yp    %updown%      
-    Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%    
-    Gui, Add, Edit,     xs  y+4   %short%                   vMainFont,                                              %MainFont%    
-    Gui, Add, Edit,     x+m yp    %updown%      
+    Gui, Add, Edit,     x+m yp    %updown%
+    Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
+    Gui, Add, Edit,     xs  y+4   %short%                   vMainFont,                                              %MainFont%
+    Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMainFontSize,                                          %MainFontSize%
-    
+
     Gui, Add, Edit,      xs y+4   %short%                   vIconsDir             Section,                          %IconsDir%
     Gui, Add, Edit,         ys    %updown%                  vIconsSizePlaceholder
     Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
-    
+
     Gui, Add, Text,         y+%MarginH%  x%MarginX%,                                                                Show sections in Menu:
     Gui, Add, CheckBox,           gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           Fa&vorites from
     Gui, Add, Edit,      xs yp-5  %long%                    vFavoritesDir,                                          %FavoritesDir%
-    
+
     Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
-     
-    Gui, Add, Text,         y+10         xp+%MarginH%       vListerIndexText0     Section,                          only from 
+
+    Gui, Add, Text,         y+10         xp+%MarginH%       vListerIndexText0     Section,                          only from
     Gui, Add, Edit,         ys-4  %updown%                  vListerIndexText1
     Gui, Add, UpDown,       Range0-999                      vListerIndex,                                           %ListerIndex%
     Gui, Add, Text,         ys                              vListerIndexText2,                                      lister (&Z-order)
-    
+
     Gui, Add, CheckBox,     xs y+8                          vShowAllDesktops      checked%ShowAllDesktops%,         from all &virtual desktops
     Gui, Add, CheckBox,                                     vActivePaneOnly       checked%ActivePaneOnly%,          only &from active pane
     Gui, Add, CheckBox,                                     vActiveTabOnly        checked%ActiveTabOnly%,           only &the active tab
@@ -154,7 +154,7 @@ ShowSettings() {
     Gui, Add, Edit,      xp yp    %short%    ReadOnly       vPinMousePlaceholder,                                 % PinMousePlaceholder
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vPinMouseListBox,                                     % GetMouseList("pinList")
     Gui, Add, Button,       ys              gTogglePinMouse vPinMouseButton,                                        mouse
-    
+
     Gui, Add, Hotkey,    xs y+8   %short%                   vMainKey              Section,                        % MainKey
     Gui, Add, Edit,      xp yp    %short%    ReadOnly       vMainMousePlaceholder,                                % MainMousePlaceholder
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vMainMouseListBox,                                    % GetMouseList("mouseList")
@@ -171,11 +171,11 @@ ShowSettings() {
     Gui, Add, ListBox,            %listbox%  gGetMouseKey   vRestartMouseListBox,                                 % GetMouseList("mouseList")
     Gui, Add, Button,       ys          gToggleRestartMouse vRestartMouseButton,                                    mouse
     Gui, Add, Text,    x%MarginX% ys+4,                                                                             &Restart app by
-;@Ahk2Exe-IgnoreEnd       
+;@Ahk2Exe-IgnoreEnd
     Gui, Add, Edit,xs y+%MarginH% %long%                    vMainIcon             Section,                        % MainIcon
     Gui, Add, Text,    x%MarginX% ys+4,                                                                             Icon (t&ray)
-;@Ahk2Exe-IgnoreBegin 
-    Gui, Add, Edit,        xs y+8 %long%                    vRestartWhere,                                        % RestartWhere        
+;@Ahk2Exe-IgnoreBegin
+    Gui, Add, Edit,        xs y+8 %long%                    vRestartWhere,                                        % RestartWhere
     Gui, Add, Text,    x%MarginX% yp+4,                                                                             &Restart only in
     Gui, Add, CheckBox,y+%MarginH%                          vShowAfterRestart     checked%ShowAfterRestart%,        Show &Menu after restart
     Gui, Add, CheckBox,                                     vShowUiAfterRestart   checked%ShowUiAfterRestart%,      Show &settings after restart
@@ -184,8 +184,8 @@ ShowSettings() {
 
     Gui, Add, CheckBox,y+%MarginH%                          vShowOpenDialog       checked%ShowOpenDialog%,          Open "Op&en" dialog before Menu
     Gui, Add, CheckBox,                                     vShowSaveAsDialog     checked%ShowSaveAsDialog%,        Open "&Save As" dialog before Menu
-;@Ahk2Exe-IgnoreEnd 
-    
+;@Ahk2Exe-IgnoreEnd
+
     Gui, Tab, 5 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
     Gui, Add, Text,,                                                                                                Delete from configuration:
@@ -200,7 +200,7 @@ ShowSettings() {
 
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
-    
+
     Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
     Gui, Add, Button, % "x+" CenterH " yp wp                        gGuiEscape          vCancelButton",          % "&Cancel"
     Gui, Add, Button, % "x+" CenterH " yp wp                        g" button "Settings vResetButton",           % "&" button
@@ -224,23 +224,23 @@ ShowSettings() {
     local _pos  := ""
         , _posX := ""
         , _posY := ""
-           
+
     if (IsEnforcedUi && !SaveUiPosition) {
         IsEnforcedUi := false
-        
+
         ; Show window contents above the cursor.
         ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
         ; Show near the screen edge if the window part would be not visible (overflow)
         CoordMode, % "Mouse", % "Screen"
         MouseGetPos, MouseX, MouseY
         GuiControlGet, Bottom, pos, ResetButton
-        
+
         static scaleX := A_ScreenDPI / 86
         static scaleY := A_ScreenDPI / 100
-        
+
         local _widthHalf := CenterX * scaleX    ; half window width (in pixels)
         local _height    := BottomY * scaleY    ; contents height (without buttons and title height)
-        
+
         if (MouseX + _widthHalf > A_ScreenWidth) {
             _posX := A_ScreenWidth - _widthHalf * 2     ; right edge
         } else if (MouseX - _widthHalf < 0) {
@@ -248,7 +248,7 @@ ShowSettings() {
         } else {
             _posX := MouseX - _widthHalf                ; cursor in the window center (X axis)
         }
-            
+
         if (MouseY - _height > A_ScreenHeight) {
             _posY := A_ScreenHeight - _height * 1.2     ; bottom edge
         } else if (MouseY - _height < 0) {
@@ -256,27 +256,27 @@ ShowSettings() {
         } else {
             _posY := MouseY - _height                   ; cursor above buttons
         }
-        
+
         _pos := "x" _posX " y" _posY
     }
-        
+
 ;@Ahk2Exe-IgnoreBegin
     InitMouseMode("Restart", RestartMousePlaceholder != "")
 
     ; This option should override any enforced coordinates
-    if SaveUiPosition && UiPosX && UiPosY       
+    if SaveUiPosition && UiPosX && UiPosY
         _pos := "x" UiPosX " y" UiPosY
 ;@Ahk2Exe-IgnoreEnd
 
     if !_pos {
-        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId        
+        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
         if (_posX != "" && _posY != "")
             _pos := "x" _posX " y" _posY + 100      ; dialog top left corner
         else
             _pos := "x0 y100"                       ; active window top left corner
     }
     Gui, Show, % "AutoSize " _pos, Settings
-    
+
     if DarkTheme
-        SetDarkControls(SettingsId)     
+        SetDarkControls(SettingsId)
 }
