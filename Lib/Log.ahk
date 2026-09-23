@@ -68,9 +68,7 @@ LogInfo(_text, _silent := false) {
 
 LogHeader() {
     ; Header with information about OS and script
-    global ErrorsLog, ScriptRepo
-
-    REPORT_LINK := ScriptRepo "/issues/new?template=bug-report.yaml"
+    global ErrorsLog, ScriptRepo, IssueTracker
     NT_VERSION  := "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
 
     _name    := A_OSType
@@ -91,7 +89,7 @@ LogHeader() {
 
     FileAppend, % "
     (LTrim
-    Report about error: " REPORT_LINK "
+    Report about error: " IssueTracker "
     AHK " A_AhkVersion "
     " _name " " _version " | " _build " " _bitness " " _lang "
     )", % ErrorsLog

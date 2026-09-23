@@ -338,40 +338,6 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateTrayIcon(_paramName, ByRef icon) {
-;─────────────────────────────────────────────────────────────────────────────
-    /*
-    If the file exists, changes the tray icon and returns "paramName=icon".
-    If icon path is incorrect, reads it from INI
-    */
-    global INI
-    
-    icon := Trim(icon, " `t\/.")        
-    icon := StrReplace(icon, "/" , "\")  
-    
-    if !icon {
-        Menu, % "Tray", % "Icon", *
-        return _paramName "=`n"
-    }
-
-    try {
-        ExpandVariables(icon)
-        Menu, % "Tray", % "Icon", % icon
-        return _paramName "=" icon "`n"
-    }
-
-    if !_paramName
-        return ""
-
-    LogError("Icon '" icon "' not found", "tray icon", "Specify the full path to the file")
-
-    IniRead, _default, % INI, % "Global", % _paramName, % A_Space
-    icon :=  _default
-    return _paramName "=" _default "`n"
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
 ValidateColor(_paramName, ByRef color) {
 ;─────────────────────────────────────────────────────────────────────────────
     /*
