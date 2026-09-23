@@ -1,6 +1,6 @@
 ScriptName    := "QuickSwitch"
 ;@Ahk2Exe-SetProductName %A_PriorLine~.*"(.*)"~$1%
-ScriptVersion := "1.10"
+ScriptVersion := "1.9.17"
 ;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
 ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
 ;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
