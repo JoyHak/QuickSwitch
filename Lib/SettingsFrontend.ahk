@@ -5,6 +5,13 @@ and displays their values as checkboxes, options, etc.
 All values are saved to the INI only after clicking OK
 */
 
+UiEnforcedPosition := false
+EnforceShowSettings() {
+    ; Enforces settings display. Used by Tray menu.
+    global UiEnforcedPosition := true
+    ShowSettings()
+}
+
 ShowSettings() {
     global
     FromSettings := true
@@ -218,16 +225,50 @@ ShowSettings() {
     local _pos  := ""
         , _posX := ""
         , _posY := ""
+           
+    if (UiEnforcedPosition && !SaveUiPosition) {
+        UiEnforcedPosition := false
+        
+        ; Show window contents above the cursor.
+        ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
+        ; Show in the bottom right corner if the window part would be not visible (overflow)
+        CoordMode, % "Mouse", % "Screen"
+        MouseGetPos, MouseX, MouseY
+        GuiControlGet, Bottom, pos, ResetButton
+        
+        static scaleX := A_ScreenDPI / 86
+        static scaleY := A_ScreenDPI / 100
+        
+        local _widthHalf := CenterX * scaleX    ; half window width (in pixels)
+        local _height    := BottomY * scaleY    ; contents height (without buttons and title height)
+        
+        if (MouseX + _widthHalf > A_ScreenWidth) {
+            _posX := A_ScreenWidth - _widthHalf * 2
+        } else {
+            _posX := MouseX - _widthHalf
+        }
+            
+        if (MouseY - _height > A_ScreenHeight) {
+            _posY := A_ScreenHeight - _height * 1.2
+        } else {
+            _posY := MouseY - _height
+        }
+        
+        _pos := "x" _posX " y" _posY
+    }
+        
 ;@Ahk2Exe-IgnoreBegin
+    ; This option should override any enforced coordinates
     if SaveUiPosition && UiPosX && UiPosY       
         _pos := "x" UiPosX " y" UiPosY
 ;@Ahk2Exe-IgnoreEnd
+
     if !_pos {
         WinGetPos, _posX, _posY,,, % "ahk_id " DialogId        
         if (_posX != "" && _posY != "")
-            _pos := "x" _posX " y" _posY + 100
+            _pos := "x" _posX " y" _posY + 100      ; dialog top left corner
         else
-            _pos := "x0 y100"        
+            _pos := "x0 y100"                       ; active window top left corner
     }
     Gui, Show, % "AutoSize " _pos, Settings
     
