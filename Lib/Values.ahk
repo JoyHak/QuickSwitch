@@ -77,10 +77,10 @@ SetDefaultValues() {
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
     IsNewUser           :=  false
+    SaveUiPosition      :=  false
 ;@Ahk2Exe-IgnoreBegin    
     ShowAfterRestart    :=  false
     ShowUiAfterRestart  :=  false
-    SaveUiPosition      :=  false
     ShowOpenDialog      :=  false
     ShowSaveAsDialog    :=  false
     

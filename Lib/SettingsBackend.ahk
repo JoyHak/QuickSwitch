@@ -3,7 +3,7 @@
 
 InitTrayMenu() {
     Menu, % "Tray", % "NoStandard"
-    Menu, % "Tray", % "Add", % "&Settings", % "ShowSettings"
+    Menu, % "Tray", % "Add", % "&Settings", % "EnforceShowSettings"
     Menu, % "Tray", % "Add", % "&Menu", % "EnforceShowMenu"
     Menu, % "Tray", % "Add"
     Menu, % "Tray", % "Add", % "&Restart", % "TrayRestart"

@@ -226,7 +226,7 @@ ShowMenu(_posX := "", _posY := "") {
 
 EnforceShowMenu() {
     ; Enforces menu display. Used by Tray menu and special global shortcut.
-    global DialogId, IsDialogClosed
+    global DialogId, IsDialogClosed, UiEnforcedPosition := true
     
     CoordMode, % "Mouse", % "Screen"
     MouseGetPos, _mouseX, _mouseY
