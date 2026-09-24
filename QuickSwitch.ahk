@@ -65,7 +65,7 @@ if IsFile(INI) {
 InitTrayMenu()
 ValidateKey("PinKey",      PinKey,      "",   "Off",  "Dummy")
 ValidateKey("MainKey",     MainKey,     "",   "Off",  "ShowMenu")
-ValidateKey("EnforceKey",  EnforceKey,  "",   "On",   "EnforceShowMenu")
+ValidateKey("EnforceKey",  EnforceKey,  "$",  "On",   "EnforceShowMenu")
 
 InitAutoStartup()
 InitDarkTheme()
