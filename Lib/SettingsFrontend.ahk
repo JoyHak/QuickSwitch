@@ -194,7 +194,7 @@ ShowSettings() {
     Gui, Add, CheckBox,                                     vDeletePinned,                                          &Pinned paths
     Gui, Add, CheckBox,                                     vDeleteClipboard,                                       &Clipboard paths
     Gui, Add, CheckBox,                                     vDeleteKeys,                                            &Hotkeys and mouse buttons
-    Gui, Add, CheckBox,     y+%MarginH%                     vNukeSettings,                                          Nuke &configration
+    Gui, Add, CheckBox,     y+%MarginH%                     vNukeSettings,                                          Nuke &configuration
 
     Gui, Tab ; BUTTONS ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 

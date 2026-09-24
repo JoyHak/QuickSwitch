@@ -65,3 +65,30 @@ IsFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0, ByRef sendE
         || (_f & 1 && _f & 4 && _f & 8)
         || (_f = 2)
 }
+
+FileDialogs := {}
+
+ReadDialogs() {
+    global INI, FileDialogs
+    
+    IniRead, _dialogs, % INI, % "Dialogs"
+    if (_dialogs = "" || _dialogs = "ERROR")
+        return
+    
+    Loop, Parse, _dialogs, `n
+    {
+        _parts  := StrSplit(A_LoopField, "=")
+        FileDialogs[_parts[1]] := _parts[2]
+    }
+}
+
+WriteDialogs() {
+    global INI, FileDialogs
+    
+    _str := ""
+    for _dialog, _action in FileDialogs {
+        _str .= _dialog "=" _action "`n"
+    }
+    
+    try IniWrite, % Trim(_str), % INI, % "Dialogs"
+}

@@ -106,10 +106,15 @@ CreateMenu() {
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
 
     MenuStack := []
-    MenuStack.Push(PinnedPaths*)
-    MenuStack.Push(FavoritePaths*)
-    MenuStack.Push(ManagersPaths*)
-    MenuStack.Push(ClipboardPaths*)
+    
+    if ShowPinned
+        MenuStack.Push(PinnedPaths*)
+    if ShowFavorites
+        MenuStack.Push(FavoritePaths*)
+    if ShowManagers
+        MenuStack.Push(ManagersPaths*)
+    if ShowClipboard
+        MenuStack.Push(ClipboardPaths*)
 
     if MenuStack.Length() {
         if (ShowPinned && !PinnedPaths.length())

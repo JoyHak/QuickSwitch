@@ -25,7 +25,6 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     If the file exists, changes the tray icon and returns "paramName=icon".
     If icon path is incorrect, reads it from INI
     */
-    global INI
 
     icon := Trim(icon, " `t\/.")
     icon := StrReplace(icon, "/" , "\")
@@ -45,9 +44,9 @@ ValidateTrayIcon(_paramName, ByRef icon) {
         return ""
 
     LogError("Icon '" icon "' not found", "tray icon", "Specify the full path to the file")
-
-    IniRead, _default, % INI, % "Global", % _paramName, % A_Space
-    icon :=  _default
+    
+    _default := ReadValue(_paramName, , A_Space)
+    icon := _default
     return _paramName "=" _default "`n"
 }
 

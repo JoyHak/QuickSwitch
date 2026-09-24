@@ -65,15 +65,12 @@ GetPaths(ByRef paths, _listerIndex := 0, _allDesktops := false, _activePaneOnly 
         DetectHiddenWindows % _detectHiddenWindows    
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 GetShortPath(ByRef path) {
-;─────────────────────────────────────────────────────────────────────────────
     /*
-        Full path is shortened according to user-specified global parameters
-        by shortening directory names to the specified length starting at the beginning
-        and separating them with the specified delimiter.
-        Additional options may change the final view.
+    Full path is shortened according to user-specified global parameters
+    by shortening directory names to the specified length starting at the beginning
+    and separating them with the specified delimiter.
+    Additional options may change the final view.
     */
     global ShortenEnd, DirsCount, DirNameLength, ShowDriveLetter, PathSeparator, ShortNameIndicator, ShowFirstSeparator
 
@@ -137,10 +134,20 @@ GetShortPath(ByRef path) {
     return path
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
+GetUniqPaths(paths) {
+    _seen := {}
+    _paths := []
+    for _, _arr in paths {
+        _path := _arr[1]
+        if !_seen.hasKey(_path) {
+            _paths.push(_arr)
+            _seen[_path] := true
+        }
+    }
+    return _paths
+}
+
 GetClipboardPath(_dataType) {
-;─────────────────────────────────────────────────────────────────────────────
     ; If the clipboard contents is text, cuts the path where the file is stored.
     ; If the path is valid, adds to the array and returns true
     global ClipboardPaths
@@ -165,10 +172,7 @@ GetClipboardPath(_dataType) {
     }
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 GetFavoritePaths(ByRef paths) {
-;─────────────────────────────────────────────────────────────────────────────
     ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
     ; Returns the number of added paths.
     global FavoritesDir, FromSettings
@@ -214,18 +218,29 @@ GetFavoritePaths(ByRef paths) {
     return _count
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-GetUniqPaths(paths) {
-;─────────────────────────────────────────────────────────────────────────────
-    _seen := {}
-    _paths := []
-    for _, _arr in paths {
-        _path := _arr[1]
-        if !_seen.hasKey(_path) {
-            _paths.push(_arr)
-            _seen[_path] := true
+ReadPinnedPaths(ByRef paths) {
+    _paths := ReadValue("PinnedPaths", "App", A_Space)
+    if _paths {
+        loop, parse, _paths, `|
+        {
+            paths.push([A_LoopField, "Pin.ico"])
         }
     }
-    return _paths
+    
+    return paths.length()
+}
+
+WritePinnedPaths(ByRef paths) {
+    _length := paths.length()
+    _paths  := ""
+
+    if _length {
+        for _, _arr in GetUniqPaths(paths)
+            _paths .= "|" . _arr[1]
+
+        _paths := LTrim(_paths, "|")
+    }
+    
+    try WriteValue("PinnedPaths", _paths, "App")
+    return _length
 }
