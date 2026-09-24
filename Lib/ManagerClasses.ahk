@@ -15,8 +15,8 @@ CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly
     ; Returns number of added paths
     WinGetTitle, _title, % "ahk_id " winId
     
-    _activeIdx := 0
-    _length := paths.length() + 1
+    _activePath := false    
+    _length := paths.length()
 
     try {
         _shellApp := 0
@@ -35,12 +35,11 @@ CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly
             ; poll. Treat that failure the same as an empty `locationURL`: skip just this window.
             _path := false
             if _win.locationURL {
-                try
-                    _path := [_win.document.folder.self.path, "Explorer.ico"]
+                try _path := [_win.document.folder.self.path, "Explorer.ico"]
             }
             
             ; Get active tab           
-            if (!_activeIdx && (_title == _win.locationName)) {
+            if (!_activePath && (_title == _win.locationName)) {
                 if _activeTabOnly {
                     if _path {
                         paths.push(_path)
@@ -49,26 +48,23 @@ CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly
                     return 0
                 }
                 
-                ; If the path is empty, the index of the previous added path will be considered as active
-                _activeIdx := paths.length() + !!_path                
+                _activePath := _path
+                continue
             }
             
-            if (!_activeTabOnly && _path)
+            if (!_activeTabOnly && _path) {
                 paths.push(_path)
+            }
         }
     } finally {
         if _shellApp
             ObjRelease(_shellApp)
     }
     
-    ; Move active path to the top
-    if paths.hasKey(_activeIdx) {
-        _active := paths[_activeIdx]
-        paths[_activeIdx] := paths[_length]
-        paths[_length] := _active
-    }
+    if _activePath
+        paths.insertAt(_length + 1, _activePath)
 
-    return paths.length() - _length + 1
+    return paths.length() - _length
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
