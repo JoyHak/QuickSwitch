@@ -84,6 +84,10 @@ ShowSettings() {
 
     Gui, Add, Edit,         ys-4  %short% Limit8            vMenuColor            Section,                          %MenuColor%
     Gui, Add, Edit,         y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
+    
+    ; Preserve this values
+    Last.MenuFont  := MenuFont
+    Last.MenuFontSize := MenuFontSize
 
     Gui, Add, Edit,         y+4   %short%                   vMenuFont,                                              %MenuFont%
     Gui, Add, Edit,     x+m yp    %updown%

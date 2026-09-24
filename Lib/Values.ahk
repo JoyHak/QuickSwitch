@@ -90,7 +90,7 @@ SetDefaultValues() {
     IconsSize     := 25
     MainFontSize  := 10
     MenuFontSize  := 0
-    ListerIndex   :=  0
+    ListerIndex   := 0
 
     DirsCount     := 3
     DirNameLength := 20
@@ -98,6 +98,9 @@ SetDefaultValues() {
     PathSeparator := "\"
     MainFont      := "Tahoma"
     MenuFont      := ""
+    
+    Last.MenuFont  := MenuFont
+    Last.MenuFontSize := MenuFontSize
 
     ShortNameIndicator := ".."
 
@@ -172,13 +175,11 @@ WriteValues() {
     IsNewUser="               IsNewUser               "
     IconsSize="               IconsSize               "
     MainFontSize="            MainFontSize            "
-    MenuFontSize="            MenuFontSize            "
     DirsCount="               DirsCount               "
     DirNameLength="           DirNameLength           "
     PathLimit="               PathLimit               "
     PathSeparator="           PathSeparator           "
     MainFont="                MainFont                "
-    MenuFont="                MenuFont                "
     ShortNameIndicator="      ShortNameIndicator      "
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
@@ -191,6 +192,7 @@ WriteValues() {
     . ValidateKey(      "EnforceKey",    (EnforceMousePlaceholder ? EnforceMousePlaceholder : EnforceKey),  "$", "On",   "EnforceShowMenu")
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
+    . ValidateMenuFont(  MenuFont,       MenuFontSize)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
     . ValidateDirectory("IconsDir",      IconsDir,      "ShowIcons",     ShowIcons)
     . ValidateDirectory("FavoritesDir",  FavoritesDir,  "ShowFavorites", ShowFavorites)
