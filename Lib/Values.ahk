@@ -113,7 +113,7 @@ SetDefaultValues() {
     ; Requires validation
     PinKey       := "RButton"
     MainKey      := "^sc10"
-    EnforceKey   := "^#+0"
+    EnforceKey   := ""
     RestartKey   := ""
     IconsDir     := "Icons"
     FavoritesDir := "Favorites"
@@ -188,7 +188,7 @@ WriteValues() {
     _values .= "`n"
     . ValidateKey(      "PinKey",        (PinMousePlaceholder     ? PinMousePlaceholder     : PinKey),      "",  "Off",  "Dummy")  ; Init and dont use this key
     . ValidateKey(      "MainKey",       (MainMousePlaceholder    ? MainMousePlaceholder    : MainKey),     "",  "Off",  "ShowMenu")
-    . ValidateKey(      "EnforceKey",    (EnforceMousePlaceholder ? EnforceMousePlaceholder : EnforceKey),  "",  "On",   "EnforceShowMenu")
+    . ValidateKey(      "EnforceKey",    (EnforceMousePlaceholder ? EnforceMousePlaceholder : EnforceKey),  "$", "On",   "EnforceShowMenu")
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
@@ -440,7 +440,10 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
     } catch _ex {
         if !_paramName
             return ""
-
+        
+        _ex.what    .= " " _paramName
+        _ex.message := "Unable to register hotkey """ . _prefix . _sequence . """. " . _ex.message
+        _ex.extra   .= " `nBound to " _function "(), state = " _state
         LogException(_ex)
 
         ; Return value from config
