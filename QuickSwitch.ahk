@@ -26,8 +26,9 @@ FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
 
-INI        := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini
-ErrorsLog  := "Errors.log"          ; file for error dumps and tracing
+INI         := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini
+ErrorsLog   := "Errors.log"          ; file for error dumps and tracing
+ErrorsCount := 0                     ; track how many errors occurred in a short period of time
 
 #Include <Log>
 #Include <Tray>
@@ -156,13 +157,23 @@ Loop {
             FromSettings := false
             ShowMenu()  ; halt main thread
         }
-
+        
+        throw Exception("e", "o")
+        
         LogElevatedNames()
-
+        ErrorsCount := 0
+        
     } catch GlobalEx {
         LogException(GlobalEx)
+        
+        if (ErrorsCount > 10) {
+            if MsgError("Too many errors occurred in a short period of time.`nDo you want to report about it?")
+                TrayIssueTracker()
+            
+            ExitApp
+        }
     }
-
+    
     Sleep 200
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
@@ -185,9 +196,8 @@ Loop {
 }   ; End of continuous WinWaitActive loop
 
 
-LogError("An error occurred while waiting for the file dialog to appear. Restart " ScriptName " app manually"
-       , "main menu"
-       , "End of continuous WinWaitActive loop in main file")
+if MsgError("An error occurred while waiting for the file dialog to appear.`nDo you want to report about error?")
+    TrayIssueTracker()
 
 ExitApp
 

@@ -18,13 +18,21 @@ MsgWarn(_text) {
     return false
 }
 
+MsgError(_text) {
+    MsgBox, % (4 + 16 + 262144),, % _text
+    IfMsgBox, % "yes"
+        return true
+
+    return false
+}
+
 LogError(_message := "Unknown error", _what := "LogError", _extra := "", _silent := false) {
     return LogException(Exception(_message, _what, _extra), 2, _silent)
 }
 
 LogException(_ex, _offset := 1, _silent := false) {
     ; Accepts Exception / any custom object with similar attributes
-    global ErrorsLog, ScriptName
+    global ErrorsLog, ErrorsCount, ScriptName
 
     ; Generate call stack
     _stack := ""
@@ -48,7 +56,8 @@ LogException(_ex, _offset := 1, _silent := false) {
 
     if !_silent
         TrayTip, % ScriptName ": " _what " error", % _msg,, 0x2
-
+    
+    ++ErrorsCount
     return ""
 }
 
@@ -165,9 +174,9 @@ InitLog() {
     }
 }
 
-InitWelcomeMessage(_errorsLogMinSizeBytes := 190) {
+InitWelcomeMessage() {
     ; Displays welcome notification if no errors occured
-    global IsNewUser, ErrorsLog, ScriptName, INI
+    global IsNewUser, ErrorsLog, ErrorsCount, ScriptName, INI
     static REG_PATH := "HKEY_CURRENT_USER\Software\QuickSwitch"
     
     if !IsNewUser {
@@ -179,19 +188,8 @@ InitWelcomeMessage(_errorsLogMinSizeBytes := 190) {
     if !_size
         _size := 0
         
-    if (_size > _errorsLogMinSizeBytes) {
-        /*
-        At least one error occurred during the current or previous run. 
-        If the current log size matches the previous log size, no more errors occurred 
-        and the installation was successful.
-        */
-        _rsize := 0
-        try RegRead, _rsize, % REG_PATH, % "ErrorsLogSize"
-        
-        if (_size != _rsize) {
-            try RegWrite, % "REG_DWORD", % REG_PATH, % "ErrorsLogSize", % _size
-            return false
-        }
+    if (ErrorsCount >= 1) {
+        return false
     }
     
     _key := ""
@@ -202,7 +200,6 @@ InitWelcomeMessage(_errorsLogMinSizeBytes := 190) {
     try {        
         TrayTip, % ScriptName " installed successfully", % "
         (LTrim Join`s
-        Launch any file manager first. 
         Open any file dialog (e.g. open notepad.exe and press Ctrl+Shift+S).`n`n
         Press Ctrl+Q to open the Menu.
         )", 100
