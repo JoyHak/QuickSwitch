@@ -64,8 +64,6 @@ AddTrayItem(_title, _function, _icon, _options := "") {
     }
 }
 
-
-IsEnforcedUi := false
 EnforceShowSettings() {
     ; Enforces settings display. Used by Tray menu.
     global IsEnforcedUi := true

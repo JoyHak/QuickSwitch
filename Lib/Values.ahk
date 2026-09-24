@@ -22,7 +22,7 @@ EditId              :=  0
 LastDialogProcess   :=  ""
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
-
+IsEnforcedUi        :=  false
 WriteDialogAction   :=  false
 WritePinnedPaths    :=  false
 FromSettings        :=  false
