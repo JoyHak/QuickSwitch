@@ -161,7 +161,7 @@ InitMenuFont() {
     ; Sets font and font attributes for all menus in the system.
     ; Prevents multiple font changes. Shows warning.
     
-    global ScriptName, INI, MenuFont, MenuFontSize
+    global ScriptName, MenuFont, MenuFontSize
     
     _warningMsg := "The font "
     if !(MenuFont || MenuFontSize)
@@ -189,13 +189,13 @@ InitMenuFont() {
     `n`nRestart the " ScriptName " manually.
     )"
     
-    IniRead, _opt, % INI, % "App", % "MenuFont", % "_0"    
+    _opt := ReadValue("MenuFont", "App", "_0")   
     _options := MenuFont "_" MenuFontSize 
     
     if (_opt = _options)
         return
         
-    try IniWrite, % _options, % INI, % "App", % "MenuFont"
+    try WriteValue("MenuFont", _options, "App")
     if !MsgWarn(_warningMsg)
         return
     

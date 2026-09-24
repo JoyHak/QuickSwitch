@@ -19,12 +19,9 @@ SelectPathAttempts  :=  3
 DialogAction        :=  0
 DialogId            :=  0
 EditId              :=  0
-LastDialogProcess   :=  ""
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
 IsEnforcedUi        :=  false
-WriteDialogAction   :=  false
-WritePinnedPaths    :=  false
 FromSettings        :=  false
 
 DeleteDialogs       :=  false
@@ -33,6 +30,10 @@ DeleteFavorites     :=  false
 DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
+
+
+; stores previous value of some global variables
+Last := {DialogId: 0, DialogProcess: ""}  
 
 SetDefaultValues() {
     /*
@@ -83,7 +84,6 @@ SetDefaultValues() {
     ShowUiAfterRestart  :=  false
     ShowOpenDialog      :=  false
     ShowSaveAsDialog    :=  false
-
     SaveLastTab         :=  true
 ;@Ahk2Exe-IgnoreEnd
 
@@ -112,7 +112,7 @@ SetDefaultValues() {
 
     ; Requires validation
     PinKey       := "RButton"
-    MainKey      := "^sc10"
+    MainKey      := "^sc10"  ; Ctrl+Q
     EnforceKey   := ""
     RestartKey   := ""
     IconsDir     := "Icons"
@@ -123,7 +123,7 @@ SetDefaultValues() {
     SetDefaultColors()
 
 ;@Ahk2Exe-IgnoreBegin
-    RestartKey   := "^sc1F"
+    RestartKey   := "^sc1F"  ; Ctrl+S
     RestartWhere := "ahk_exe notepad++.exe"
     UiPosX := UiPosY := 0
 ;@Ahk2Exe-IgnoreEnd
@@ -226,6 +226,25 @@ WriteValues() {
     }
 }
 
+WriteValue(_paramName, _value, _section) {
+    global INI
+    
+    try {
+        if (_section = "")
+            throw Exception("Section cannot be empty")    
+        if (_section = "Global")
+            throw Exception("The value will be overwritten in WriteValues()")
+            
+        IniWrite, % _value, % INI, % _section, % _paramName
+    } catch _ex {
+        _ex.what  .= " " _paramName
+        _ex.extra .= " " ValidateFile(INI)
+        _ex.message := "Unable to write """ _paramName """ to [" _section "]. " . _ex.message
+        
+        throw _ex    
+    }
+}
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 ReadValues() {
@@ -243,6 +262,21 @@ ReadValues() {
         _value      := _array[2]
         %_variable% := _value
     }
+    
+    Last.SendEnter := SendEnter
+}
+
+ReadValue(_paramName, _section := "Global", _default := "") {
+    global INI
+    IniRead, _value, % INI, % _section, % _paramName, % _default
+    
+    if (_value = "ERROR") {
+        throw Exception("Parameter """ _paramName """ not found in [" _section "]"
+                      , _paramName " read"
+                      , ValidateFile(INI))
+    }
+    
+    return _value
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -289,7 +323,6 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
 
     Returns an empty string if `paramName` is empty and path doesn't exist.
     */
-    global INI
 
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathisdirectoryw
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
@@ -322,10 +355,11 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
 
     ; If path is empty, assume it's intentional and skip this block
     _default := ""
-    if path {
-        IniRead, _default, % INI, % "Global", % _paramName
-        if ((_default != "ERROR") && associatedParam)
+    if (path) {
+        _default := ReadValue(_paramName, , A_Space)
+        if (associatedParam) {
             LogError("Directory not found: '" _path "'", _paramName, "Specify the full path to the directory")
+        }
     }
 
     if DllCall(IsPath, "str", _default)
@@ -349,7 +383,6 @@ ValidateColor(_paramName, ByRef color) {
     If found, returns "paramName=color".
     If color is incorrect, reads it from INI
     */
-    global INI
 
     if color {
         if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
@@ -359,8 +392,7 @@ ValidateColor(_paramName, ByRef color) {
             return ""
 
         LogError("Wrong color: '" color "'. Enter the HEX value", _paramName)
-
-        IniRead, _default, % INI, % "Global", % _paramName, % A_Space
+        _default := ReadValue(_paramName, , A_Space)
         color := _default
         return _paramName "=" _default "`n"
     }
@@ -380,12 +412,12 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
     Disables old key bound to `function` (if any) and removes it from `registeredKeys`.
     If key is incorrect, reads it from INI
     */
-    global INI
     static registeredKeys := {}
 
     try {
-        if !_sequence
+        if !_sequence {
             return _paramName "=`n"
+        }
 
         ; Early return: set state for existing hotkey
         if (!_function && registeredKeys.HasKey(_sequence)) {
@@ -427,7 +459,8 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
             return ""
 
         ; Remove old key if it exist
-        IniRead, _old, % INI, % "Global", % _paramName, % A_Space
+        _old := ReadValue(_paramName, , A_Space)
+        
         try if (_old && (_old != _key)) {
             Hotkey, % _prefix . _old, % "Off"
             Hotkey, % _old, % "Off"
@@ -447,7 +480,7 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
         LogException(_ex)
 
         ; Return value from config
-        IniRead, _default, % INI, % "Global", % _paramName, % A_Space
+        _default := ReadValue(_paramName, , A_Space)
         return _paramName "=" _default "`n"
     }
 }
@@ -487,42 +520,9 @@ ValidateFile(ByRef filePath) {
     return "'" filePath "' - " _extra "`n"
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-ValidatePinnedPaths(_paramName, ByRef paths, _state := false) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Restores or saves the "paths" array depending on the flags.
-    ; Returns the number of paths in the array after processing.
-    global INI, WritePinnedPaths
-
-    _length := paths.length()
-    if (WritePinnedPaths || !_state && _length) {
-        WritePinnedPaths := false
-        _paths := ""
-
-        if _length {
-            for _, _arr in GetUniqPaths(paths)
-                _paths .= "|" . _arr[1]
-
-            _paths := LTrim(_paths, "|")
-        }
-        try IniWrite, % _paths, % INI, % "App", % _paramName
-
-        if !_state {
-            paths := []
-            return 0
-        }
-        return _length
-    }
-
-    if (_state && !_length) {
-        IniRead, _paths, % INI, % "App", % _paramName, % A_Space
-        if _paths {
-            loop, parse, _paths, `|
-            {
-                paths.push([A_LoopField, "Pin.ico"])
-            }
-        }
-    }
-    return paths.length()
+OnExitCleanup() {
+    global
+    
+    WritePinnedPaths(PinnedPaths)
+    WriteDialogs()
 }

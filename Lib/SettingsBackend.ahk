@@ -14,7 +14,6 @@ ResetSettings() {
 
     InitAutoStartup()
     InitDarkTheme()
-    InitSections()
     InitMenuFont()
     ShowSettings()
 }
@@ -37,7 +36,6 @@ SaveSettings() {
 
     InitAutoStartup()
     InitDarkTheme()
-    InitSections()
     InitMenuFont()
 }
 
@@ -60,7 +58,7 @@ GuiEscape() {
 }
 
 NukeSettings() {
-    global INI
+    global
 
     DeleteFile(INI, "configuration")
     ResetSettings()
@@ -86,8 +84,10 @@ DeleteSections() {
     if (DeleteFavorites
      && MsgWarn("Do you want to delete the favorites?`n" FavoritesDir "\*.lnk")) {
         RunWait, % A_ComSpec " /c del /s /q """ FavoritesDir "\*.lnk""",, % "Hide"
-        if !ErrorLevel
+        if !ErrorLevel {
+            FavoritePaths := []
             LogInfo("Favorites has been placed in the Recycle Bin")
+        }            
     }
 
     if DeleteKeys {
@@ -95,39 +95,18 @@ DeleteSections() {
         PinMousePlaceholder := RestartMouselaceholder := MainMouselaceholder := EnforceMouselaceholder := ""
     }
 
-    if DeleteClipboard
-        ClipboardPaths := []
-
     if DeletePinned {
         PinnedPaths := []
-        try IniDelete, % INI, % "App", % "PinnedPaths"
     }
-
-    if NukeSettings
-        return NukeSettings()
-
-    if DeleteDialogs
-        try IniDelete, % INI, % "Dialogs"
-}
-
-;─────────────────────────────────────────────────────────────────────────────
-;
-InitSections(_all := false) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Clear / Init global arrays to remove sections from the menu
-    global
-
-    if _all
-        PinnedPaths := []
-
-    ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
-
-    if (!ShowFavorites || _all)
-        FavoritePaths  := []
-    if (!ShowManagers  || _all)
-        ManagersPaths  := []
-    if (!ShowClipboard || _all)
+    if DeleteClipboard {
         ClipboardPaths := []
+    }
+    if DeleteDialogs {
+        FileDialogs := {}
+    }
+    if NukeSettings {
+        NukeSettings()
+    }
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

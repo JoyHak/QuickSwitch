@@ -45,8 +45,6 @@ SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
         else
             PinnedPaths.RemoveAt(_pos)
 
-        WritePinnedPaths := true
-
         CreateMenu()
         return ShowMenu()
     }
@@ -86,24 +84,18 @@ SendPath(path) {
     }
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 IsMenuReady() {
-;─────────────────────────────────────────────────────────────────────────────
     global
     return ShowAlways && DialogAction != -1
         || ShowNoSwitch && DialogAction = 0
         || ShowAfterSettings && FromSettings
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleAutoSwitch() {
-;─────────────────────────────────────────────────────────────────────────────
     global
 
     DialogAction := (DialogAction = 1) ? 0 : 1
-    WriteDialogAction := true
+    FileDialogs[FingerPrint] := DialogAction
     
     ; Check only current item
     AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
@@ -118,21 +110,21 @@ ToggleAutoSwitch() {
         SetForegroundWindow(DialogId)
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleBlackList() {
-;─────────────────────────────────────────────────────────────────────────────
     global
 
     DialogAction := (DialogAction = -1) ? 0 : -1
-    WriteDialogAction := true
-
+    
+    if BlackListProcess {
+        ; All file dialogs, created by this process are added in the Black List
+        FileDialogs[DialogProcess] := DialogAction
+    } else {
+        FileDialogs[FingerPrint] := DialogAction
+    }
+    
     ; Check only current item
     AddMenuOption("AutoSwitch", "ToggleAutoSwitch", false)
-    AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)    
-    
-    if BlackListProcess
-        FingerPrint := DialogProcess
+    AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)
 
     if IsMenuReady()
         ShowMenu()

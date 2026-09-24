@@ -30,6 +30,11 @@ INI         := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini
 ErrorsLog   := "Errors.log"          ; file for error dumps and tracing
 ErrorsCount := 0                     ; track how many errors occurred in a short period of time
 
+PinnedPaths    := []
+FavoritePaths  := []
+ManagersPaths  := []
+ClipboardPaths := []
+
 #Include <Log>
 #Include <Tray>
 #Include <Debug>
@@ -57,6 +62,8 @@ SetDefaultValues()
 
 if IsFile(INI) {
     ReadValues()
+    ReadDialogs()
+    ReadPinnedPaths(PinnedPaths)
 } else {
     IsNewUser := true
     WriteValues()
@@ -69,8 +76,9 @@ ValidateKey("EnforceKey",  EnforceKey,  "$",  "On",   "EnforceShowMenu")
 
 InitAutoStartup()
 InitDarkTheme()
-InitSections("All")
 InitWelcomeMessage()
+
+OnExit("OnExitCleanup")
 
 ;@Ahk2Exe-IgnoreBegin
 ValidateKey("RestartKey",  RestartKey,  "~",  "On",   "RestartApp")
@@ -86,32 +94,42 @@ Loop {
 
     try {
         DialogId := DllCall("GetForegroundWindow", "Ptr")
-
-        IniRead, SendEnter, % INI, % "Global", % "SendEnter", 0
-        if !IsFileDialog(DialogId, EditId, , SendEnter) {
-            WinWaitNotActive, % "ahk_id " DialogId
-            Continue
+        
+        if FromSettings {
+            Gui, Destroy
         }
+        
+        if (IsDialogClosed || DialogId != Last.DialogId) {
+            SendEnter := Last.SendEnter
+            if !IsFileDialog(DialogId, EditId, , SendEnter) {
+                WinWaitNotActive, % "ahk_id " DialogId
+                Continue
+            }
 
-        ; If there is any GUI left from previous calls...
-        Gui, Destroy
+            WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
+            WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
+            FingerPrint := DialogProcess "___" DialogTitle
+            
+            /*
+            `DialogAction` represents user choice for current dialog: 
+            autoswitch = 1, black list = -1 or nothing = 0.
+            `DialogProcess` key affects all dialogs of this process 
+            (currently used by Black List).
+            */
+            if FileDialogs.HasKey(DialogProcess) {
+                DialogAction := FileDialogs[DialogProcess]
+            } else if FileDialogs.HasKey(FingerPrint) {
+                DialogAction := FileDialogs[FingerPrint]
+            } else {
+                ; Fallback to "Always AutoSwitch" value
+                DialogAction := AutoSwitch
+            }
 
-        WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
-        WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
-        FingerPrint := DialogProcess "___" DialogTitle
-
-        ; Get current dialog settings or use default mode (AutoSwitch flag).
-        ; The default DialogAction value is depends on "Always AutoSwitch" option.
-        ; Current choice will override "Always AutoSwitch" value.
-        IniRead, BlackList,    % INI, % "Dialogs", % DialogProcess, 0               ; -1 or 0
-        IniRead, DialogAction, % INI, % "Dialogs", % FingerPrint,   % AutoSwitch    ; -1, 0 or 1
-        DialogAction |= BlackList
-
-
-        ; Get paths for Menu sections
-        if ShowFavorites
-            GetFavoritePaths(FavoritePaths)
-
+            ; Get paths for Menu sections
+            if ShowFavorites
+                GetFavoritePaths(FavoritePaths)
+        }
+        
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPath", false)
@@ -158,8 +176,6 @@ Loop {
             ShowMenu()  ; halt main thread
         }
         
-        throw Exception("e", "o")
-        
         LogElevatedNames()
         ErrorsCount := 0
         
@@ -177,23 +193,16 @@ Loop {
     Sleep 200
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
-    ValidatePinnedPaths("PinnedPaths", PinnedPaths, ShowPinned)
 
-    ; Pending actions that are performed after closing a dialog
-    ; Save the selected option in the Menu if it has been changed
-    if WriteDialogAction {
-        WriteDialogAction := false
-        try IniWrite, % DialogAction, % INI, % "Dialogs", % FingerPrint
-    }
-
-    ; Clean-up paths from clipboard in new process
-    if (LastDialogProcess && (LastDialogProcess != DialogProcess))
-        Clips := []
-
-    LastDialogProcess := DialogProcess
+    ; Clean-up paths from clipboard in the new process
+    if (Last.DialogProcess != DialogProcess && Last.DialogProcess)
+        ClipboardPaths := []
+    
+    Last.DialogProcess := DialogProcess
+    Last.DialogId  := DialogId
     IsDialogClosed := !WinExist("ahk_id " DialogId)
 
-}   ; End of continuous WinWaitActive loop
+}   ; End of main loop
 
 
 if MsgError("An error occurred while waiting for the file dialog to appear.`nDo you want to report about error?")

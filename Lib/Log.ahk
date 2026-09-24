@@ -30,6 +30,12 @@ LogError(_message := "Unknown error", _what := "LogError", _extra := "", _silent
     return LogException(Exception(_message, _what, _extra), 2, _silent)
 }
 
+LogDebug(_text := ">") {
+    ; ToolTip % _text
+    _text := "[DEBUG] " _text
+    return LogException(Exception(_text), 3, true)
+}
+
 LogException(_ex, _offset := 1, _silent := false) {
     ; Accepts Exception / any custom object with similar attributes
     global ErrorsLog, ErrorsCount, ScriptName
@@ -111,8 +117,8 @@ LogVersion(_enforce := false) {
     _lastVersion := ""
     
     if IsFile(INI) {
-        IniRead, _lastVersion, % INI, % "App", % "Version", % A_Space
-        IniWrite, % _version,  % INI, % "App", % "Version"
+        _lastVersion := ReadValue("Version", "App", A_Space)
+        WriteValue("Version", _version, "App")
     }
     
     if (_enforce || _lastVersion != _version) {
@@ -176,18 +182,12 @@ InitLog() {
 
 InitWelcomeMessage() {
     ; Displays welcome notification if no errors occured
-    global IsNewUser, ErrorsLog, ErrorsCount, ScriptName, INI
+    global IsNewUser, ErrorsLog, ErrorsCount, ScriptName
     static REG_PATH := "HKEY_CURRENT_USER\Software\QuickSwitch"
     
     if !IsNewUser {
-        try RegWrite, % "REG_DWORD", % REG_PATH, % "SuppressWelcomeMessage", 1
         return true
     }
-    
-    try FileGetSize, _size, % ErrorsLog, B
-    if !_size
-        _size := 0
-        
     if (ErrorsCount >= 1) {
         return false
     }
@@ -205,7 +205,6 @@ InitWelcomeMessage() {
         )", 100
         
         IsNewUser := false
-        try IniWrite, 0, % INI, % "Global", % "IsNewUser"
         try RegWrite, % "REG_DWORD", % REG_PATH, % "SuppressWelcomeMessage", 1
         return true
     }
