@@ -154,25 +154,47 @@ SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
     return true
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 InitMenuFont() {
-;─────────────────────────────────────────────────────────────────────────────
     ; Sets font and font attributes for all menus in the system.
-    ; Prevents multiple font changes. Shows warning.
+    ; Prevents multiple font changes.
+    global
     
-    global ScriptName, MenuFont, MenuFontSize
+    if (MenuFont = Last.MenuFont && MenuFontSize = Last.MenuFontSize)
+        return
+    
+    if !SetMenuFont(MenuFont, MenuFontSize)
+        return
+    
+    MsgBox % "
+    (LTrim Join`s
+    The font has been changed. To roll back changes, open the settings, 
+    make the field empty and set the size to 0.
+    `n`nRestart the " ScriptName " manually.
+    )"
+    
+    ExitApp
+}
+
+ValidateMenuFont(_name, _size) {
+    ; Returns a pairs "param=value" where `value` is the new font and it's size 
+    ; if the user agreed to change the font, otherwise the old ones.
+    ; See SetMenuFont() and InitMenuFont()
+    global ScriptName, Last
+
+    if (_name = Last.MenuFont && _size = Last.MenuFontSize) {
+        return "MenuFont=" _name "`nMenuFontSize=" _size "`n"
+    }
     
     _warningMsg := "The font "
-    if !(MenuFont || MenuFontSize)
+    if !(_name || _size)
         _warningMsg .= "will be reset to system defaults "        
     
-    if MenuFont
-        _warningMsg .= "will be set to '" MenuFont "' "
-    if (MenuFont && MenuFontSize)
+    if _name
+        _warningMsg .= "will be set to """ _name """ "
+    if (_name && _size)
         _warningMsg .= "and its "
-    if MenuFontSize
-        _warningMsg .= "size will be set to " MenuFontSize " "
+    if _size
+        _warningMsg .= "size will be set to " _size " "
         
     _warningMsg .= "
     (LTrim Join`s
@@ -182,24 +204,10 @@ InitMenuFont() {
     `n`nDo you want to continue?
     )"
     
-    _restartMsg := "
-    (LTrim Join`s
-    The font has been changed. To roll back changes, open the settings, 
-    make the field empty and set the size to 0.
-    `n`nRestart the " ScriptName " manually.
-    )"
+    if !MsgWarn(_warningMsg) {
+        ; Restore previous values
+        return "MenuFont=" Last.MenuFont "`nMenuFontSize=" Last.MenuFontSize "`n"
+    }
     
-    _opt := ReadValue("MenuFont", "App", "_0")   
-    _options := MenuFont "_" MenuFontSize 
-    
-    if (_opt = _options)
-        return
-        
-    try WriteValue("MenuFont", _options, "App")
-    if !MsgWarn(_warningMsg)
-        return
-    
-    SetMenuFont(MenuFont, MenuFontSize)
-    MsgBox % _restartMsg
-    ExitApp
+    return "MenuFont=" _name "`nMenuFontSize=" _size "`n"
 }

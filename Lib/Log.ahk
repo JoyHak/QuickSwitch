@@ -118,7 +118,7 @@ LogVersion(_enforce := false) {
     
     if IsFile(INI) {
         _lastVersion := ReadValue("Version", "App", A_Space)
-        WriteValue("Version", _version, "App")
+        try WriteValue("Version", _version, "App")
     }
     
     if (_enforce || _lastVersion != _version) {
