@@ -163,10 +163,8 @@ GetClipboardPath(_dataType) {
             if ((_path := A_LoopField)             
              && ValidateDirectory("", _path)) {
                 ClipboardPaths.push([_path, "Clipboard.ico"])
-                return true
             }
         }
-        return false
     } catch _ex {
         LogException(_ex)
     }
