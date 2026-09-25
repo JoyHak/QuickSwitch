@@ -2,7 +2,7 @@
 <a href="#installation">
 <img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a><br>
 <a href="#installation">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
+<img src="https://raw.githack.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
 <!--
 <a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
 <img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
@@ -159,13 +159,13 @@ If you want to see the duplicate paths disable the `Settings > Menu > Delete dup
 
 You can copy any file or directory path (or any [variable](#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
 
-[Clipboard paths](Images/clipboard.avif)
+![Clipboard paths](Images/clipboard.avif)
 
 Copied paths will not disappear if you enforce the Menu to appear using [`Ctrl+Shift+Win+0`](#enforce-menu). It can help you to open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
 
 The option works in the background and analyzes the clipboard for the presence of a path when changing it. If several paths separated by line breaks (multi-line text) have been copied, they will be added to the Menu individually. 
 
-[Clipboard paths](Images/clipboard2.avif)
+![Clipboard paths](Images/clipboard2.avif)
 
 Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > (Show) file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
 
@@ -293,7 +293,7 @@ To understand how this works, let's look at an example. I opened `C:/Junk/CPP` t
 
 ![](Images/EnforceMenu1.gif)
 
-It allows me to duplicate paths between file managers, [open bookmarks](#favorites) or recently (copied paths)[#clipboard]. You can customize your bookmarks and then open them in any file manager. And for active work, you can copy paths (for example, the path to the active tab or the path to a file) and open them all at once using "enforce menu" feature.
+It allows me to duplicate paths between file managers, [open bookmarks](#favorites) or recently [copied paths](#clipboard). You can customize your bookmarks and then open them in any file manager. And for active work, you can copy paths (for example, the path to the active tab or the path to a file) and open them all at once using "enforce menu" feature.
 
 As this folder contains my C++ projects, let's open the IDE. Once the menu appears, I can select this path to open all my files. 
 
@@ -325,17 +325,19 @@ For other actions like "Show Menu" you can set shortcut or special key on `Setti
 
 To select mouse button press `mouse` on `App` tab and select item from drop-down list. You can select mouse buttons `Right`, `Left`, `Middle`, `Forward` and `Backward` (also known as BrowserBack or XButton1) and their combinations with keyboard modifiers like `Ctrl+Right` or `Shift+Backward` (`Alt` key hides menu by default, so it's not presented here).
 
+<img width="600" alt="mouse selection" src="Images/MouseSelection.avif" />
+
 ![mouse selection](Images/MouseSelection.avif)
 
 Press `mouse` -> `keybd` UI button to switch back to the keyboard hotkey input. Press `space` to disable specific hotkey.
 
-![mouse selection](Images/KeyboardInput.avif)
+<img width="600" alt="keyboard input" src="Images/KeyboardInput.avif" />
 
 ### Variables
 
 In the settings you can select the paths to the desired directories *(e.g. icons)*. 
 
-[Variables in edit fields](Images/variables.avif)
+<img width="600" alt="Variables in edit fields" src="Images/variables" />
 
 You can use an absolute path *(C:\QuickSwitch\Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
 
