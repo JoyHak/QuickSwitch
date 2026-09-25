@@ -58,7 +58,9 @@ AddTrayItem(_title, _function, _icon, _options := "") {
     if ShowIcons {
         if !IsFile(_icon)
             _icon := IconsDir "\" _icon
-
+        if !IsFile(_icon)
+            return
+            
         try Menu, % "Tray", % "Icon", % _title, % _icon,, % IconsSize
     }
 }
