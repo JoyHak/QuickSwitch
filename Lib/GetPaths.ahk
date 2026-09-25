@@ -200,12 +200,12 @@ GetFavoritePaths(ByRef paths) {
                 continue
 
             if _icon
-                ExpandVariables(_icon)
+                _icon := ExpandVariables(_icon)
             else
                 _icon := "Favorite.ico"
             
             if (_title := Trim(_title, " `t")) {
-                ExpandVariables(_title)
+                _title := ExpandVariables(_title)
                 paths.push([_path, _icon, _iconNumber, _title])
             } else {
                 paths.push([_path, _icon, _iconNumber])                
