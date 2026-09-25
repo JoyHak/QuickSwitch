@@ -117,16 +117,21 @@ CreateMenu() {
         MenuStack.Push(ClipboardPaths*)
 
     if MenuStack.Length() {
-        if (ShowPinned && !PinnedPaths.length())
-             AddMenuTitle("Hold " PinKey " and click on any path to pin it")
-        if (ShowFavorites && !FavoritePaths.length())
-             AddMenuTitle("Create .lnk in '" FavoritesDir "' dir to make it favorite")
+        local _offset := 0
+        if (ShowPinned && !PinnedPaths.length()) {
+            AddMenuTitle("Hold " PinKey " and click on any path to pin it")
+            _offset++
+        }
+        if (ShowFavorites && !FavoritePaths.length()) {
+            AddMenuTitle("Create .lnk in '" FavoritesDir "' dir to make it favorite")
+            _offset++
+        }
 
         if DeleteDuplicates
             MenuStack := GetUniqPaths(MenuStack)
 
         MenuStack.RemoveAt(PathLimit + 1, MenuStack.Length())
-        AddMenuPaths(MenuStack, Func("SelectPath").Bind(MenuStack))
+        AddMenuPaths(MenuStack, Func("SelectPath").Bind(MenuStack, _offset))
         AddMenuOptions()
     } else {
         AddMenuTitle("No available paths")

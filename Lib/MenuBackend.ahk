@@ -36,9 +36,11 @@ SwitchPath(ByRef path, _fromMenu := "") {
                   , "Timeout. " _log)
 }
 
-SelectPath(ByRef paths, _fromMenu := "", _pos := 1) {
+SelectPath(ByRef paths, _offset := 0, _fromMenu := "", _pos := 1) {
     global
-
+    
+    _pos -= _offset
+    
     if (ShowPinned && GetKeyState(PinKey)) {
         if (_pos > PinnedPaths.Length())
             PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico"])
