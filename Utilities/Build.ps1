@@ -29,12 +29,6 @@ $zipParams  = @(
     '-mx=0' # no compression (to prevent antivirus and scan issues)
 )
 
-$zipPaths = @(
-    "$outExe",  # main file
-    "$scriptDir\Icons",
-    "$scriptDir\Favorites"
-)
-
 if (!(Test-Path -Literal $outDir)) {
     New-Item -ItemType Directory -Path $outDir | Out-Null
 }
@@ -79,6 +73,7 @@ ForEach($bitness in @('64', '32')) {
         @zipParams `
         $archivePath `
         "$outExe" `
+        "$scriptDir\README.md" `
         "$scriptDir\Icons" `
         "$scriptDir\Favorites" |
         Out
@@ -94,6 +89,7 @@ $archivePath = "{0}-{1}.zip" -f `
     @zipParams `
     $archivePath `
     "$scriptPath" `
+    "$scriptDir\README.md" `
     "$scriptDir\Icons" `
     "$scriptDir\Favorites" `
     "$scriptDir\Lib" |
