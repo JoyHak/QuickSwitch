@@ -92,7 +92,7 @@ DeleteSections() {
 
     if DeleteKeys {
         PinKey := MainKey := EnforceKey := RestartKey := ""
-        PinMousePlaceholder := RestartMouselaceholder := MainMouselaceholder := EnforceMouselaceholder := ""
+        PinMousePlaceholder := RestartMousePlaceholder := MainMousePlaceholder := EnforceMousePlaceholder := ""
     }
 
     if DeletePinned {

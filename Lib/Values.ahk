@@ -410,20 +410,25 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
     Converts `sequence` to scancodes or internal mouse buttons.
     Replaces modifier names to standard modifiers symbols:  ! ^ + #
 
-    If converted, returns "paramName=key", creates a new key in `registeredKeys`.
-    Disables old key bound to `function` (if any) and removes it from `registeredKeys`.
+    If converted, returns "paramName=key", creates a new key in `hotkeys`.
+    Disables old key bound to `function` (if any) and removes it from `hotkeys`.
     If key is incorrect, reads it from INI
     */
-    static registeredKeys := {}
+    static hotkeys := {}
 
     try {
         if !_sequence {
+            if hotkeys.HasKey(_paramName) {
+                ; Unregister hotkey
+                Hotkey, % hotkeys[_paramName], % "Off"
+                hotkeys.Delete(_paramName)
+            }
             return _paramName "=`n"
         }
 
         ; Early return: set state for existing hotkey
-        if (!_function && registeredKeys.HasKey(_sequence)) {
-            Hotkey, % registeredKeys[_sequence], % _state
+        if (!_function && hotkeys.HasKey(_paramName)) {
+            Hotkey, % hotkeys[_paramName], % _state
             return ""
         }
 
@@ -452,29 +457,24 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
                 }
             }
         }
-
+        
+        ; Remove previous hotkey if it exists
+        if hotkeys.HasKey(_paramName) {
+            Hotkey, % hotkeys[_paramName], % "Off"
+        }
         ; Register new hotkey
         Hotkey, % _prefix . _key, % _function, % _state
-        registeredKeys[_sequence] := _prefix . _key
+        hotkeys[_paramName] := _prefix . _key
 
-        if !_paramName
+        if !_paramName {
             return ""
-
-        ; Remove old key if it exist
-        _old := ReadValue(_paramName, , A_Space)
-        
-        try if (_old && (_old != _key)) {
-            Hotkey, % _prefix . _old, % "Off"
-            Hotkey, % _old, % "Off"
-
-            try registeredKeys.Delete(_old)
         }
-
         return _paramName "=" _key "`n"
 
     } catch _ex {
-        if !_paramName
+        if !_paramName {
             return ""
+        }
         
         _ex.what    .= " " _paramName
         _ex.message := "Unable to register hotkey """ . _prefix . _sequence . """. " . _ex.message
