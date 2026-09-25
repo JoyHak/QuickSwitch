@@ -1,25 +1,15 @@
 <div align="center">    
 <a href="#installation">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a>
-<br>Forum threads<br>
-<a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=102377&sd=d">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/AutoHotkey.svg" alt="AutoHotkey"></a>
-<a href="https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Xyplorer.svg" alt="Xyplorer"></a>
-<a href="https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/TotalCommander.svg" alt="TotalCommander"></a>
-<a href="https://resource.dopus.com/t/quickswitch/40965/20">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/DirectoryOpus.svg" alt="DirectoryOpus"></a>
-<a href="https://www.voidtools.com/forum/viewtopic.php?t=9881&sd=d">
-<img src="https://img.shields.io/badge/Everything-orange?style=for-the-badge&logo=startpage&logoColor=ff8000&color=6c4028" alt="Everything"></a>
-<br>Installation sources<br>
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/banner-wide.png"></a><br>
+<a href="#installation">
+<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
+<!--
 <a href="https://wingetgui.com/apps/JoyHak-QuickSwitch">
 <img src="https://img.shields.io/winget/v/JoyHak.QuickSwitch?style=for-the-badge" alt="WinGet"></a>
 <a href="https://push.chocolatey.org/packages/quickswitch">
 <img src="https://img.shields.io/chocolatey/v/quickswitch?style=for-the-badge" alt="Chocolatey"></a>
-<a href="#installation">
-<img src="https://raw.githubusercontent.com/JoyHak/QuickSwitch/main/Images/badges/Download.svg" alt="Download"></a>
-<br>Quick help<br>
+-->
+<br>
 <a href="https://github.com/JoyHak/QuickSwitch/discussions/new/choose">
 <img src="https://img.shields.io/github/discussions-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Discussions"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml">
@@ -29,7 +19,7 @@
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
 ![](/Images/menu.gif)
 
-Open any tabs in supported file managers: File Explorer, Directory Opus, Total Commander, XYplorer. All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. [Pin and save your favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
+Open any tabs in [supported file managers](#file-managers): Windows Explorer, [Directory Opus](https://resource.dopus.com/t/quickswitch/40965/20), [Total Commander](https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d), [XYplorer](https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d). All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. [Pin and save your favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
 
 Enable "AutoSwitch" option to automatically change path in file dialog:
 
@@ -42,13 +32,17 @@ And of course you can customize the Menu:<br>
 Now you can install QuickSwitch or [explore](#appearance) advanced customization options!
 
 ## Installation
+
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
 <img src="https://img.shields.io/github/v/release/JoyHak/QuickSwitch?display_name=tag&style=flat" alt="Release"></a>
 <a href="https://github.com/JoyHak/QuickSwitch/releases/latest">
 <img src="https://img.shields.io/github/downloads/Joyhak/QuickSwitch/total?style=flat&color=fb9233" alt="Downloads"></a>
 <br><br>
 
+<!--
+UNDER VERIFICATION.
 You can install and upgrade QuickSwitch automatically through package manager or [download it manually](#manual-installation).
+
 ```ahk
 winget install JoyHak.QuickSwitch
 ```
@@ -63,7 +57,6 @@ winget install JoyHak.QuickSwitch
 ```powershell
 winget install JoyHak.QuickSwitch
 winget upgrade JoyHak.QuickSwitch
-winget uninstall JoyHak.QuickSwitch
 ```
 
 </details>
@@ -78,20 +71,30 @@ winget uninstall JoyHak.QuickSwitch
 ```powershell
 choco install quickswitch
 choco upgrade quickswitch
-choco uninstall quickswitch
 ```
 
 </details>
 
-\* <a name="scoop" href="https://github.com/ScoopInstaller/Scoop/wiki/So-What">
+<details>
+  <summary>
+    <a name="scoop" href="https://github.com/ScoopInstaller/Scoop/wiki/So-What">
       scoop
     </a>
+  </summary>
 
-> We need more than 100⭐ GitHub stars to satisfy the [Scoop package requirements](https://github.com/ScoopInstaller/Extras/discussions/11588#discussioncomment-6454332).
+```powershell
+scoop bucket add extras
+scoop install quickswitch
+scoop update quickswitch
+```
+
+</details>
 
 After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter` to launch installed package.
 
 ### Manual installation
+--> 
+
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
 2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps to update the app. The `.ini` configuration will never be replaced. 
 3. Run `QuickSwitch.exe`. Open some tabs in a supported file manager or create `.lnk` files in `.\Favorites`.
@@ -102,7 +105,9 @@ After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter
 ![installation video](Images/installation.avif)
 
 ## Appearance
+
 ### Short path
+
 Any path can shortened to a specified number of directories with limited name length. For example, enter number `2` in the `Number of dirs` field on the `ShortPath` tab. If the path to the menu will contain more than 2 directories (`C:\Windows\System32\Resources`), it will be shortened to 2 directories: `System32\Resources`
 
 > [!NOTE]
@@ -123,42 +128,54 @@ W̲indows\System32 – press `W` to activate this path.
 .̲.̲Windows – press `.` to activate this path.
 
 ~̲Windows – press `~` to activate this path.
- 
+
 </details>
 
 The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underlined in your Menu.
 
-#### Menu sections
-In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab.
-<a name="pinned"></a>
-<details><summary>Pinned paths (that are always visible)</summary> 
+### Menu sections
 
-If you want some paths to appear permanently in the Menu, you can pin them. To do this, enable the `Settings > Theme > Show pinned paths`  option and select a key or mouse button at  `Settings > App > Pin path...`. Close the settings and open the Menu. Hold down the selected key and left click on any path. Now it is pinned and it will be stored in the configuration. You will see this path on every restart. 
+In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab.
+
+<img src="./Icons/Pin.ico" width="35px" align="left" style="margin-right: 8px">
+
+#### Pinned
+
+<details><summary>Pinned paths (that are always visible)</summary>
+
+If you want some paths to appear permanently in the Menu, you can pin them. To do this, enable the `Settings > Theme > Show pinned paths`  option and [select a key or mouse button](#keyboard) on  `Settings > App > Pin path...`. Close the settings and open the Menu. Hold down the selected key and left click on any path. Now it is pinned and it will be stored in the configuration. You will see this path on every restart. 
 
 If you turn this option *off*, the pinned paths will no longer be displayed. If you turn this option *on* again, all pinned paths will be displayed again. If you want to delete all pinned paths, check `Settings > Reset > Delete favorite paths` and press `Enter`.
 
 If you want to see the duplicate paths disable the `Settings > Menu > Delete duplicate paths` option *(e.g. if you have a pinned path, but also want to quickly find it visually in the Menu by file manager icon)*.
 
 </details>
-<a name="clipboard"></a>
-<details><summary>Paths from clipboard (temporary, for a single file dialog)</summary> 
+
+<img src="./Icons/Clipboard.ico" width="35px" align="left" style="margin-right: 8px">
+
+#### Clipboard
+
+<details><summary>Paths from clipboard (temporary, for a single file dialog)</summary>
 
 You can copy any file or directory path (or any [variable](#variables)) and it will appear in the Menu. All copied paths will remain in the Menu until you open the file dialog in another application. If you want some paths to appear permanently, pin them.
 
-<img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/0014e6fc-74df-4936-b683-9c35a2d95068" />
+[Clipboard paths](Images/clipboard.avif)
 
 Copied paths will not disappear if you enforce the Menu to appear using [`Ctrl+Shift+Win+0`](#enforce-menu). It can help you to open the copied paths in multiple applications. If you copy the path to a file, QuickSwitch will use the directory with that file by removing everything after the last slash `\`.
 
-<img width="614" height="593" alt="clipboard2" src="https://github.com/user-attachments/assets/09237a63-2264-4050-9a8c-b0501536fd27" />
-
 The option works in the background and analyzes the clipboard for the presence of a path when changing it. If several paths separated by line breaks (multi-line text) have been copied, they will be added to the Menu individually. 
 
-Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > Show file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
+[Clipboard paths](Images/clipboard2.avif)
+
+Background analysis is temporarily disabled when requesting paths from other file managers *(if the `Settings > Theme > (Show) file managers paths` option is enabled)*, as their data is exchanged via the clipboard. If the request takes a very long time *(e.g., QuickSwitch creates the configuration for Total Commander)*, clipboard analysis will be turned off until all paths are fully received.
 
 </details>
-<details><summary>Favorite paths (with customizable icons and names)</summary>  
 
-<a name="favorites"></a>
+<img src="./Icons/Favorite.ico" width="35px" align="left" style="margin-right: 8px">
+
+#### Favorites
+
+<details><summary>Favorite paths (with customizable icons and names)</summary>
 
 If you have many paths and you want to change how they are displayed in the Menu, enable the `Settings > Theme > Show favorite paths` option. This option works with `.lnk` shortcuts (links). In the input field next to it, enter the directory from which the shortcuts will be taken. You can use [variables](#variables).
 
@@ -167,6 +184,7 @@ Press `Enter` and open specified directory. [Create .lnk shortcut](https://www.t
 <img width="1920" height="1920" alt="properties" src="https://github.com/user-attachments/assets/ec65e78b-26cb-4989-a71b-a14c6ea964bf" />
 
 You will see editable fields that will directly affect the display of the shortcut in QuickSwitch:
+
 - Target
 - Start in (working dir.)
 - Comment
@@ -192,64 +210,153 @@ You can hide some shortcuts by changing or removing their extension. If there ar
 
 </details>
 
-#### Variables
-In the settings you can select the paths to the desired directories *(e.g. icons)*. You can use an absolute path *(C:\QuickSwitch\Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
+<img src="./Icons/Explorer.ico" width="35px" align="left" style="margin-right: 8px">
 
-<details><summary>Examples</summary>
+#### File Managers
 
-```haml
-Icons
-%AppData%\Icons
-%A_ScriptDir%\Icons
+<details><summary>Tabs and entire panes from supported file managers</summary>
+
+The main paths that you will see immediately after installation are sourced from one of the supported file managers. You can "filter" the visible paths using options on `Settings >  theme` tab. All these options can be combined to produce different "filter". Currently, they are global and are not bound to each file dialog individually.
+
+- **Active pane:** many file managers, with the exception of Windows Explorer, have one or more panes. If you have many tabs open in each pane, you can choose to display only the tabs in the active pane. If "Active Tab" option is checked, "Active Pane" option would be ignored. That's it, the active tab will be the first one from each manager regardless of this option.
+
+- **Active tab:** only the active tab from each manager will be displayed. If the adjacent "Show locked tabs" is checked and all tabs from the active pane of some manager are locked, paths from it not be displayed.
+
+- **Locked Tabs:** in XYplorer and Total Commander, you can lock a tab's address. Once this is done, its path cannot be changed. Such tabs are sometimes referred to as "pinned" tabs. If you do not want them to be displayed, disable this option.
+
+- **Z-order index:** If you've seen the windows when pressing `Alt+Tab`, you've noticed that they appear in order of most recent use (Z-order). 
+
 ```
-```rust
-%SYSTEM_PATH%\%IconsDir%\SubDir
-```  
-```ruby
-C:\%IconsDir%
+┌─────────────────────────────────────┐
+│  Top of Z-Order (Foreground)
+│  ┌─────────────────────────────────┐
+│  │ Window 0 (Active, On Top)
+│  └─────────────────────────────────┘
+│  ┌──────────────────────┐
+│  │ Window 1 (Middle)
+│  └──────────────────────┘
+│  ┌──────────────────────┐
+│  │ Window 2 (Behind)
+│  └──────────────────────┘
+│  Bottom of Z-Order (Background)
+└─────────────────────────────────────┘
 ```
 
- If you have enabled the `Settings > Theme > Show paths from clipboard`, all copied variables will also be expanded. For example, if you have [Cmder](https://github.com/cmderdev/cmder) or [ConEmu](https://github.com/Maximus5/ConEmu) installed you can copy the `%ConEmuDir%` text to always see the path `C:\Users\...\cmder\vendor\conemu-maximus5` in the Menu. For permanent use you can pin this path and it will be visible in the menu always (enable `Settings > Theme > Show pinned paths`).
- 
- <img width="616" height="683" alt="Clipboard" src="https://github.com/user-attachments/assets/80ea3b3d-9eec-4629-aa64-38b35a28ab92" />
+  The most recently opened window will be first (index **0**). Each open file manager window has a sequence number (index), and you can set it to display paths from that window only. So the last opened window has index **0**, recently opened has **1**, and so on. So Z-order index 1 means "display tabs from previous active window" (not the active one). And Z-order index 2 means "previous previous active window".
 
+  ![z-order](https://github.com/user-attachments/assets/baf967fa-3e47-46dd-bb64-45640c891381)
+
+QuickSwitch counts index individually for each file manager. Therefore, if you have, for example, 2 XYplorer windows, you can set Z-order index to **0** or **1** even if there are other windows in-between. Windows from other apps are ignored.
+
+```
+┌─────────────────────────────────────┐
+│  ┌─────────────────────────────────┐
+│  │ XYplorer 0 (Active)
+│  └─────────────────────────────────┘
+│  ┌──────────────────────┐
+│  │ Window 1 (Middle)
+│  └──────────────────────┘
+│  ┌──────────────────────┐
+│  │ XYplorer 1 (Recent)
+│  └──────────────────────┘
+│  ┌──────────────────────┐
+│  │ DOpus 0 (Recent)
+│  └──────────────────────┘
+│  ┌──────────────────────┐
+│  │ DOpus 1 (Old)
+│  └──────────────────────┘
+└─────────────────────────────────────┘
+```
+
+- **Virtual desktops:** displays all paths from all file managers if the Z-index is `0` *(see above)* or displays the paths from lister according to the selected index. If you recently opened a file manager in another desktop (#162), select index `2` to see its paths.
+
+  ![virtual desktops](https://github.com/user-attachments/assets/92484619-2447-4fc7-898c-14e941e8d3cf)
 
 </details>
 
-## Keyboard
+## Settings
+
+### Enforce Menu
+
+You can show the Menu everywhere:
+- Press default shortcut `Ctrl+Shift+Win+0` (can be changed on `Settings > App` tab). 
+- Click on tray icon
+- Right click on tray icon -> "Menu"
+
+This shortcut can be changed to any [mouse button](#mouse) or [keyboard shortcut](#keyboard) or even special key like `CapsLock`. You can use this feature to open new tab in file manager or change working path in active application.
+
+<details><summary>How to use this feature</summary>
+
+This feature is known as "enforce menu" because it forces the menu to appear in any work application or file manager, even if there is no file dialog.
+
+To understand how this works, let's look at an example. I opened `C:/Junk/CPP` tab in XYplorer and switched to Total Commander. Clicking the icon in the system tray or pressing the `Ctrl+Shift+Win+0` keyboard shortcut (can be changed on `Settings > App` tab) brought up the Menu showing my [pinned paths](#pinned) and the tab from XYplorer. Now, by selecting any path, I can switch the active tab in Total Commander.
+
+![](Images/EnforceMenu1.gif)
+
+It allows me to duplicate paths between file managers, [open bookmarks](#favorites) or recently (copied paths)[#clipboard]. You can customize your bookmarks and then open them in any file manager. And for active work, you can copy paths (for example, the path to the active tab or the path to a file) and open them all at once using "enforce menu" feature.
+
+As this folder contains my C++ projects, let's open the IDE. Once the menu appears, I can select this path to open all my files. 
+
+![](Images/EnforceMenu2.gif)
+
+This way, I can open different projects, and their locations will be stored in QuickSwitch. I can open the same project in Clion, VS Code and Notepad++.
+
+</details>
+
+The menu will display the paths obtained after the last opening of the file dialog and will not change them until the next opening. The menu will be empty the first time it is opened. [Pin and save your favorite paths](#menu-sections) so you can always see them.
+
+### Keyboard
+
 Each option and button in the settings has a corresponding key.
 Take a closer look: each name has an u̲n̲d̲e̲r̲l̲i̲n̲e̲d̲ l̲e̲t̲t̲e̲r̲. Press this letter on the keyboard to jump to the option. For example:
  _C̲ancel_ – `C`; _Path s̲eparator_  – `S`.
 
 Here is a short list of the main keys:
+
 - Path: `0-9`.
 - Auto switch: `A`
 - Black list: `B`
 - Settings: `S`
 - Hide menu: `Esc` / `click` anywhere
 
-You can select keys or mouse buttons on `Settings > App` tab. You can even select the `CapsLock` or `Win` key in the settings or the middle mouse button to show the Menu. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them. 
+For other actions like "Show Menu" you can set shortcut or special key on `Settings > App` tab. You can even select `CapsLock` or `Win` key in the settings or the middle mouse button. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them. Press `space` to disable specific hotkey.
 
-## Feedback
+### Mouse
 
-**I really need your feedback!** If something is not working for you, please [let me know](https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml). If you think that app can be improved, [write to me](https://github.com/JoyHak/QuickSwitch/issues/new?template=feature-request.yaml) or read the [contribution guide](CONTRIBUTING.md).
+To select mouse button press `mouse` on `App` tab and select item from drop-down list. You can select mouse buttons `Right`, `Left`, `Middle`, `Forward` and `Backward` (also known as BrowserBack or XButton1) and their combinations with keyboard modifiers like `Ctrl+Right` or `Shift+Backward` (`Alt` key hides menu by default, so it's not presented here).
 
-<a name="enforce-menu"></a>
-You can enforce the Menu in any application using the keyboard shortcut: `Ctrl+Shift+Win+0`. You can use this feature to change the path in any application, including supported file manager.
+![mouse selection](Images/MouseSelection.avif)
+
+Press `mouse` -> `keybd` UI button to switch back to the keyboard hotkey input. Press `space` to disable specific hotkey.
+
+![mouse selection](Images/KeyboardInput.avif)
+
+### Variables
+
+In the settings you can select the paths to the desired directories *(e.g. icons)*. 
+
+[Variables in edit fields](Images/variables.avif)
+
+You can use an absolute path *(C:\QuickSwitch\Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
 
 <details><summary>Examples</summary>
 
-Open any file manager and press this shortcut. If you have tabs open in one file manager, you can open them in active manager using the Menu.
+```rust
+Icons
+%AppData%\Icons
+%A_ScriptDir%\Icons
+%SYSTEM_PATH%\%IconsDir%\SubDir
+C:\%IconsDir%
+```
 
-Another example: open Notepad++ and press this shortcut. Select any path from the Menu. Notepad++ will open all files from that path.
+ If you have enabled the `Settings > Theme > Show paths from clipboard`, all copied variables will also be expanded. For example, if you have [Cmder](https://github.com/cmderdev/cmder) or [ConEmu](https://github.com/Maximus5/ConEmu) installed you can copy the `%ConEmuDir%` text to always see the path `C:\Users\...\cmder\vendor\conemu-maximus5` in the Menu. For permanent use you can pin this path and it will be visible in the menu always (enable `Settings > Theme > Show pinned paths`).
 
 </details>
-  
-The menu will display the **paths obtained after the last opening of the file dialog** and will not change them until the next opening. The menu will be empty the first time it is opened. [Pin and save your favorite paths](#menu-sections) so you can always see them. 
 
 ## Limitations
 
 To ensure that the correct current paths always appear in the menu:
+
 - Disable localized folder names *(e.g. C:\Users, C:\Användare, ...).*                       
 - Periodically open the file manager you need *(a big number of windows makes it difficult to find the last open manager).*
 - Do not keep virtual folders open *(e.g. coll://, Desktop, Rapid Access, ...).*
@@ -263,9 +370,10 @@ QuickSwitch is written in AutoHotkey, which uses WinAPI. It sends messages to ot
 > User Interface Privilege Isolation (UIPI) implements restrictions in the Windows subsystem that prevent lower-privilege applications from sending messages or installing hooks in higher-privilege processes. Higher-privilege applications are permitted to send messages to lower-privilege processes. UIPI doesn't interfere with or change the behavior of messages between applications at the same privilege (or integrity) level.
 
 You can also [disable UAC](https://superuser.com/a/1773044) and use low-level or powerful antivirus _(Crowdstrike, Eset Endpoint Security)_ for full control over running applications. Modern viruses [does not require admin privileges](https://security.stackexchange.com/a/183149) to interact with the system. However, they can obtain admin rights by [exploiting Windows vulnerability](https://community.spiceworks.com/t/how-does-malware-actually-gain-admin-access-to-a-pc-without-av/329471).
+
 </details>
 
-## Compiling	
+## Compiling
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/JoyHak/QuickSwitch)
 
@@ -274,11 +382,12 @@ This app is written on [Autohotkey language](https://en.m.wikipedia.org/wiki/Aut
 <details><summary>Dependencies</summary>
 
 Required applications:
+
 - `Autohotkey` interpreter (v1.1.37.02 Unicode and v2.0.19): https://www.autohotkey.com/download
 - `Ahk2Exe` builder to create EXE from AHK. It's included in AHK installer: `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe`</br>
-    - Can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
-    - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
-    *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
+  - Can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
+  - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
+      *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
 
 > Autohotkey v1.1.37.02 is an **outdated version.** If you want to start learning this language, learn `v2.0.19+`. QuickSwitch needs to be updated from `v1` to `v2`! 
 
@@ -286,17 +395,9 @@ Optional `7zG.exe` to create an archives with the required files: https://7-zip.
 
 </details>
 
-To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Open the [.\Utilities\Build.ahk](/Utilities/Build.ahk) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path. Detailed documentation on which values to specify is provided in the [script comments](/Utilities/Build.ahk).
+To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Run the [build script](Utilities/Build.ps1) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path.
 
-> [!NOTE]
-> The builder is designed for different AHK apps regardless of their interpreter. It will automatically select the interpreter based on the app name and its directory, so **you can use it in your AHK projects**. Unnecessary dependencies can be disabled by commenting out variables with paths to different applications.
-
-You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin)  in the main file with the name like `QuickSwitch-v1.8...ahk`. After completing the configuration process, run the `Build.ahk`.
-Directives allow the user to specify how app should be builded by [Ahk2Exe](https://www.autohotkey.com/docs/v1/Scripts.htm#ahk2exe). Some of the features are:
-- Ability to change the version information (such as the name, description, version...).
-- Ability to add resources to the compiled script.
-- Ability to tweak several miscellaneous aspects of compilation.
-- Ability to remove code sections from the compiled script and vice versa.
+You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin) in the [main file](QuickSwitch.ahk). After completing the configuration process, run the `Build.ps1`.
 
 ## Credits
 
@@ -317,6 +418,3 @@ After the release, [Arsiendle](https://github.com/Arsiendle) sent a detailed rep
 [Noticz](https://github.com/noticz) suggested algorithms for a dark theme, switching tabs in file managers using QuickSwitch, and extending the Black List for the [big 1.8 release](https://github.com/JoyHak/QuickSwitch/releases/tag/1.8). During the testing by [eddablin](https://github.com/eddablin) some issues was fixed.
 
 I also posted a message on the AutoHotkey discord server asking for help in fixing an ancient bug that caused the Menu to stuck on the screen, which has been known since 2007. [FuPeiJiang](https://github.com/FuPeiJiang) responded and helped resolve many issues with Menu. He helped make the main Menu stable and predictable.
-
-
-
