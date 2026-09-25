@@ -101,7 +101,7 @@ Loop {
         
         if (IsDialogClosed || DialogId != Last.DialogId) {
             SendEnter := Last.SendEnter
-            if !IsFileDialog(DialogId, EditId, , SendEnter) {
+            if !IsFileDialog(DialogId, EditId, SendEnter) {
                 WinWaitNotActive, % "ahk_id " DialogId
                 Continue
             }

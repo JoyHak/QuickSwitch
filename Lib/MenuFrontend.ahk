@@ -222,7 +222,7 @@ ShowMenu(_posX := "", _posY := "") {
             , "Ptr", A_ScriptHwnd
             , "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
     }
-
+    
     ; Switch windows focus
     _activeId := DllCall("GetForegroundWindow", "Ptr")
     if (_activeId != A_ScriptHwnd) {
@@ -253,8 +253,6 @@ EnforceShowMenu() {
 }
 
 HideMenu(_winId, _wmTimer, _timerId, _tickCount) {
-    ; Menu, % "ContextMenu", % "Enable", % "&AutoSwitch"
-    ; Menu, % "ContextMenu", % "Disable", % "&BlackList"
     _id := DllCall("GetForegroundWindow", "Ptr")
     if (_id = _winId)
         return _winId
