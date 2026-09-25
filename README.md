@@ -106,33 +106,6 @@ After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter
 
 ## Appearance
 
-### Short path
-
-Any path can shortened to a specified number of directories with limited name length. For example, enter number `2` in the `Number of dirs` field on the `ShortPath` tab. If the path to the menu will contain more than 2 directories (`C:\Windows\System32\Resources`), it will be shortened to 2 directories: `System32\Resources`
-
-> [!NOTE]
-> By default `ShortPath` cuts the beginning of the path. Option `Shorten the end` cuts the end of the path.
-
-Enter number `3` in the `Length of dir names` field on the same tab to limit the length of each directory in the path to 3 symbols: `Sys..\Res..`. Increase this number to see their full names.
-
-Also you can include the disk letter at the beginning or change the separator between directories to anything, e.g. tilda `~`: `W:~Windows~System32`
-
-The first letter of the path (or selected tilda `~`) will be <ins>underlined</ins> in the menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9. Press the <ins>underlined</ins> letter or symbol on your keyboard to activate this path in the menu and change file dialog path (see more about keys [here](#keyboard)).
-
-<details><summary>Underlined letters examples</summary>
-
-C̲:\Windows – press `C` to activate this path and change file dialog path.
-
-W̲indows\System32 – press `W` to activate this path.
-
-.̲.̲Windows – press `.` to activate this path.
-
-~̲Windows – press `~` to activate this path.
-
-</details>
-
-The path shortening settings on the `ShortPath`‬ tab allows you to completely change a path structure. Experiment with this settings to change which letter will be underlined in your Menu.
-
 ### Menu sections
 
 In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab.
@@ -274,6 +247,22 @@ QuickSwitch counts index individually for each file manager. Therefore, if you h
 
 </details>
 
+### Short path
+
+Any path can be shortened to a specified number of directories with limited name length: `System32\Resources` or even `Sys..\Res..`. The path shortening settings on `Settings > Short Path‬` tab allows you to completely change a path structure.
+
+<details><summary>Short path examples</summary>
+
+For example, enter number `2` in the `Number of dirs` field on the `ShortPath` tab. If the path to the menu will contain more than 2 directories (`C:\Windows\System32\Resources`), it will be shortened to 2 directories: `System32\Resources`
+
+By default `ShortPath` cuts the beginning of the path. `Shorten the end` option cuts the end of the path.
+
+Enter number `3` in the `Length of dir names` field on the same tab to limit the length of each directory in the path to 3 symbols: `Sys..\Res..`. Increase this number to see their full names.
+
+Also you can include the disk letter at the beginning or change the separator between directories to anything, e.g. tilda `~`: `W:~Windows~System32`
+
+</details>
+
 ## Settings
 
 ### Enforce Menu
@@ -319,6 +308,24 @@ Here is a short list of the main keys:
 - Settings: `S`
 - Hide menu: `Esc` / `click` anywhere
 
+Each path in the Menu has <ins>underlined</ins> prefix. Press the <ins>underlined</ins> key on your keyboard to activate this path. 
+For example: "<ins>1</ins> C:\Windows" – press `1` to activate this path.
+
+<details><summary>Underlined letters examples</summary>
+<ins>2</ins> Windows\System32 – press `2` to activate this path.<br><br>
+
+The first letter of the path will be <ins>underlined</ins> in the Menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9:
+
+C̲:\Windows – press `C` to activate this path.<br>
+
+You can customize <ins>underlined</ins> prefix on `Settings > Short Path` tab:<br>
+
+.̲.̲Windows – press `.` to activate this path.<br>
+
+~̲Windows – press `~` to activate this path.
+
+</details>
+
 For other actions like "Show Menu" you can set shortcut or special key on `Settings > App` tab. You can even select `CapsLock` or `Win` key in the settings or the middle mouse button. While the file dialog is open, keys such as `Space`, `Win`, `CapsLock` and so on will not work as usual so that you can use them. Press `space` to disable specific hotkey.
 
 ### Mouse
@@ -327,8 +334,6 @@ To select mouse button press `mouse` on `App` tab and select item from drop-down
 
 <img width="600" alt="mouse selection" src="Images/MouseSelection.avif" />
 
-![mouse selection](Images/MouseSelection.avif)
-
 Press `mouse` -> `keybd` UI button to switch back to the keyboard hotkey input. Press `space` to disable specific hotkey.
 
 <img width="600" alt="keyboard input" src="Images/KeyboardInput.avif" />
@@ -336,8 +341,6 @@ Press `mouse` -> `keybd` UI button to switch back to the keyboard hotkey input. 
 ### Variables
 
 In the settings you can select the paths to the desired directories *(e.g. icons)*. 
-
-<img width="600" alt="Variables in edit fields" src="Images/variables" />
 
 You can use an absolute path *(C:\QuickSwitch\Icons)* or a path relative to the current QuickSwitch location *(Icons)* as the path. You can use variables in paths: [environment variables](https://learn.microsoft.com/en-us/windows/deployment/usmt/usmt-recognized-environment-variables); built-in [AutoHotkey variables](https://www.autohotkey.com/docs/v1/Variables.htm#BuiltIn); declared [QuickSwitch variables](/Lib/Values.ahk). Enclose the variables in percent signs `%`.
 
