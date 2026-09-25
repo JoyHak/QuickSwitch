@@ -120,10 +120,13 @@ SetDefaultValues() {
     RestartKey   := ""
     IconsDir     := "Icons"
     FavoritesDir := "Favorites"
-    MainIcon     := IconsDir "\QuickSwitch.ico"
     MenuColor    := ""
     GuiColor     := ""
     SetDefaultColors()
+    
+    MainIcon     := IconsDir "\QuickSwitch.ico"
+    if !IsFile(MainIcon)
+        MainIcon := ""
 
 ;@Ahk2Exe-IgnoreBegin
     RestartKey   := "^sc1F"  ; Ctrl+S
@@ -350,9 +353,11 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
     ; If path is empty, assume it's intentional and skip this block
     _default := ""
     if (path) {
-        _default := ReadValue(_paramName, , A_Space)
-        if (associatedParam) {
-            LogError("Directory not found: '" _path "'", _paramName, "Specify the full path to the directory")
+        try {
+            _default := ReadValue(_paramName)
+            if (associatedParam) {
+                LogError("Directory not found: '" _path "'", _paramName, "Specify the full path to the directory")
+            }
         }
     }
 
