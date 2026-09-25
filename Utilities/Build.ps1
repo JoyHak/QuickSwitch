@@ -41,7 +41,22 @@ if (!(Test-Path -Literal $outDir)) {
 Set-Location $outDir
 
 # Archive for each platform
-ForEach($bitness in @('32', '64')) {
+
+function Out {
+    [cmdletbinding()]
+    param (
+        [Parameter(Position=0, ValueFromPipeline)]
+        [string]$msg
+    )
+    
+    if (-not ([string]::IsNullOrEmpty($msg))) {
+        $msg.Trim("`r","`n") | Out-String
+    }
+}
+
+$archives = [System.Collections.Generic.List[string]]@()
+
+ForEach($bitness in @('64', '32')) {
     $interpreterPath = "{0}\AutoHotkeyU{1}.exe" -f `
         $autoHotkeyDir, $bitness
 
@@ -66,9 +81,9 @@ ForEach($bitness in @('32', '64')) {
         "$outExe" `
         "$scriptDir\Icons" `
         "$scriptDir\Favorites" |
-        Out-String
-        
-    Write-Host $archivePath    
+        Out
+    
+    $archives.Add($archivePath)
 }
 
 # Archive source code
@@ -82,9 +97,15 @@ $archivePath = "{0}-{1}.zip" -f `
     "$scriptDir\Icons" `
     "$scriptDir\Favorites" `
     "$scriptDir\Lib" |
-    Out-String
-    
-Write-Host $archivePath
+    Out
+
+$archives.Add($archivePath)
+
+# Output hashes
+ForEach($path in $archives) {
+    Write-Host $path (Get-FileHash $path -Algorithm SHA256).hash
+}
+
 
 $artifact = Split-Path $archivePath -leafBase
 "artifact=$artifact" >> $env:GITHUB_ENV
