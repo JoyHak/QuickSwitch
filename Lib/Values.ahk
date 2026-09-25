@@ -281,35 +281,27 @@ ReadValue(_paramName, _section := "Global", _default := "") {
     return _value
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-IsFile(ByRef path) {
-;─────────────────────────────────────────────────────────────────────────────
+IsFile(_path) {
     ; https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathfileexistsw
     static shlwapi := DllCall("GetModuleHandle", "str", "Shlwapi", "ptr")
     static IsFile  := DllCall("GetProcAddress", "ptr", shlwapi, "astr", "PathFileExistsW", "ptr")
 
-    return DllCall(IsFile, "ptr", &path)
+    return DllCall(IsFile, "str", _path)
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-ExpandVariables(ByRef path) {
-;─────────────────────────────────────────────────────────────────────────────
+ExpandVariables(_path) {
     ; Performs a dereference of all built-in, declared and env. variables
     ; Returns the number of expanded variables.
-    _pos := _count := 0
-    while (_pos := RegExMatch(path, "%(\w+)%", _var, ++_pos)) {
+    _pos := 0
+    while (_pos := RegExMatch(_path, "%(\w+)%", _var, ++_pos)) {
         if IsSet(%_var1%) {
-            path := StrReplace(path, "%" _var1 "%", %_var1%)
-            ++_count
+            _path := StrReplace(_path, "%" _var1 "%", %_var1%)
         } else {
             EnvGet, _env, % _var1
-            path := StrReplace(path, "%" _var1 "%", _env)
-            ++_count
+            _path := StrReplace(_path, "%" _var1 "%", _env)
         }
     }
-    return _count
+    return _path
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -333,7 +325,7 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
     ; Filter the path
     path := Trim(path, " `t\/.")
     path := StrReplace(path, "/" , "\")
-    ExpandVariables(path)
+    path := ExpandVariables(path)
     _path := path
 
     loop, 2 {
@@ -489,20 +481,20 @@ ValidateKey(_paramName, _sequence, _prefix := "", _state := "On", _function := "
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-ValidateFile(ByRef filePath) {
+ValidateFile(_filePath) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Collects debugging information about the file and attempts to read it.
     _extra := "Cant write data to the file"
 
-    if !filePath {
+    if !_filePath {
         _extra := "File path is empty"
-    } else if !IsFile(filePath) {
+    } else if !IsFile(_filePath) {
         _extra := "Unable to create file"
     } else {
-        _file := FileOpen(filePath, "r")
+        _file := FileOpen(_filePath, "r")
 
         if !IsObject(_file) {
-            FileGetAttrib, _attr, % filePath
+            FileGetAttrib, _attr, % _filePath
             _extra := "Unable to get access to the file"
         } else {
             _extra     := "`nReading existing file`n"
@@ -514,12 +506,12 @@ ValidateFile(ByRef filePath) {
         _file.Close()
 
         try {
-            FileGetAttrib, _attr, % filePath
+            FileGetAttrib, _attr, % _filePath
             _extra .= "File attributes: " _attr
         }
     }
 
-    return "'" filePath "' - " _extra "`n"
+    return "'" _filePath "' - " _extra "`n"
 }
 
 OnExitCleanup() {

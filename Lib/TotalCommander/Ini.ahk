@@ -98,9 +98,8 @@ GetTotalRegistryIni() {
 
     if !_path
         return ""
-
-    ExpandVariables(_path)
-    return _path
+    
+    return ExpandVariables(_path)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
