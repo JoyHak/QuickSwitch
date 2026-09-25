@@ -24,26 +24,25 @@ FillDialog(ByRef editId, ByRef path, _sendEnter := false) {
     return false
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-IsFileDialog(ByRef dialogId, ByRef editId := 0, ByRef buttonId := 0, ByRef sendEnter := false) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Checks all dialog controls and returns true
+IsFileDialog(ByRef dialogId, ByRef editId := 0, ByRef sendEnter := false) {
+    ; Checks all dialog controls and returns "true"
     ; if required controls found, otherwise returns "false"
 
     try {
-        ControlGet, buttonId, % "hwnd",, % "Button1", % "ahk_id " DialogId
-        ControlGet, editId,   % "hwnd",, % "Edit1",   % "ahk_id " DialogId
+        ControlGet, _buttonId, % "hwnd",, % "Button1", % "ahk_id " dialogId
+        ControlGet, _editId,   % "hwnd",, % "Edit1",   % "ahk_id " dialogId
     } catch {
         return false
     }
 
-    if !(buttonId || editId)
+    if !(_buttonId || _buttonId)
         return false
 
-    ; Dialog with buttons
+    editId := _editId
+    
+    ; It's a dialog
     ; Get specific controls
-    WinGet, _controlList, % "ControlList", % "ahk_id " DialogId
+    WinGet, _controlList, % "ControlList", % "ahk_id " dialogId
 
     ; Search for...
     static classes := {SysListView321: 1, SysTreeView321: 2, SysHeader321: 4, ToolbarWindow321: 8, DirectUIHWND1: 16}
