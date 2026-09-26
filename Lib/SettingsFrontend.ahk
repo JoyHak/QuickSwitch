@@ -30,9 +30,9 @@ ShowSettings() {
     local fieldDefault := "r1 -Wrap -vscroll w"
     local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
     local tiny   := fieldDefault . 4  * (10 + scale)
-    local short  := fieldDefault . 11 * (10 + scale)
+    local short  := fieldDefault . 12 * (10 + scale)
     local list   := "r4 w"       . 12 * (10 + scale)
-    local long   := fieldDefault . 16 * (10 + scale)
+    local long   := fieldDefault . 17 * (10 + scale)
 
     ; Split settings to the tabs
     Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
@@ -85,17 +85,16 @@ ShowSettings() {
     ; Preserve this values
     Last.DarkTheme    := DarkTheme
     Last.MenuFont     := MenuFont
-    Last.MenuFontSize := MenuFontSize    
-    
+    Last.MenuFontSize := MenuFontSize
     OnMessage(0x0133, "OnEditColor")
     
     Gui, Add, Edit,      ys-4     %short% Limit8            vMenuColor            Section,                          %MenuColor%
     Gui, Add, Edit,      xs y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
     
-    Gui, Add, Edit,         y+4   %short%                   vMenuFont,                                              %MenuFont%
+    Gui, Add, ComboBox,     y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
-    Gui, Add, Edit,     xs  y+4   %short%                   vMainFont,                                              %MainFont%
+    Gui, Add, ComboBox, xs  y+4   %list%                    vMainFont,                                            % GetFontList(MainFont)
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMainFontSize,                                          %MainFontSize%
 
