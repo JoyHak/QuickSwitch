@@ -15,13 +15,20 @@ SendMessage(ByRef winId, _message := 74, ByRef wParam := 0, ByRef lParam := 0) {
 
 SendExplorerPath(ByRef winId, ByRef path) {
     try {
-        for _win in ComObjCreate("Shell.Application").windows {
+        _shellApp := 0
+        _shellApp := ComObjCreate("Shell.Application")
+        
+        for _win in _shellApp.windows {
             if (winId = _win.hwnd) {
                 _win.Navigate(Trim(path, " ""\/"))
                 break
             }
         }
-        _win := ""
+    } catch _ex {
+        LogException(_ex)
+    } finally {
+        if _shellApp
+            ObjRelease(_shellApp)
     }
 }
 
