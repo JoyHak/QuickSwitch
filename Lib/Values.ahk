@@ -326,7 +326,8 @@ ValidateDirectory(_paramName, ByRef path, _associatedParamName := "", ByRef asso
     static IsPath  := DllCall("GetProcAddress", "Ptr", shlwapi, "astr", "PathIsDirectoryW", "ptr")
 
     ; Filter the path
-    path := Trim(path, " `t\/.")
+    path := Trim(path, " `t'""")
+    path := RTrim(path, "\/.")
     path := StrReplace(path, "/" , "\")
     path := ExpandVariables(path)
     _path := path
