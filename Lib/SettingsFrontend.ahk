@@ -24,15 +24,15 @@ ShowSettings() {
     Gui, Font, % _options, % MainFont
 
     ; The larger the font size and DPI, the wider the input fields
-    local scale := (MainFontSize != 0) ? (MainFontSize - 8) : 0
+    local scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
 
     ; Edit fields: one row, no multi-line word wrap, no vertical scrollbar
     local fieldDefault := "r1 -Wrap -vscroll w"
     local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
-    local tiny   := fieldDefault . 5  * (10 + scale)
-    local short  := fieldDefault . 10 * (10 + scale)
-    local list   := "r4 w"       . 10 * (10 + scale)
-    local long   := fieldDefault . 14 * (10 + scale)
+    local tiny   := fieldDefault . 4  * (10 + scale)
+    local short  := fieldDefault . 11 * (10 + scale)
+    local list   := "r4 w"       . 12 * (10 + scale)
+    local long   := fieldDefault . 16 * (10 + scale)
 
     ; Split settings to the tabs
     Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
@@ -208,10 +208,10 @@ ShowSettings() {
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
 
-    Gui, Add, Button, % "x" ((CenterX >> 2) - scale) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
-    Gui, Add, Button, % "x+" CenterH " yp wp                        gGuiEscape          vCancelButton",          % "&Cancel"
-    Gui, Add, Button, % "x+" CenterH " yp wp                        g" button "Settings vResetButton",           % "&" button
-    Gui, Add, Button, % "x+" CenterH " yp wp                        gShowDebug          vDebugButton",           % "Debu&g"
+    Gui, Add, Button, % "x" (CenterX / 3) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
+    Gui, Add, Button, % "x+" CenterH " yp wp             gGuiEscape          vCancelButton",          % "&Cancel"
+    Gui, Add, Button, % "x+" CenterH " yp wp             g" button "Settings vResetButton",           % "&" button
+    Gui, Add, Button, % "x+" CenterH " yp wp             gShowDebug          vDebugButton",           % "Debu&g"
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
