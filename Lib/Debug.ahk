@@ -116,8 +116,23 @@ ShowDebug() {
         Gui, Font, % "q5 c" InvertColor(GuiColor), % MainFont
 
     SetFormat, Integer, D
-    Gui, Add, ListView, r30 w1024, Control||Text|ID|PID|X|Y|Width|Height
-
+    Gui, Add, ListView, r30 w1024, Control||Text|Hwnd|Parent|X|Y|Width|Height
+    
+    ; Get window information
+    WinGetPos _x, _y, _width, _height, % "ahk_id " A_ScriptHwnd
+    WinGetTitle, _title, % "ahk_id " A_ScriptHwnd
+    LV_Add( , "Script window", _title, Abs(A_ScriptHwnd), DllCall("GetParent", "Ptr", A_ScriptHwnd), _x, _y, _width, _height)
+ 
+    WinGetPos _x, _y, _width, _height, % "ahk_id " DialogId
+    WinGetTitle, _title, % "ahk_id " DialogId
+    LV_Add( , "Dialog window", _title, Abs(DialogId), DllCall("GetParent", "Ptr", DialogId), _x, _y, _width, _height)
+    
+    _activeId := DllCall("GetForegroundWindow", "Ptr")
+    WinGetPos _x, _y, _width, _height, % "ahk_id " _activeId
+    WinGetTitle, _title, % "ahk_id " _activeId
+    LV_Add( , "Active window", _title, Abs(_activeId), DllCall("GetParent", "Ptr", _activeId), _x, _y, _width, _height)
+    
+    ; Get window child controls
     WinGet, _controlsList, % "ControlList", % "ahk_id " DialogId
     Loop, Parse, _controlsList, `n
     {
@@ -126,7 +141,7 @@ ShowDebug() {
         ControlGetPos _x, _y, _width, _height,, % "ahk_id " _id
 
         _pid := DllCall("GetParent", "Ptr", _id)
-        ; Abs for hex to dec
+        ; Abs() converts Hex to Dec
         LV_Add( , A_LoopField, _text, Abs(_id), _pid, _x, _y, _width, _height)
     }
 

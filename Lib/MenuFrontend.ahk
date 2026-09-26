@@ -241,10 +241,10 @@ EnforceShowMenu() {
     CoordMode, % "Mouse", % "Screen"
     MouseGetPos, _mouseX, _mouseY
 
-    _foreId := DllCall("GetForegroundWindow", "Ptr")
-    if (_foreId != DialogId
-     && _foreId != A_ScriptHwnd) {
-        DialogId := _foreId
+    _activeId := DllCall("GetForegroundWindow", "Ptr")
+    if (_activeId != DialogId
+     && _activeId != A_ScriptHwnd) {
+        DialogId := _activeId
         IsDialogClosed := true
     }
 
