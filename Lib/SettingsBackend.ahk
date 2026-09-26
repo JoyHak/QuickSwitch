@@ -29,7 +29,6 @@ SaveSettings() {
     Gui, Submit
 
     DeleteSections()
-    SetDefaultColors()
 
     WriteValues()
     ReadValues()

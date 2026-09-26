@@ -31,7 +31,6 @@ DeleteClipboard     :=  false
 DeleteKeys          :=  false
 NukeSettings        :=  false
 
-
 ; stores previous value of some global variables
 Last := {DialogId: 0, DialogProcess: ""}  
 
@@ -48,8 +47,8 @@ SetDefaultValues() {
     global
 
     DarkTheme           :=  IsDarkTheme()
-    DarkColors          :=  true
-
+    Last.DarkTheme      :=  false
+    
     ShowManagers        :=  true
     AutoStartup         :=  true
     PathNumbers         :=  true
@@ -120,9 +119,10 @@ SetDefaultValues() {
     RestartKey   := ""
     IconsDir     := "Icons"
     FavoritesDir := "Favorites"
-    MenuColor    := ""
-    GuiColor     := ""
-    SetDefaultColors()
+    DefaultColor := ""
+    DarkColor    := "202020"
+    MenuColor    := DefaultColor
+    GuiColor     := DefaultColor
     
     MainIcon     := IconsDir "\QuickSwitch.ico"
     if !IsFile(MainIcon)
@@ -150,7 +150,6 @@ WriteValues() {
     local _values := "
     (LTrim
     DarkTheme="               DarkTheme               "
-    DarkColors="              DarkColors              "
     ShowManagers="            ShowManagers            "
     AutoStartup="             AutoStartup             "
     PathNumbers="             PathNumbers             "
@@ -384,7 +383,7 @@ ValidateColor(_paramName, ByRef color) {
     If color is incorrect, reads it from INI
     */
 
-    if color {
+    if (color != "") {
         if (RegExMatch(color, "i)[a-f0-9]{6}$", _color))
             return _paramName "=" _color "`n"
 

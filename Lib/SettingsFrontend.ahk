@@ -75,20 +75,23 @@ ShowSettings() {
 
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui, Add, CheckBox,           gToggleDarkTheme          vDarkTheme            checked%DarkTheme%,               Apply &dark theme
+    Gui, Add, CheckBox,           gSetColors                vDarkTheme            checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Menu font
     Gui, Add, Text,         y+12,                                                                                   &Settings font
     Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Show &icons from
 
-    Gui, Add, Edit,         ys-4  %short% Limit8            vMenuColor            Section,                          %MenuColor%
-    Gui, Add, Edit,         y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
-    
     ; Preserve this values
-    Last.MenuFont  := MenuFont
-    Last.MenuFontSize := MenuFontSize
-
+    Last.DarkTheme    := DarkTheme
+    Last.MenuFont     := MenuFont
+    Last.MenuFontSize := MenuFontSize    
+    
+    OnMessage(0x0133, "OnEditColor")
+    
+    Gui, Add, Edit,      ys-4     %short% Limit8            vMenuColor            Section,                          %MenuColor%
+    Gui, Add, Edit,      xs y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
+    
     Gui, Add, Edit,         y+4   %short%                   vMenuFont,                                              %MenuFont%
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
