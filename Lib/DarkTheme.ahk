@@ -25,21 +25,6 @@ SetDarkControls(_winId) {
     }
 }
 
-SetDefaultColors() {
-    global    
-    
-    if DarkColors {    
-        MenuColor := DarkTheme ? 202020 : ""
-        GuiColor  := MenuColor
-    }
-    
-    DarkColors := false
-}
-
-ToggleDarkTheme() {
-    global DarkColors := true
-}
-
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 InitDarkTheme() {
@@ -47,8 +32,12 @@ InitDarkTheme() {
     ; Noticz: sets theme for Menu and GUI
 	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
     ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
-	global DarkTheme 
-
+	global
+    
+    if (Last.DarkTheme = DarkTheme) {
+        return
+    }
+    
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
 	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
@@ -56,6 +45,84 @@ InitDarkTheme() {
     ; 0 = Light theme, 1 = Dark theme
 	DllCall(SetPreferredAppMode, "int", DarkTheme)
 	DllCall(FlushThemes)
+    
+    OnMessage(0x0133, "OnEditColor", false)
+    OnEditColor(false, false)
+}
+
+SetColors(_control := 0) {
+    ; Sets default colors for each theme (light/dark)
+    global MenuColor, GuiColor, DefaultColor, DarkColor
+    
+    GuiControlGet, _darkTheme,, % "DarkTheme"
+    GuiControlGet, _menuColor,, % "MenuColor"
+    GuiControlGet, _guiColor,,  % "GuiColor"
+    
+    if (!_menuColor && _darkTheme) {
+        GuiControl,, % "MenuColor", % DarkColor
+    }
+    if (!_guiColor && _darkTheme) { 
+        GuiControl,, % "GuiColor", % DarkColor
+    }    
+    if (_menuColor = DarkColor && !_darkTheme) {
+        GuiControl,, % "MenuColor", % DefaultColor
+    }
+    if (_guiColor = DarkColor && !_darkTheme) {
+        GuiControl,, % "GuiColor", % DefaultColor
+    }
+}
+
+OnEditColor(_hdc, _control) {    
+    ; Sets background color of the control based on it's value.
+    ; Allows to demonstrate a color by rendering it as control's background.
+    static last := {}
+    if (_hdc = false && _control = false) {
+        last := {}
+        return 0
+    }
+    
+    GuiControlGet, _name, % "Name", % _control
+    if !InStr(_name, "Color")
+        return 0    
+    
+    GuiControlGet, _text,, % _control
+    if (_text = "")
+        return 0
+    
+    if !(RegExMatch(_text, "i)^(\#|0x)?([a-f0-9]{6,})$", _color))
+        return 0
+        
+    ; Clamp number with 6+ digits
+    _value := _color2
+    if (StrLen(_value) > 6) {
+        if last.hasKey(_name) {
+            GuiControl,, % _control, % last[_name]
+        } else {
+            _c := _color1 . SubStr(_value, 1, 6)
+            GuiControl,, % _control, % _c            
+            last[_name] := _c
+        }
+        _value := last[_name]
+    } else {
+        last[_name] := _color1 . _value
+    }
+    
+    ; Calculate color
+    _color := "0x" _value
+    _color := Min(_color + 0, 0xEEEEEE)  ; clamp for readability
+    _color := ToBGR(_color)
+    
+    DllCall("SetTextColor", "Ptr", _hdc, "UInt", 0xFFFFFF)
+    DllCall("SetBkColor",   "Ptr", _hdc, "UInt", _color)
+    
+    static brush := 0
+    if (brush) {
+        DllCall("DeleteObject", "Ptr", brush)
+    }
+        
+    brush := DllCall("CreateSolidBrush", "UInt", _color, "Ptr")
+    
+    return brush
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -76,19 +143,26 @@ IsDarkTheme() {
     return false
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-InvertColor(color) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Noticz: inverts UI color if Windows dark mode is enabled
-	c1 := 0xFF & color >> 16
-	c2 := 0xFF & color >> 8
-	c3 := 0xFF & color
-	c1 := ((c1 < 0x80) * 0xFF) << 16
-	c2 := ((c2 < 0x80) * 0xFF) << 8
-	c3 := (c3 < 0x80) * 0xFF
+InvertColor(_color) {
+    _R := (_color >> 16) & 0xFF
+    _G := (_color >> 8) & 0xFF
+    _B := _color & 0xFF
+    
+    _luminance := 0.299 * _R + 0.587 * _G + 0.114 * _B
 
-    return Format("{:x}", c1 + c2 + c3)
+    ; Dynamic gray to add readability.
+    _gray := _luminance < 128
+        ? Round(255 - _luminance * 35 / 128)       ; 255 -> 220
+        : Round((_luminance - 128) * 40 / 127)     ; 0 -> 40
+    
+    ; To RGB
+    return Format("{:x}", _gray | (_gray << 8) | (_gray << 16))
+}
+
+ToBGR(_color) {
+    return ((_color >> 16) & 0xFF) 
+         | (_color & 0x00FF00) 
+         | ((_color & 0xFF) << 16)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
