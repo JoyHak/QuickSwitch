@@ -45,9 +45,6 @@ SetDefaultValues() {
     You can find the meaning of each option in Lib\SettingsFrontend.ahk
     */
     global
-
-    DarkTheme           :=  IsDarkTheme()
-    Last.DarkTheme      :=  false
     
     ShowManagers        :=  true
     AutoStartup         :=  true
@@ -56,7 +53,8 @@ SetDefaultValues() {
     ShowIcons           :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
-
+    
+    AutoSwitch          :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     BlackListProcess    :=  false
@@ -76,6 +74,7 @@ SetDefaultValues() {
     ShortenEnd          :=  false
     ShowDriveLetter     :=  false
     ShowFirstSeparator  :=  false
+    
     IsNewUser           :=  false
     SaveUiPosition      :=  false
 ;@Ahk2Exe-IgnoreBegin
@@ -84,55 +83,56 @@ SetDefaultValues() {
     ShowOpenDialog      :=  false
     ShowSaveAsDialog    :=  false
     SaveLastTab         :=  true
+    
+    RestartKey   := "^sc1F"  ; Ctrl+S
+    RestartWhere := "ahk_exe notepad++.exe"
+    UiPosX := UiPosY := 0
 ;@Ahk2Exe-IgnoreEnd
-
-    IconsSize     := 25
-    MainFontSize  := 10
-    MenuFontSize  := 0
-    ListerIndex   := 0
-
+    
+    ; Short path
     DirsCount     := 3
     DirNameLength := 20
     PathLimit     := 9
     PathSeparator := "\"
-    MainFont      := "Tahoma"
-    MenuFont      := ""
+    ShortNameIndicator := ".."
     
+    ; Appearance    
+    DarkTheme      := IsDarkTheme()
+    Last.DarkTheme := false
+    
+    DefaultColor   := ""
+    DarkColor      := "202020"
+    MenuColor      := DarkTheme ? DarkColor : DefaultColor
+    GuiColor       := DarkTheme ? DarkColor : DefaultColor
+    
+    IconsSize      := 25
+    MainFontSize   := 10
+    MenuFontSize   := 0
+    MainFont       := "Tahoma"
+    MenuFont       := ""
     Last.MenuFont  := MenuFont
     Last.MenuFontSize := MenuFontSize
-
-    ShortNameIndicator := ".."
-
+    
+    ListerIndex      := 0
+    AutoSwitchIndex  := 1
+    AutoSwitchTarget := "ManagersPaths"
+    
+    ; Hotkeys
     PinMousePlaceholder     := "Right"
     MainMousePlaceholder    := ""
     EnforceMousePlaceholder := "Ctrl+Shift+Win+0"
     RestartMousePlaceholder := ""
 
-    AutoSwitch       := false
-    AutoSwitchIndex  := 1
-    AutoSwitchTarget := "ManagersPaths"
-
     ; Requires validation
     PinKey       := "RButton"
     MainKey      := "^sc10"  ; Ctrl+Q
-    EnforceKey   := ""
-    RestartKey   := ""
+    EnforceKey   := EnforceMousePlaceholder
     IconsDir     := "Icons"
     FavoritesDir := "Favorites"
-    DefaultColor := ""
-    DarkColor    := "202020"
-    MenuColor    := DefaultColor
-    GuiColor     := DefaultColor
     
     MainIcon     := IconsDir "\QuickSwitch.ico"
     if !IsFile(MainIcon)
         MainIcon := ""
-
-;@Ahk2Exe-IgnoreBegin
-    RestartKey   := "^sc1F"  ; Ctrl+S
-    RestartWhere := "ahk_exe notepad++.exe"
-    UiPosX := UiPosY := 0
-;@Ahk2Exe-IgnoreEnd
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
