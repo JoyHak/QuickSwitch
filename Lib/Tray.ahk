@@ -25,9 +25,11 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     If the file exists, changes the tray icon and returns "paramName=icon".
     If icon path is incorrect, reads it from INI
     */
-
-    icon := Trim(icon, " `t\/.")
+    
+    icon := Trim(icon, " `t'""")
+    icon := RTrim(icon, "\/.")
     icon := StrReplace(icon, "/" , "\")
+    icon := ExpandVariables(icon)
 
     if !icon {
         Menu, % "Tray", % "Icon", *
@@ -35,7 +37,6 @@ ValidateTrayIcon(_paramName, ByRef icon) {
     }
 
     try {
-        icon := ExpandVariables(icon)
         Menu, % "Tray", % "Icon", % icon, , 1
         return _paramName "=" icon "`n"
     }
