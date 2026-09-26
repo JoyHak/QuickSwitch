@@ -7,19 +7,27 @@ Dummy() {
 SwitchPath(ByRef path, _fromMenu := "") {
     global
 
-    local _ex, _winPid, _log := ""
+    local _ex, _winPid, _activeId, _log := "", _windowsIds := ""
+    
     loop % SelectPathAttempts {
         try {
             if FillDialog(EditId, path, SendEnter)
                 return true
-
         } catch _ex {
             ; See CreateMenu()
-            if (A_ScriptHwnd != DllCall("GetForegroundWindow", "Ptr"))
-                return false
+            _activeId := DllCall("GetForegroundWindow", "Ptr")
+            _windowsIds := "script: " Abs(A_ScriptHwnd) ", dialog: " Abs(DialogId) ", active: " Abs(_activeId)
+                         . "`nedit field: " Abs(EditId) ", SendEnter: " SendEnter
+            
+            if (_activeId != A_ScriptHwnd) {
+                _log .= "`n" _windowsIds
+                return LogError("Active window is not a dialog"
+                              , _fromMenu ? "Menu selection" : "AutoSwitch"
+                              , _log, true)
+            }
         
             if (A_Index = SelectPathAttempts)
-                _log := _ex.what " " _ex.message " " _ex.extra
+                _log := _ex.what " " _ex.message " " _ex.extra "`n" _windowsIds
         }
     }
 

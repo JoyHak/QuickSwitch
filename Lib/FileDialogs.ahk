@@ -34,8 +34,8 @@ IsFileDialog(ByRef dialogId, ByRef editId := 0, ByRef sendEnter := false) {
     } catch {
         return false
     }
-
-    if !(_buttonId || _buttonId)
+    
+    if !_editId
         return false
 
     editId := _editId
