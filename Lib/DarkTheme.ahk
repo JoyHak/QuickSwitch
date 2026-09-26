@@ -165,6 +165,29 @@ ToBGR(_color) {
          | ((_color & 0xFF) << 16)
 }
 
+GetInstalledFonts() {
+    _list := ""
+    Loop, Reg, % "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    {
+        ; Extract base font name (remove Bold, Italic, etc.)
+        _list .= "|" . RegExReplace(A_LoopRegName, " \(.*\)$")
+    }
+    _list := LTrim(_list, "|")
+
+    ; Sort alphabetically, Case-Sens local., Unique, Delimiter = |
+    Sort, _list, % "CL U D|"
+    return _list
+}
+
+GetFontList(_font) {
+    static list := GetInstalledFonts()
+    
+    if _font
+        return _font "||" list  ; pre-select font in the list
+        
+    return list
+}
+
 ;─────────────────────────────────────────────────────────────────────────────
 ;
 SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
