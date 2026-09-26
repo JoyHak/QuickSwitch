@@ -78,6 +78,7 @@ InitAutoStartup()
 InitDarkTheme()
 InitWelcomeMessage()
 
+OnClipboardChange("GetClipboardPaths", ShowClipboard)
 OnExit("OnExitCleanup")
 
 ;@Ahk2Exe-IgnoreBegin
@@ -132,13 +133,13 @@ Loop {
         
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
-            OnClipboardChange("GetClipboardPath", false)
+            OnClipboardChange("GetClipboardPaths", false)
             GetPaths(ManagersPaths := []
                    , ListerIndex,    ShowAllDesktops
                    , ActivePaneOnly, ActiveTabOnly, ShowLockedTabs)
         }
 
-        OnClipboardChange("GetClipboardPath", ShowClipboard)
+        OnClipboardChange("GetClipboardPaths", ShowClipboard)
 
         ; Force menu re-creation on first hotkey press
         try Menu, % "ContextMenu", % "Delete"
