@@ -147,7 +147,7 @@ GetUniqPaths(paths) {
     return _paths
 }
 
-GetClipboardPath(_dataType) {
+GetClipboardPaths(_dataType) {
     ; If the clipboard contents is text, cuts the path where the file is stored.
     ; If the path is valid, adds to the array and returns true
     global ClipboardPaths
