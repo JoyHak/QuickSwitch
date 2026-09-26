@@ -19,9 +19,9 @@
 Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
 ![](/Images/menu.gif)
 
-Open any tabs in [supported file managers](#file-managers): Windows Explorer, [Directory Opus](https://resource.dopus.com/t/quickswitch/40965/20), [Total Commander](https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d), [XYplorer](https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d). All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. [Pin and save your favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
+Open any tabs in supported file managers: Windows Explorer, [Directory Opus](https://resource.dopus.com/t/quickswitch/40965/20), [Total Commander](https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d), [XYplorer](https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d). All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. [Pin and save your favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
 
-Enable "AutoSwitch" option to automatically change path in file dialog:
+Enable ["AutoSwitch" option](#file-dialogs) to automatically change path in file dialog:
 
 ![](/Images/autoswitch.gif)
 
@@ -93,14 +93,14 @@ scoop update quickswitch
 After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter` to launch installed package.
 
 ### Manual installation
---> 
+-->
 
 1. [Download](https://github.com/JoyHak/QuickSwitch/releases/latest) the latest x64 or x32 archive depending on your system architecture. If you don't know it, start with the x64 version. *It is not recommended to run the x32 version on an x64 machine!*
 2. Create a directory named `QuickSwitch`, copy downloaded archive here and select "extract here" from the context menu. Follow the same steps to update the app. The `.ini` configuration will never be replaced. 
 3. Run `QuickSwitch.exe`. Open some tabs in a supported file manager or create `.lnk` files in `.\Favorites`.
 4. Open any application and try to open\save a file using it. E.g., open `Notepad` then `File - Open...` (or press `Ctrl+Shift+S`).
 5. Press `Ctrl+Q` and look at the paths in the Menu that opens. All directories opened in supported file managers will be displayed here.
-6. Explore the available options in the _"Menu settings"_ and experiment with them. Choose a convenient style and logic of the menu!
+6. Explore the available options in the _"Settings"_ and experiment with them. Choose a convenient style and logic of the menu!
 
 ![installation video](Images/installation.avif)
 
@@ -197,51 +197,51 @@ The main paths that you will see immediately after installation are sourced from
 
 - **Locked Tabs:** in XYplorer and Total Commander, you can lock a tab's address. Once this is done, its path cannot be changed. Such tabs are sometimes referred to as "pinned" tabs. If you do not want them to be displayed, disable this option.
 
-- **Z-order index:** If you've seen the windows when pressing `Alt+Tab`, you've noticed that they appear in order of most recent use (Z-order). 
+- **Z-order index:** If you've seen the windows when pressing `Alt+Tab`, you've noticed that they appear in order of most recent use (Z-order).
 
 ```
 ┌─────────────────────────────────────┐
 │  Top of Z-Order (Foreground)
 │  ┌─────────────────────────────────┐
-│  │ Window 0 (Active, On Top)
+│  │ Window 1 (Active, On Top)
 │  └─────────────────────────────────┘
 │  ┌──────────────────────┐
-│  │ Window 1 (Middle)
+│  │ Window 2 (Middle)
 │  └──────────────────────┘
 │  ┌──────────────────────┐
-│  │ Window 2 (Behind)
+│  │ Window 3 (Behind)
 │  └──────────────────────┘
 │  Bottom of Z-Order (Background)
 └─────────────────────────────────────┘
 ```
 
-  The most recently opened window will be first (index **0**). Each open file manager window has a sequence number (index), and you can set it to display paths from that window only. So the last opened window has index **0**, recently opened has **1**, and so on. So Z-order index 1 means "display tabs from previous active window" (not the active one). And Z-order index 2 means "previous previous active window".
+By default it's set to **0** - all windows. The most recently opened window will be first (index **1**). Each open file manager window has a sequence number (index), and you can set it to display paths from that window only. So the last opened window has index **1**, recently opened has **2**, and so on. So Z-order index **2** means "display tabs from previous active window" (not the active one).
 
   ![z-order](https://github.com/user-attachments/assets/baf967fa-3e47-46dd-bb64-45640c891381)
 
-QuickSwitch counts index individually for each file manager. Therefore, if you have, for example, 2 XYplorer windows, you can set Z-order index to **0** or **1** even if there are other windows in-between. Windows from other apps are ignored.
+QuickSwitch counts index individually for each file manager. Therefore, if you have, for example, 2 XYplorer windows, you can set Z-order index to **1** or **2** even if there are other windows in-between. Windows from other apps are ignored.
 
 ```
 ┌─────────────────────────────────────┐
 │  ┌─────────────────────────────────┐
-│  │ XYplorer 0 (Active)
+│  │ XYplorer 1 (Active)
 │  └─────────────────────────────────┘
 │  ┌──────────────────────┐
 │  │ Window 1 (Middle)
 │  └──────────────────────┘
 │  ┌──────────────────────┐
-│  │ XYplorer 1 (Recent)
+│  │ XYplorer 2 (Recent)
 │  └──────────────────────┘
 │  ┌──────────────────────┐
-│  │ DOpus 0 (Recent)
+│  │ DOpus 1 (Recent)
 │  └──────────────────────┘
 │  ┌──────────────────────┐
-│  │ DOpus 1 (Old)
+│  │ DOpus 2 (Old)
 │  └──────────────────────┘
 └─────────────────────────────────────┘
 ```
 
-- **Virtual desktops:** displays all paths from all file managers if the Z-index is `0` *(see above)* or displays the paths from lister according to the selected index. If you recently opened a file manager in another desktop (#162), select index `2` to see its paths.
+- **Virtual desktops:** displays all paths from all file managers if the *Z-index* is `0` *(see above)* or displays the paths from lister according to the selected *Z-index*. If you recently opened a file manager on another desktop, select index `2` to see its paths.
 
   ![virtual desktops](https://github.com/user-attachments/assets/92484619-2447-4fc7-898c-14e941e8d3cf)
 
@@ -268,6 +268,7 @@ Also you can include the disk letter at the beginning or change the separator be
 ### Enforce Menu
 
 You can show the Menu everywhere:
+
 - Press default shortcut `Ctrl+Shift+Win+0` (can be changed on `Settings > App` tab). 
 - Click on tray icon
 - Right click on tray icon -> "Menu"
@@ -293,6 +294,135 @@ This way, I can open different projects, and their locations will be stored in Q
 </details>
 
 The menu will display the paths obtained after the last opening of the file dialog and will not change them until the next opening. The menu will be empty the first time it is opened. [Pin and save your favorite paths](#menu-sections) so you can always see them.
+
+### File Dialogs
+
+On `Settings > Menu` tab, you can configure the Menu's behavior for all file dialogs. For example, select *"(Show menu) always"* so that the Menu opens automatically in every file dialog. There are two options that are specific to each dialog.
+
+<img src="./Icons/AutoSwitchOn.ico" width="35px" align="left" style="margin-right: 8px">
+
+#### Auto Switch
+
+QuickSwitch can work without Menu in "AutoSwitch" mode. In this mode, the path changes immediately when the focus moves to the file dialog. You can switch between the open file dialog and the file manager to quickly open file paths. To activate this mode, open the Menu by pressing `Ctrl+Q` and select "AutoSwitch" (or press `A`). To enable it for all dialogs, open `Settings > Menu` tab, and select "Always Auto Switch".
+
+![](/Images/autoswitch.gif)
+
+<details><summary>Configure AutoSwitch</summary>
+
+AutoSwitch switches to the 1st path found from the active file manager:
+
+```
+┌----------------------------┐
+│  ┌----------------------┐
+│  │ Window 1
+│  └----------------------┘
+│  ┌----------------------┐
+│  │ Explorer  <--
+│  └----------------------┘
+│  ┌----------------------┐
+│  │ Window 2
+│  └----------------------┘
+│  ┌----------------------┐
+│  │ XYplorer
+│  └----------------------┘
+└----------------------------┘
+```
+
+To change this behavior, you can modify the path index and the [menu section](#menu-sections). The combination of the index and the section (**the source** from which to retrieve the path) allows for flexible use of AutoSwitch. For example, if file managers are closed, it may activate the *copied path*. And if there is a *pinned path*, always activate it. To understand what a **menu section** is, let's look at some examples.
+
+```
+AutoSwitch [index of the path] path from [menu section]
+```
+
+The simplest option is the `MenuStack` section: switch to the *1st path* visible in the menu. For example, for `ManagersPaths`, an *index 1* means "switch to tab #1, counting from the left". For `PinnedPaths`, the index means “switch to pinned path #1, counting from the top". For all sections except `ManagersPaths`, the path is counted from the top. You can switch between sections on the adjacent `theme`tab.
+
+Depending on which sections are enabled, selecting the `MenuStack` section will switch to the first path in the menu. So, if paths are pinned, the switch will occur to the first (or selected) path:
+
+```
+Menu stack (pinned paths on top)
+┌----------------------------┐
+│ Pinned paths
+│  ┌----------------------┐
+│  📎 Pinned path 1 <--
+│  └----------------------┘
+│ Managers paths
+│  ┌----------------------┐
+│  📰 Explorer path 1
+│  └----------------------┘
+│  ┌----------------------┐
+│  📰 Explorer path 2
+│  └----------------------┘
+└----------------------------┘
+```
+
+And if there are no pinned paths, but there are paths from file managers, the path that was found will be activated:
+
+```
+Menu stack (found paths on top)
+┌---------------------------┐
+│ Managers paths
+│  ┌----------------------┐
+│  📰 Explorer path 1 <--
+│  └----------------------┘
+│  ┌----------------------┐
+│  📰 Explorer path 2
+│  └----------------------┘
+│ Clipboard paths
+│  ┌----------------------┐
+│  📋 Clipboard path 1
+│  └----------------------┘
+│  ┌----------------------┐
+│  📋 Clipboard path 2
+│  └----------------------┘
+└----------------------------┘
+```
+
+You cannot switch to a path from an empty section (for example, you cannot activate a copied path if it isn't in the menu). You can select `MenuStack` to activate the **first path found in the menu**. This is the most dynamic section, because AutoSwitch can activate different path depending on a situation. The most predictable section is the `PinnedPaths`. If you've pinned a path and don't change it, AutoSwitch will always activate only that path.
+
+Options on `Settings > Menu` tab does not conflict with AutoSwitch: first, the path will switch automatically, and then a menu will open.
+
+To expand the power of "Auto Switch," [select the Z-order](#file-managers) index on the `theme` tab.
+
+</details>
+
+<img src="./Icons/BlackListOn.ico" width="35px" align="left" style="margin-right: 8px">
+
+#### Black List
+
+If you don't want to see the Menu or AutoSwitch in the current file dialog, open the menu and select "BlackList" (or press `B`). The Menu will still be accessible via `Ctrl+Q` and through tray icon.
+
+<details><summary>Black List all dialogs of specific app</summary>
+
+If you want to prevent the menu from appearing in all file dialogs of the current application (for example, when *opening or saving* a Word document), open the `Settings > Menu` tab and select "Add file dialog owner process name to Black List". After that, every time you click "Black List the Menu will not appear in all dialogs from this application and AutoSwitch mode will not be activated.
+
+```
+┌-------------------------------------┐
+│ Word                           - o x
+│  ┌---------┐
+│  │ Save as │ Exclude
+│  └---------┘
+│  ┌---------┐
+│  │ Open    │ Exclude
+│  └---------┘
+│ Black List now adds all dialogs
+└-------------------------------------┘
+```
+
+Disable this option to return to adding only file dialogs to the exclusion, not the **owner process name**.
+
+```
+┌-------------------------------------┐
+│ Word                           - o x
+│  ┌---------┐
+│  │ Save as │    Black List only this
+│  └---------┘
+│  ┌---------┐
+│  │ Open    │    Black List only this
+│  └---------┘
+└-------------------------------------┘
+```
+
+</details>
 
 ### Keyboard
 
