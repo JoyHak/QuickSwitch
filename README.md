@@ -524,21 +524,22 @@ This app is written on [Autohotkey language](https://en.m.wikipedia.org/wiki/Aut
 
 Required applications:
 
-- `Autohotkey` interpreter (v1.1.37.02 Unicode and v2.0.19): https://www.autohotkey.com/download
-- `Ahk2Exe` builder to create EXE from AHK. It's included in AHK installer: `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe`</br>
-  - Can be downloaded from here: https://github.com/AutoHotkey/Ahk2Exe </br>
-  - Can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`</br>
-      *Directory depends on your autohotkey installation and can be found automatically. See below.*</br></br>
+- [PowerShell core](https://github.com/PowerShell/PowerShell) v7.0+
+- [AutoHotkey interpreter](https://www.autohotkey.com/download) v1.1.37.02 Unicode
+- [Ahk2Exe builder](https://github.com/AutoHotkey/Ahk2Exe)
+  - It's included in AHK installer above: `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe`</br>
+  - It can be installed using the script: `C:\Program Files\AutoHotkey\UX\install-Ahk2Exe.ahk`
+- [7-zip](https://7-zip.org) v25.01+
 
-> Autohotkey v1.1.37.02 is an **outdated version.** If you want to start learning this language, learn `v2.0.19+`. QuickSwitch needs to be updated from `v1` to `v2`! 
-
-Optional `7zG.exe` to create an archives with the required files: https://7-zip.org
+> Autohotkey v1.1.37.02 is **deprecated.** If you want to start learning this language, learn starting from `2.0.19+`. QuickSwitch needs to be ported from AHK `1.1` to `2.0`! 
 
 </details>
 
-To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Run the [build script](Utilities/Build.ps1) file and assign the necessary values to the variables. You can also leave the default values. In this case, the build script will automatically find the interpreter regardless of its installation path.
+To build the application, clone or [download this repository](https://github.com/JoyHak/QuickSwitch/archive/refs/heads/main.zip). Run the [build script](Utilities/Build.ps1) file. Change the variables if necessary.
 
 You can change application metadata, such as version and description by changing the [Ahk2Exe directives](https://www.autohotkey.com/docs/v1/misc/Ahk2ExeDirectives.htm#Bin) in the [main file](QuickSwitch.ahk). After completing the configuration process, run the `Build.ps1`.
+
+[Or you can build QuickSwitch via Ahk2Exe GUI](https://github.com/JoyHak/QuickSwitch/blob/main/Compile-old.md).
 
 ## Credits
 
