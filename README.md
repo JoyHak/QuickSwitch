@@ -108,7 +108,7 @@ After installation press `Win+R` or `Win+Q`, type `QuickSwitch` and press `Enter
 
 ### Menu sections
 
-In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab.
+In addition to the paths from the file managers, you can enable special paths on `Settings > Theme` tab. Each special path can be [switched automatically](#auto-switch) when file dialog opens.
 
 <img src="./Icons/Pin.ico" width="35px" align="left" style="margin-right: 8px">
 
@@ -187,15 +187,19 @@ You can hide some shortcuts by changing or removing their extension. If there ar
 
 #### File Managers
 
-<details><summary>Tabs and entire panes from supported file managers</summary>
+<details><summary>Tabs and panes</summary>
 
-The main paths that you will see immediately after installation are sourced from one of the supported file managers. You can "filter" the visible paths using options on `Settings >  theme` tab. All these options can be combined to produce different "filter". Currently, they are global and are not bound to each file dialog individually.
+The main paths that you will see immediately after installation are sourced from one of the supported file managers. You can "filter" the visible paths using options on `Settings >  theme` tab. All these options can be combined to create a "filter" and change [AutoSwitch behavior](#auto-switch). Currently, they are global and are not bound to each file dialog individually.
 
 - **Active pane:** many file managers, with the exception of Windows Explorer, have one or more panes. If you have many tabs open in each pane, you can choose to display only the tabs in the active pane. If "Active Tab" option is checked, "Active Pane" option would be ignored. That's it, the active tab will be the first one from each manager regardless of this option.
 
 - **Active tab:** only the active tab from each manager will be displayed. If the adjacent "Show locked tabs" is checked and all tabs from the active pane of some manager are locked, paths from it not be displayed.
 
 - **Locked Tabs:** in XYplorer and Total Commander, you can lock a tab's address. Once this is done, its path cannot be changed. Such tabs are sometimes referred to as "pinned" tabs. If you do not want them to be displayed, disable this option.
+
+</details>
+
+<details><summary>Listers and virtual desktops</summary>
 
 - **Z-order index:** If you've seen the windows when pressing `Alt+Tab`, you've noticed that they appear in order of most recent use (Z-order).
 
@@ -217,7 +221,7 @@ The main paths that you will see immediately after installation are sourced from
 
 By default it's set to **0** - all windows. The most recently opened window will be first (index **1**). Each open file manager window has a sequence number (index), and you can set it to display paths from that window only. So the last opened window has index **1**, recently opened has **2**, and so on. So Z-order index **2** means "display tabs from previous active window" (not the active one).
 
-  ![z-order](https://github.com/user-attachments/assets/baf967fa-3e47-46dd-bb64-45640c891381)
+![z-order](https://github.com/user-attachments/assets/baf967fa-3e47-46dd-bb64-45640c891381)
 
 QuickSwitch counts index individually for each file manager. Therefore, if you have, for example, 2 XYplorer windows, you can set Z-order index to **1** or **2** even if there are other windows in-between. Windows from other apps are ignored.
 
@@ -243,7 +247,7 @@ QuickSwitch counts index individually for each file manager. Therefore, if you h
 
 - **Virtual desktops:** displays all paths from all file managers if the *Z-index* is `0` *(see above)* or displays the paths from lister according to the selected *Z-index*. If you recently opened a file manager on another desktop, select index `2` to see its paths.
 
-  ![virtual desktops](https://github.com/user-attachments/assets/92484619-2447-4fc7-898c-14e941e8d3cf)
+![virtual desktops](https://github.com/user-attachments/assets/92484619-2447-4fc7-898c-14e941e8d3cf)
 
 </details>
 
@@ -328,15 +332,15 @@ AutoSwitch switches to the 1st path found from the active file manager:
 └----------------------------┘
 ```
 
-To change this behavior, you can modify the path index and the [menu section](#menu-sections). The combination of the index and the section (**the source** from which to retrieve the path) allows for flexible use of AutoSwitch. For example, if file managers are closed, it may activate the *copied path*. And if there is a *pinned path*, always activate it. To understand what a **menu section** is, let's look at some examples.
-
+To change this behavior, you can modify the path index and the [menu section](#menu-sections) on `Settings > Menu` tab.
 ```
 AutoSwitch [index of the path] path from [menu section]
 ```
+The combination of the index and the section (**the source** from which to retrieve the path) allows for flexible use of AutoSwitch. For example, if file managers are closed, it may activate the *copied path*. Or if there is a *pinned path*, always activate it. To understand what a **menu section** is, let's look at some examples.
 
-The simplest option is the `MenuStack` section: switch to the *1st path* visible in the menu. For example, for `ManagersPaths`, an *index 1* means "switch to tab #1, counting from the left". For `PinnedPaths`, the index means “switch to pinned path #1, counting from the top". For all sections except `ManagersPaths`, the path is counted from the top. You can switch between sections on the adjacent `theme`tab.
+The simplest section is the `MenuStack`: autoswitch to the *1st path* visible in the Menu. `ManagersPaths` - autoswitch to the *1st tab*, counting from the left. `PinnedPaths` – autoswitch to the *1st pinned path*, counting from the top". For all sections except `ManagersPaths`, the path is counted from the top. You can enable sections on the adjacent `theme`tab.
 
-Depending on which sections are enabled, selecting the `MenuStack` section will switch to the first path in the menu. So, if paths are pinned, the switch will occur to the first (or selected) path:
+You can select `MenuStack` to activate the **first path found in the Menu**. This is the most dynamic section, because AutoSwitch can activate different path depending on a situation. For example, if you have at least one *pinned path*, AutoSwitch will activate that path:
 
 ```
 Menu stack (pinned paths on top)
@@ -355,7 +359,7 @@ Menu stack (pinned paths on top)
 └----------------------------┘
 ```
 
-And if there are no pinned paths, but there are paths from file managers, the path that was found will be activated:
+If you *unpin* it and open any file manager, the path that was found will be activated:
 
 ```
 Menu stack (found paths on top)
@@ -377,7 +381,9 @@ Menu stack (found paths on top)
 └----------------------------┘
 ```
 
-You cannot switch to a path from an empty section (for example, you cannot activate a copied path if it isn't in the menu). You can select `MenuStack` to activate the **first path found in the menu**. This is the most dynamic section, because AutoSwitch can activate different path depending on a situation. The most predictable section is the `PinnedPaths`. If you've pinned a path and don't change it, AutoSwitch will always activate only that path.
+The most predictable section is the `PinnedPaths`. If you've pinned a path and don't change it, AutoSwitch will always activate only that path.
+
+If the section is empty, nothing will happen (for example, if you did not pin the path).
 
 Options on `Settings > Menu` tab does not conflict with AutoSwitch: first, the path will switch automatically, and then a menu will open.
 
