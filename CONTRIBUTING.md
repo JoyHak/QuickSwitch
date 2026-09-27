@@ -59,7 +59,6 @@ If you already have ideas on how to improve QuickSwitch – [jump to the documen
 
 The following smaller contributions are always appreciated:
 
-- Fixing typos or improving comments in the source code.
 - Refactoring or simplifying existing code without changing behavior.
 - Improving path parsing edge cases in [GetPaths](Lib/GetPaths.ahk).
 - Improving INI validation logic in [Values](Lib/Values.ahk).
@@ -96,21 +95,21 @@ But if you want to learn about GitHub, you can [start here](https://docs.github.
 <img src="https://img.shields.io/chocolatey/v/git?style=flat&logo=git&logoColor=red&label=git&color=red"></a>
 <br>
 
-The best way to start working with the GitHub is to [install GitButler](https://github.com/gitbutlerapp/gitbutler/). Read it's [short documentation](https://docs.gitbutler.com), [clone the project](https://docs.gitbutler.com/guide#importing-a-local-repository) and start making changes to the files. If you're a big fan of Git, I highly recommend giving this client a try – it solves many problems and simplifies your work by creating more functional branches.
+The best way to start working with the GitHub is to [install GitButler](https://github.com/gitbutlerapp/gitbutler/). Read it's [short documentation](https://docs.gitbutler.com), [fork the project](https://docs.gitbutler.com/guide#importing-a-local-repository) and start making changes to the files. If you're a big fan of Git, I highly recommend giving this client a try – it solves many problems and simplifies your work by creating more functional branches.
 
 <details><summary>If you have GitHub CLI</summary>
    
 Execute this script in your terminal:
 
 ```powershell
-# under construction
+gh repo fork JoyHak/QuickSwitch --clone --default-branch-only=true
 ```
 
 </details>
 
-Once you've cloned your repository, follow these steps for each development session (fixing a bug, introducing a new feature, etc.):
+Once you've forked this repository, follow these steps for each development session (fixing a bug, introducing a new feature, etc.):
 1. **Create a branch** for your work: `fix/dialog-detection-edge-case` or `feat/add-freecommander-support`.
-2. **Make your changes** and test them manually by running the main [QuickSwitch-1.9.ahk](QuickSwitch-1.9.ahk) script.
+2. **Make your changes** and test them manually by running the main [QuickSwitch.ahk](QuickSwitch.ahk) script.
 3. **Check `Errors.log`** in the root directory after testing — it records all exceptions caught by `LogException()` in [Log](Lib/Log.ahk).
 4. **Check Menu**, all paths must work correctly. Press `Ctrl+Shift+Win+0` or **Alt + \`** (backtick or `~` tilde) to display the Menu everywhere.
 > You can tweak pre-display actions and `Restart` hotkey on `Settings > App` tab. If you're working on the [Settings UI](Lib/SettingsFrontend.ahk), check `Show settings after restart`.
@@ -127,9 +126,7 @@ Once you've cloned your repository, follow these steps for each development sess
 - **Local variables:** prefixed with `_` (e.g., `_path`, `_winId`).
 - **Global variables:** PascalCase (e.g., `ShowManagers`, `AutoSwitch`).
 - **Static variables, VarRefs:** camelCase (e.g., `winId`, `sendEnter`).
-- **Strings and constants:** should be passed as `VarRef`s to the functions (functions must accept parameter by reference: `&variable`). E.g. path or window handle.
 - **Error handling:** wrap risky WinAPI/COM calls in `try/catch` and call `LogException()` from [Log](Lib/Log.ahk) in the `catch` block. Pass non-terminating errors to the `LogError()`.
-- **Comments:** should explain why such code is needed/complicated ideas of the code. Comments must not duplicate code, **code must be self-documented**, i.e. consise and readable!
-
+- **Comments:** should explain why such code is needed/complicated ideas of the code. **Code must be self-documented**, i.e. consise and readable!
 
 *Thank you for helping make QuickSwitch the most reliable path-switching tool for Windows!*
