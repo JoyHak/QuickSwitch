@@ -8,6 +8,8 @@ All values are saved to the INI only after clicking OK
 ShowSettings() {
     global
     FromSettings := true
+    
+    InitControlsColorsHandlers()
 
     ; Options that affects subsequent controls
     ; Hide window border and header
@@ -27,11 +29,11 @@ ShowSettings() {
     local scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
 
     ; Edit fields: one row, no multi-line word wrap, no vertical scrollbar
-    local fieldDefault := "r1 -Wrap -vscroll w"
+    local fieldDefault := "-E0x200 -Border r1 -Wrap -vscroll w"
     local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
     local tiny   := fieldDefault . 4  * (10 + scale)
     local short  := fieldDefault . 12 * (10 + scale)
-    local list   := "r4 w"       . 12 * (10 + scale)
+    local list   := "-E0x200 -Border r4 w" . 12 * (10 + scale)
     local long   := fieldDefault . 17 * (10 + scale)
 
     ; Split settings to the tabs
@@ -86,7 +88,6 @@ ShowSettings() {
     Last.DarkTheme    := DarkTheme
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
-    OnMessage(0x0133, "OnEditColor")
 
     Gui, Add, Edit,      ys-4     %short% Limit8            vMenuColor            Section,                          %MenuColor%
     Gui, Add, Edit,      xs y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
@@ -282,8 +283,9 @@ ShowSettings() {
         else
             _pos := "x0 y100"                       ; active window top left corner
     }
+    
     Gui, Show, % "AutoSize " _pos, Settings
-
+    
     if DarkTheme
         SetDarkControls(SettingsId)
 }

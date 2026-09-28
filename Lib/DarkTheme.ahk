@@ -1,55 +1,8 @@
 ; Contains functions for switching Menu and GUI to dark / light mode
 
-SetDarkControls(_winId) {
-    ; Sets dark theme for all non-text window controls.
-    static SetWindowTheme := DllCall("GetProcAddress"
-        , "ptr", DllCall("GetModuleHandle", "str", "uxtheme", "ptr")
-        , "astr", "SetWindowTheme", "ptr")
-
-    WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
-    Loop, parse, _ctrlIdList, `n
-    {
-        WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
-        switch _ctrlClass {
-        case "SysListView32", "SysHeader32":
-            DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_ItemsView", "ptr", 0)
-        case "msctls_hotkey32", "ComboBox", "Edit":
-            DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_CFD", "ptr", 0)
-        case "msctls_updown32", "ListBox":
-            DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_Explorer", "ptr", 0)
-        case "Button":
-            GuiControlGet, _name, % "name", % A_LoopField
-            if InStr(_name, "button")
-                DllCall(SetWindowTheme, "ptr", A_LoopField, "str", "DarkMode_Explorer", "ptr", 0)
-        }
-    }
-}
-
-InitDarkTheme() {
-    ; Noticz: sets theme for Menu and GUI
-	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
-    ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
-	global
-
-    if (Last.DarkTheme = DarkTheme) {
-        return
-    }
-
-    static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
-	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
-	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
-
-    ; 0 = Light theme, 1 = Dark theme
-	DllCall(SetPreferredAppMode, "int", DarkTheme)
-	DllCall(FlushThemes)
-
-    OnMessage(0x0133, "OnEditColor", false)
-    OnEditColor(false, false)
-}
-
 SetColors(_control := 0) {
     ; Sets default colors for each theme (light/dark)
-    global MenuColor, GuiColor, DefaultColor, DarkColor
+    global DefaultColor, DarkColor
 
     GuiControlGet, _darkTheme,, % "DarkTheme"
     GuiControlGet, _menuColor,, % "MenuColor"
@@ -69,6 +22,129 @@ SetColors(_control := 0) {
     }
 }
 
+SetDarkControls(_winId) {
+    ; Sets dark theme for all non-text window controls.
+    SetImmseriveDarkMode(_winId)
+
+    WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
+    Loop, parse, _ctrlIdList, `n
+    {
+        WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
+        
+        switch _ctrlClass {
+        case "SysListView32", "SysHeader32":
+            SetWindowTheme(A_LoopField, "DarkMode_ItemsView")
+        case "ComboBox", "Edit":
+            SetWindowTheme(A_LoopField, "DarkMode_CFD")
+        case "msctls_hotkey32":
+            SetWindowTheme(A_LoopField, "DarkMode_CFD", true)
+        case "msctls_updown32", "ListBox", "CheckBox":
+            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+        case "Button":
+            ; GuiControlGet, _name, % "name", % A_LoopField
+            ; if InStr(_name, "button")
+            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+        }
+    }
+}
+
+SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
+    static SetWindowTheme := DllCall("GetProcAddress"
+        , "ptr", DllCall("GetModuleHandle", "str", "uxtheme", "ptr")
+        , "astr", "SetWindowTheme", "ptr")
+    
+    static fullyDark := VerCompare(A_OSVersion, "10.0.26100") >= 0
+    if (fullyDark && !_enforce)
+        return DllCall(SetWindowTheme, "ptr", _winId, "str", "DarkMode_DarkTheme", "ptr", 0)
+        
+    return DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)    
+}
+
+GetImmseriveDarkMode() {
+    if (VerCompare(A_OSVersion, "10.0.17763") >= 0) {
+		if (VerCompare(A_OSVersion, "10.0.18985") >= 0) {
+			return 20
+		}
+		return 19
+    }
+    return 0
+}
+
+SetImmseriveDarkMode(_winId) {
+    static mode := GetImmseriveDarkMode()
+    if !mode {
+        return false
+    }
+    
+    return DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", _winId, "Int", mode, "Int*", True, "Int", 4)
+}
+
+
+InitControlsColorsHandlers(_state := true) {
+    global GuiColor, DarkTheme, DarkColor, LightColor
+
+    if DarkTheme {
+        _color := GuiColor ? GuiColor : DarkColor
+    } else {
+        _color := GuiColor ? GuiColor : LightColor
+    }
+
+    global ControlsBackColor := ToBGR(DarkenColor(ToHEX(_color)))
+    global ControlsTextColor := ToHEX(InvertColor(ToHEX(_color)))
+    global GuiBackColor      := ToBGR(ToHEX(_color))
+
+    OnMessage(0x0133, "OnEditColor", _state)
+    OnMessage(0x0134, "OnListBoxRender", _state)
+    OnMessage(0x0135, "OnButtonRender", _state)
+    OnMessage(0x0138, "OnStaticRender", _state && !!GuiColor)
+
+    if !_state {
+        ; Cleanup cache
+        OnEditColor(false, false)
+        OnStaticRender(false, false)
+    }
+}
+
+InitDarkTheme() {
+	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
+    ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
+	global
+
+    InitControlsColorsHandlers(false)
+
+    if (Last.DarkTheme = DarkTheme) {
+        return
+    }
+    static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
+	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
+	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
+
+	DllCall(SetPreferredAppMode, "int", DarkTheme ? 2 : 0)
+	DllCall(FlushThemes)
+}
+
+SetDCBrushColor(_hdc, _color) {
+    ; DllCall("gdi32\SetDCBrushColor", "Ptr", _hdc, "UInt", _color, "UInt")
+    ; return DllCall("gdi32\GetStockObject", "Int", 16, "Ptr")  ; DC_BRUSH
+    return DllCall("gdi32\CreateSolidBrush", "UInt", _color, "Ptr")
+}
+
+SetControlColors(_hdc, _back := 0, _text := 0) {
+    global ControlsBackColor, ControlsTextColor
+    
+    if !_back {
+        _back := ControlsBackColor
+    }
+    if !_text {
+        _text := ControlsTextColor
+    }
+
+    DllCall("gdi32\SetBkColor",   "Ptr", _hdc, "UInt", _back)
+    DllCall("gdi32\SetTextColor", "Ptr", _hdc, "UInt", _text)
+    
+    return SetDCBrushColor(_hdc, _back)
+}
+
 OnEditColor(_hdc, _control) {
     ; Sets background color of the control based on it's value.
     ; Allows to demonstrate a color by rendering it as control's background.
@@ -80,7 +156,7 @@ OnEditColor(_hdc, _control) {
 
     GuiControlGet, _name, % "Name", % _control
     if !InStr(_name, "Color")
-        return 0
+        return SetControlColors(_hdc)
 
     GuiControlGet, _text,, % _control
     if (_text = "")
@@ -104,37 +180,36 @@ OnEditColor(_hdc, _control) {
         last[_name] := _color1 . _value
     }
 
-    ; Calculate color
-    _color := "0x" _value
-    _color := Min(_color + 0, 0xEEEEEE)  ; clamp for readability
-    _color := ToBGR(_color)
-
-    DllCall("SetTextColor", "Ptr", _hdc, "UInt", 0xFFFFFF)
-    DllCall("SetBkColor",   "Ptr", _hdc, "UInt", _color)
-
-    static brush := 0
-    if (brush) {
-        DllCall("DeleteObject", "Ptr", brush)
-    }
-
-    brush := DllCall("CreateSolidBrush", "UInt", _color, "Ptr")
-
-    return brush
+    _color := Min(ToHEX(_value), 0xEEEEEE)  ; clamp for readability    
+    return SetControlColors(_hdc, ToBGR(_color), 0xFFFFFF)
 }
 
-IsDarkTheme() {
-    ; Returns true if system or apps doesn't use light theme or (custom) theme contains dark theme words
-    try {
-        static reg := "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes"
+OnListBoxRender(_hdc, _control) {
+    return SetControlColors(_hdc)
+}
 
-        RegRead, _theme,    % reg,                % "CurrentTheme"
-        RegRead, _appLight, % reg "\Personalize", % "AppsUseLightTheme"
-        ; RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme"
+OnButtonRender(_hdc, _control) {
+    global GuiBackColor
+    return SetDCBrushColor(_hdc, GuiBackColor)
+}
 
-        return (_appLight = 0)
-            && !(_theme ~= "Ui).*\b(dark|night|gray)\b.*")
+OnStaticRender(_hdc, _control) {
+    global GuiBackColor, ControlsTextColor
+
+    SetControlColors(_hdc, GuiBackColor, ControlsTextColor)
+
+    static brush := 0
+    if (_hdc = false && _control = false) {
+        DllCall("DeleteObject", "Ptr", brush)
+        brush := 0
+        return 0
     }
-    return false
+    
+    if !brush {
+        brush := DllCall("gdi32\CreateSolidBrush", "UInt", GuiBackColor, "Ptr")
+    }
+    
+    return brush
 }
 
 InvertColor(_color) {
@@ -153,24 +228,56 @@ InvertColor(_color) {
     return Format("{:x}", _gray | (_gray << 8) | (_gray << 16))
 }
 
+DarkenColor(_color, _factor := 0.9) {
+    _R := (_color >> 16) & 0xFF
+    _G := (_color >> 8) & 0xFF
+    _B := _color & 0xFF
+    
+    _R := Round(_R  * _factor)
+    _G := Round(_G  * _factor)
+    _B := Round(_B  * _factor)
+    
+    return (_R << 16) | (_G << 8) | _B
+}
+
 ToBGR(_color) {
     return ((_color >> 16) & 0xFF)
          | (_color & 0x00FF00)
          | ((_color & 0xFF) << 16)
 }
 
+ToHEX(_hex) {
+    _hex := "0x" . _hex
+    _hex := _hex + 0
+    return _hex
+}
+
+IsDarkTheme() {
+    ; Returns true if system or apps doesn't use light theme or (custom) theme contains dark theme words
+    try {
+        static reg := "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes"
+
+        RegRead, _theme,    % reg,                % "CurrentTheme"
+        RegRead, _appLight, % reg "\Personalize", % "AppsUseLightTheme"
+        ; RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme"
+
+        return (_appLight = 0)
+            && !(_theme ~= "Ui).*\b(dark|night|gray)\b.*")
+    }
+    return false
+}
+
+
 GetInstalledFonts() {
     _list := ""
     Loop, Reg, % "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
     {
-        ; Extract base font name (remove Bold, Italic, etc.)
-        _list .= "|" . RegExReplace(A_LoopRegName, " \(.*\)$")
+        ; Extract base font name
+        _name := RegExReplace(A_LoopRegName, " \(.*\)$")
+        _name := RegExReplace(_name, "\d+(,\d+)*$")
+        _list .= "|" . _name
     }
-    _list := LTrim(_list, "|")
-
-    ; Sort alphabetically, Case-Sens local., Unique, Delimiter = |
-    Sort, _list, % "CL U D|"
-    return _list
+    return LTrim(_list, "|")
 }
 
 GetFontList(_font) {
@@ -182,10 +289,8 @@ GetFontList(_font) {
     return list
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
+
 SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
-;─────────────────────────────────────────────────────────────────────────────
     ; Sets font and font attributes for all menus in the system.
     ; Returns true on success
 

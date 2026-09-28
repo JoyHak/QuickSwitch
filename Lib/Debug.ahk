@@ -107,13 +107,15 @@ ShowDebug() {
     ; Displays information about the file dialog Controls
     global DialogId, MainFont, GuiColor, DarkTheme, FingerPrintActive
     
+    InitControlsColorsHandlers()
+    
     Gui, Destroy
     Gui, -DPIScale +HwndDebugId
     Gui, Color, % GuiColor, % GuiColor
     Gui, Font, q5, % MainFont           ; Clean quality
 
     if DarkTheme
-        Gui, Font, % "q5 c" InvertColor(GuiColor), % MainFont
+        Gui, Font, % "q5 c" InvertColor(ToHEX(GuiColor)), % MainFont
 
     SetFormat, Integer, D
     Gui, Add, ListView, r30 w1024, Control||Text|Hwnd|Parent|X|Y|Width|Height
@@ -154,14 +156,13 @@ ShowDebug() {
     Gui, Add, Button, x438 y+20 w74 gExportDebug vExportButton,    &Export
     Gui, Add, Button, x+20 wp       gCancelLV vCancelButton,       &Cancel
     
-    
     WinGetTitle, _title, % "ahk_id " DialogId
     WinGetClass, _class, % "ahk_id " DialogId    
     WinGet,      _process, % "ProcessName", % "ahk_id " DialogId
     
     FingerPrintActive := _process "___" _class "___" _title    
     Gui, Show,, % FingerPrintActive
-    
+
     if DarkTheme
         SetDarkControls(DebugId)
 }

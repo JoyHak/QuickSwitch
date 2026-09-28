@@ -101,6 +101,7 @@ SetDefaultValues() {
     
     DefaultColor   := ""
     DarkColor      := "202020"
+    LightColor     := "FFFFFF"
     MenuColor      := DarkTheme ? DarkColor : DefaultColor
     GuiColor       := DarkTheme ? DarkColor : DefaultColor
     
