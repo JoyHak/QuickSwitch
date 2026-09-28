@@ -140,7 +140,8 @@ ShowSettings() {
     Gui, Add, UpDown,       Range1-9999                     vDirNameLength,                                         %DirNameLength%
 
     Gui, Tab, 4 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-
+    
+    Last.AutoStartup := AutoStartup
     Gui, Add, CheckBox,                                     vAutoStartup          checked%AutoStartup%,             Launch at &system startup
 
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Pin path (hold && click)

@@ -108,104 +108,80 @@ DeleteSections() {
     }
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 InitAutoStartup() {
-;─────────────────────────────────────────────────────────────────────────────
-    global AutoStartup, ScriptName
+    global Last, AutoStartup, ScriptName
+
+    if (Last.AutoStartup = AutoStartup) {
+        return
+    }
 
     try {
         _link := A_Startup "\" ScriptName ".lnk"
 
         if AutoStartup {
-            if !IsFile(_link) {
-                LogInfo("Auto Startup enabled")
-            }
             FileCreateShortcut, % A_ScriptFullPath, % _link, % A_ScriptDir
-        } else {
-            if IsFile(_link) {
-                FileDelete, % _link
-                LogInfo("Auto Startup disabled")
-            }
+            LogInfo("Auto Startup enabled")
+        } else if IsFile(_link) {
+            FileDelete, % _link
+            LogInfo("Auto Startup disabled")
         }
     } catch _ex {
         LogException(_ex)
     }
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleShowAlways() {
-;─────────────────────────────────────────────────────────────────────────────
-    global ShowAlways
-    Gui, Submit, NoHide
+    GuiControlGet, _showAlways,, % "ShowAlways"
 
-    GuiControl,  % "Disable" ShowAlways, % "ShowNoSwitch"
-    GuiControl,  % "Disable" ShowAlways, % "ShowAfterSettings"
-    GuiControl,  % "Disable" ShowAlways, % "ShowAfterSelect"
+    GuiControl,  % "Disable" _showAlways, % "ShowNoSwitch"
+    GuiControl,  % "Disable" _showAlways, % "ShowAfterSettings"
+    GuiControl,  % "Disable" _showAlways, % "ShowAfterSelect"
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleShortPath() {
-;─────────────────────────────────────────────────────────────────────────────
     ; Hide or display additional options
-    global ShortPath
-    Gui, Submit, NoHide
-    GuiControl,, % "ShortPath", % "&Show short path" . (ShortPath ? " indicate as" : "")
+    GuiControlGet, _shortPath,, % "ShortPath"
+    GuiControl,, % "ShortPath", % "&Show short path" . (_shortPath ? " indicate as" : "")
 
-    GuiControl,  % "Enable" ShortPath,   % "ShortenEnd"
-    GuiControl,  % "Enable" ShortPath,   % "ShowDriveLetter"
-    GuiControl,  % "Enable" ShortPath,   % "DirsCount"
-    GuiControl,  % "Enable" ShortPath,   % "DirsCountText"
-    GuiControl,  % "Enable" ShortPath,   % "DirNameLength"
-    GuiControl,  % "Enable" ShortPath,   % "DirNameLengthText"
-    GuiControl,  % "Enable" ShortPath,   % "PathSeparator"
-    GuiControl,  % "Enable" ShortPath,   % "PathSeparatorText"
-    GuiControl,  % "Enable" ShortPath,   % "ShowFirstSeparator"
-
-    GuiControl,  % "Show" ShortPath,     % "ShortNameIndicator"
+    GuiControl,  % "Enable" _shortPath,   % "ShortenEnd"
+    GuiControl,  % "Enable" _shortPath,   % "ShowDriveLetter"
+    GuiControl,  % "Enable" _shortPath,   % "DirsCount"
+    GuiControl,  % "Enable" _shortPath,   % "DirsCountText"
+    GuiControl,  % "Enable" _shortPath,   % "DirNameLength"
+    GuiControl,  % "Enable" _shortPath,   % "DirNameLengthText"
+    GuiControl,  % "Enable" _shortPath,   % "PathSeparator"
+    GuiControl,  % "Enable" _shortPath,   % "PathSeparatorText"
+    GuiControl,  % "Enable" _shortPath,   % "ShowFirstSeparator"
+    GuiControl,  % "Show"   _shortPath,   % "ShortNameIndicator"
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleIcons() {
-;─────────────────────────────────────────────────────────────────────────────
     ; Hide or display input fields
-    global ShowIcons
-    Gui, Submit, NoHide
-    GuiControl,, % "ShowIcons", % "&Show icons" . (ShowIcons ? " from" : "")
+    GuiControlGet, _showIcons,, % "ShowIcons"
+    GuiControl,, % "ShowIcons", % "&Show icons" . (_showIcons ? " from" : "")
 
-    GuiControl,  % "Show" ShowIcons,     % "IconsDir"
-    GuiControl,  % "Show" ShowIcons,     % "IconsSize"
-    GuiControl,  % "Show" ShowIcons,     % "IconsSizePlaceholder"
+    GuiControl,  % "Show" _showIcons,     % "IconsDir"
+    GuiControl,  % "Show" _showIcons,     % "IconsSize"
+    GuiControl,  % "Show" _showIcons,     % "IconsSizePlaceholder"
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleFavorites() {
-;─────────────────────────────────────────────────────────────────────────────
     ; Hide or display path input field
-    global ShowFavorites
-    Gui, Submit, NoHide
-    GuiControl,, % "ShowFavorites", % "&Favorites" . (ShowFavorites ? " from" : "")
-    GuiControl,  % "Show" ShowFavorites, % "FavoritesDir"
+    GuiControlGet, _showFavorites,, % "ShowFavorites"
+    GuiControl,, % "ShowFavorites", % "&Favorites" . (_showFavorites ? " from" : "")
+    GuiControl,  % "Show" _showFavorites, % "FavoritesDir"
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 ToggleManagersTabs() {
-;─────────────────────────────────────────────────────────────────────────────
     ; Hide or display tabs checkboxes
-    global ShowManagers
-    Gui, Submit, NoHide
-    GuiControl,  % "Enable" ShowManagers, % "ListerIndex"
-    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText0"
-    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText1"
-    GuiControl,  % "Enable" ShowManagers, % "ListerIndexText2"
+    GuiControlGet, _showManagers,, % "ShowManagers"
+    GuiControl,  % "Enable" _showManagers, % "ListerIndex"
+    GuiControl,  % "Enable" _showManagers, % "ListerIndexText0"
+    GuiControl,  % "Enable" _showManagers, % "ListerIndexText1"
+    GuiControl,  % "Enable" _showManagers, % "ListerIndexText2"
 
-    GuiControl,  % "Enable" ShowManagers, % "ShowAllDesktops"
-    GuiControl,  % "Enable" ShowManagers, % "ActivePaneOnly"
-    GuiControl,  % "Enable" ShowManagers, % "ActiveTabOnly"
-    GuiControl,  % "Enable" ShowManagers, % "ShowLockedTabs"
+    GuiControl,  % "Enable" _showManagers, % "ShowAllDesktops"
+    GuiControl,  % "Enable" _showManagers, % "ActivePaneOnly"
+    GuiControl,  % "Enable" _showManagers, % "ActiveTabOnly"
+    GuiControl,  % "Enable" _showManagers, % "ShowLockedTabs"
 }
