@@ -86,7 +86,7 @@ DeleteSections() {
         if !ErrorLevel {
             FavoritePaths := []
             LogInfo("Favorites has been placed in the Recycle Bin")
-        }            
+        }
     }
 
     if DeleteKeys {
