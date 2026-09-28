@@ -87,10 +87,10 @@ ShowSettings() {
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
     OnMessage(0x0133, "OnEditColor")
-    
+
     Gui, Add, Edit,      ys-4     %short% Limit8            vMenuColor            Section,                          %MenuColor%
     Gui, Add, Edit,      xs y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
-    
+
     Gui, Add, ComboBox,     y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%

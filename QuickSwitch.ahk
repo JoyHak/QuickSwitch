@@ -95,11 +95,11 @@ Loop {
 
     try {
         DialogId := DllCall("GetForegroundWindow", "Ptr")
-        
+
         if FromSettings {
             Gui, Destroy
         }
-        
+
         if (IsDialogClosed || DialogId != Last.DialogId) {
             SendEnter := Last.SendEnter
             if !IsFileDialog(DialogId, EditId, SendEnter) {
@@ -110,11 +110,11 @@ Loop {
             WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
             WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
             FingerPrint := DialogProcess "___" DialogTitle
-            
+
             /*
-            `DialogAction` represents user choice for current dialog: 
+            `DialogAction` represents user choice for current dialog:
             autoswitch = 1, black list = -1 or nothing = 0.
-            `DialogProcess` key affects all dialogs of this process 
+            `DialogProcess` key affects all dialogs of this process
             (currently used by Black List).
             */
             if FileDialogs.HasKey(DialogProcess) {
@@ -130,7 +130,7 @@ Loop {
             if ShowFavorites
                 GetFavoritePaths(FavoritePaths)
         }
-        
+
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it
             OnClipboardChange("GetClipboardPaths", false)
@@ -176,21 +176,21 @@ Loop {
             FromSettings := false
             ShowMenu()  ; halt main thread
         }
-        
+
         LogElevatedNames()
         ErrorsCount := 0
-        
+
     } catch GlobalEx {
         LogException(GlobalEx)
-        
+
         if (ErrorsCount > 10) {
             if MsgError("Too many errors occurred in a short period of time.`nDo you want to report about it?")
                 TrayIssueTracker()
-            
+
             ExitApp
         }
     }
-    
+
     Sleep 200
     WinWaitNotActive, % "ahk_id " DialogId
     ValidateKey("MainKey", MainKey,, "Off")
@@ -198,7 +198,7 @@ Loop {
     ; Clean-up paths from clipboard in the new process
     if (Last.DialogProcess != DialogProcess && Last.DialogProcess)
         ClipboardPaths := []
-    
+
     Last.DialogProcess := DialogProcess
     Last.DialogId  := DialogId
     IsDialogClosed := !WinExist("ahk_id " DialogId)
