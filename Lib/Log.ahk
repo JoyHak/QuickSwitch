@@ -126,12 +126,12 @@ LogVersion(_enforce := false) {
     }
 }
 
-ClearLog(_maxSize := 7000, _enforce := false) {
+ClearLog(_maxSize := 7000) {
     global ErrorsLog
 
     try {
         FileGetSize, _size, % ErrorsLog, B
-        if (_size < _maxSize && !_enforce)
+        if (_size < _maxSize)
             return ""
 
         _date := ""

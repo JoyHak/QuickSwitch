@@ -64,8 +64,14 @@ if IsFile(INI) {
     ReadValues()
     ReadDialogs()
     ReadPinnedPaths(PinnedPaths)
+    Last.AutoStartup  := AutoStartup
+    Last.DarkTheme    := DarkTheme    
 } else {
     IsNewUser := true
+    Last.AutoStartup  := false
+    Last.DarkTheme    := false
+    Last.MenuFont     := MenuFont
+    Last.MenuFontSize := MenuFontSize
     WriteValues()
 }
 

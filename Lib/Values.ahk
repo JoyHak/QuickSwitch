@@ -98,7 +98,6 @@ SetDefaultValues() {
     
     ; Appearance    
     DarkTheme      := IsDarkTheme()
-    Last.DarkTheme := false
     
     DefaultColor   := ""
     DarkColor      := "202020"
@@ -110,8 +109,6 @@ SetDefaultValues() {
     MenuFontSize   := 0
     MainFont       := "Tahoma"
     MenuFont       := ""
-    Last.MenuFont  := MenuFont
-    Last.MenuFontSize := MenuFontSize
     
     ListerIndex      := 0
     AutoSwitchIndex  := 1
