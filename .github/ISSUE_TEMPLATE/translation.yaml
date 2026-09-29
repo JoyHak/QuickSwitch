@@ -1,0 +1,28 @@
+name: "Translation suggestion"
+description: Suggest the translation
+labels: ["lang"]
+
+body:
+  - type: markdown
+    attributes:
+      value: Suggest an improvement to an existing language or the addition of a new one
+  
+  - type: textarea
+    attributes:
+      label: Description without log
+      description: Only the translated text in free form
+      placeholder: >
+        Example:
+            ##### Menu
+            Show menu after:
+            Disabling Auto Switch
+    validations:
+      required: true
+  
+  - type: textarea
+    attributes:
+      label: Notes
+      description: Comments and Notes
+    validations:
+      required: false
+
