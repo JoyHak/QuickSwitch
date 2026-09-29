@@ -98,11 +98,16 @@ InitControlsColorsHandlers(_state := true) {
         switch GuiColor {
         case "":
             GuiBackColor := ""   ; default
-            ControlsBackColor := ""
-            ControlsTextColor := ""
+
+            ; Controls must have a color to be readable
+            static backColor  := DllCall("GetSysColor", "Int", 5, "UInt")
+            static textColor  := DllCall("GetSysColor", "Int", 8, "UInt")
+            
+            ControlsBackColor := DarkenColor(backColor)
+            ControlsTextColor := textColor
         case 0:
-            _color := 0x0c0c0c   ; very dark gray
             GuiBackColor := 0    ; black
+            _color := 0x0c0c0c   ; very dark gray
             ControlsBackColor := _color
             ControlsTextColor := InvertColor(_color)
         default:
