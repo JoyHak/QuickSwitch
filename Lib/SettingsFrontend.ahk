@@ -19,7 +19,7 @@ ShowSettings() {
 
     local _options := "q5"
     if DarkTheme
-        _options .= " c" InvertColor(GuiColor)
+        _options .= " c" InvertColor(ToHEX(GuiColor))
     if MainFontSize
         _options .= " s" MainFontSize
 

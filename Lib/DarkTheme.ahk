@@ -55,7 +55,6 @@ SetDarkControls(_winId) {
             ; SetWindowTheme(A_LoopField, "DarkMode_DarkTheme", true)
         }
     }
-    
 }
 
 SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
@@ -92,27 +91,38 @@ GetComboList(_control) {
 
 InitControlsColorsHandlers(_state := true) {
     global GuiColor, DarkTheme, DarkColor, LightColor
-
-    if DarkTheme {
-        _color := GuiColor ? GuiColor : DarkColor
+    global GuiBackColor, ControlsBackColor, ControlsTextColor
+    
+    if _state {
+        ; Setup colors
+        switch GuiColor {
+        case "":
+            GuiBackColor := ""   ; default
+            ControlsBackColor := ""
+            ControlsTextColor := ""    
+        case 0:
+            _color := 0x0c0c0c   ; very dark gray
+            GuiBackColor := 0    ; black
+            ControlsBackColor := _color
+            ControlsTextColor := ToHEX(InvertColor(_color))
+        default:
+            _color := ToHEX(GuiColor)
+            GuiBackColor := ToBGR(_color)
+            ControlsBackColor := ToBGR(DarkenColor(_color))
+            ControlsTextColor := ToHEX(InvertColor(_color))
+        }
+        
     } else {
-        _color := GuiColor ? GuiColor : LightColor
+        ; Cleanup cache
+        OnEditColor(-1, -1)
+        CreateBrush(-1)    
     }
-
-    global ControlsBackColor := ToBGR(DarkenColor(ToHEX(_color)))
-    global ControlsTextColor := ToHEX(InvertColor(ToHEX(_color)))
-    global GuiBackColor      := ToBGR(ToHEX(_color))
-
+    
+    ; Colorful background and dark theme handlers
     OnMessage(0x0133, "OnEditColor", _state)
     OnMessage(0x0134, "OnListBoxRender", _state)
-    OnMessage(0x0135, "OnButtonRender", _state)
+    OnMessage(0x0135, "OnButtonRender", _state && GuiColor != "")
     OnMessage(0x0138, "OnStaticRender", _state)
-    
-    if !_state {
-        ; Cleanup cache
-        OnEditColor(false, false)
-        CreateBrush(false)
-    }
 }
 
 InitDarkTheme() {
@@ -137,7 +147,7 @@ InitDarkTheme() {
 CreateBrush(_color) {
     static brushes := {}
     
-    if (_color = false) {
+    if (_color = -1) {
         for _, brush in brushes {
             DllCall("DeleteObject", "Ptr", brush)
         }
@@ -146,7 +156,9 @@ CreateBrush(_color) {
     }
     
     if !brushes.hasKey(_color) {
-        brushes[_color] := DllCall("gdi32\CreateSolidBrush", "UInt", _color, "Ptr")
+        brushes[_color] := (_color != "")
+          ? DllCall("gdi32\CreateSolidBrush", "UInt", _color, "Ptr")
+          : 0
     }
 
     return brushes[_color]
@@ -175,7 +187,7 @@ OnEditColor(_hdc, _control) {
     ; Sets background color of the control based on it's value.
     ; Allows to demonstrate a color by rendering it as control's background.
     static last := {}
-    if (_hdc = false && _control = false) {
+    if (_hdc = -1 && _control = -1) {
         last := {}
         return 0
     }
