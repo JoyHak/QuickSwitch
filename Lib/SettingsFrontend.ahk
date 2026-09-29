@@ -29,15 +29,17 @@ ShowSettings() {
     local scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
 
     ; Edit fields: one row, no multi-line word wrap, no vertical scrollbar
-    local fieldDefault := "-E0x200 -Border r1 -Wrap -vscroll w"
+    local noBorder := "-E0x200 -E0x20000 -Border"
+    local fieldDefault := noBorder . " r1 -Wrap -vscroll w"
     local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
     local tiny   := fieldDefault . 4  * (10 + scale)
     local short  := fieldDefault . 12 * (10 + scale)
-    local list   := "-E0x200 -Border r4 w" . 12 * (10 + scale)
+    local list   := noBorder . " r4 w" . 12 * (10 + scale)
     local long   := fieldDefault . 17 * (10 + scale)
+    local clr    := short " Limit8"
 
     ; Split settings to the tabs
-    Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
+    Gui, Add, Tab3, -Wrap +0x100 AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
 
     /*
         To align "Edit" fields to the right after the "Text" fields,
@@ -89,8 +91,8 @@ ShowSettings() {
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
 
-    Gui, Add, Edit,      ys-4     %short% Limit8            vMenuColor            Section,                          %MenuColor%
-    Gui, Add, Edit,      xs y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
+    Gui, Add, Edit,      ys-4     %clr%                     vMenuColor            Section,                          %MenuColor%
+    Gui, Add, Edit,      xs y+4   %clr%                     vGuiColor,                                              %GuiColor%
 
     Gui, Add, ComboBox,     y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
     Gui, Add, Edit,     x+m yp    %updown%

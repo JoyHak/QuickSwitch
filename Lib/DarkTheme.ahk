@@ -24,7 +24,6 @@ SetColors(_control := 0) {
 
 SetDarkControls(_winId) {
     ; Sets dark theme for all non-text window controls.
-    SetImmseriveDarkMode(_winId)
 
     WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
     Loop, parse, _ctrlIdList, `n
@@ -32,8 +31,6 @@ SetDarkControls(_winId) {
         WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
         
         switch _ctrlClass {
-        case "SysListView32", "SysHeader32":
-            SetWindowTheme(A_LoopField, "DarkMode_ItemsView")
         case "ComboBox", "Edit":
             SetWindowTheme(A_LoopField, "DarkMode_CFD")
         case "msctls_hotkey32":
@@ -41,11 +38,16 @@ SetDarkControls(_winId) {
         case "msctls_updown32", "ListBox", "CheckBox":
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
         case "Button":
-            ; GuiControlGet, _name, % "name", % A_LoopField
-            ; if InStr(_name, "button")
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+        case "SysListView32", "SysHeader32":
+            SetWindowTheme(A_LoopField, "DarkMode_ItemsView")
+        ; case "SysTabControl32": 
+        ;
+        default:
+            SetWindowTheme(A_LoopField, "DarkMode_Explorer", true)
         }
     }
+    
 }
 
 SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
@@ -58,25 +60,6 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
         return DllCall(SetWindowTheme, "ptr", _winId, "str", "DarkMode_DarkTheme", "ptr", 0)
         
     return DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)    
-}
-
-GetImmseriveDarkMode() {
-    if (VerCompare(A_OSVersion, "10.0.17763") >= 0) {
-		if (VerCompare(A_OSVersion, "10.0.18985") >= 0) {
-			return 20
-		}
-		return 19
-    }
-    return 0
-}
-
-SetImmseriveDarkMode(_winId) {
-    static mode := GetImmseriveDarkMode()
-    if !mode {
-        return false
-    }
-    
-    return DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", _winId, "Int", mode, "Int*", True, "Int", 4)
 }
 
 
@@ -96,12 +79,11 @@ InitControlsColorsHandlers(_state := true) {
     OnMessage(0x0133, "OnEditColor", _state)
     OnMessage(0x0134, "OnListBoxRender", _state)
     OnMessage(0x0135, "OnButtonRender", _state)
-    OnMessage(0x0138, "OnStaticRender", _state && !!GuiColor)
 
     if !_state {
         ; Cleanup cache
         OnEditColor(false, false)
-        OnStaticRender(false, false)
+        CreateBrush(false)
     }
 }
 
@@ -112,9 +94,10 @@ InitDarkTheme() {
 
     InitControlsColorsHandlers(false)
 
-    if (Last.DarkTheme = DarkTheme) {
-        return
-    }
+    ; if (Last.DarkTheme = DarkTheme) {
+        ; return
+    ; }
+    
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
 	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
@@ -123,10 +106,22 @@ InitDarkTheme() {
 	DllCall(FlushThemes)
 }
 
-SetDCBrushColor(_hdc, _color) {
-    ; DllCall("gdi32\SetDCBrushColor", "Ptr", _hdc, "UInt", _color, "UInt")
-    ; return DllCall("gdi32\GetStockObject", "Int", 16, "Ptr")  ; DC_BRUSH
-    return DllCall("gdi32\CreateSolidBrush", "UInt", _color, "Ptr")
+CreateBrush(_color) {
+    static brushes := {}
+    
+    if (_color = false) {
+        for _, brush in brushes {
+            DllCall("DeleteObject", "Ptr", brush)
+        }
+        brushes := {}
+        return 0
+    }
+    
+    if !brushes.hasKey(_color) {
+        brushes[_color] := DllCall("gdi32\CreateSolidBrush", "UInt", _color, "Ptr")
+    }
+
+    return brushes[_color]
 }
 
 SetControlColors(_hdc, _back := 0, _text := 0) {
@@ -141,8 +136,9 @@ SetControlColors(_hdc, _back := 0, _text := 0) {
 
     DllCall("gdi32\SetBkColor",   "Ptr", _hdc, "UInt", _back)
     DllCall("gdi32\SetTextColor", "Ptr", _hdc, "UInt", _text)
+    DllCall("gdi32\SetBkMode",    "Ptr", _hdc, "Int", 1)   ; transparent
     
-    return SetDCBrushColor(_hdc, _back)
+    return CreateBrush(_back)
 }
 
 OnEditColor(_hdc, _control) {
@@ -190,26 +186,8 @@ OnListBoxRender(_hdc, _control) {
 
 OnButtonRender(_hdc, _control) {
     global GuiBackColor
-    return SetDCBrushColor(_hdc, GuiBackColor)
-}
-
-OnStaticRender(_hdc, _control) {
-    global GuiBackColor, ControlsTextColor
-
-    SetControlColors(_hdc, GuiBackColor, ControlsTextColor)
-
-    static brush := 0
-    if (_hdc = false && _control = false) {
-        DllCall("DeleteObject", "Ptr", brush)
-        brush := 0
-        return 0
-    }
-    
-    if !brush {
-        brush := DllCall("gdi32\CreateSolidBrush", "UInt", GuiBackColor, "Ptr")
-    }
-    
-    return brush
+    DllCall("gdi32\SetBkMode", "Ptr", _hdc, "Int", 1)   ; transparent
+    return CreateBrush(GuiBackColor)
 }
 
 InvertColor(_color) {
@@ -228,7 +206,7 @@ InvertColor(_color) {
     return Format("{:x}", _gray | (_gray << 8) | (_gray << 16))
 }
 
-DarkenColor(_color, _factor := 0.9) {
+DarkenColor(_color, _factor := 0.85) {
     _R := (_color >> 16) & 0xFF
     _G := (_color >> 8) & 0xFF
     _B := _color & 0xFF
