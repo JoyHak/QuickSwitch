@@ -26,21 +26,21 @@ SetDarkControls(_winId) {
     ; Sets dark theme for all non-text window controls.
     ; Inspired by DarkMode from jNizM
     ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=115952&p=621245#p621245
-    
+
     WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
     Loop, parse, _ctrlIdList, `n
     {
         WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
-        
+
         switch _ctrlClass {
         case "Edit":
             SetWindowTheme(A_LoopField, "DarkMode_CFD")
         case "Combobox":
-            SetWindowTheme(A_LoopField, "DarkMode_CFD")  ; edit field 
+            SetWindowTheme(A_LoopField, "DarkMode_CFD")  ; edit field
             SetWindowTheme(GetComboList(A_LoopField), "DarkMode_Explorer")  ; internal list
-            
+
             SendMessage(A_LoopField, 0x0142, 0, 0xFFFF) ; CB_SETEDITSEL -> remove selection
-            
+
         case "msctls_hotkey32":
             SetWindowTheme(A_LoopField, "DarkMode_CFD", true)
         case "msctls_updown32", "ListBox", "CheckBox":
@@ -49,7 +49,7 @@ SetDarkControls(_winId) {
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
         case "SysListView32", "SysHeader32":
             SetWindowTheme(A_LoopField, "DarkMode_ItemsView")
-        ; case "SysTabControl32": 
+        ; case "SysTabControl32":
         ;
         ; default:
             ; SetWindowTheme(A_LoopField, "DarkMode_DarkTheme", true)
@@ -61,9 +61,9 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetWindowTheme := DllCall("GetProcAddress", "ptr", uxTheme, "astr", "SetWindowTheme", "ptr")
 	static AllowDarkModeForWindow := 0
-    
+
     static fullyDark := VerCompare(A_OSVersion, "10.0.26100") >= 0
-    
+
     if (fullyDark && !AllowDarkModeForWindow) {
         AllowDarkModeForWindow := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 133, "ptr")
     }
@@ -73,8 +73,8 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
     if (fullyDark && !_enforce) {
         _theme := "DarkMode_DarkTheme"
     }
-    
-    DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)    
+
+    DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)
     SendMessage(_winId, 0x031A)  ; WM_THEMECHANGED
 }
 
@@ -90,34 +90,33 @@ GetComboList(_control) {
 }
 
 InitControlsColorsHandlers(_state := true) {
-    global GuiColor, DarkTheme, DarkColor, LightColor
+    global GuiColor
     global GuiBackColor, ControlsBackColor, ControlsTextColor
-    
+
     if _state {
         ; Setup colors
         switch GuiColor {
         case "":
             GuiBackColor := ""   ; default
             ControlsBackColor := ""
-            ControlsTextColor := ""    
+            ControlsTextColor := ""
         case 0:
             _color := 0x0c0c0c   ; very dark gray
             GuiBackColor := 0    ; black
             ControlsBackColor := _color
-            ControlsTextColor := ToHEX(InvertColor(_color))
+            ControlsTextColor := InvertColor(_color)
         default:
             _color := ToHEX(GuiColor)
             GuiBackColor := ToBGR(_color)
-            ControlsBackColor := ToBGR(DarkenColor(_color))
-            ControlsTextColor := ToHEX(InvertColor(_color))
+            ControlsBackColor := DarkenColor(_color)
+            ControlsTextColor := InvertColor(_color)
         }
-        
     } else {
         ; Cleanup cache
         OnEditColor(-1, -1)
-        CreateBrush(-1)    
+        CreateBrush(-1)
     }
-    
+
     ; Colorful background and dark theme handlers
     OnMessage(0x0133, "OnEditColor", _state)
     OnMessage(0x0134, "OnListBoxRender", _state)
@@ -135,7 +134,7 @@ InitDarkTheme() {
     if (Last.DarkTheme = DarkTheme) {
         return
     }
-    
+
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
 	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
@@ -146,7 +145,7 @@ InitDarkTheme() {
 
 CreateBrush(_color) {
     static brushes := {}
-    
+
     if (_color = -1) {
         for _, brush in brushes {
             DllCall("DeleteObject", "Ptr", brush)
@@ -154,7 +153,7 @@ CreateBrush(_color) {
         brushes := {}
         return 0
     }
-    
+
     if !brushes.hasKey(_color) {
         brushes[_color] := (_color != "")
           ? DllCall("gdi32\CreateSolidBrush", "UInt", _color, "Ptr")
@@ -168,18 +167,18 @@ SetControlColors(_hdc, _back := 0, _text := 0) {
     ; Inspired by DarkGui from TrueCrimeDev
     ; https://github.com/TrueCrimeDev/DarkGui/blob/adf5e7389b80bb7d4d895d037f0d6153a871271b/DarkModeModular.ahk#L2053
     global ControlsBackColor, ControlsTextColor
-    
+
     if !_back {
         _back := ControlsBackColor
     }
     if !_text {
         _text := ControlsTextColor
     }
-    
+
     DllCall("gdi32\SetBkColor",   "Ptr", _hdc, "UInt", _back)
     DllCall("gdi32\SetTextColor", "Ptr", _hdc, "UInt", _text)
     DllCall("gdi32\SetBkMode",    "Ptr", _hdc, "Int",  1)   ; transparent
-    
+
     return CreateBrush(_back)
 }
 
@@ -216,7 +215,7 @@ OnEditColor(_hdc, _control) {
         last[_name] := _color1 . _value
     }
 
-    _color := Min(ToHEX(_value), 0xEEEEEE)  ; clamp for readability    
+    _color := Min(ToHEX(_value), 0xEEEEEE)  ; clamp for readability
     return SetControlColors(_hdc, ToBGR(_color), 0xFFFFFF)
 }
 
@@ -232,18 +231,18 @@ OnButtonRender(_hdc, _control) {
 
 OnStaticRender(_hdc, _control) {
     global GuiBackColor, ControlsTextColor
-    
+
     static GWL_STYLE := -16
     static ES_READONLY := 0x0800
-    
+
     static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
     _style := DllCall(GetWindowLong, "Ptr", _control, "Int", GWL_STYLE, "Ptr")
-    
+
     if (_style & ES_READONLY) {
         ; Edit control
         return SetControlColors(_hdc)
     }
-    
+
     ; Text/Checkbox
     SetControlColors(_hdc, GuiBackColor, ControlsTextColor)
     return CreateBrush(GuiBackColor)
@@ -261,20 +260,20 @@ InvertColor(_color) {
         ? Round(255 - _luminance * 35 / 128)       ; 255 -> 220
         : Round((_luminance - 128) * 40 / 127)     ; 0 -> 40
 
-    ; To RGB
-    return Format("{:x}", _gray | (_gray << 8) | (_gray << 16))
+    ; Fill each component
+    return (_gray << 16) | (_gray << 8) | _gray
 }
 
 DarkenColor(_color, _factor := 0.85) {
     _R := (_color >> 16) & 0xFF
     _G := (_color >> 8) & 0xFF
     _B := _color & 0xFF
-    
+
     _R := Round(_R  * _factor)
     _G := Round(_G  * _factor)
     _B := Round(_B  * _factor)
-    
-    return (_R << 16) | (_G << 8) | _B
+
+    return (_B << 16) | (_G << 8) | _R
 }
 
 ToBGR(_color) {
@@ -283,10 +282,13 @@ ToBGR(_color) {
          | ((_color & 0xFF) << 16)
 }
 
-ToHEX(_hex) {
-    _hex := "0x" . _hex
-    _hex := _hex + 0
-    return _hex
+ToHEX(_string) {
+    _num := "0x" . _string
+    return _num + 0
+}
+
+ToHexString(_hex) {
+    return Format("{:x}", _hex)
 }
 
 IsDarkTheme() {

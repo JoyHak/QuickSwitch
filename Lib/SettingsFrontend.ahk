@@ -15,11 +15,11 @@ ShowSettings() {
     ; Hide window border and header
     Gui, Destroy
     Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
-    Gui, Color, % GuiColor, % GuiColor
+    Gui, Color, % GuiColor  ; controls colors are handled by InitControlsColorsHandlers()
 
-    local _options := "q5"
-    if DarkTheme
-        _options .= " c" InvertColor(ToHEX(GuiColor))
+    local _options := "q5"  ; clean quality
+    if (DarkTheme)
+        _options .= " c" ToHexString(InvertColor(ToHEX(GuiColor)))
     if MainFontSize
         _options .= " s" MainFontSize
 

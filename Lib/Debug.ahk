@@ -111,13 +111,13 @@ ShowDebug() {
     
     Gui, Destroy
     Gui, -DPIScale +HwndDebugId
-    Gui, Color, % GuiColor, % GuiColor
-    Gui, Font, q5, % MainFont           ; Clean quality
+    Gui, Color, % GuiColor
 
-    if DarkTheme
-        Gui, Font, % "q5 c" InvertColor(ToHEX(GuiColor)), % MainFont
+    if (DarkTheme)
+        Gui, Font, % "q5 c" ToHexString(InvertColor(ToHEX(GuiColor))), % MainFont
+    else
+        Gui, Font, % "q5", % MainFont
 
-    SetFormat, Integer, D
     Gui, Add, ListView, r30 w1024, Control||Text|Hwnd|Parent|X|Y|Width|Height
     
     ; Get window information
