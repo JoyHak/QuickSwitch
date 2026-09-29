@@ -79,7 +79,8 @@ InitControlsColorsHandlers(_state := true) {
     OnMessage(0x0133, "OnEditColor", _state)
     OnMessage(0x0134, "OnListBoxRender", _state)
     OnMessage(0x0135, "OnButtonRender", _state)
-
+    OnMessage(0x0138, "OnStaticRender", _state)
+    
     if !_state {
         ; Cleanup cache
         OnEditColor(false, false)
@@ -125,6 +126,8 @@ CreateBrush(_color) {
 }
 
 SetControlColors(_hdc, _back := 0, _text := 0) {
+    ; Inspired by DarkGui from TrueCrimeDev
+    ; https://github.com/TrueCrimeDev/DarkGui/blob/adf5e7389b80bb7d4d895d037f0d6153a871271b/DarkModeModular.ahk#L2053
     global ControlsBackColor, ControlsTextColor
     
     if !_back {
@@ -133,7 +136,7 @@ SetControlColors(_hdc, _back := 0, _text := 0) {
     if !_text {
         _text := ControlsTextColor
     }
-
+    
     DllCall("gdi32\SetBkColor",   "Ptr", _hdc, "UInt", _back)
     DllCall("gdi32\SetTextColor", "Ptr", _hdc, "UInt", _text)
     DllCall("gdi32\SetBkMode",    "Ptr", _hdc, "Int", 1)   ; transparent
@@ -155,11 +158,9 @@ OnEditColor(_hdc, _control) {
         return SetControlColors(_hdc)
 
     GuiControlGet, _text,, % _control
-    if (_text = "")
-        return 0
-
-    if !(RegExMatch(_text, "i)^(\#|0x)?([a-f0-9]{6,})$", _color))
-        return 0
+    if (_text = ""
+     || !RegExMatch(_text, "i)^(\#|0x)?([a-f0-9]{6,})$", _color))
+        return SetControlColors(_hdc)
 
     ; Clamp number with 6+ digits
     _value := _color2
@@ -187,6 +188,25 @@ OnListBoxRender(_hdc, _control) {
 OnButtonRender(_hdc, _control) {
     global GuiBackColor
     DllCall("gdi32\SetBkMode", "Ptr", _hdc, "Int", 1)   ; transparent
+    return CreateBrush(GuiBackColor)
+}
+
+OnStaticRender(_hdc, _control) {
+    global GuiBackColor, ControlsTextColor
+    
+    static GWL_STYLE := -16
+    static ES_READONLY := 0x0800
+    
+    static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
+    _style := DllCall(GetWindowLong, "Ptr", _control, "Int", GWL_STYLE, "Ptr")
+    
+    if (_style & ES_READONLY) {
+        ; Edit control
+        return SetControlColors(_hdc)
+    }
+    
+    ; Text/Checkbox
+    SetControlColors(_hdc, GuiBackColor, ControlsTextColor)
     return CreateBrush(GuiBackColor)
 }
 
