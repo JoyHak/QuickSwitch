@@ -75,12 +75,12 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
         AllowDarkModeForWindow := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 133, "ptr")
     }
     if (AllowDarkModeForWindow) {
-         DllCall(AllowDarkModeForWindow, "Ptr", _winId, "UInt", 1)
+         DllCall(AllowDarkModeForWindow, "Ptr", _winId, "UInt", true)
     }
     if (IsModernWindows && !_enforce) {
         _theme := "DarkMode_DarkTheme"
     }
-
+    
     DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)
     SendMessage(_winId, 0x031A)  ; WM_THEMECHANGED
 }

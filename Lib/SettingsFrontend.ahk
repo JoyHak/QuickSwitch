@@ -15,7 +15,7 @@ ShowSettings() {
     ; Hide window border and header
     Gui, Destroy
     Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
-    Gui, Color, % GuiColor  ; controls colors are handled by InitControlsColorsHandlers()
+    Gui, Color, % GuiColor, % GuiColor
 
     local _options := "q5"  ; clean quality
     if (DarkTheme && GuiColor)

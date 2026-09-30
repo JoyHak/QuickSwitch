@@ -111,7 +111,7 @@ ShowDebug() {
     
     Gui, Destroy
     Gui, -DPIScale +HwndDebugId
-    Gui, Color, % GuiColor
+    Gui, Color, % GuiColor, % GuiColor
 
     if (DarkTheme && GuiColor)
         Gui, Font, % "q5 c" ToHexString(InvertColor(ToHEX(GuiColor))), % MainFont
