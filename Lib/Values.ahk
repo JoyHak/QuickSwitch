@@ -22,6 +22,8 @@ EditId              :=  0
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
 IsEnforcedUi        :=  false
+IsModernWindows     :=  VerCompare(A_OSVersion, "10.0.26100") >= 0
+
 FromSettings        :=  false
 
 DeleteDialogs       :=  false

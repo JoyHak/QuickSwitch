@@ -26,7 +26,10 @@ SetDarkControls(_winId) {
     ; Sets dark theme for all non-text window controls.
     ; Inspired by DarkMode from jNizM
     ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=115952&p=621245#p621245
-
+    
+    global IsModernWindows
+    SetWindowTheme(_winId, "DarkMode_Explorer")
+    
     WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
     Loop, parse, _ctrlIdList, `n
     {
@@ -38,7 +41,6 @@ SetDarkControls(_winId) {
         case "Combobox":
             SetWindowTheme(A_LoopField, "DarkMode_CFD")  ; edit field
             SetWindowTheme(GetComboList(A_LoopField), "DarkMode_Explorer")  ; internal list
-
             SendMessage(A_LoopField, 0x0142, 0, 0xFFFF) ; CB_SETEDITSEL -> remove selection
 
         case "msctls_hotkey32":
@@ -46,31 +48,36 @@ SetDarkControls(_winId) {
         case "msctls_updown32", "ListBox", "CheckBox":
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
         case "Button":
+            if (!IsModernWindows && IsCheckbox(A_LoopField)) {
+                ; Checkbox text may become inverted on previous Windows builds
+                continue
+            }
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+            
         case "SysListView32", "SysHeader32":
-            SetWindowTheme(A_LoopField, "DarkMode_ItemsView")
+            SetWindowTheme(A_LoopField, "DarkMode_ItemsView", true)
         ; case "SysTabControl32":
         ;
         ; default:
-            ; SetWindowTheme(A_LoopField, "DarkMode_DarkTheme", true)
+            ; SetWindowTheme(A_LoopField, "DarkMode_Explorer", true)
         }
     }
 }
 
 SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
+    global IsModernWindows
+    
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetWindowTheme := DllCall("GetProcAddress", "ptr", uxTheme, "astr", "SetWindowTheme", "ptr")
 	static AllowDarkModeForWindow := 0
 
-    static fullyDark := VerCompare(A_OSVersion, "10.0.26100") >= 0
-
-    if (fullyDark && !AllowDarkModeForWindow) {
+    if (IsModernWindows && !AllowDarkModeForWindow) {
         AllowDarkModeForWindow := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 133, "ptr")
     }
     if (AllowDarkModeForWindow) {
          DllCall(AllowDarkModeForWindow, "Ptr", _winId, "UInt", 1)
     }
-    if (fullyDark && !_enforce) {
+    if (IsModernWindows && !_enforce) {
         _theme := "DarkMode_DarkTheme"
     }
 
@@ -88,6 +95,15 @@ GetComboList(_control) {
 
     return NumGet(CBI, 40 + (A_PtrSize * 2), "Ptr")
 }
+
+IsCheckbox(_control) {
+    static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
+    _s := 0x000F & DllCall(GetWindowLong, "Ptr", _control, "Int", -16, "Ptr")    ; GWL_STYLE
+    
+    ; BS_CHECKBOX, BS_AUTOCHECKBOX, BS_3STATE, BS_AUTO3STATE
+    return _s = 0x0002 || _s = 0x0003 || _s = 0x0005 || _s = 0x0006
+}
+
 
 InitControlsColorsHandlers(_state := true) {
     global GuiColor
