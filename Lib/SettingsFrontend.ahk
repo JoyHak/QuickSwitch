@@ -16,30 +16,31 @@ ShowSettings() {
     Gui, Destroy
     Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
     Gui, Color, % GuiColor, % GuiColor
+    
+    local _fontOpt := ""
+    if (GuiColor != "")
+        _fontOpt .= " c" . ToHexString(InvertColor(ToHEX(GuiColor))) . " "
 
-    local _options := "q5"  ; clean quality
-    if (DarkTheme && GuiColor)
-        _options .= " c" ToHexString(InvertColor(ToHEX(GuiColor)))
-    if MainFontSize
-        _options .= " s" MainFontSize
-
-    Gui, Font, % _options, % MainFont
+    Gui, Font, % _fontOpt " q5 s" MainFontSize, % MainFont
 
     ; The larger the font size and DPI, the wider the input fields
-    local scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
+    local _scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
 
     ; Edit fields: one row, no multi-line word wrap, no vertical scrollbar
-    local noBorder := "-E0x200 -E0x20000 -Border"
-    local fieldDefault := noBorder . " r1 -Wrap -vscroll w"
-    local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
-    local tiny   := fieldDefault . 4  * (10 + scale)
-    local short  := fieldDefault . 12 * (10 + scale)
-    local list   := noBorder . " r4 w" . 12 * (10 + scale)
-    local long   := fieldDefault . 17 * (10 + scale)
-    local clr    := short " Limit8"
+    local _noBorderOpt := " -E0x200 -Border "
+    local _input := _noBorderOpt . _fontOpt . " r1 -Wrap -vscroll w"
+    
+    local tiny   := _input . 4  * (10 + _scale)
+    local short  := _input . 12 * (10 + _scale)
+    local long   := _input . 17 * (10 + _scale)
+    
+    local updown := tiny   . " Limit2"
+    local clr    := short  . " Limit8"
+    local list   := "r4 w" . 12 * (10 + _scale) . _noBorderOpt . _fontOpt
 
     ; Split settings to the tabs
-    Gui, Add, Tab3, -Wrap +0x100 AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
+    ; One row, no border
+    Gui, Add, Tab3, % "-Wrap +0x100 AltSubmit vLastTabSettings " _fontOpt " Choose" LastTabSettings, % "Menu|Theme|Short path|App|Reset"
 
     /*
         To align "Edit" fields to the right after the "Text" fields,
@@ -109,7 +110,7 @@ ShowSettings() {
     Gui, Add, CheckBox,           gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           Fa&vorites from
     Gui, Add, Edit,      xs yp-5  %long%                    vFavoritesDir,                                          %FavoritesDir%
 
-    Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
+    Gui, Add, CheckBox,     y+%_scale%    x%MarginX%        vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
 
