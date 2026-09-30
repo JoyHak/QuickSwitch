@@ -80,7 +80,13 @@ ShowSettings() {
 
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui, Add, CheckBox,           gSetColors                vDarkTheme            checked%DarkTheme%,               Apply &dark theme
+if IsThemesAvailable {
+    Gui, Add, Text,             y+m,                                                                                Transparent theme
+    Gui, Add, DropDownList, x+m yp-2 %list%   gSetSettingsGlassTheme vGlassTheme  AltSubmit,                        Disabled|Mica|Glass|Acrylic
+    GuiControl, % "Choose", % "GlassTheme", % GlassTheme
+}
+
+    Gui, Add, CheckBox,     x%MarginX% y+8   gSetColors     vDarkTheme            checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Menu font
@@ -287,11 +293,8 @@ ShowSettings() {
             _pos := "x0 y100"                       ; active window top left corner
     }
     
-    if IsModernWindows {    
-        ; WS_OVERLAPPEDWINDOW, WS_EX_LAYERED
-        Gui, % "+Resize +E0x80000"
-        SetGlassBackground(SettingsId)
-    }
+    if (IsThemesAvailable && GlassTheme != 1)
+        SetSettingsGlassTheme()
     
     Gui, Show, % "AutoSize " _pos, Settings
     

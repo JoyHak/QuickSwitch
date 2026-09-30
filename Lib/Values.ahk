@@ -22,7 +22,6 @@ EditId              :=  0
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
 IsEnforcedUi        :=  false
-IsModernWindows     :=  VerCompare(A_OSVersion, "10.0.26100") >= 0
 
 FromSettings        :=  false
 
@@ -34,7 +33,7 @@ DeleteKeys          :=  false
 NukeSettings        :=  false
 
 ; stores previous value of some global variables
-Last := {DialogId: 0, DialogProcess: ""}  
+Last := {DialogId: 0, DialogProcess: "", DarkTheme: false}  
 
 SetDefaultValues() {
     /*
@@ -107,6 +106,8 @@ SetDefaultValues() {
     MenuColor      := DarkTheme ? DarkColor : DefaultColor
     GuiColor       := DarkTheme ? DarkColor : DefaultColor
     
+    GlassTheme     := 1  ; disabled
+    
     IconsSize      := 25
     MainFontSize   := 10
     MenuFontSize   := 0
@@ -146,10 +147,11 @@ WriteValues() {
     The individual special values are checked before writing.
     */
     global
-
+    
     local _values := "
     (LTrim
     DarkTheme="               DarkTheme               "
+    GlassTheme="              GlassTheme              "
     ShowManagers="            ShowManagers            "
     AutoStartup="             AutoStartup             "
     PathNumbers="             PathNumbers             "

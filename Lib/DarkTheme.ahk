@@ -1,11 +1,13 @@
 ; Contains functions for switching Menu and GUI to dark / light mode
 
+IsThemesAvailable := VerCompare(A_OSVersion, "10.0.26100") >= 0
+
 SetSettingsDarkTheme(_winId) {
     ; Sets dark theme for all non-text window controls.
     ; Inspired by DarkMode from jNizM
     ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=115952&p=621245#p621245
     
-    ; global IsModernWindows
+    ; global IsThemesAvailable
     SetImmersiveDarkMode(_winId)    ; dark Titlebar
     
     WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
@@ -26,7 +28,7 @@ SetSettingsDarkTheme(_winId) {
         case "msctls_updown32", "ListBox", "CheckBox":
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
         case "Button":
-            ; if (!IsModernWindows && IsCheckbox(A_LoopField)) {
+            ; if (!IsThemesAvailable && IsCheckbox(A_LoopField)) {
                 ; Checkbox text may become inverted on previous Windows builds
                 ; continue
             ; }
@@ -38,8 +40,27 @@ SetSettingsDarkTheme(_winId) {
     }
 }
 
+GetComboList(_control) {
+    ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=139862&p=613750&hilit=dark+checkbox#p613750
+
+    CBISize := 40 + (A_PtrSize * 3)
+    VarSetCapacity(CBI, CBISize, 0)
+    NumPut(CBISize, CBI, 0, "UInt")
+    DllCall("GetComboBoxInfo", "Ptr", _control, "Ptr", &CBI)
+
+    return NumGet(CBI, 40 + (A_PtrSize * 2), "Ptr")
+}
+
+IsCheckbox(_control) {
+    _s := 0x000F & GetWindowLong(_control)
+    
+    ; BS_CHECKBOX, BS_AUTOCHECKBOX, BS_3STATE, BS_AUTO3STATE
+    return _s = 0x0002 || _s = 0x0003 || _s = 0x0005 || _s = 0x0006
+}
+
+
 SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
-    global IsModernWindows
+    global IsThemesAvailable
     
     static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
 	static SetWindowTheme := DllCall("GetProcAddress", "ptr", uxTheme, "astr", "SetWindowTheme", "ptr")
@@ -47,7 +68,7 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
     
     SetImmersiveDarkMode(_winId)
 
-    if (IsModernWindows && !_enforce) {
+    if (IsThemesAvailable && !_enforce) {
         _theme := "DarkMode_DarkTheme"
     }
     
@@ -83,42 +104,50 @@ SetImmersiveDarkMode(_winId, _state := true) {
     DllCall(DwmSetWindowAttribute,  "Ptr", _winId, "Int", mode, "Int*", _state, "Int", 4)
 }
 
-SetGlassBackground(_winId) {
+
+SetGlassBackground(_winId, _mode := 3) {
     ; https://www.autohotkey.com/boards/viewtopic.php?f=83&t=140577&p=617944&hilit=Mica#p617944
-    DllCall("SetLayeredWindowAttributes", "Ptr", _winId, "UInt", 0, "UChar", 255, "UInt", 2)  ; LWA_ALPHA 
-    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", _winId, "UInt", 38, "Int*", 3, "UInt", 4)  ; Frosted
     
+    if (_mode >= 4 || _mode <= 0)
+        _mode := 1
+
+    static GWL_EXSTYLE   := -20
+    static WS_EX_LAYERED := 0x80000
+    ; static WS_OVERLAPPEDWINDOW := 0x00CF0000    ; causes glitches
+
+    _style := GetWindowLong(_winId, GWL_EXSTYLE)
+    if (_mode != 1)
+        _style |= WS_EX_LAYERED
+    else
+        _style &= ~WS_EX_LAYERED
+    
+    SetWindowLong(_winId, GWL_EXSTYLE, _style)
+    
+    DllCall("SetLayeredWindowAttributes",   "Ptr", _winId, "UInt", 0, "UChar", 255, "UInt", 2)    ; LWA_ALPHA 
+    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", _winId, "UInt", 38, "Int*", _mode, "UInt", 4)  ; DWMWA_SYSTEMBACKDROP_TYPE
+
     ; Apply Glass Margins into the entire client area
     VarSetCapacity(_margins, 16, 0)
-    
-    NumPut(-1, _margins,  0, "Int")  ; left
-    NumPut(-1, _margins,  4, "Int")  ; top
-    NumPut(-1, _margins,  8, "Int")  ; right
-    NumPut(-1, _margins, 12, "Int")  ; bottom
+    _size := (_mode != 1) ? -1 : 0
+
+    NumPut(_size, _margins,  0, "Int")  ; left
+    NumPut(_size, _margins,  4, "Int")  ; top
+    NumPut(_size, _margins,  8, "Int")  ; right
+    NumPut(_size, _margins, 12, "Int")  ; bottom
     
     DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", _winId, "Ptr", &_margins)
+
+    ; Force a frame redraw so the new extended style takes effect immediately
+    ; SWP_FRAMECHANGED, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_NOACTIVATE
+    DllCall("SetWindowPos", "Ptr", _winId, "Ptr", 0, "Int", 0, "Int", 0, "Int", 0, "Int", 0
+          , "UInt", 0x0020 | 0x0002 | 0x0001 | 0x0004 | 0x0010)
 }
 
-
-GetComboList(_control) {
-    ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=139862&p=613750&hilit=dark+checkbox#p613750
-
-    CBISize := 40 + (A_PtrSize * 3)
-    VarSetCapacity(CBI, CBISize, 0)
-    NumPut(CBISize, CBI, 0, "UInt")
-    DllCall("GetComboBoxInfo", "Ptr", _control, "Ptr", &CBI)
-
-    return NumGet(CBI, 40 + (A_PtrSize * 2), "Ptr")
+SetSettingsGlassTheme() {
+    global SettingsId
+    GuiControlGet, _glassTheme,, % "GlassTheme"
+    SetGlassBackground(SettingsId, _glassTheme)
 }
-
-IsCheckbox(_control) {
-    static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
-    _s := 0x000F & DllCall(GetWindowLong, "Ptr", _control, "Int", -16, "Ptr")    ; GWL_STYLE
-    
-    ; BS_CHECKBOX, BS_AUTOCHECKBOX, BS_3STATE, BS_AUTO3STATE
-    return _s = 0x0002 || _s = 0x0003 || _s = 0x0005 || _s = 0x0006
-}
-
 
 SetColors(_control := 0) {
     ; Sets default colors for each theme (light/dark)
@@ -272,14 +301,8 @@ OnButtonRender(_hdc, _control) {
 
 OnStaticRender(_hdc, _control) {
     global GuiBackColor, ControlsTextColor
-
-    static GWL_STYLE := -16
-    static ES_READONLY := 0x0800
-
-    static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
-    _style := DllCall(GetWindowLong, "Ptr", _control, "Int", GWL_STYLE, "Ptr")
-
-    if (_style & ES_READONLY) {
+    
+    if (GetWindowLong(_control) & 0x0800) {  ; ES_READONLY
         ; Edit control
         return SetControlColors(_hdc)
     }

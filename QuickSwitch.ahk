@@ -64,12 +64,10 @@ if IsFile(INI) {
     ReadValues()
     ReadDialogs()
     ReadPinnedPaths(PinnedPaths)
-    Last.AutoStartup  := AutoStartup
-    Last.DarkTheme    := DarkTheme    
+    Last.AutoStartup  := AutoStartup 
 } else {
     IsNewUser := true
     Last.AutoStartup  := false
-    Last.DarkTheme    := false
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
     WriteValues()
@@ -112,7 +110,7 @@ Loop {
                 WinWaitNotActive, % "ahk_id " DialogId
                 Continue
             }
-
+            
             WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
             WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
             FingerPrint := DialogProcess "___" DialogTitle
@@ -135,6 +133,11 @@ Loop {
             ; Get paths for Menu sections
             if ShowFavorites
                 GetFavoritePaths(FavoritePaths)
+        }
+        
+        if (IsThemesAvailable
+        && (FromSettings || GlassTheme != 1)) {
+            SetGlassBackground(DialogId, GlassTheme)
         }
 
         if ShowManagers {
