@@ -309,7 +309,7 @@ ToHEX(_string) {
 }
 
 ToHexString(_hex) {
-    return Format("{:x}", _hex)
+    return Format("{:06x}", _hex)
 }
 
 
@@ -524,4 +524,41 @@ EnumFontFamilies(_lpelfe, _lpntme, _fontType, _lParam) {
 
     Object(_lParam)[_font] := true
     return 1  ; continue enumeration
+}
+
+ShowColorPicker(_winId := 0, _color := "FFFFFF", _fullPanel := true) {
+    ; https://www.autohotkey.com/board/topic/94083-ahk-11-font-and-_color-dialogs
+    ; https://github.com/TheArkive/ColorPicker_ahk2 
+
+    _size := (A_PtrSize = 8) ? 72 : 36
+    VarSetCapacity(_CHOOSECOLOR, _size, 0)
+    VarSetCapacity(_CUSTOM, 16 * 4, 0)
+    
+    _bgr := ToBGR(ToHex(_color))
+    _flags := _fullPanel ? 0x3 : 0x1 ; full panel / basic panel
+
+    NumPut(_size,     _CHOOSECOLOR, 0,             "UInt")   ; lStructSize
+    NumPut(_winId,    _CHOOSECOLOR, A_PtrSize,     "UPtr")   ; hwndOwner
+    NumPut(_bgr,      _CHOOSECOLOR, 3 * A_PtrSize, "UInt")   ; rgbResult
+    NumPut(&_CUSTOM,  _CHOOSECOLOR, 4 * A_PtrSize, "UPtr")   ; lpCustColors
+    NumPut(_flags,    _CHOOSECOLOR, 5 * A_PtrSize, "UInt")   ; _flags
+
+    if !DllCall("comdlg32\ChooseColor", "Ptr", &_CHOOSECOLOR, "Int")
+        return _color
+    
+    ; BGR
+    return NumGet(_CHOOSECOLOR, 3 * A_PtrSize, "UInt")
+}
+
+SetPickedColor(_control := 0) {
+    global SettingsId
+    
+    ; Get associated color field
+    GuiControlGet, _name, % "Name", % _control
+    _name := StrReplace(_name, "Pick")
+    
+    ; Pick a color
+    GuiControlGet, _color,, % _name
+    _result := ShowColorPicker(SettingsId, _color)
+    GuiControl,, % _name, % ToHexString(ToBGR(_result))
 }
