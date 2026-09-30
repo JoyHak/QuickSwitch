@@ -1,7 +1,9 @@
 ScriptName    := "QuickSwitch"
 ;@Ahk2Exe-SetProductName %A_PriorLine~.*"(.*)"~$1%
-ScriptVersion := "1.9.20"
+ScriptVersion := "1.9.20-glass"
 ;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
+;@Ahk2Exe-Set IsPreRelease, 1
+;@Ahk2Exe-Set IsSpecialBuild, 1
 ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
 IssueTracker  := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 ;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
