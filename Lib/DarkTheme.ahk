@@ -1,16 +1,19 @@
-; Contains functions for switching Menu and GUI to dark / light mode
+; Contains functions for switching Menu and GUI to dark / light / mica mode
 
 IsThemesAvailable := VerCompare(A_OSVersion, "10.0.26100") >= 0
 
-SetSettingsDarkTheme(_winId) {
+SetDarkTheme(_winId) {
     ; Sets dark theme for all non-text window controls.
     ; Inspired by DarkMode from jNizM
     ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=115952&p=621245#p621245
     
-    ; global IsThemesAvailable
-    SetImmersiveDarkMode(_winId)    ; dark Titlebar
-    
-    WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
+    if (_winId = -1) {
+        ; Last Found window
+        WinGet, _ctrlIdList, % "ControlListHwnd"        
+    } else {
+        WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
+    }
+
     Loop, parse, _ctrlIdList, `n
     {
         WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
@@ -28,12 +31,11 @@ SetSettingsDarkTheme(_winId) {
         case "msctls_updown32", "ListBox", "CheckBox":
             SetWindowTheme(A_LoopField, "DarkMode_Explorer")
         case "Button":
-            ; if (!IsThemesAvailable && IsCheckbox(A_LoopField)) {
+            global IsThemesAvailable
+            if (IsThemesAvailable || !IsCheckbox(A_LoopField)) {
                 ; Checkbox text may become inverted on previous Windows builds
-                ; continue
-            ; }
-            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
-            
+                SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+            }
         case "SysListView32", "SysHeader32":
             SetWindowTheme(A_LoopField, "DarkMode_ItemsView", true)
         }
@@ -105,7 +107,7 @@ SetImmersiveDarkMode(_winId, _state := true) {
 }
 
 
-SetGlassBackground(_winId, _mode := 3) {
+SetGlassTheme(_winId, _mode := 3) {
     ; https://www.autohotkey.com/boards/viewtopic.php?f=83&t=140577&p=617944&hilit=Mica#p617944
     
     if (_mode >= 4 || _mode <= 0)
@@ -146,10 +148,10 @@ SetGlassBackground(_winId, _mode := 3) {
 SetSettingsGlassTheme() {
     global SettingsId
     GuiControlGet, _glassTheme,, % "GlassTheme"
-    SetGlassBackground(SettingsId, _glassTheme)
+    SetGlassTheme(SettingsId, _glassTheme)
 }
 
-SetColors(_control := 0) {
+SetSettingsInputColors(_control := 0) {
     ; Sets default colors for each theme (light/dark)
     global DefaultColor, DarkColor
 

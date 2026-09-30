@@ -165,5 +165,5 @@ ShowDebug() {
     Gui, Show,, % FingerPrintActive
 
     if DarkTheme
-        SetSettingsDarkTheme(DebugId)
+        SetDarkTheme(DebugId)
 }

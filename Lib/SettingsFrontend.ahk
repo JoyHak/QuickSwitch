@@ -12,7 +12,7 @@ ShowSettings() {
     ; Options that affects subsequent controls
     ; Hide window border and header
     Gui, Destroy
-    Gui, % "+HwndSettingsId +AlwaysOnTop -E0x200 -SysMenu +DPIScale"
+    Gui, % "+HwndSettingsId +AlwaysOnTop +LastFound -E0x200 -SysMenu +DPIScale"
     Gui, Color, % GuiColor, % GuiColor
     
     local _fontOpt := ""
@@ -35,8 +35,6 @@ ShowSettings() {
     local updown := tiny   . " Limit2"
     local clr    := short  . " Limit8"
     local list   := "r4 w" . 12 * (10 + _scale) . _noBorderOpt . _fontOpt
-    
-    InitControlsColorsHandlers()
     
     ; Split settings to the tabs
     ; One row, no border
@@ -81,12 +79,12 @@ ShowSettings() {
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 if IsThemesAvailable {
-    Gui, Add, Text,             y+m,                                                                                Transparent theme
+    Gui, Add, Text,             y+m,                                                                                % "Transparent theme  "
     Gui, Add, DropDownList, x+m yp-2 %list%   gSetSettingsGlassTheme vGlassTheme  AltSubmit,                        Disabled|Mica|Glass|Acrylic
     GuiControl, % "Choose", % "GlassTheme", % GlassTheme
 }
 
-    Gui, Add, CheckBox,     x%MarginX% y+8   gSetColors     vDarkTheme            checked%DarkTheme%,               Apply &dark theme
+    Gui, Add, CheckBox,     x%MarginX% y+8  gSetSettingsInputColors vDarkTheme    checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Menu font
@@ -237,7 +235,17 @@ if IsThemesAvailable {
     InitMouseMode("Main",    MainMousePlaceholder    != "")
     InitMouseMode("Enforce", EnforceMousePlaceholder != "")
 
-    ; Set settings window position
+    ; Apply themes
+    InitControlsColorsHandlers()
+    if (IsThemesAvailable && GlassTheme != 1) {
+        SetSettingsGlassTheme()
+    }
+    if (DarkTheme) {
+        SetImmersiveDarkMode(SettingsId)  ; dark Titlebar
+        SetDarkTheme(-1)
+    }
+
+    ; Calculate settings window position
     local _pos  := ""
         , _posX := ""
         , _posY := ""
@@ -293,11 +301,5 @@ if IsThemesAvailable {
             _pos := "x0 y100"                       ; active window top left corner
     }
     
-    if (IsThemesAvailable && GlassTheme != 1)
-        SetSettingsGlassTheme()
-    
-    Gui, Show, % "AutoSize " _pos, Settings
-    
-    if DarkTheme
-        SetSettingsDarkTheme(SettingsId)
+    Gui, Show, % "AutoSize " _pos, Settings    
 }

@@ -136,7 +136,7 @@ Loop {
         
         if (IsThemesAvailable
         && (FromSettings || GlassTheme != 1)) {
-            SetGlassBackground(DialogId, GlassTheme)
+            SetGlassTheme(DialogId, GlassTheme)
         }
         
         ; Get paths for Menu sections
