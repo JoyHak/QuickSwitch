@@ -313,28 +313,6 @@ ToHexString(_hex) {
 }
 
 
-GetInstalledFonts() {
-    _list := ""
-    Loop, Reg, % "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    {
-        ; Extract base font name
-        _name := RegExReplace(A_LoopRegName, " \(.*\)$")
-        _name := RegExReplace(_name, "\d+(,\d+)*$")
-        _list .= "|" . _name
-    }
-    return LTrim(_list, "|")
-}
-
-GetFontList(_font) {
-    static list := GetInstalledFonts()
-
-    if _font
-        return _font "||" list  ; pre-select font in the list
-
-    return list
-}
-
-
 IsDarkTheme() {
     ; Returns true if system or apps doesn't use light theme or (custom) theme contains dark theme words
     try {
@@ -485,4 +463,65 @@ ValidateMenuFont(_name, _size) {
     }
 
     return "MenuFont=" _name "`nMenuFontSize=" _size "`n"
+}
+
+
+GetFontList(_font) {
+    static list := GetInstalledFonts()
+
+    if _font
+        return _font "||" list  ; pre-select font in the list
+
+    return list
+}
+
+GetInstalledFonts() {
+    ; Inspired by GetFontNames from teadrinker
+    ; https://www.autohotkey.com/boards/viewtopic.php?t=66000
+
+    _hdc := DllCall("GetDC", "Ptr", 0)
+    VarSetCapacity(_LOGFONT, 92, 0)
+    NumPut(1, &_LOGFONT + 23, "UChar")  ; DEFAULT_CHARSET
+
+    ; Create callback for EnumFontFamiliesExW
+    _EnumFontFamilies := RegisterCallback("EnumFontFamilies", "F", 4)
+
+    DllCall("EnumFontFamiliesExW"
+        , "Ptr", _hdc
+        , "Ptr", &_LOGFONT
+        , "Ptr", _EnumFontFamilies
+        , "Ptr", _fontsPtr := Object(_fonts := {})
+        , "UInt", 0)
+
+    ObjRelease(_fontsPtr)
+    DllCall("ReleaseDC", "Ptr", 0, "Ptr", _hdc)
+    DllCall("GlobalFree", "Ptr", _EnumFontFamilies, "Ptr")
+    
+    _list := ""
+    for _name, _ in _fonts {
+        _list .= "|" _name
+    }
+
+    return LTrim(_list, "|")
+}
+
+EnumFontFamilies(_lpelfe, _lpntme, _fontType, _lParam) {
+    _font := StrGet(_lpelfe + 28, "UTF-16")
+
+    ; Skip vertical fonts
+    if (SubStr(_font, 1, 1) = "@")
+        return 1
+
+    ; Check exclusions
+    for _, _val in ["8514oem", "Roman", "Script", "Courier", "Fixedsys"
+        , "MS Sans Serif", "MS Serif", "Modern", "Small Fonts"
+        , "System", "Terminal"] 
+    {
+        if (_val = _font) {
+            return 1
+        }
+    }
+
+    Object(_lParam)[_font] := true
+    return 1  ; continue enumeration
 }
