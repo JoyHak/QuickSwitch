@@ -8,13 +8,11 @@ All values are saved to the INI only after clicking OK
 ShowSettings() {
     global
     FromSettings := true
-    
-    InitControlsColorsHandlers()
 
     ; Options that affects subsequent controls
     ; Hide window border and header
     Gui, Destroy
-    Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
+    Gui, % "+HwndSettingsId +AlwaysOnTop -E0x200 -SysMenu +DPIScale"
     Gui, Color, % GuiColor, % GuiColor
     
     local _fontOpt := ""
@@ -37,7 +35,9 @@ ShowSettings() {
     local updown := tiny   . " Limit2"
     local clr    := short  . " Limit8"
     local list   := "r4 w" . 12 * (10 + _scale) . _noBorderOpt . _fontOpt
-
+    
+    InitControlsColorsHandlers()
+    
     ; Split settings to the tabs
     ; One row, no border
     Gui, Add, Tab3, % "-Wrap +0x100 AltSubmit vLastTabSettings " _fontOpt " Choose" LastTabSettings, % "Menu|Theme|Short path|App|Reset"
@@ -287,8 +287,14 @@ ShowSettings() {
             _pos := "x0 y100"                       ; active window top left corner
     }
     
+    if IsModernWindows {    
+        ; WS_OVERLAPPEDWINDOW, WS_EX_LAYERED
+        Gui, % "+Resize +E0x80000"
+        SetGlassBackground(SettingsId)
+    }
+    
     Gui, Show, % "AutoSize " _pos, Settings
     
     if DarkTheme
-        SetDarkControls(SettingsId)
+        SetSettingsDarkTheme(SettingsId)
 }

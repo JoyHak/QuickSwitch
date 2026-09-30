@@ -1,5 +1,125 @@
 ; Contains functions for switching Menu and GUI to dark / light mode
 
+SetSettingsDarkTheme(_winId) {
+    ; Sets dark theme for all non-text window controls.
+    ; Inspired by DarkMode from jNizM
+    ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=115952&p=621245#p621245
+    
+    ; global IsModernWindows
+    SetImmersiveDarkMode(_winId)    ; dark Titlebar
+    
+    WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
+    Loop, parse, _ctrlIdList, `n
+    {
+        WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
+
+        switch _ctrlClass {
+        case "Edit":
+            SetWindowTheme(A_LoopField, "DarkMode_CFD")
+        case "Combobox":
+            SetWindowTheme(A_LoopField, "DarkMode_CFD")  ; edit field
+            SetWindowTheme(GetComboList(A_LoopField), "DarkMode_Explorer")  ; internal list
+            SendMessage(A_LoopField, 0x0142, 0, 0xFFFF) ; remove selection (CB_SETEDITSEL)
+
+        case "msctls_hotkey32":
+            SetWindowTheme(A_LoopField, "DarkMode_CFD", true)
+        case "msctls_updown32", "ListBox", "CheckBox":
+            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+        case "Button":
+            ; if (!IsModernWindows && IsCheckbox(A_LoopField)) {
+                ; Checkbox text may become inverted on previous Windows builds
+                ; continue
+            ; }
+            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
+            
+        case "SysListView32", "SysHeader32":
+            SetWindowTheme(A_LoopField, "DarkMode_ItemsView", true)
+        }
+    }
+}
+
+SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
+    global IsModernWindows
+    
+    static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
+	static SetWindowTheme := DllCall("GetProcAddress", "ptr", uxTheme, "astr", "SetWindowTheme", "ptr")
+    static WM_THEMECHANGED := 0x031A
+    
+    SetImmersiveDarkMode(_winId)
+
+    if (IsModernWindows && !_enforce) {
+        _theme := "DarkMode_DarkTheme"
+    }
+    
+    DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)
+    SendMessage(_winId, WM_THEMECHANGED)
+}
+
+GetImmersiveDarkMode() {
+    if VerCompare(A_OSVersion, "10.0.17763") < 0
+        return 0
+    if VerCompare(A_OSVersion, "10.0.18985") < 0
+        return 19
+        
+    return 20
+}
+
+SetImmersiveDarkMode(_winId, _state := true) {
+    static AllowDarkModeForWindow := 0
+    static DwmSetWindowAttribute  := 0
+
+    static mode := GetImmersiveDarkMode()
+    if !mode
+        return
+        
+    if !AllowDarkModeForWindow {        
+        AllowDarkModeForWindow := DllCall("GetProcAddress", "ptr", DllCall("GetModuleHandle", "str", "uxTheme", "ptr"), "ptr", 133, "ptr")
+    }
+    if !DwmSetWindowAttribute {
+        DwmSetWindowAttribute  := DllCall("GetProcAddress", "ptr", DllCall("GetModuleHandle", "str", "dwmapi", "ptr"), "astr", "DwmSetWindowAttribute", "ptr")
+    }
+    
+    DllCall(AllowDarkModeForWindow, "Ptr", _winId, "UInt", _state)
+    DllCall(DwmSetWindowAttribute,  "Ptr", _winId, "Int", mode, "Int*", _state, "Int", 4)
+}
+
+SetGlassBackground(_winId) {
+    ; https://www.autohotkey.com/boards/viewtopic.php?f=83&t=140577&p=617944&hilit=Mica#p617944
+    DllCall("SetLayeredWindowAttributes", "Ptr", _winId, "UInt", 0, "UChar", 255, "UInt", 2)  ; LWA_ALPHA 
+    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", _winId, "UInt", 38, "Int*", 3, "UInt", 4)  ; Frosted
+    
+    ; Apply Glass Margins into the entire client area
+    VarSetCapacity(_margins, 16, 0)
+    
+    NumPut(-1, _margins,  0, "Int")  ; left
+    NumPut(-1, _margins,  4, "Int")  ; top
+    NumPut(-1, _margins,  8, "Int")  ; right
+    NumPut(-1, _margins, 12, "Int")  ; bottom
+    
+    DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", _winId, "Ptr", &_margins)
+}
+
+
+GetComboList(_control) {
+    ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=139862&p=613750&hilit=dark+checkbox#p613750
+
+    CBISize := 40 + (A_PtrSize * 3)
+    VarSetCapacity(CBI, CBISize, 0)
+    NumPut(CBISize, CBI, 0, "UInt")
+    DllCall("GetComboBoxInfo", "Ptr", _control, "Ptr", &CBI)
+
+    return NumGet(CBI, 40 + (A_PtrSize * 2), "Ptr")
+}
+
+IsCheckbox(_control) {
+    static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
+    _s := 0x000F & DllCall(GetWindowLong, "Ptr", _control, "Int", -16, "Ptr")    ; GWL_STYLE
+    
+    ; BS_CHECKBOX, BS_AUTOCHECKBOX, BS_3STATE, BS_AUTO3STATE
+    return _s = 0x0002 || _s = 0x0003 || _s = 0x0005 || _s = 0x0006
+}
+
+
 SetColors(_control := 0) {
     ; Sets default colors for each theme (light/dark)
     global DefaultColor, DarkColor
@@ -22,90 +142,10 @@ SetColors(_control := 0) {
     }
 }
 
-SetDarkControls(_winId) {
-    ; Sets dark theme for all non-text window controls.
-    ; Inspired by DarkMode from jNizM
-    ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=115952&p=621245#p621245
-    
-    global IsModernWindows
-    SetWindowTheme(_winId, "DarkMode_Explorer")
-    
-    WinGet, _ctrlIdList, % "ControlListHwnd", % "ahk_id " _winId
-    Loop, parse, _ctrlIdList, `n
-    {
-        WinGetClass, _ctrlClass, % "ahk_id " A_LoopField
-
-        switch _ctrlClass {
-        case "Edit":
-            SetWindowTheme(A_LoopField, "DarkMode_CFD")
-        case "Combobox":
-            SetWindowTheme(A_LoopField, "DarkMode_CFD")  ; edit field
-            SetWindowTheme(GetComboList(A_LoopField), "DarkMode_Explorer")  ; internal list
-            SendMessage(A_LoopField, 0x0142, 0, 0xFFFF) ; CB_SETEDITSEL -> remove selection
-
-        case "msctls_hotkey32":
-            SetWindowTheme(A_LoopField, "DarkMode_CFD", true)
-        case "msctls_updown32", "ListBox", "CheckBox":
-            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
-        case "Button":
-            if (!IsModernWindows && IsCheckbox(A_LoopField)) {
-                ; Checkbox text may become inverted on previous Windows builds
-                continue
-            }
-            SetWindowTheme(A_LoopField, "DarkMode_Explorer")
-            
-        case "SysListView32", "SysHeader32":
-            SetWindowTheme(A_LoopField, "DarkMode_ItemsView", true)
-        ; case "SysTabControl32":
-        ;
-        ; default:
-            ; SetWindowTheme(A_LoopField, "DarkMode_Explorer", true)
-        }
-    }
-}
-
-SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
-    global IsModernWindows
-    
-    static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
-	static SetWindowTheme := DllCall("GetProcAddress", "ptr", uxTheme, "astr", "SetWindowTheme", "ptr")
-	static AllowDarkModeForWindow := 0
-
-    if (IsModernWindows && !AllowDarkModeForWindow) {
-        AllowDarkModeForWindow := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 133, "ptr")
-    }
-    if (AllowDarkModeForWindow) {
-         DllCall(AllowDarkModeForWindow, "Ptr", _winId, "UInt", true)
-    }
-    if (IsModernWindows && !_enforce) {
-        _theme := "DarkMode_DarkTheme"
-    }
-    
-    DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)
-    SendMessage(_winId, 0x031A)  ; WM_THEMECHANGED
-}
-
-GetComboList(_control) {
-    ; https://www.autohotkey.com/boards/viewtopic.php?f=92&t=139862&p=613750&hilit=dark+checkbox#p613750
-
-    CBISize := 40 + (A_PtrSize * 3)
-    VarSetCapacity(CBI, CBISize, 0)
-    NumPut(CBISize, CBI, 0, "UInt")
-    DllCall("GetComboBoxInfo", "Ptr", _control, "Ptr", &CBI)
-
-    return NumGet(CBI, 40 + (A_PtrSize * 2), "Ptr")
-}
-
-IsCheckbox(_control) {
-    static GetWindowLong := A_PtrSize = 8 ? "GetWindowLongPtr" : "GetWindowLong"
-    _s := 0x000F & DllCall(GetWindowLong, "Ptr", _control, "Int", -16, "Ptr")    ; GWL_STYLE
-    
-    ; BS_CHECKBOX, BS_AUTOCHECKBOX, BS_3STATE, BS_AUTO3STATE
-    return _s = 0x0002 || _s = 0x0003 || _s = 0x0005 || _s = 0x0006
-}
-
-
 InitControlsColorsHandlers(_state := true) {
+    ; Registers control render handlers 
+    ; that apply background colors to controls
+    
     global GuiColor
     global GuiBackColor, ControlsBackColor, ControlsTextColor
 
@@ -138,30 +178,10 @@ InitControlsColorsHandlers(_state := true) {
         CreateBrush(-1)
     }
 
-    ; Colorful background and dark theme handlers
     OnMessage(0x0133, "OnEditColor", _state)
     OnMessage(0x0134, "OnListBoxRender", _state)
     OnMessage(0x0135, "OnButtonRender", _state && GuiColor != "")
     OnMessage(0x0138, "OnStaticRender", _state)
-}
-
-InitDarkTheme() {
-	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
-    ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
-	global
-
-    InitControlsColorsHandlers(false)
-
-    if (Last.DarkTheme = DarkTheme) {
-        return
-    }
-
-    static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
-	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
-	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
-
-	DllCall(SetPreferredAppMode, "int", DarkTheme ? 2 : 0)
-	DllCall(FlushThemes)
 }
 
 CreateBrush(_color) {
@@ -312,21 +332,6 @@ ToHexString(_hex) {
     return Format("{:x}", _hex)
 }
 
-IsDarkTheme() {
-    ; Returns true if system or apps doesn't use light theme or (custom) theme contains dark theme words
-    try {
-        static reg := "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes"
-
-        RegRead, _theme,    % reg,                % "CurrentTheme"
-        RegRead, _appLight, % reg "\Personalize", % "AppsUseLightTheme"
-        ; RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme"
-
-        return (_appLight = 0)
-            && !(_theme ~= "Ui).*\b(dark|night|gray)\b.*")
-    }
-    return false
-}
-
 
 GetInstalledFonts() {
     _list := ""
@@ -347,6 +352,40 @@ GetFontList(_font) {
         return _font "||" list  ; pre-select font in the list
 
     return list
+}
+
+
+IsDarkTheme() {
+    ; Returns true if system or apps doesn't use light theme or (custom) theme contains dark theme words
+    try {
+        static reg := "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes"
+
+        RegRead, _theme,    % reg,                % "CurrentTheme"
+        RegRead, _appLight, % reg "\Personalize", % "AppsUseLightTheme"
+        ; RegRead, _sysLight, % reg "\Personalize", % "SystemUsesLightTheme"
+
+        return (_appLight = 0)
+            && !(_theme ~= "Ui).*\b(dark|night|gray)\b.*")
+    }
+    return false
+}
+
+SetMenuDarkTheme() {
+    ; Applies dark theme to the context menu
+	; https://www.autohotkey.com/boards/viewtopic.php?f=13&t=94661&hilit=dark#p426437
+    ; https://gist.github.com/rounk-ctrl/b04e5622e30e0d62956870d5c22b7017
+	global
+
+    if (Last.DarkTheme = DarkTheme) {
+        return
+    }
+
+    static uxTheme := DllCall("GetModuleHandle", "str", "uxTheme", "ptr")
+	static SetPreferredAppMode := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 135, "ptr")
+	static FlushThemes := DllCall("GetProcAddress", "ptr", uxTheme, "ptr", 136, "ptr")
+
+	DllCall(SetPreferredAppMode, "int", DarkTheme ? 2 : 0)
+	DllCall(FlushThemes)
 }
 
 

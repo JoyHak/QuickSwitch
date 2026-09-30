@@ -81,7 +81,7 @@ ValidateKey("MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 ValidateKey("EnforceKey",  EnforceKey,  "$",  "On",   "EnforceShowMenu")
 
 InitAutoStartup()
-InitDarkTheme()
+SetMenuDarkTheme()
 InitWelcomeMessage()
 
 OnClipboardChange("GetClipboardPaths", ShowClipboard)
@@ -103,7 +103,7 @@ Loop {
         DialogId := DllCall("GetForegroundWindow", "Ptr")
 
         if FromSettings {
-            Gui, Destroy
+            GuiEscape()
         }
 
         if (IsDialogClosed || DialogId != Last.DialogId) {

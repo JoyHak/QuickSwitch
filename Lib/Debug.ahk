@@ -20,6 +20,7 @@ Timer(R := 0) {
 CancelLV() {
     LV_Delete()
     Gui, Destroy
+    InitControlsColorsHandlers(false)
 }
 
 LV_MaxWidths(_columns) {
@@ -107,7 +108,6 @@ ShowDebug() {
     ; Displays information about the file dialog Controls
     global DialogId, MainFont, GuiColor, DarkTheme, FingerPrintActive
     
-    InitControlsColorsHandlers()
     
     Gui, Destroy
     Gui, -DPIScale +HwndDebugId
@@ -118,6 +118,7 @@ ShowDebug() {
     else
         Gui, Font, % "q5", % MainFont
 
+    InitControlsColorsHandlers()
     Gui, Add, ListView, r30 w1024, Control||Text|Hwnd|Parent|X|Y|Width|Height
     
     ; Get window information
@@ -164,5 +165,5 @@ ShowDebug() {
     Gui, Show,, % FingerPrintActive
 
     if DarkTheme
-        SetDarkControls(DebugId)
+        SetSettingsDarkTheme(DebugId)
 }
