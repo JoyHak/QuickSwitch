@@ -39,13 +39,11 @@ ClipboardPaths := []
 
 #Include <Log>
 #Include <Tray>
-#Include <Debug>
 #Include <Values>
 #Include <FileDialogs>
 
 #Include <Elevated>
 #Include <Windows>
-#Include <Processes>
 #Include <ManagerMessages>
 #Include <ManagerClasses>
 #Include <TotalCommander>
