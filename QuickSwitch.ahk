@@ -55,6 +55,7 @@ ClipboardPaths := []
 #Include <SettingsMouse>
 #Include <MenuBackend>
 #Include <DarkTheme>
+#Include <Fonts>
 
 #Include <SettingsFrontend>
 #Include <MenuFrontend>
