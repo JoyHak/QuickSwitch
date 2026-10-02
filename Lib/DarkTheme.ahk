@@ -563,3 +563,51 @@ SetPickedColor(_control := 0) {
     _result := ShowColorPicker(SettingsId, _color)
     GuiControl,, % _name, % ToHexString(ToBGR(_result))
 }
+
+
+; Using emojis and fonts is cheaper than separate icons files, 
+; but we need additional code for old Windows builds
+IsSupportedChar(_fontName, _char) {
+    ; Create font
+    _fontId := DllCall("gdi32\CreateFontW"
+      , "int",  -16,  ; nHeight
+      , "int",  0,    ; nWidth
+      , "int",  0,    ; nEscapement
+      , "int",  0,    ; nOrientation
+      , "int",  400,  ; fnWeight (FW_NORMAL)
+      , "uint", 0,    ; fdwItalic
+      , "uint", 0,    ; fdwUnderline
+      , "uint", 0,    ; fdwStrikeOut
+      , "uint", 0,    ; fdwCharSet (DEFAULT)
+      , "uint", 0,    ; fdwOutputPrecision
+      , "uint", 0,    ; fdwClipPrecision
+      , "uint", 0,    ; fdwQuality
+      , "uint", 0,    ; fdwPitchAndFamily
+      , "str",  _fontName,   ; lpszFaceName
+      , "ptr")
+
+    ; Create compatible DC
+    _hdc := DllCall("gdi32\CreateCompatibleDC", "ptr", 0, "ptr")
+    _fontCopy := DllCall("gdi32\SelectObject", "ptr", _hdc, "ptr", _fontId, "ptr")
+
+    ; Get _glyph index
+    _glyph := DllCall("gdi32\Get_glyphIndicesW"
+        , "ptr",  _hdc,
+        , "wstr", _char,
+        , "int",  2,  ; length in UTF‑16 code units
+        , "ptr",  0,  ; not used
+        , "uint", 0,  ; flags
+        , "uint")
+
+    ; Clean up
+    DllCall("gdi32\SelectObject", "ptr", _hdc, "ptr", _fontCopy)
+    DllCall("gdi32\DeleteObject", "ptr", _fontId)
+    DllCall("gdi32\DeleteDC",     "ptr", _hdc)
+
+    return (_glyph != 0xFFFF)
+}
+
+GetCharOrDefault(_char, _default) {
+    global MainFont
+    return IsSupportedChar(MainFont, _char) ? _char : _default
+}

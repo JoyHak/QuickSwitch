@@ -90,10 +90,12 @@ ShowSettings() {
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
 
+    local _paletteIcon := GetCharOrDefault(Chr(0xD83C) . Chr(0xDFA8), "#") 
+    
     Gui, Add, Edit,      ys-4     %clr%                     vMenuColor            Section,                          %MenuColor%
-    Gui, Add, Button,    x+m hp   gSetPickedColor           vMenuColorPick,                                       % "🎨"
+    Gui, Add, Button,    x+m hp   gSetPickedColor           vMenuColorPick,                                       % _paletteIcon
     Gui, Add, Edit,      xs y+4   %clr%                     vGuiColor,                                              %GuiColor%
-    Gui, Add, Button,    x+m hp   gSetPickedColor           vGuiColorPick,                                        % "🎨"
+    Gui, Add, Button,    x+m hp   gSetPickedColor           vGuiColorPick,                                        % _paletteIcon
 
     Gui, Add, ComboBox, xs  y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
     Gui, Add, Edit,     x+m yp    %updown%
