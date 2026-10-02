@@ -1,8 +1,8 @@
 #Include %A_LineFile%\..\TotalCommander
-#Include Ini.ahk
-#Include Search.ahk
-#Include Create.ahk
-#Include Tabs.ahk
+#Include FindUserIni.ahk
+#Include GetUserIni.ahk
+#Include CreateUserCmd.ahk
+#Include ParseTabs.ahk
 
 TTOTAL_CMD(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
     /*

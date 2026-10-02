@@ -19,8 +19,8 @@ If an error occurs while retrieving tabs, QuickSwitch tries to create a command.
 Lib/    
 ├── TotalCommander.ahk (requests paths from Total Commander and creation of `usercmd` *if necessary*)  
 └── TotalCommander/
-       ├── Ini.ahk (contains functions to find `wincmd` location)
-       ├── Search.ahk (searches for the `wincmd` location using all possible functions)   
-       ├── Create.ahk (creates required command in the `usercmd` in the `wincmd` location)  
-       └── Tabs.ahk (contains getters of one or more tabs *depending on the settings*)
+       ├── FindUserIni.ahk 		(contains functions to find `wincmd` location)
+       ├── GetUserIni.ahk (queries functions above)   
+       ├── CreateUserCmd.ahk (creates required command in the `usercmd` in the found `wincmd` location)  
+       └── ParseTabs.ahk   (contains getters of one or more tabs *depending on the settings*)
 ```
