@@ -99,7 +99,7 @@ Loop {
     WinWaitActive, % "ahk_class #32770"
 
     try {
-        DialogId := DllCall("GetForegroundWindow", "Ptr")
+        DialogId := WinGetActive()
 
         if FromSettings {
             GuiEscape()
@@ -112,9 +112,9 @@ Loop {
                 continue
             }
             
-            WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
-            WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
-            FingerPrint := DialogProcess "___" DialogTitle
+            DialogProcess := GetWinProcess(DialogId, true)
+            DialogTitle   := WinGetTitle(DialogId)
+            FingerPrint   := DialogProcess "___" DialogTitle
 
             /*
             `DialogAction` represents user choice for current dialog:

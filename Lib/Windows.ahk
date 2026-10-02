@@ -131,3 +131,12 @@ SetWindowLong(_winId, _index := -16, _newValue := 0) {
         return DllCall("SetWindowLong", "Ptr", _winId, "Int", _index, "UInt", _newValue, "UInt")
     }
 }
+
+WinGetTitle(ByRef winId) {
+    WinGetTitle, _title, % "ahk_id " winId
+    return _title
+}
+
+WinGetActive() {
+    return DllCall("GetForegroundWindow", "Ptr")
+}

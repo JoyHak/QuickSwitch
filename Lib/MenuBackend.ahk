@@ -7,7 +7,7 @@ Dummy() {
 SwitchPath(ByRef path, _fromMenu := "") {
     global
 
-    local _ex, _winPid, _activeId, _log := "", _windowsIds := ""
+    local _ex, _processId, _activeId, _log := "", _windowsIds := ""
     
     loop % SelectPathAttempts {
         try {
@@ -15,7 +15,7 @@ SwitchPath(ByRef path, _fromMenu := "") {
                 return true
         } catch _ex {
             ; See CreateMenu()
-            _activeId := DllCall("GetForegroundWindow", "Ptr")
+            _activeId := WinGetActive()
             _windowsIds := "script: " Abs(A_ScriptHwnd) ", dialog: " Abs(DialogId) ", active: " Abs(_activeId)
                          . "`nedit field: " Abs(EditId) ", SendEnter: " SendEnter
             
@@ -32,10 +32,10 @@ SwitchPath(ByRef path, _fromMenu := "") {
     }
 
     ; If dialog owner is elevated, show error in Main
-    WinGet, _winPid, pid, % "ahk_id " DialogId
+    WinGet, _processId, pid, % "ahk_id " DialogId
 
-    if (IsAppElevated(_winPid)
-     || AddElevatedName(_winPid))
+    if (IsAppElevated(_processId)
+     || AddElevatedName(_processId))
         return false
 
     ; Log additional info and error details (if catched)

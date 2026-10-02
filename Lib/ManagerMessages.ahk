@@ -7,7 +7,7 @@ SendMessage(ByRef winId, _message := 74, ByRef wParam := 0, ByRef lParam := 0) {
         return (ErrorLevel = 0)
     } catch _ex {
         throw Exception("Unable to send message"
-                      , GetWinProccess(winId) " message"
+                      , GetWinProcess(winId) " message"
                       , Format("`nHWND: {:d} Message: {} wParam: {} lParam: {}`nDetails: {}"
                       , winId, _message, wParam, lParam, _ex.what " " _ex.message " " _ex.extra))
     }
@@ -32,9 +32,9 @@ SendExplorerPath(ByRef winId, ByRef path) {
     }
 }
 
-SendTotalInternalCmd(ByRef winPid, _cmd) {
+SendTotalInternalCmd(ByRef processId, _cmd) {
     ; Internal commands can be found in totalcmd.inc
-    WinGet, _winId, % "id", % "ahk_pid " winPid
+    WinGet, _winId, % "id", % "ahk_pid " processId
     return SendMessage(_winId, 1075, _cmd)
 }
 
@@ -72,17 +72,16 @@ SendXyplorerScript(ByRef winId, ByRef script) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SendConsoleCommand(ByRef pid, _command) {
+SendConsoleCommand(ByRef winId, _command) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send command to external cmd.exe
     try {
-        ControlSend,, % "{Text}" _command "`n", % "ahk_pid " pid
+        ControlSend,, % "{Text}" _command "`n", % "ahk_id " winId
         LogInfo("Executed console command: " _command, "NoTraytip")
-        return true
     } catch _ex {
         throw Exception("Unable to send console command"
                       , "console"
                       , Format("`nCommand: [{}]  HWND: {:d}`nDetails: {}`n"
-                      , _command, pid, _ex.what " " _ex.message " " _ex.extra))
+                      , _command, winId, _ex.what " " _ex.message " " _ex.extra))
     }
 }
