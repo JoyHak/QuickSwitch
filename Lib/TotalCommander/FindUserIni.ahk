@@ -1,12 +1,20 @@
 /*
-    Contains functions to find the location of the TC settings file (wincmd.ini).
+Contains functions to find the location of the TC settings file (wincmd.ini).
 
-    Thanks to Dalai for the search steps:
-    https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
+Thanks to Dalai for the search steps:
+https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
 
-    Documentation about ini location:
-    https://www.ghisler.ch/wiki/index.php?title=Finding_the_paths_of_Total_Commander_files
+Documentation about ini location:
+https://www.ghisler.ch/wiki/index.php?title=Finding_the_paths_of_Total_Commander_files
 */
+
+NormalizePath(_path) {
+    _path := ExpandVariables(_path)
+    _path := StrReplace(_path, "/" , "\")
+    _path := Trim(_path, " `r`n`t\'""")
+    _path := Format("{:L}", _path)
+    return _path
+}
 
 GetTotalConsoleIni(ByRef totalPid) {
     ; Searches the ini through the console, throws readable error
@@ -14,45 +22,68 @@ GetTotalConsoleIni(ByRef totalPid) {
     _clipSaved   := ClipboardAll
     A_Clipboard  := ""
 
-    ; Create new console process and get its PID
+    ; Create new console process
     SendTotalInternalCmd(totalPid, 511)
-    _consolePid := GetTotalConsolePid(totalPid)
+    WinWaitActive, % "ahk_exe cmd.exe",, 5
+
+    ; Find it's Window ID
+    _consoleId := 0
+    _activeId  := WinGetActive()
+
+    if ("cmd" = GetWinProcess(_activeId)) {
+        _consoleId := _activeId
+    } else {
+        ; Iterate windows stack
+        WinGet, _winIdList, % "list"
+        Loop, % _winIdList {
+            _winId := _winIdList%A_Index%
+            if ("cmd" = GetWinProcess(_winId)) {
+                _consoleId := _winId
+                break
+            }
+        }
+    }
+
+    if !_consoleId {
+        throw Exception("Unable to find console", "TotalCmd console")
+    }
 
     ; Send command to the console
-    static command     :=  "echo %commander_ini%"
-    static exportFile  :=  A_Temp "\TotalCmdIni.txt"
+    static command    := "echo %commander_ini%"
+    static exportFile := A_Temp "\TotalCmdIni.txt"
 
-    SendConsoleCommand(_consolePid, command " > " exportFile)  ; Export
+    BlockInput % "On"
+    SendConsoleCommand(_consoleId, command " > " exportFile)  ; Export
     Sleep 150
-    SendConsoleCommand(_consolePid, command " | clip")         ; Copy
+    SendConsoleCommand(_consoleId, command " | clip")         ; Copy
+    
+    ClipWait 2
+    BlockInput % "Off"
 
-    ClipWait 5
     _clip       := A_Clipboard
     A_Clipboard := _clipSaved
-    try Process, Close, % _consolePid
+    try WinClose, % "ahk_id " _consoleId
+
+    _clip := NormalizePath(_clip)
 
     ; Parse the result
-    _log := "TotalCmd PID: " totalPid " Console PID: " _consolePid
-    
-    if (_clip && IsFile(_clip)) {
+    _log := "TotalCmd PID: " totalPid " Console HWND: " _consoleId
+    if IsFile(_clip) {
         LogInfo(_log " The result is copied to the clipboard.", "NoTraytip")
         return _clip
     }
-    
 
     ; Read exported file
-    _log .= " Failed to copy the result to the clipboard."
-
+    _log .= " Copied path is not valid."
     if IsFile(exportFile) {
         FileRead, _path, % exportFile
+        _path := NormalizePath(_path)
 
-        if _path {
+        if IsFile(_path) {
             LogInfo(_log, "NoTraytip")
             return _path
         }
-
-        _log .= " Exported file is empty."
-
+        _log .= " Exported file doesnt contains valid path."
     } else {
         _log .= " Failed to export the result."
     }
@@ -64,21 +95,21 @@ GetTotalConsoleIni(ByRef totalPid) {
 ;
 GetTotalLaunchIni(ByRef totalPid) {
 ;─────────────────────────────────────────────────────────────────────────────
-    ; Searches the ini passed to TC via /i switch
-
-    if (_arg := GetProcessProperty("CommandLine", "ProcessId=" totalPid)) {
-        if (_pos := InStr(_arg, "/i")) {
-            ; Switch found
-
-            if (RegExMatch(_arg, "[""`']([^""`']+)[""`']|\s+([^\/\r\n""`']+)", _match, _pos)) {
-                LogInfo("Found /i launch argument", "NoTraytip")
-                return (_match1 ? _match1 : _match2)
-            }
-            LogError("/i argument is invalid", "TotalCmd argument", "Cant find quotes or spaces after /i")
-        }
+    ; Searches the ini passed to TC via /i argument
+    if !(_cli := GetCommandLine(totalPid)) {
+        return ""
+    }
+    if !(_pos := InStr(_cli, "/i")) {
+        return ""
     }
 
-    return false
+    if !(RegExMatch(_cli, "(?|=[""`']([^""`']+)[""`']|=([^\/\r\n""`']+))", _match, _pos)) {
+        LogError("/i argument is invalid", "TotalCmd argument", "Unable to find quotes or spaces after /i")
+        return ""
+    }
+
+    LogInfo("Found /i launch argument", "NoTraytip")
+    return _match1
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -90,7 +121,7 @@ GetTotalRegistryIni() {
     static totalCmd := "Software\Ghisler\Total Commander"
     static iniKey   := "IniFileName"
     _path := ""
-    
+
     try RegRead, _path, % "HKEY_CURRENT_USER\" totalCmd, % iniKey
 
     if !_path
@@ -98,8 +129,8 @@ GetTotalRegistryIni() {
 
     if !_path
         return ""
-    
-    return ExpandVariables(_path)
+
+    return NormalizePath(_path)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────

@@ -1,29 +1,27 @@
-GetTotalIni(ByRef winId, ByRef winPid) {
+GetTotalIni(ByRef winId, ByRef processId) {
     /*
-        Searches for the location of wincmd.ini
-        Needed to create usercmd.ini in that directory
-        with the "cmd" user command
+    Searches for the location of wincmd.ini
+    Needed to create usercmd.ini in that directory
+    with the "cmd" user command
 
-        Thanks to Dalai for the search steps:
-        https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
+    Thanks to Dalai for the search steps:
+    https://www.ghisler.ch/board/viewtopic.php?p=470238#p470238
     */
 
     ; Close the child windows of the current TC instance
     ; to ensure that messages are sent correctly
-    WinWaitActive, % "ahk_class #32770 ahk_pid " winPid,, 0.25
-    CloseChildWindows(winPid, winId)
+    WinWaitActive, % "ahk_class #32770 ahk_pid " processId,, 0.25
+    CloseChildWindows(processId, winId)
 
     _ini := ""
     for _, _func in ["GetTotalConsoleIni", "GetTotalLaunchIni", "GetTotalPathIni"] {
-        try if (_ini := %_func%(winPid))
+        try if (_ini := %_func%(processId))
             break
-        catch _ex
+        catch _ex {
+            _ex.what := _func
+            _ex.extra .= " PID: " processId
             LogException(_ex)
-    }
-
-    if _ini {
-        _ini := RTrim(_ini, " `r`n\/")
-        _ini := StrReplace(_ini, "/" , "\")
+        }
     }
 
     if !IsFile(_ini)

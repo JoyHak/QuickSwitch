@@ -145,7 +145,7 @@ GetTotalActiveTab(ByRef winId, ByRef paths) {
         if !SendMessage(winId, 1075, 2028 + A_Index)  ; copy source/target path   
             continue
         
-        ClipWait 1
+        ClipWait 2
         if !A_Clipboard
             continue
         
