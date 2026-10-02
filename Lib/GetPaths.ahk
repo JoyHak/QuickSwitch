@@ -14,9 +14,9 @@ GetPaths(ByRef paths, _listerIndex := 0, _allDesktops := false, _activePaneOnly 
     WinGet, _winIdList, % "list", % "ahk_group ManagerClasses"    
     Loop, % _winIdList {
         _winId := _winIdList%A_Index%
-        WinGet, _winPid, % "pid", % "ahk_id " _winId
+        WinGet, _processId, % "pid", % "ahk_id " _winId
 
-        if IsAppElevated(_winPid)
+        if IsAppElevated(_processId)
             continue
 
         ; Fix specific problems
@@ -50,11 +50,11 @@ GetPaths(ByRef paths, _listerIndex := 0, _allDesktops := false, _activePaneOnly 
             }
                 
             if !(%_winClass%(_winId, paths, _activePaneOnly, _activeTabOnly, _showLockedTabs))
-                AddElevatedName(_winPid)
+                AddElevatedName(_processId)
 
         } catch _ex {
             ; Assume that the file manager is elevated
-            if AddElevatedName(_winPid)
+            if AddElevatedName(_processId)
                 continue
 
             LogException(_ex)

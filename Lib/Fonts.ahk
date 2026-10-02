@@ -10,29 +10,34 @@ SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
     static SPIF_UPDATEINIFILE      := 0x1
     static SPIF_SENDCHANGE         := 0x2
 
-    static LOGFONT_SIZE := 92
-    static NONCLIENTMETRICS_SIZE := 40 + 5 * LOGFONT_SIZE
-
-    VarSetCapacity(NONCLIENTMETRICS, NONCLIENTMETRICS_SIZE, 0)
-    NumPut(NONCLIENTMETRICS_SIZE, &NONCLIENTMETRICS, 0, "UInt")
+    static sizeOfLFW := 92
+    static sizeOfNCM := 40 + 5 * sizeOfLFW
+    
+    ; Get the font
+    VarSetCapacity(_metrics, sizeOfNCM, 0)
+    NumPut(sizeOfNCM, &_metrics, 0, "UInt")  ; cbSize
 
     if !DllCall("SystemParametersInfoW"
         , "UInt", SPI_GETNONCLIENTMETRICS
-        , "UInt", NONCLIENTMETRICS_SIZE
-        , "Ptr",  &NONCLIENTMETRICS
+        , "UInt", sizeOfNCM
+        , "Ptr",  &_metrics
         , "UInt", 0) {
         return LogError("Unable to retrieve system font"
                       , "menu font"
                       , "Result: " A_LastError)
     }
+    
+    ; Get pointer to lfMenuFont
+    _offset  := 40 + 2 * sizeOfLFW
+    _address := &_metrics + _offset
 
-    _offset  := 40 + 2 * LOGFONT_SIZE
-    _address := &NONCLIENTMETRICS + _offset
-
-    if _name
-        StrPut(_name, _address + 28, 32)
+    if _name {
+        ; The length of this string must not exceed 32 characters incl. \0
+        StrPut(_name, _address + 28, 31)  ; lfFaceName
+    }
 
     if _size {
+        ; Negative value = character height (not cell height)
         _height := -DllCall("MulDiv"
             , "Int", _size
             , "Int", A_ScreenDPI
@@ -43,19 +48,20 @@ SetMenuFont(_name := "", _size := 0, _weight := 0, _isItalic := -1) {
     if _weight
         NumPut(_weight, _address + 16, "Int")
 
-    if (_isItalic = 1) || (_isItalic = 0)
+    if (_isItalic = 1 || _isItalic = 0)
         NumPut(_isItalic, &_address + 20, "UChar")
 
     if !DllCall("SystemParametersInfoW"
         , "UInt", SPI_SETNONCLIENTMETRICS
-        , "UInt", NONCLIENTMETRICS_SIZE
-        , "Ptr",  &NONCLIENTMETRICS
+        , "UInt", sizeOfNCM
+        , "Ptr",  &_metrics
         , "UInt", SPIF_UPDATEINIFILE | SPIF_SENDCHANGE) {
         return LogError("Unable to set system font"
                       , "menu font"
                       , "Result: " A_LastError)
     }
-
+    
+    ; Allow system time to broadcast WM_SETTINGCHANGE and update UI
     Sleep 1000
     return true
 }

@@ -224,7 +224,7 @@ ShowMenu(_posX := "", _posY := "") {
     }
     
     ; Switch windows focus
-    _activeId := DllCall("GetForegroundWindow", "Ptr")
+    _activeId := WinGetActive()
     if (_activeId != A_ScriptHwnd) {
         ; Activate current visible window
         SetForegroundWindow(_activeId)
@@ -241,7 +241,7 @@ EnforceShowMenu() {
     CoordMode, % "Mouse", % "Screen"
     MouseGetPos, _mouseX, _mouseY
 
-    _activeId := DllCall("GetForegroundWindow", "Ptr")
+    _activeId := WinGetActive()
     if (_activeId != DialogId
      && _activeId != A_ScriptHwnd) {
         DialogId := _activeId
@@ -253,7 +253,7 @@ EnforceShowMenu() {
 }
 
 HideMenu(_winId, _wmTimer, _timerId, _tickCount) {
-    _id := DllCall("GetForegroundWindow", "Ptr")
+    _id := WinGetActive()
     if (_id = _winId)
         return _winId
 

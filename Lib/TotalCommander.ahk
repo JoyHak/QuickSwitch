@@ -33,10 +33,10 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly :=
         
     } catch _ex {
         ; Get proccess permissions
-        WinGet, _winPid, % "pid", % "ahk_id " winId        
-        if (!A_IsAdmin && IsProcessElevated(_winPid))
-            throw Exception("Unable to obtain TotalCmd paths"
-                          , "admin permission"
+        WinGet, _processId, % "pid", % "ahk_id " winId        
+        if (!A_IsAdmin && IsProcessElevated(_processId))
+            throw Exception("Unable to get paths"
+                          , "TotalCmd admin permission"
                           , _ex.what " " _ex.message " " _ex.extra)
         
         ; Check if required dir exists
@@ -49,7 +49,7 @@ TTOTAL_CMD(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly :=
         ; Create user command and retry
         if (lastWinId != winId) {
             LogInfo("Required to create user command: [" userCmd "]", "NoTraytip")
-            userIni := GetTotalIni(winId, _winPid)
+            userIni := GetTotalIni(winId, _processId)
         }
         lastWinId := winId
         

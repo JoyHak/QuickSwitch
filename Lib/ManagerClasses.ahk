@@ -13,8 +13,7 @@ CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly
     ; Analyzes the attributes of the Explorer COM object. 
     ; Searches for active tab using Explorer window title. 
     ; Returns number of added paths
-    WinGetTitle, _title, % "ahk_id " winId
-    
+    _title := WinGetTitle(winId)
     _activePath := false    
     _length := paths.length()
 
