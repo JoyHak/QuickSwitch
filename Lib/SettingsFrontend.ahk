@@ -214,10 +214,9 @@ ShowSettings() {
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
 
-    Gui, Add, Button, % "x" (CenterX / 3) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
+    Gui, Add, Button, % "x" (CenterX / 2) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
     Gui, Add, Button, % "x+" CenterH " yp wp             gGuiEscape          vCancelButton",          % "&Cancel"
     Gui, Add, Button, % "x+" CenterH " yp wp             g" button "Settings vResetButton",           % "&" button
-    Gui, Add, Button, % "x+" CenterH " yp wp             gShowDebug          vDebugButton",           % "Debu&g"
 
     ; SETUP AND SHOW GUI ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
