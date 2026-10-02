@@ -54,16 +54,4 @@ GetTotalConsolePid(ByRef totalPid) {
     throw Exception("Unable to find console", "TotalCmd console")
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
-CloseProcess(_name) {
-;─────────────────────────────────────────────────────────────────────────────
-    ; Closes the process tree with the specified name
-
-    Loop, 100 {
-        Process, % "Close", % _name
-        Process, % "Exist", % _name
-    } Until !ErrorLevel
-}
-
 
