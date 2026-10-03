@@ -69,28 +69,31 @@ SelectPath(ByRef paths, _offset := 0, _fromMenu := "", _pos := 1) {
 
 ;─────────────────────────────────────────────────────────────────────────────
 ;
-SendPath(path) {
+SendPath(_path) {
 ;─────────────────────────────────────────────────────────────────────────────
     ; Send path to the current file manager / active window
     global DialogId
     
-    WinGet, _id,  % "id", % "ahk_id " DialogId
     WinGet, _exe, % "ProcessPath", % "ahk_id " DialogId
     WinGetClass, _class, % "ahk_id " DialogId
     
-    path := """" path """"
+    _path := """" _path """"
+    _exe  := """" _exe """"
 
     switch (_class) {
         case "CabinetWClass":
-            SendExplorerPath(_id, path)
+            SendExplorerPath(DialogId, _path)
         case "ThunderRT6FormDC":
-            Run, % _exe " /feed=|::goto " path ";|"
+            Run, % _exe " /feed=|::goto " _path ";|"
         case "dopus.lister":
-            Run, % _exe "\..\dopusrt.exe /acmd go " path
+            SplitPath, _exe,, _dir
+            Run, %  """" _exeDir "\..\dopusrt.exe"" /acmd go " _path
         case "TTOTAL_CMD":
-            Run, % _exe " /O /S /L=" path
+            Run, % _exe " /O /S /L=" _path
+        case "":
+            Run, % _path
         default:
-            Run, % _exe " " path
+            Run, % _exe " " _path
     }
 }
 
