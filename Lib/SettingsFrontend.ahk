@@ -90,7 +90,7 @@ ShowSettings() {
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
 
-    local _paletteIcon := GetCharOrDefault(Chr(0xD83C) . Chr(0xDFA8), "#") 
+    local _paletteIcon := Char(MainFont, Chr(0xD83C) . Chr(0xDFA8), Chr(0x23)) 
     
     Gui, Add, Edit,      ys-4     %clr%                     vMenuColor            Section,                          %MenuColor%
     Gui, Add, Button,    x+m hp   gSetPickedColor           vMenuColorPick,                                       % _paletteIcon
