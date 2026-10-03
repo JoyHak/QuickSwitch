@@ -24,7 +24,7 @@ SetDarkTheme(_winId) {
         case "Combobox":
             SetWindowTheme(A_LoopField, "DarkMode_CFD")  ; edit field
             SetWindowTheme(GetComboList(A_LoopField), "DarkMode_Explorer")  ; internal list
-            SendMessage(A_LoopField, 0x0142, 0, 0xFFFF) ; remove selection (CB_SETEDITSEL)
+            SendMessageW(A_LoopField, 0x0142, 0, 0xFFFF) ; remove selection (CB_SETEDITSEL)
 
         case "msctls_hotkey32":
             SetWindowTheme(A_LoopField, "DarkMode_CFD", true)
@@ -75,7 +75,7 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
     }
     
     DllCall(SetWindowTheme, "ptr", _winId, "str", _theme, "ptr", 0)
-    SendMessage(_winId, WM_THEMECHANGED)
+    SendMessageW(_winId, WM_THEMECHANGED)
 }
 
 GetImmersiveDarkMode() {

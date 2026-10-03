@@ -4,13 +4,17 @@
 SendMessage(ByRef winId, _message := 74, ByRef wParam := 0, ByRef lParam := 0) {
     try {
         SendMessage, % _message, % wParam, % lParam,, % "ahk_id " winId
-        return (ErrorLevel = 0)
+        return ErrorLevel
     } catch _ex {
         throw Exception("Unable to send message"
                       , GetWinProcess(winId) " message"
                       , Format("`nHWND: {:d} Message: {} wParam: {} lParam: {}`nDetails: {}"
                       , winId, _message, wParam, lParam, _ex.what " " _ex.message " " _ex.extra))
     }
+}
+
+SendMessageW(_winId, _message := 74, _wParam := 0, _lParam := 0) {
+    return DllCall("SendMessageW", "Ptr", _winId, "Uint", _message, "Ptr", _wParam, "Ptr", _lParam)
 }
 
 SendExplorerPath(ByRef winId, ByRef path) {
@@ -41,13 +45,13 @@ SendTotalInternalCmd(ByRef processId, _cmd) {
 SendTotalUserCmd(ByRef winId, ByRef cmd) {
     ; Command must be defined as "EM_..." in usercmd.ini (may be user-defined filename)
     VarSetCapacity(_copyData, A_PtrSize * 3)
-    VarSetCapacity(_result, StrPut(cmd, "UTF-8"))
-    _size := StrPut(cmd, &_result, "UTF-8")
+    VarSetCapacity(_result, StrPut(cmd, "CP0"))
+    _size := StrPut(cmd, &_result, "CP0")
 
     ; EM command (user-defined): Asc("E") + 256 * Asc("M")
-    NumPut(19781, _copyData, 0)
-    NumPut(_size, _copyData, A_PtrSize)
-    NumPut(&_result , _copyData, A_PtrSize * 2)
+    NumPut(19781, _copyData, 0, "Ptr")
+    NumPut(_size, _copyData, A_PtrSize, "UInt")
+    NumPut(&_result , _copyData, A_PtrSize * 2, "Ptr")
 
     ; Send data without recieve
     return SendMessage(winId, 74, 0, &_copyData)
