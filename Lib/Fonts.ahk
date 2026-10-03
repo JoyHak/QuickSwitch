@@ -149,7 +149,7 @@ GetInstalledFonts() {
     ObjRelease(_fontsPtr)
     DllCall("ReleaseDC", "Ptr", 0, "Ptr", _hdc)
     DllCall("GlobalFree", "Ptr", _EnumFontFamilies, "Ptr")
-    
+
     _list := ""
     for _name, _ in _fonts {
         _list .= "|" _name
@@ -168,7 +168,7 @@ EnumFontFamilies(_lpelfe, _lpntme, _fontType, _lParam) {
     ; Check exclusions
     for _, _val in ["8514oem", "Roman", "Script", "Courier", "Fixedsys"
         , "MS Sans Serif", "MS Serif", "Modern", "Small Fonts"
-        , "System", "Terminal"] 
+        , "System", "Terminal"]
     {
         if (_val = _font) {
             return 1
@@ -179,49 +179,153 @@ EnumFontFamilies(_lpelfe, _lpntme, _fontType, _lParam) {
     return 1  ; continue enumeration
 }
 
-; Using emojis and fonts is cheaper than separate icons files, 
-; but we need additional code for old Windows builds
-IsSupportedChar(_fontName, _char) {
-    ; Create font
-    _fontId := DllCall("gdi32\CreateFontW"
-      , "int",  -16,  ; nHeight
-      , "int",  0,    ; nWidth
-      , "int",  0,    ; nEscapement
-      , "int",  0,    ; nOrientation
-      , "int",  400,  ; fnWeight (FW_NORMAL)
-      , "uint", 0,    ; fdwItalic
-      , "uint", 0,    ; fdwUnderline
-      , "uint", 0,    ; fdwStrikeOut
-      , "uint", 0,    ; fdwCharSet (DEFAULT)
-      , "uint", 0,    ; fdwOutputPrecision
-      , "uint", 0,    ; fdwClipPrecision
-      , "uint", 0,    ; fdwQuality
-      , "uint", 0,    ; fdwPitchAndFamily
-      , "str",  _fontName,   ; lpszFaceName
-      , "ptr")
+; Using Unicode emojis and fonts is cheaper than separate icons files,
+; but we need fallback algorithm for old Windows builds
+Char(_fontName, _char, _default := "#") {
+    ; Detects whether a Unicode character renders as "tofu" (missing glyph)
+    ; by checking if Uniscribe falls back to a symbol font.
+    ; Returns _char if it renders properly, otherwise returns _default.
+    ; https://stackoverflow.com/q/47840800
 
-    ; Create compatible DC
-    _hdc := DllCall("gdi32\CreateCompatibleDC", "ptr", 0, "ptr")
-    _fontCopy := DllCall("gdi32\SelectObject", "ptr", _hdc, "ptr", _fontId, "ptr")
+    _hdc := DllCall("CreateCompatibleDC", "ptr", 0, "ptr")
+    if (!_hdc) {
+        return _default
+    }
 
-    ; Get _glyph index
-    _glyph := DllCall("gdi32\Get_glyphIndicesW"
-        , "ptr",  _hdc,
-        , "wstr", _char,
-        , "int",  2,  ; length in UTF‑16 code units
-        , "ptr",  0,  ; not used
-        , "uint", 0,  ; flags
-        , "uint")
+    ; Create enhanced metafile DC
+    ; Uniscribe will record its font fallback/linking decisions here
+    _metaDC := DllCall("gdi32\CreateEnhMetaFileW", "ptr", _hdc, "ptr", 0, "ptr", 0, "ptr", 0, "ptr")
+    if (!_metaDC) {
+        DllCall("DeleteDC", "Ptr", _hdc)
+        return _default
+    }
 
-    ; Clean up
-    DllCall("gdi32\SelectObject", "ptr", _hdc, "ptr", _fontCopy)
-    DllCall("gdi32\DeleteObject", "ptr", _fontId)
-    DllCall("gdi32\DeleteDC",     "ptr", _hdc)
+    ; Select font into metafile DC
+    ; This gives Uniscribe a reasonable starting font for analysis
+    if (_fontName) {
+        ; Create font from the passed font name
+        static sizeOfLFW  := 92
+        VarSetCapacity(_logFont, sizeOfLFW, 0)
+        NumPut(92,  _logFont, 0,  "int")    ; lfHeight (negative = character height)
+        NumPut(400, _logFont, 16, "int")    ; lfWeight (FW_NORMAL)
+        NumPut(1,   _logFont, 23, "uchar")  ; lfCharSet (DEFAULT_CHARSET)
 
-    return (_glyph != 0xFFFF)
+        ; The length of this string must not exceed 32 characters incl. \0
+        StrPut(_fontName, &_logFont + 28, 31, "UTF-16")  ; lfFaceName
+
+        _font := DllCall("gdi32\CreateFontIndirectW", "ptr", &_logFont, "ptr")
+        DllCall("gdi32\SelectObject", "ptr", _metaDC, "ptr", _font)
+    } else {
+        ; Use system default font
+        _systemFont := DllCall("gdi32\GetStockObject", "int", 17, "ptr")
+        DllCall("gdi32\SelectObject", "ptr", _metaDC, "ptr", _systemFont)
+        _font := 0  ; Don't delete stock objects
+    }
+
+    ; Let Uniscribe analyze the character.
+    ; Performs font fallback and linking, recording the chosen font to the metafile
+    static SSA_METAFILE := 0x00000020  ; Record font choices to metafile
+    static SSA_FALLBACK := 0x00000040  ; Enable font fallback
+    static SSA_GLYPHS   := 0x00000080  ; Generate glyph indices
+    static SSA_LINK     := 0x00000800  ; Enable font linking
+
+    _len := StrLen(_char)
+    _analyzed := DllCall("usp10\ScriptStringAnalyse"
+        , "ptr",  _metaDC
+        , "wstr", _char
+        , "int",  _len
+        , "int",  0
+        , "int", -1
+        , "int",  SSA_METAFILE | SSA_FALLBACK | SSA_GLYPHS | SSA_LINK
+        , "int",  0, "ptr", 0, "ptr", 0, "ptr", 0, "ptr", 0, "ptr", 0
+        , "ptr*", _ssa := 0)
+
+    if (_analyzed >= 0) {
+        DllCall("usp10\ScriptStringOut"
+            , "ptr", _ssa
+            , "int", 0, "int", 0, "int", 0
+            , "ptr", 0, "int", 0, "int", 0, "int", 0)
+
+        DllCall("usp10\ScriptStringFree", "ptr*", _ssa)
+    }
+
+    _metaFile := DllCall("gdi32\CloseEnhMetaFile", "ptr", _metaDC, "ptr")
+    _firstGlyph := 0
+    _fallbackFont := 0
+
+    if (_analyzed >= 0) {
+        ; Capture the fallback font that Uniscribe chose
+        VarSetCapacity(_fallbackLogFont, sizeOfLFW, 0)
+        _EnumMetafileFont := RegisterCallback("EnumMetafileFont", "", 5)
+        DllCall("gdi32\EnumEnhMetaFile"
+            , "ptr", 0
+            , "ptr", _metaFile
+            , "ptr", _EnumMetafileFont
+            , "ptr", &_fallbackLogFont
+            , "ptr", 0)
+
+        DllCall("GlobalFree", "Ptr", _EnumMetafileFont, "Ptr")
+
+        ; Select the fallback font and get glyph indices
+        _fallbackFont := DllCall("gdi32\CreateFontIndirectW", "ptr", &_fallbackLogFont, "ptr")
+        DllCall("gdi32\SelectObject", "ptr", _hdc, "ptr", _fallbackFont, "ptr")
+
+        ; GCP_RESULTSW struct for GetCharacterPlacementW
+        static sizeOfGCP    := (A_PtrSize = 8) ? 64 : 36
+        static lpGlyphsOff  := (A_PtrSize = 8) ? 48 : 24
+        static nGlyphsOff   := (A_PtrSize = 8) ? 56 : 28
+        static GCP_GLYPHSHAPE := 0x00000010  ; get glyph indices
+
+        VarSetCapacity(_gcpResults, sizeOfGCP, 0)   ; GCP_RESULTSW
+        VarSetCapacity(_glyphs, _len * 2, 0)        ; WORD array for glyph indices
+
+        NumPut(sizeOfGCP,  _gcpResults, 0,           "uint")
+        NumPut(&_glyphs,   _gcpResults, lpGlyphsOff, "ptr")
+        NumPut(_len,       _gcpResults, nGlyphsOff,  "uint")
+
+        _result := DllCall("gdi32\GetCharacterPlacementW"
+            , "ptr",  _hdc
+            , "wstr", _char
+            , "int",  _len
+            , "int",  0
+            , "ptr",  &_gcpResults
+            , "uint", GCP_GLYPHSHAPE, "uint")
+
+        if (_result = 0) {
+            ; Treat as tofu
+            _firstGlyph := 0
+        } else {
+            _firstGlyph := NumGet(_glyphs, 0, "ushort")  ; Glyph indices are WORD (2 bytes)
+        }
+    }
+    
+    ; Cleanup
+    DllCall("gdi32\DeleteEnhMetaFile", "ptr", _metaFile)
+    DllCall("DeleteDC", "Ptr", _hdc)
+    if (_font) {
+        DllCall("gdi32\DeleteObject", "ptr", _font)
+    }
+    if (_fallbackFont) {
+        DllCall("gdi32\DeleteObject", "ptr", _fallbackFont)
+    }
+
+    ; Check for tofu indicators
+    if (_firstGlyph = 0     ; character not in font (XP behavior)
+     || _firstGlyph = 3)    ; fallback to .notdef/symbol glyph (Win7+ behavior)
+        return _default
+
+    return _char
 }
 
-GetCharOrDefault(_char, _default) {
-    global MainFont
-    return IsSupportedChar(MainFont, _char) ? _char : _default
+EnumMetafileFont(_hdc, _table, _record, _tableEntries, _logFont) {
+    ; Extracts LOGFONTW from font creation records
+    static EMR_EXTCREATEFONTINDIRECTW := 82
+    static sizeOfLFW := 92
+    static elfLogFontOff := 12
+
+    if (NumGet(_record + 0, "uint") = EMR_EXTCREATEFONTINDIRECTW) {
+        ; *reinterpret_cast<LOGFONT*>(_logFont) = _record->elfw.elfLogFont;
+        DllCall("RtlMoveMemory", "ptr", _logFont, "ptr", _record + elfLogFontOff, "ptr", sizeOfLFW)
+    }
+    return 1
 }
