@@ -83,6 +83,9 @@ SetMenuDarkTheme()
 InitWelcomeMessage()
 
 OnClipboardChange("GetClipboardPaths", ShowClipboard)
+if ShowFavorites
+    GetFavoritePaths(FavoritePaths, FavoritesDir)
+
 OnExit("OnExitCleanup")
 
 ;@Ahk2Exe-IgnoreBegin
