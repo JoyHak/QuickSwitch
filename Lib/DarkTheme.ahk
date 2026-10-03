@@ -1,6 +1,6 @@
 ; Contains functions for switching Menu and GUI to dark / light / mica mode
 
-IsThemesAvailable := VerCompare(A_OSVersion, "10.0.26100") >= 0
+IsThemesAvailable := (VerCompare(A_OSVersion, "10.0.26100") >= 0) && !InStr(A_OSVersion, "WIN_")
 
 SetDarkTheme(_winId) {
     ; Sets dark theme for all non-text window controls.
@@ -79,7 +79,8 @@ SetWindowTheme(_winId, _theme := "DarkMode_DarkTheme", _enforce := false) {
 }
 
 GetImmersiveDarkMode() {
-    if VerCompare(A_OSVersion, "10.0.17763") < 0
+    if (VerCompare(A_OSVersion, "10.0.17763") < 0) 
+     || InStr(A_OSVersion, "WIN_")
         return 0
     if VerCompare(A_OSVersion, "10.0.18985") < 0
         return 19
