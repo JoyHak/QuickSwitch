@@ -67,9 +67,9 @@ ShowSettings() {
 
     GuiControlGet, Center, pos, CenteredText
     Gui, Add, CheckBox,     y+%MarginH% x%MarginX%          vAutoSwitch           checked%AutoSwitch%,              &Always Auto Switch
-    Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add file dialog owner process name to &Black List
-    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Close old-style file dialog after switching path
-    Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Show paths &numbers && switch them with keys 0-9
+    Gui, Add, CheckBox,                                     vBlackListProcess     checked%BlackListProcess%,        Add all file dialogs of current app to &Black List
+    Gui, Add, CheckBox,                                     vSendEnter            checked%SendEnter%,               &Send Enter after switching path
+    Gui, Add, CheckBox,                                     vPathNumbers          checked%PathNumbers%,             Show paths &index && activate them with keys 0-9
     Gui, Add, CheckBox,                                     vDeleteDuplicates     checked%DeleteDuplicates%,        &Delete duplicate paths
 
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Limit of displayed paths
