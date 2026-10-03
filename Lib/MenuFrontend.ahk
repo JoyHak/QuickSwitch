@@ -220,9 +220,7 @@ ShowMenu(_posX := "", _posY := "") {
 
     if (_cmd) {
         ; Execute menu action (send WM_COMMAND)
-        return DllCall("SendMessageW"
-            , "Ptr", A_ScriptHwnd
-            , "Uint", 0x0111, "Ptr", _cmd, "Ptr", 0)
+        return SendMessageW(A_ScriptHwnd, 0x0111, _cmd)
     }
     
     ; Switch windows focus
