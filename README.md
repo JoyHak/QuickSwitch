@@ -399,7 +399,7 @@ If you don't want to see the Menu or AutoSwitch in the current file dialog, open
 
 <details><summary>Black List all dialogs of specific app</summary>
 
-If you want to prevent the menu from appearing in all file dialogs of the current application (for example, when *opening or saving* a Word document), open the `Settings > Menu` tab and select "Add file dialog owner process name to Black List". After that, every time you click "Black List the Menu will not appear in all dialogs from this application and AutoSwitch mode will not be activated.
+If you want to prevent the menu from appearing in all file dialogs of the current application (for example, when *opening or saving* a Word document), open the `Settings > Menu` tab and select "Add all file dialogs of current app to Black List". After that, every time you click "Black List the Menu will not appear in all dialogs from this application and AutoSwitch mode will not be activated.
 
 ```
 ┌-------------------------------------┐
@@ -450,7 +450,7 @@ For example: "<ins>1</ins> C:\Windows" – press `1` to activate this path.
 <details><summary>Underlined letters examples</summary>
 <ins>2</ins> Windows\System32 – press `2` to activate this path.<br><br>
 
-The first letter of the path will be <ins>underlined</ins> in the Menu if `Menu > Paths numbers with shortcuts` option is turned off _or_ the number of paths in the Menu is greater than 9:
+The first letter of the path will be <ins>underlined</ins> in the Menu if "Show paths index & activate them with keys 0-9" on "Menu" tab is turned off _or_ the number of paths in the Menu is greater than 9:
 
 C̲:\Windows – press `C` to activate this path.<br>
 
