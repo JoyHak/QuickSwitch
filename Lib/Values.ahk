@@ -180,7 +180,6 @@ WriteValues() {
     DirNameLength="           DirNameLength           "
     PathLimit="               PathLimit               "
     PathSeparator="           PathSeparator           "
-    MainFont="                MainFont                "
     ShortNameIndicator="      ShortNameIndicator      "
     PinMousePlaceholder="     PinMousePlaceholder     "
     MainMousePlaceholder="    MainMousePlaceholder    "
@@ -194,6 +193,7 @@ WriteValues() {
     . ValidateColor(    "GuiColor",      GuiColor)
     . ValidateColor(    "MenuColor",     MenuColor)
     . ValidateMenuFont(  MenuFont,       MenuFontSize)
+    . ValidateFont(     "MainFont",      MainFont)
     . ValidateTrayIcon( "MainIcon",      MainIcon)
     . ValidateDirectory("IconsDir",      IconsDir,      "ShowIcons",     ShowIcons)
     . ValidateDirectory("FavoritesDir",  FavoritesDir,  "ShowFavorites", ShowFavorites)
@@ -392,6 +392,26 @@ ValidateColor(_paramName, ByRef color) {
         LogError("Wrong color: '" color "'. Enter the HEX value", _paramName)
         _default := ReadValue(_paramName, , A_Space)
         color := _default
+        return _paramName "=" _default "`n"
+    }
+
+    return _paramName "=`n"
+}
+
+ValidateFont(_paramName, ByRef font) {
+    if (font != "") {
+        static list := "|" GetInstalledFonts() "|"
+        if InStr(list, "|" font "|") {
+            return _paramName "=" font "`n"
+        }
+        
+        if !_paramName
+            return ""
+
+        LogError("Font is not installed: '" font "'", _paramName)
+        
+        _default := ReadValue(_paramName, , A_Space)
+        font := _default
         return _paramName "=" _default "`n"
     }
 
