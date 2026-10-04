@@ -131,12 +131,6 @@ Loop {
                 ; Fallback to "Always AutoSwitch" value
                 DialogAction := AutoSwitch
             }
-
-        }
-        
-        if (IsThemesAvailable
-        && (FromSettings || GlassTheme != 1)) {
-            SetGlassTheme(DialogId, GlassTheme)
         }
         
         ; Get paths for Menu sections

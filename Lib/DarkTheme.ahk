@@ -106,51 +106,6 @@ SetImmersiveDarkMode(_winId, _state := true) {
     DllCall(DwmSetWindowAttribute,  "Ptr", _winId, "Int", mode, "Int*", _state, "Int", 4)
 }
 
-
-SetGlassTheme(_winId, _mode := 3) {
-    ; https://www.autohotkey.com/boards/viewtopic.php?f=83&t=140577&p=617944&hilit=Mica#p617944
-    
-    if (_mode >= 4 || _mode <= 0)
-        _mode := 1
-
-    static GWL_EXSTYLE   := -20
-    static WS_EX_LAYERED := 0x80000
-    ; static WS_OVERLAPPEDWINDOW := 0x00CF0000    ; causes glitches
-
-    _style := GetWindowLong(_winId, GWL_EXSTYLE)
-    if (_mode != 1)
-        _style |= WS_EX_LAYERED
-    else
-        _style &= ~WS_EX_LAYERED
-    
-    SetWindowLong(_winId, GWL_EXSTYLE, _style)
-    
-    DllCall("SetLayeredWindowAttributes",   "Ptr", _winId, "UInt", 0, "UChar", 255, "UInt", 2)    ; LWA_ALPHA 
-    DllCall("dwmapi\DwmSetWindowAttribute", "Ptr", _winId, "UInt", 38, "Int*", _mode, "UInt", 4)  ; DWMWA_SYSTEMBACKDROP_TYPE
-
-    ; Apply Glass Margins into the entire client area
-    VarSetCapacity(_margins, 16, 0)
-    _size := (_mode != 1) ? -1 : 0
-
-    NumPut(_size, _margins,  0, "Int")  ; left
-    NumPut(_size, _margins,  4, "Int")  ; top
-    NumPut(_size, _margins,  8, "Int")  ; right
-    NumPut(_size, _margins, 12, "Int")  ; bottom
-    
-    DllCall("dwmapi\DwmExtendFrameIntoClientArea", "Ptr", _winId, "Ptr", &_margins)
-
-    ; Force a frame redraw so the new extended style takes effect immediately
-    ; SWP_FRAMECHANGED, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_NOACTIVATE
-    DllCall("SetWindowPos", "Ptr", _winId, "Ptr", 0, "Int", 0, "Int", 0, "Int", 0, "Int", 0
-          , "UInt", 0x0020 | 0x0002 | 0x0001 | 0x0004 | 0x0010)
-}
-
-SetSettingsGlassTheme() {
-    global SettingsId
-    GuiControlGet, _glassTheme,, % "GlassTheme"
-    SetGlassTheme(SettingsId, _glassTheme)
-}
-
 SetSettingsInputColors(_control := 0) {
     ; Sets default colors for each theme (light/dark)
     global DefaultColor, DarkColor

@@ -106,8 +106,6 @@ SetDefaultValues() {
     MenuColor      := DarkTheme ? DarkColor : DefaultColor
     GuiColor       := DarkTheme ? DarkColor : DefaultColor
     
-    GlassTheme     := 1  ; disabled
-    
     IconsSize      := 25
     MainFontSize   := 10
     MenuFontSize   := 0
@@ -151,7 +149,6 @@ WriteValues() {
     local _values := "
     (LTrim
     DarkTheme="               DarkTheme               "
-    GlassTheme="              GlassTheme              "
     ShowManagers="            ShowManagers            "
     AutoStartup="             AutoStartup             "
     PathNumbers="             PathNumbers             "

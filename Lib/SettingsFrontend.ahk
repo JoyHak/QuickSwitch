@@ -78,12 +78,6 @@ ShowSettings() {
 
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-if IsThemesAvailable {
-    Gui, Add, Text,             y+m,                                                                                % "Transparent theme  "
-    Gui, Add, DropDownList, x+m yp-2 %list%   gSetSettingsGlassTheme vGlassTheme  AltSubmit,                        Disabled|Mica|Glass|Acrylic
-    GuiControl, % "Choose", % "GlassTheme", % GlassTheme
-}
-
     Gui, Add, CheckBox,     x%MarginX% y+8  gSetSettingsInputColors vDarkTheme    checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
@@ -237,9 +231,6 @@ if IsThemesAvailable {
 
     ; Apply themes
     InitControlsColorsHandlers()
-    if (IsThemesAvailable && GlassTheme != 1) {
-        SetSettingsGlassTheme()
-    }
     if (DarkTheme) {
         SetImmersiveDarkMode(SettingsId)  ; dark Titlebar
         SetDarkTheme(-1)
