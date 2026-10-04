@@ -23,10 +23,9 @@ SetBatchLines, -1
 SetWinDelay, -1
 SetKeyDelay, -1
 
-Process, % "Priority", , % "A"
-FileEncoding, % "UTF-8"
 SetWorkingDir, % A_ScriptDir
 CoordMode, % "Menu", % "Screen"
+CoordMode, % "Mouse", % "Screen"
 
 INI         := ScriptName ".ini"     ; see Lib\Values.ahk for details about .ini
 ErrorsLog   := "Errors.log"          ; file for error dumps and tracing

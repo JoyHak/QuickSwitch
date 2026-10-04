@@ -202,10 +202,11 @@ ShowMenu(_posX := "", _posY := "") {
     If the menu does not respond for a long time and the active window has already changed,
     the menu will be hidden automatically.
     */
+    _HideMenu := RegisterCallback("HideMenu", "F")
     DllCall("SetTimer"
         , "Ptr", A_ScriptHwnd, "Ptr", _timerId := 1
         , "UInt", 1000  ; polling time in milliseconds
-        , "Ptr", RegisterCallback("HideMenu", "F"))
+        , "Ptr", _HideMenu)
 
     _cmd := DllCall("TrackPopupMenuEx"
         , "Ptr", _menuId
@@ -214,7 +215,8 @@ ShowMenu(_posX := "", _posY := "") {
         , "Ptr", A_ScriptHwnd  ; handle to the activated script window that will own the Menu
         , "Ptr", 0)
 
-    DllCall("KillTimer", "Ptr", A_ScriptHwnd, "Ptr", _timerId)
+    DllCall("KillTimer",  "Ptr", A_ScriptHwnd, "Ptr", _timerId)
+    DllCall("GlobalFree", "Ptr", _HideMenu, "Ptr")
 
     if (_cmd) {
         ; Execute menu action (send WM_COMMAND)
@@ -237,8 +239,6 @@ ShowMenu(_posX := "", _posY := "") {
 EnforceShowMenu() {
     ; Enforces menu display. Used by Tray menu and special global shortcut.
     global DialogId, IsDialogClosed, IsEnforcedUi := true
-
-    CoordMode, % "Mouse", % "Screen"
     MouseGetPos, _mouseX, _mouseY
 
     _activeId := WinGetActive()
