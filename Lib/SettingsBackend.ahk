@@ -105,6 +105,7 @@ DeleteSections() {
     }
     if DeleteDialogs {
         FileDialogs := {}
+        DialogAction := 0
     }
     if NukeSettings {
         NukeSettings()

@@ -106,11 +106,11 @@ Loop {
             GuiEscape()
         }
 
+        SendEnter := Last.SendEnter
         if (IsDialogClosed || DialogId != Last.DialogId) {
-            SendEnter := Last.SendEnter
             if !IsFileDialog(DialogId, EditId, SendEnter) {
                 WinWaitNotActive, % "ahk_id " DialogId
-                Continue
+                continue
             }
             
             WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
@@ -132,15 +132,17 @@ Loop {
                 DialogAction := AutoSwitch
             }
 
-            ; Get paths for Menu sections
-            if ShowFavorites
-                GetFavoritePaths(FavoritePaths)
         }
         
         if (IsThemesAvailable
         && (FromSettings || GlassTheme != 1)) {
             SetGlassBackground(DialogId, GlassTheme)
         }
+        
+        ; Get paths for Menu sections
+        if (ShowFavorites
+        && (IsDialogClosed || FromSettings))
+            GetFavoritePaths(FavoritePaths, FavoritesDir)
 
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it

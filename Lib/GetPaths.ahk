@@ -170,23 +170,22 @@ GetClipboardPaths(_dataType) {
     }
 }
 
-GetFavoritePaths(ByRef paths) {
+GetFavoritePaths(ByRef paths, ByRef favoritesDir) {
     ; Analyzes shortcuts from FavoritesDir and adds the target path / working directory to the array along with metadata.
     ; Returns the number of added paths.
-    global FavoritesDir, FromSettings
     _count := 0
     
     static time := ""
     _time := ""
     try {       
-        FileGetTime, _time, % FavoritesDir, M
-        if (!FromSettings && _time != "" && _time = time)
+        FileGetTime, _time, % favoritesDir, M
+        if (_time != "" && _time = time)
             return 0
-    }    
+    }
     time  := _time  
     paths := []
 
-    Loop, files, % FavoritesDir "\*.lnk", R
+    Loop, files, % favoritesDir "\*.lnk", R
 	{
         try {
             FileGetShortcut, % A_LoopFileFullPath, _path, _workingDir,, _title, _icon, _iconNumber
