@@ -250,7 +250,6 @@ ShowSettings() {
         ; Show window contents above the cursor.
         ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
         ; Show near the screen edge if the window part would be not visible (overflow)
-        CoordMode, % "Mouse", % "Screen"
         MouseGetPos, MouseX, MouseY
         GuiControlGet, Bottom, pos, ResetButton
 
