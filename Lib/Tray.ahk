@@ -6,7 +6,7 @@ InitTrayMenu() {
 
     Menu, % "Tray", % "NoStandard"
     AddTrayItem("&Menu",         "EnforceShowMenu",     MainIcon)
-    AddTrayItem("&Settings",     "EnforceShowSettings", "SettingsOff.ico")
+    AddTrayItem("&Settings",     "EnforceShowSettings", "Settings.ico")
     Menu, % "Tray", % "Add"
     AddTrayItem("Repor&t error", "TrayIssueTracker",    "Bug.ico")
     AddTrayItem("&Errors log",   "TrayErrorsLog",       "Bug.ico")
