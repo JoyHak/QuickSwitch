@@ -25,7 +25,7 @@ AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
                 _icon := IconsDir "\" _icon
 
             Menu, % "ContextMenu", % "Icon", % _title, % _icon, % _iconNumber, % IconsSize
-        } else {
+        } else if (_isToggle != -1) {
             Menu, % "ContextMenu", % _isToggle ? "Check" : "UnCheck", % _title
         }
     } catch _ex {
@@ -48,9 +48,13 @@ AddMenuOption(_title, _function, _isToggle := false, _type := "Radio") {
     ; Underline the first letter to activate using keyboard
     _item := "&" _title
     Menu, % "ContextMenu", % "Add", % _item, % _function, % _type
-
+    
+    if (_type && _isToggle != -1) {
+        _title .= (_isToggle ? "On" : "Off")
+    }
+    
     ; Add icon with a postfix depending on the toggle
-    AddMenuIcon(_item, _title . (_isToggle ? "On" : "Off") . ".ico", 1, _isToggle)
+    AddMenuIcon(_item, _title ".ico", 1, _isToggle)
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -67,7 +71,7 @@ AddMenuOptions() {
     AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)
 
     Menu, % "ContextMenu", % "Add"
-    AddMenuOption("Settings",   "ShowSettings")
+    AddMenuOption("Settings",   "ShowSettings",, "")
 }
 
 ;─────────────────────────────────────────────────────────────────────────────
@@ -149,7 +153,7 @@ CreateMenu() {
             }
         }
 
-        AddMenuOption("Settings", "ShowSettings")
+        AddMenuOption("Settings", "ShowSettings",, "")
     }
 
     Menu, % "ContextMenu", % "Color", % MenuColor
