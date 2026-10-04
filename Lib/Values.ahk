@@ -22,6 +22,7 @@ EditId              :=  0
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
 IsEnforcedUi        :=  false
+
 FromSettings        :=  false
 
 DeleteDialogs       :=  false
@@ -32,7 +33,7 @@ DeleteKeys          :=  false
 NukeSettings        :=  false
 
 ; stores previous value of some global variables
-Last := {DialogId: 0, DialogProcess: ""}  
+Last := {DialogId: 0, DialogProcess: "", DarkTheme: false}  
 
 SetDefaultValues() {
     /*
@@ -101,6 +102,7 @@ SetDefaultValues() {
     
     DefaultColor   := ""
     DarkColor      := "202020"
+    LightColor     := "FFFFFF"
     MenuColor      := DarkTheme ? DarkColor : DefaultColor
     GuiColor       := DarkTheme ? DarkColor : DefaultColor
     
@@ -143,7 +145,7 @@ WriteValues() {
     The individual special values are checked before writing.
     */
     global
-
+    
     local _values := "
     (LTrim
     DarkTheme="               DarkTheme               "

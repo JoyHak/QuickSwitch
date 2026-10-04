@@ -30,7 +30,6 @@ InitKeybdMode(_type := "Main", _toggle := true) {
 
 InitMouseMode(_type := "Main", _toggle := false) {
     ; Changes the visibility of mouse buttons selection controls
-    global
 
     if _toggle {
         ; Pre-select key in the ListBox
@@ -81,8 +80,6 @@ ToggleMainMouse(_control := 0) {
 /*@Ahk2Exe-Keep
     GuiControl, % "Hide" toggle, % "MainIcon"
 */
-
-
     if !toggle
         return InitKeybdMode("Main")
 

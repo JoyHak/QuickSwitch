@@ -12,30 +12,33 @@ ShowSettings() {
     ; Options that affects subsequent controls
     ; Hide window border and header
     Gui, Destroy
-    Gui, -E0x200 -SysMenu +DPIScale +AlwaysOnTop +HwndSettingsId
+    Gui, % "+HwndSettingsId +AlwaysOnTop +LastFound -E0x200 -SysMenu +DPIScale"
     Gui, Color, % GuiColor, % GuiColor
+    
+    local _fontOpt := ""
+    if (GuiColor != "")
+        _fontOpt .= " c" . ToHexString(InvertColor(ToHEX(GuiColor))) . " "
 
-    local _options := "q5"
-    if DarkTheme
-        _options .= " c" InvertColor(GuiColor)
-    if MainFontSize
-        _options .= " s" MainFontSize
-
-    Gui, Font, % _options, % MainFont
+    Gui, Font, % _fontOpt " q5 s" MainFontSize, % MainFont
 
     ; The larger the font size and DPI, the wider the input fields
-    local scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
+    local _scale := (MainFontSize != 0) ? ((MainFontSize - 8) * 1.5) : 0
 
     ; Edit fields: one row, no multi-line word wrap, no vertical scrollbar
-    local fieldDefault := "r1 -Wrap -vscroll w"
-    local updown := fieldDefault . 4  * (10 + scale) . " Limit2"
-    local tiny   := fieldDefault . 4  * (10 + scale)
-    local short  := fieldDefault . 12 * (10 + scale)
-    local list   := "r4 w"       . 12 * (10 + scale)
-    local long   := fieldDefault . 17 * (10 + scale)
-
+    local _noBorderOpt := " -E0x200 -Border "
+    local _input := _noBorderOpt . _fontOpt . " r1 -Wrap -vscroll w"
+    
+    local tiny   := _input . 4  * (10 + _scale)
+    local short  := _input . 12 * (10 + _scale)
+    local long   := _input . 17 * (10 + _scale)
+    
+    local updown := tiny   . " Limit2"
+    local clr    := short  . " Limit8"
+    local list   := "r4 w" . 12 * (10 + _scale) . _noBorderOpt . _fontOpt
+    
     ; Split settings to the tabs
-    Gui, Add, Tab3, -Wrap +Background +Theme AltSubmit vLastTabSettings Choose%LastTabSettings%, Menu|Theme|Short path|App|Reset
+    ; One row, no border
+    Gui, Add, Tab3, % "-Wrap +0x100 AltSubmit vLastTabSettings " _fontOpt " Choose" LastTabSettings, % "Menu|Theme|Short path|App|Reset"
 
     /*
         To align "Edit" fields to the right after the "Text" fields,
@@ -75,7 +78,7 @@ ShowSettings() {
 
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Gui, Add, CheckBox,           gSetColors                vDarkTheme            checked%DarkTheme%,               Apply &dark theme
+    Gui, Add, CheckBox,     x%MarginX% y+8  gSetSettingsInputColors vDarkTheme    checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Menu font
@@ -86,12 +89,13 @@ ShowSettings() {
     Last.DarkTheme    := DarkTheme
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
-    OnMessage(0x0133, "OnEditColor")
 
-    Gui, Add, Edit,      ys-4     %short% Limit8            vMenuColor            Section,                          %MenuColor%
-    Gui, Add, Edit,      xs y+4   %short% Limit8            vGuiColor,                                              %GuiColor%
+    Gui, Add, Edit,      ys-4     %clr%                     vMenuColor            Section,                          %MenuColor%
+    Gui, Add, Button,    x+m hp   gSetPickedColor           vMenuColorPick,                                       % "🎨"
+    Gui, Add, Edit,      xs y+4   %clr%                     vGuiColor,                                              %GuiColor%
+    Gui, Add, Button,    x+m hp   gSetPickedColor           vGuiColorPick,                                        % "🎨"
 
-    Gui, Add, ComboBox,     y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
+    Gui, Add, ComboBox, xs  y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
     Gui, Add, ComboBox, xs  y+4   %list%                    vMainFont,                                            % GetFontList(MainFont)
@@ -106,7 +110,7 @@ ShowSettings() {
     Gui, Add, CheckBox,           gToggleFavorites          vShowFavorites        checked%ShowFavorites%,           Fa&vorites from
     Gui, Add, Edit,      xs yp-5  %long%                    vFavoritesDir,                                          %FavoritesDir%
 
-    Gui, Add, CheckBox,     y+%scale%    x%MarginX%         vShowPinned           checked%ShowPinned%,              &Pinned paths
+    Gui, Add, CheckBox,     y+%_scale%    x%MarginX%        vShowPinned           checked%ShowPinned%,              &Pinned paths
     Gui, Add, CheckBox,                                     vShowClipboard        checked%ShowClipboard%,           Paths from &Clipboard
     Gui, Add, CheckBox,           gToggleManagersTabs       vShowManagers         checked%ShowManagers%,            &File managers paths
 
@@ -227,7 +231,14 @@ ShowSettings() {
     InitMouseMode("Main",    MainMousePlaceholder    != "")
     InitMouseMode("Enforce", EnforceMousePlaceholder != "")
 
-    ; Set settings window position
+    ; Apply themes
+    InitControlsColorsHandlers()
+    if (DarkTheme) {
+        SetImmersiveDarkMode(SettingsId)  ; dark Titlebar
+        SetDarkTheme(-1)
+    }
+
+    ; Calculate settings window position
     local _pos  := ""
         , _posX := ""
         , _posY := ""
@@ -282,8 +293,6 @@ ShowSettings() {
         else
             _pos := "x0 y100"                       ; active window top left corner
     }
-    Gui, Show, % "AutoSize " _pos, Settings
-
-    if DarkTheme
-        SetDarkControls(SettingsId)
+    
+    Gui, Show, % "AutoSize " _pos, Settings    
 }

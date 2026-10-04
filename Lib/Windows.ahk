@@ -115,3 +115,19 @@ SetForegroundWindow(ByRef winId) {
     
     return false
 }
+
+GetWindowLong(_winId, _index := -16) {
+    if (A_PtrSize = 8) {
+        return DllCall("GetWindowLongPtr", "Ptr", _winId, "Int", _index, "Ptr")
+    } else {
+        return DllCall("GetWindowLong", "Ptr", _winId, "Int", _index, "UInt")
+    }
+}
+
+SetWindowLong(_winId, _index := -16, _newValue := 0) {
+    if (A_PtrSize = 8) {
+        return DllCall("SetWindowLongPtr", "Ptr", _winId, "Int", _index, "Ptr", _newValue, "Ptr")
+    } else {
+        return DllCall("SetWindowLong", "Ptr", _winId, "Int", _index, "UInt", _newValue, "UInt")
+    }
+}

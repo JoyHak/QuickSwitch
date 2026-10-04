@@ -1,7 +1,9 @@
 ScriptName    := "QuickSwitch"
 ;@Ahk2Exe-SetProductName %A_PriorLine~.*"(.*)"~$1%
-ScriptVersion := "1.9.20"
+ScriptVersion := "1.9.20-glass"
 ;@Ahk2Exe-SetVersion %A_PriorLine~.*"(.*)"~$1%
+;@Ahk2Exe-Set IsPreRelease, 1
+;@Ahk2Exe-Set IsSpecialBuild, 1
 ScriptRepo    := "https://github.com/JoyHak/QuickSwitch"
 IssueTracker  := "https://github.com/JoyHak/QuickSwitch/issues/new?template=bug-report.yaml"
 ;@Ahk2Exe-SetDescription %A_PriorLine~.*"(.*)"~$1%
@@ -64,12 +66,10 @@ if IsFile(INI) {
     ReadValues()
     ReadDialogs()
     ReadPinnedPaths(PinnedPaths)
-    Last.AutoStartup  := AutoStartup
-    Last.DarkTheme    := DarkTheme    
+    Last.AutoStartup  := AutoStartup 
 } else {
     IsNewUser := true
     Last.AutoStartup  := false
-    Last.DarkTheme    := false
     Last.MenuFont     := MenuFont
     Last.MenuFontSize := MenuFontSize
     WriteValues()
@@ -81,7 +81,7 @@ ValidateKey("MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 ValidateKey("EnforceKey",  EnforceKey,  "$",  "On",   "EnforceShowMenu")
 
 InitAutoStartup()
-InitDarkTheme()
+SetMenuDarkTheme()
 InitWelcomeMessage()
 
 OnClipboardChange("GetClipboardPaths", ShowClipboard)
@@ -103,16 +103,16 @@ Loop {
         DialogId := DllCall("GetForegroundWindow", "Ptr")
 
         if FromSettings {
-            Gui, Destroy
+            GuiEscape()
         }
 
+        SendEnter := Last.SendEnter
         if (IsDialogClosed || DialogId != Last.DialogId) {
-            SendEnter := Last.SendEnter
             if !IsFileDialog(DialogId, EditId, SendEnter) {
                 WinWaitNotActive, % "ahk_id " DialogId
-                Continue
+                continue
             }
-
+            
             WinGet,        DialogProcess, % "ProcessName", % "ahk_id " DialogId
             WinGetTitle,   DialogTitle,                    % "ahk_id " DialogId
             FingerPrint := DialogProcess "___" DialogTitle
@@ -131,11 +131,12 @@ Loop {
                 ; Fallback to "Always AutoSwitch" value
                 DialogAction := AutoSwitch
             }
-
-            ; Get paths for Menu sections
-            if ShowFavorites
-                GetFavoritePaths(FavoritePaths)
         }
+        
+        ; Get paths for Menu sections
+        if (ShowFavorites
+        && (IsDialogClosed || FromSettings))
+            GetFavoritePaths(FavoritePaths, FavoritesDir)
 
         if ShowManagers {
             ; Disable clipboard analysis while file managers transfer data through it

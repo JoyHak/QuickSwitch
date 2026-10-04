@@ -8,12 +8,13 @@ ResetSettings() {
 
     ; Roll back values and show them in settings
     Gui, Destroy
+    InitControlsColorsHandlers(false)
 
     SetDefaultValues()
     WriteValues()
 
     InitAutoStartup()
-    InitDarkTheme()
+    SetMenuDarkTheme()
     InitMenuFont()
     ShowSettings()
 }
@@ -27,6 +28,7 @@ SaveSettings() {
         try WinGetPos, UiPosX, UiPosY,,, % "ahk_id " SettingsId
 ;@Ahk2Exe-IgnoreEnd
     Gui, Submit
+    InitControlsColorsHandlers(false)
 
     DeleteSections()
 
@@ -34,7 +36,7 @@ SaveSettings() {
     ReadValues()
 
     InitAutoStartup()
-    InitDarkTheme()
+    SetMenuDarkTheme()
     InitMenuFont()
 }
 
@@ -54,6 +56,7 @@ RestartApp() {
 
 GuiEscape() {
     Gui, Destroy
+    InitControlsColorsHandlers(false)
 }
 
 NukeSettings() {
@@ -102,6 +105,7 @@ DeleteSections() {
     }
     if DeleteDialogs {
         FileDialogs := {}
+        DialogAction := 0
     }
     if NukeSettings {
         NukeSettings()
