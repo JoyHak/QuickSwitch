@@ -86,9 +86,14 @@ ValidateMenuFont(_name, _size) {
     ; if the user agreed to change the font, otherwise the old ones.
     ; See SetMenuFont() and InitMenuFont()
     global ScriptName, Last
-
+    
     if (_name = Last.MenuFont && _size = Last.MenuFontSize) {
         return "MenuFont=" _name "`nMenuFontSize=" _size "`n"
+    }
+    
+    ValidateFont("MenuFont", _font := _name)
+    if (_font != _name) {
+        return "MenuFont=" Last.MenuFont "`nMenuFontSize=" Last.MenuFontSize "`n"
     }
 
     _warningMsg := "The font "
