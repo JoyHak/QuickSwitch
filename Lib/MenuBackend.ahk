@@ -90,7 +90,8 @@ SendPath(_path) {
             Run, %  """" _exeDir "\..\dopusrt.exe"" /acmd go " _path
         case "TTOTAL_CMD":
             Run, % _exe " /O /S /L=" _path
-        case "":
+        case "Progman", "Shell_TrayWnd", "":
+            ; Run in default file manager
             Run, % _path
         default:
             Run, % _exe " " _path
