@@ -54,12 +54,12 @@ SetDefaultValues() {
     ShowIcons           :=  true
     ShowNoSwitch        :=  true
     ShowAfterSettings   :=  true
+    SendEnter           :=  true
     
     AutoSwitch          :=  false
     ShowAlways          :=  false
     ShowAfterSelect     :=  false
     BlackListProcess    :=  false
-    SendEnter           :=  false
 
     ActiveListerOnly    :=  false
     ActivePaneOnly      :=  false
