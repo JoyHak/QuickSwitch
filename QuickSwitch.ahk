@@ -134,8 +134,7 @@ Loop {
         }
         
         ; Get paths for Menu sections
-        if (ShowFavorites
-        && (IsDialogClosed || FromSettings))
+        if (ShowFavorites && IsDialogClosed)
             GetFavoritePaths(FavoritePaths, FavoritesDir)
 
         if ShowManagers {
