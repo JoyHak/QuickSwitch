@@ -33,7 +33,7 @@ LogError(_message := "Unknown error", _what := "LogError", _extra := "", _silent
 LogDebug(_text := ">") {
     ; ToolTip % _text
     _text := "[DEBUG] " _text
-    return LogException(Exception(_text), 3, true)
+    return LogException(Exception(_text), 2, true)
 }
 
 LogException(_ex, _offset := 1, _silent := false) {

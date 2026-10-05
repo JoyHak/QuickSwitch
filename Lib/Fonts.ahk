@@ -123,6 +123,8 @@ ValidateMenuFont(_name, _size) {
 
     if !MsgWarn(_warningMsg) {
         ; Restore previous values
+        Last.MenuFont := _name
+        Last.MenuFontSize := _size
         return "MenuFont=" Last.MenuFont "`nMenuFontSize=" Last.MenuFontSize "`n"
     }
 
