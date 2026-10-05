@@ -57,19 +57,17 @@ AddMenuOption(_title, _function, _isToggle := false, _type := "Radio") {
     AddMenuIcon(_item, _title ".ico", 1, _isToggle)
 }
 
-;─────────────────────────────────────────────────────────────────────────────
-;
 AddMenuOptions() {
-;─────────────────────────────────────────────────────────────────────────────
     global DialogAction
-
-    ; Add options to select
+    
     Menu, % "ContextMenu", % "Add"
     AddMenuTitle("Options")
 
     AddMenuOption("AutoSwitch", "ToggleAutoSwitch", DialogAction = 1)
     AddMenuOption("BlackList",  "ToggleBlackList",  DialogAction = -1)
+}
 
+AddMenuHelpers() {
     Menu, % "ContextMenu", % "Add"
     AddMenuOption("Settings",   "ShowSettings",, "")
 }
@@ -136,7 +134,11 @@ CreateMenu() {
 
         MenuStack.RemoveAt(PathLimit + 1, MenuStack.Length())
         AddMenuPaths(MenuStack, Func("SelectPath").Bind(MenuStack, _offset))
-        AddMenuOptions()
+        
+        if !IsDialogClosed
+            AddMenuOptions()
+            
+        AddMenuHelpers()
     } else {
         AddMenuTitle("No available paths")
 
@@ -152,8 +154,7 @@ CreateMenu() {
                 AddMenuTitle("Open any file manager first")
             }
         }
-
-        AddMenuOption("Settings", "ShowSettings",, "")
+        AddMenuHelpers()
     }
 
     Menu, % "ContextMenu", % "Color", % MenuColor
