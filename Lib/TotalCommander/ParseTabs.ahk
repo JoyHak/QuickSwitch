@@ -72,7 +72,7 @@ ParseTotalTabs(ByRef tabsFile, ByRef paths, _activePaneOnly := false, _showLocke
 
         ; Get the path, omit the "path=" key
         if (_path := InStr(_line, "path=")) {
-            paths.push([RTrim(SubStr(_line, _path + 5), "\ "), "TotalCmd.ico"])
+            paths.push([RTrim(SubStr(_line, _path + 5), "\ "), "TotalCmd"])
             continue
         }
         
@@ -129,7 +129,7 @@ GetTotalUnlockedTab(ByRef tabsFile, ByRef paths) {
     if !(_path := RTrim(_path, "\ "))
         return 0
     
-    paths.push([_path, "TotalCmd.ico"])
+    paths.push([_path, "TotalCmd"])
     return 1
 }
 
@@ -149,7 +149,7 @@ GetTotalActiveTab(ByRef winId, ByRef paths) {
         if !A_Clipboard
             continue
         
-        paths.push([A_Clipboard, "TotalCmd.ico"])
+        paths.push([A_Clipboard, "TotalCmd"])
         A_Clipboard := _clipSaved
 
         return 1

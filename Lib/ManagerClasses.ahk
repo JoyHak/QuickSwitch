@@ -34,7 +34,7 @@ CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly
             ; poll. Treat that failure the same as an empty `locationURL`: skip just this window.
             _path := false
             if _win.locationURL {
-                try _path := [_win.document.folder.self.path, "Explorer.ico"]
+                try _path := [_win.document.folder.self.path, "Explorer"]
             }
             
             ; Get active tab           
@@ -145,7 +145,7 @@ ThunderRT6FormDC(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabO
     
     Loop, parse, _clip, `|
     {
-        paths.push([A_LoopField, "Xyplorer.ico"])
+        paths.push([A_LoopField, "Xyplorer"])
         if _activeTabOnly
             return 1
     }
@@ -192,7 +192,7 @@ Dopus(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := fals
         if !(DllCall("GetWindowTextW", "ptr", _currentId, "str", _text, "int", WINDOW_TEXT_SIZE))
             continue
         
-        _path := [_text, "Dopus.ico"]
+        _path := [_text, "Dopus"]
         if (!_activePath
           && _title == SubStr(_text, 1 + InStr(_text, "\",, -1))) {                 
             if _activeTabOnly {
