@@ -130,15 +130,6 @@ ValidateMenuFont(_name, _size) {
 }
 
 
-GetFontList(_font) {
-    static list := GetInstalledFonts()
-
-    if _font
-        return _font "||" list  ; pre-select font in the list
-
-    return list
-}
-
 GetInstalledFonts() {
     ; Inspired by GetFontNames from teadrinker
     ; https://www.autohotkey.com/boards/viewtopic.php?t=66000
