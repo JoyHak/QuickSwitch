@@ -16,8 +16,32 @@
 <img src="https://img.shields.io/github/issues-search?query=repo%3AJoyHak%2FQuickSwitch%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="NewBug"></a>
 </div>
 
-Imagine you want to open/save a file. A dialog box will appear and you will need to manually search for the target folder. QuickSwitch can open it instantly:
-![](/Images/menu.gif)
+This is a special version of QuickSwitch that includes a glass theme in three variants: Mica, Glass, and Acrylic *(Windows 10.0.26100+)*. It can affect the appearance of settings and file dialogs. 
+![](/Images/mica.avif)
+<img width="1988" height="1286" alt="mica2" src="https://github.com/user-attachments/assets/4ed815c3-28b9-411e-9a45-bdf95d1f1548" />
+<img width="1845" height="1250" alt="mica3" src="https://github.com/user-attachments/assets/55f80727-4177-476c-a897-e68fca70de47" />
+
+Set the Settings background color to `0x000000` to make them completely transparent.
+
+In addition, the following are also available:
+
+- Colored theme (any selected color: from light to dark)
+    ![](/Images/gray.png)
+    ![](/Images/green.png)
+    ![](/Images/ChangeColor.avif)
+    
+  - `0xFFFFFF` is similar to the light theme
+  - `0x000000` creates a high-contrast theme.
+     ![](/Images/black.png)
+- Dark theme (completely covers the settings; works starting with Windows 10.0.26100+)
+- Light theme
+
+If necessary, you can set the [IsThemesAvailable](https://github.com/JoyHak/QuickSwitch/blob/ae2658d04ea62b636d78efcfcaf094df06099699/Lib/DarkTheme.ahk#L3) flag to `true` to force themes to be enabled even on Windows 7.
+
+<img width="1280" height="800" alt="win7-glass" src="https://github.com/user-attachments/assets/0753b5cd-e9f4-40dc-9ae3-abaa811d1b10" />
+
+
+---
 
 Open any tabs in supported file managers: Windows Explorer, [Directory Opus](https://resource.dopus.com/t/quickswitch/40965/20), [Total Commander](https://www.ghisler.ch/board/viewtopic.php?t=76254&sd=d), [XYplorer](https://www.xyplorer.com/xyfc/viewtopic.php?t=28304&sd=d). All opened tabs will be available in the Menu for switching, press `Ctrl+Q` to open the Menu. [Pin and save your favorite paths](#menu-sections) and [open them later](#enforce-menu) in any file manager or application.
 
