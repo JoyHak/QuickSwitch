@@ -189,3 +189,54 @@ ToggleManagersTabs() {
     GuiControl,  % "Enable" _showManagers, % "ActiveTabOnly"
     GuiControl,  % "Enable" _showManagers, % "ShowLockedTabs"
 }
+
+
+CalculateGuiPosition(_centerX, _buttonsY) {
+    global IsEnforcedUi, DialogId
+    _pos  := ""
+    _posX := ""
+    _posY := ""
+
+    if IsEnforcedUi {
+        IsEnforcedUi := false
+
+        ; Show window contents above the cursor.
+        ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
+        ; Show near the screen edge if the window part would be not visible (overflow)
+        MouseGetPos, _mouseX, _mouseY
+        
+        static scaleX := A_ScreenDPI / 86
+        static scaleY := A_ScreenDPI / 100
+
+        _widthHalf := _centerX  * scaleX    ; half window width (in pixels)
+        _height    := _buttonsY * scaleY    ; contents height (without buttons and title height)
+
+        if (_mouseX + _widthHalf > A_ScreenWidth) {
+            _posX := A_ScreenWidth - _widthHalf * 2     ; right edge
+        } else if (_mouseX - _widthHalf < 0) {
+            _posX := 0                                  ; left edge
+        } else {
+            _posX := _mouseX - _widthHalf               ; cursor in the window center (X axis)
+        }
+
+        if (_mouseY - _height > A_ScreenHeight) {
+            _posY := A_ScreenHeight - _height * 1.2     ; bottom edge
+        } else if (_mouseY - _height < 0) {
+            _posY := 0                                  ; top edge
+        } else {
+            _posY := _mouseY - _height                  ; cursor above buttons
+        }
+
+        _pos := "x" _posX " y" _posY
+    }
+
+    if !_pos {
+        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+        if (_posX != "" && _posY != "")
+            _pos := "x" _posX " y" _posY + 100      ; dialog top left corner
+        else
+            _pos := "x0 y100"                       ; active window top left corner
+    }
+    
+    return _pos
+}

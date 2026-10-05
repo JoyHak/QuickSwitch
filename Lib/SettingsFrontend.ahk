@@ -91,19 +91,23 @@ ShowSettings() {
     Last.MenuFontSize := MenuFontSize
 
     local _paletteIcon := Char(MainFont, Chr(0xD83C) . Chr(0xDFA8), Chr(0x23)) 
+    static installedFonts := GetInstalledFonts()
     
     Gui, Add, Edit,      ys-4     %clr%                     vMenuColor            Section,                          %MenuColor%
     Gui, Add, Button,    x+m hp   gSetPickedColor           vMenuColorPick,                                       % _paletteIcon
     Gui, Add, Edit,      xs y+4   %clr%                     vGuiColor,                                              %GuiColor%
     Gui, Add, Button,    x+m hp   gSetPickedColor           vGuiColorPick,                                        % _paletteIcon
 
-    Gui, Add, ComboBox, xs  y+4   %list%                    vMenuFont,                                            % GetFontList(MenuFont)
+    Gui, Add, ComboBox, xs  y+4   %list%                    vMenuFont,                                            % installedFonts
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMenuFontSize,                                          %MenuFontSize%
-    Gui, Add, ComboBox, xs  y+4   %list%                    vMainFont,                                            % GetFontList(MainFont)
+    Gui, Add, ComboBox, xs  y+4   %list%                    vMainFont,                                            % installedFonts
     Gui, Add, Edit,     x+m yp    %updown%
     Gui, Add, UpDown,       Range0-99                       vMainFontSize,                                          %MainFontSize%
-
+    
+    GuiControl, % "ChooseString", % "MainFont", % MainFont
+    GuiControl, % "ChooseString", % "MenuFont", % MenuFont
+    
     Gui, Add, Edit,      xs y+4   %short%                   vIconsDir             Section,                          %IconsDir%
     Gui, Add, Edit,         ys    %updown%                  vIconsSizePlaceholder
     Gui, Add, UpDown,       Range1-200                      vIconsSize,                                             %IconsSize%
@@ -214,7 +218,7 @@ ShowSettings() {
     local button := NukeSettings ? "Nuke" : "Reset"
     NukeSettings := false
 
-    Gui, Add, Button, % "x" (CenterX / 2) " w" CenterW " gSaveSettings       vSaveButton    Default", % "&OK"
+    Gui, Add, Button, % "x" (CenterX / 1.7) " w" CenterW " gSaveSettings     vSaveButton    Default", % "&OK"
     Gui, Add, Button, % "x+" CenterH " yp wp             gGuiEscape          vCancelButton",          % "&Cancel"
     Gui, Add, Button, % "x+" CenterH " yp wp             g" button "Settings vResetButton",           % "&" button
 
@@ -238,45 +242,10 @@ ShowSettings() {
         SetImmersiveDarkMode(SettingsId)  ; dark Titlebar
         SetDarkTheme(-1)
     }
+    
 
-    ; Calculate settings window position
-    local _pos  := ""
-        , _posX := ""
-        , _posY := ""
-
-    if (IsEnforcedUi && !SaveUiPosition) {
-        IsEnforcedUi := false
-
-        ; Show window contents above the cursor.
-        ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
-        ; Show near the screen edge if the window part would be not visible (overflow)
-        MouseGetPos, MouseX, MouseY
-        GuiControlGet, Bottom, pos, ResetButton
-
-        static scaleX := A_ScreenDPI / 86
-        static scaleY := A_ScreenDPI / 100
-
-        local _widthHalf := CenterX * scaleX    ; half window width (in pixels)
-        local _height    := BottomY * scaleY    ; contents height (without buttons and title height)
-
-        if (MouseX + _widthHalf > A_ScreenWidth) {
-            _posX := A_ScreenWidth - _widthHalf * 2     ; right edge
-        } else if (MouseX - _widthHalf < 0) {
-            _posX := 0                                  ; left edge
-        } else {
-            _posX := MouseX - _widthHalf                ; cursor in the window center (X axis)
-        }
-
-        if (MouseY - _height > A_ScreenHeight) {
-            _posY := A_ScreenHeight - _height * 1.2     ; bottom edge
-        } else if (MouseY - _height < 0) {
-            _posY := 0                                  ; top edge
-        } else {
-            _posY := MouseY - _height                   ; cursor above buttons
-        }
-
-        _pos := "x" _posX " y" _posY
-    }
+    GuiControlGet, Bottom, % "pos", % "ResetButton"
+    local _pos := CalculateGuiPosition(CenterX, BottomY)
 
 ;@Ahk2Exe-IgnoreBegin
     InitMouseMode("Restart", RestartMousePlaceholder != "")
@@ -285,14 +254,6 @@ ShowSettings() {
     if SaveUiPosition && UiPosX && UiPosY
         _pos := "x" UiPosX " y" UiPosY
 ;@Ahk2Exe-IgnoreEnd
-
-    if !_pos {
-        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-        if (_posX != "" && _posY != "")
-            _pos := "x" _posX " y" _posY + 100      ; dialog top left corner
-        else
-            _pos := "x0 y100"                       ; active window top left corner
-    }
     
     Gui, Show, % "AutoSize " _pos, Settings    
 }
