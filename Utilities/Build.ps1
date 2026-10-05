@@ -57,13 +57,8 @@ ForEach($bitness in @('64', '32')) {
     &$compiler @compileParams /base $interpreterPath | Out-String
 
     if (!$scriptVersion) {
-        $ver = (Get-Item $outExe).VersionInfo.FileVersionRaw
-        $scriptVersion = "{0}.{1}" -f `
-            $ver.major, $ver.minor
-
-        if ($ver.build) {
-            $scriptVersion += '.' + $ver.build
-        }
+        $ver = (Get-Item $outExe).VersionInfo.FileVersion
+        $scriptVersion = $ver.Trim('.0')
     }
 
     $archivePath = "{0}-{1}-x{2}.zip" -f `
