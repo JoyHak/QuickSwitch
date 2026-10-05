@@ -242,9 +242,17 @@ OnEditColor(_hdc, _control) {
     } else {
         last[_name] := _color1 . _value
     }
-
-    _color := Min(ToHEX(_value), 0xEEEEEE)  ; clamp for readability
-    return SetControlColors(_hdc, ToBGR(_color), 0xFFFFFF)
+    
+    ; Extract components, cap each at 0xEE for readability with white font
+    _color := ToHEX(_value)
+    _r := (_color >> 16) & 0xFF
+    _g := (_color >> 8) & 0xFF
+    _b := _color & 0xFF
+    _r := (_r > 0xEE) ? 0xEE : _r
+    _g := (_g > 0xEE) ? 0xEE : _g
+    _b := (_b > 0xEE) ? 0xEE : _b
+    
+    return SetControlColors(_hdc, (_b << 16) | (_g << 8) | _r, 0xFFFFFF)
 }
 
 OnListBoxRender(_hdc, _control) {
@@ -366,7 +374,7 @@ ShowColorPicker(_winId := 0, _color := "FFFFFF", _fullPanel := true) {
     NumPut(_flags,    _CHOOSECOLOR, 5 * A_PtrSize, "UInt")   ; _flags
 
     if !DllCall("comdlg32\ChooseColor", "Ptr", &_CHOOSECOLOR, "Int")
-        return _color
+        return ""
     
     ; BGR
     return NumGet(_CHOOSECOLOR, 3 * A_PtrSize, "UInt")
@@ -381,6 +389,8 @@ SetPickedColor(_control := 0) {
     
     ; Pick a color
     GuiControlGet, _color,, % _name
+    
     _result := ShowColorPicker(SettingsId, _color)
-    GuiControl,, % _name, % ToHexString(ToBGR(_result))
+    if (_result != "")
+        GuiControl,, % _name, % ToHexString(ToBGR(_result))
 }
