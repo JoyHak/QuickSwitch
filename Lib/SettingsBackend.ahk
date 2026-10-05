@@ -3,9 +3,9 @@
 
 ResetSettings() {
     ; Show "Nuke" button once after pressing "Reset" button
-    if (A_GuiControl = "&Reset")
+    if (A_GuiControl = "ResetButton")
         global NukeSettings := true
-
+    
     ; Roll back values and show them in settings
     Gui, Destroy
     InitControlsColorsHandlers(false)
