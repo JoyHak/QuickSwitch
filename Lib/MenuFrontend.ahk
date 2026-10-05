@@ -175,15 +175,26 @@ ShowMenu(_posX := "", _posY := "") {
     https://github.com/AutoHotkey/AutoHotkey/blob/16ea5db9247812593c53bbb0444422524cf1a1df/source/window.cpp#L182
     To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
     */
-    global DialogId
-
+    global IsDialogClosed, DialogId
+    
     if (_posX = "" || _posY = "") {
-        WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
-        _posY += 100  ; position just below the dialog title
+        if IsDialogClosed {
+            ; Use last position to avoid Menu "jumping" after each click
+            static lastPosX := 0, lastPosY := 0
+            _posX := lastPosX
+            _posY := lastPosY
+        } else {
+            WinGetPos, _posX, _posY,,, % "ahk_id " DialogId
+            _posY += 100  ; position just below the dialog title
+        }
     }
     if (_posX = "" || _posY = "") {
         ; Unable to get position
         return false
+    } else {
+        ; Save position for future re-use
+        lastPosX := _posX
+        lastPosY := _posY
     }
 
     SetForegroundWindow(A_ScriptHwnd)  ; file dialog is not active anymore!
@@ -240,7 +251,7 @@ ShowMenu(_posX := "", _posY := "") {
 
 EnforceShowMenu() {
     ; Enforces menu display. Used by Tray menu and special global shortcut.
-    global DialogId, IsDialogClosed, IsEnforcedUi := true
+    global DialogId, IsDialogClosed
     MouseGetPos, _mouseX, _mouseY
 
     _activeId := WinGetActive()

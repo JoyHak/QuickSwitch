@@ -21,7 +21,6 @@ DialogId            :=  0
 EditId              :=  0
 DialogProcess       :=  "Dummy"
 IsDialogClosed      :=  true
-IsEnforcedUi        :=  false
 
 FromSettings        :=  false
 
