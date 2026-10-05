@@ -20,20 +20,21 @@ ResetSettings() {
 }
 
 SaveSettings() {
-    ; Write current GUI (global) values
-
+    global
 ;@Ahk2Exe-IgnoreBegin
-    global SaveUiPosition, SettingsId, UiPosX, UiPosY
     if SaveUiPosition
         try WinGetPos, UiPosX, UiPosY,,, % "ahk_id " SettingsId
 ;@Ahk2Exe-IgnoreEnd
+
     Gui, Submit
     InitControlsColorsHandlers(false)
-
     DeleteSections()
-
+    
     WriteValues()
     ReadValues()
+    
+    if ShowFavorites
+        GetFavoritePaths(FavoritePaths, FavoritesDir)
 
     InitAutoStartup()
     SetMenuDarkTheme()
