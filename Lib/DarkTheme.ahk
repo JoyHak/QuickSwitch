@@ -143,8 +143,8 @@ InitControlsColorsHandlers(_state := true) {
             GuiBackColor := ""   ; default
 
             ; Controls must have a color to be readable
-            static backColor  := DllCall("GetSysColor", "Int", 5, "UInt")
-            static textColor  := DllCall("GetSysColor", "Int", 8, "UInt")
+            static backColor  := GetSysColor(5)
+            static textColor  := GetSysColor(8)
             
             ControlsBackColor := DarkenColor(backColor)
             ControlsTextColor := textColor
@@ -319,6 +319,21 @@ ToHEX(_string) {
 
 ToHexString(_hex) {
     return Format("{:06x}", _hex)
+}
+
+GetSysColor(_index) {
+    _color := DllCall("GetSysColor", "Int", _index, "UInt")
+    if _color
+        return _color
+    
+    ; NULL or 0x000000
+    if DllCall("GetSysColorBrush", "Int", _index, "UInt") {
+        ; valid color
+        return _color   
+    }
+    
+    ; NULL
+    return ""
 }
 
 
