@@ -6,7 +6,7 @@ InitTrayMenu() {
 
     Menu, % "Tray", % "NoStandard"
     AddTrayItem("&Menu",         "EnforceShowMenu",     MainIcon)
-    AddTrayItem("&Settings",     "EnforceShowSettings", "Settings.ico")
+    AddTrayItem("&Settings",     "ShowSettings",        "Settings.ico")
     Menu, % "Tray", % "Add"
     AddTrayItem("Repor&t error", "TrayIssueTracker",    "Bug.ico")
     AddTrayItem("&Errors log",   "TrayErrorsLog",       "Bug.ico")
@@ -64,12 +64,6 @@ AddTrayItem(_title, _function, _icon, _options := "") {
             
         try Menu, % "Tray", % "Icon", % _title, % _icon,, % IconsSize
     }
-}
-
-EnforceShowSettings() {
-    ; Enforces settings display. Used by Tray menu.
-    global IsEnforcedUi := true
-    ShowSettings()
 }
 
 TrayIssueTracker() {

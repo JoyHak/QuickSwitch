@@ -193,14 +193,12 @@ ToggleManagersTabs() {
 
 
 CalculateGuiPosition(_centerX, _buttonsY) {
-    global IsEnforcedUi, DialogId
+    global IsDialogClosed, DialogId
     _pos  := ""
     _posX := ""
     _posY := ""
 
-    if IsEnforcedUi {
-        IsEnforcedUi := false
-
+    if IsDialogClosed {
         ; Show window contents above the cursor.
         ; Buttons like "OK" below the the cursor (Y axis), contents in the center (X axis).
         ; Show near the screen edge if the window part would be not visible (overflow)
