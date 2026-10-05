@@ -15,6 +15,7 @@ ResetSettings() {
 
     InitAutoStartup()
     SetMenuDarkTheme()
+    InitTrayMenu()
     InitMenuFont()
     ShowSettings()
 }
@@ -38,6 +39,7 @@ SaveSettings() {
 
     InitAutoStartup()
     SetMenuDarkTheme()
+    InitTrayMenu()
     InitMenuFont()
 }
 

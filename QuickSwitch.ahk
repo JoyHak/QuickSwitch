@@ -73,6 +73,7 @@ if IsFile(INI) {
 }
 
 InitTrayMenu()
+ValidateTrayIcon("MainIcon", MainIcon)
 ValidateKey("PinKey",      PinKey,      "",   "Off",  "Dummy")
 ValidateKey("MainKey",     MainKey,     "",   "Off",  "ShowMenu")
 ValidateKey("EnforceKey",  EnforceKey,  "$",  "On",   "EnforceShowMenu")

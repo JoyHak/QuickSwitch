@@ -162,7 +162,7 @@ GetClipboardPaths(_dataType) {
         {
             if ((_path := A_LoopField)             
              && ValidateDirectory("", _path)) {
-                ClipboardPaths.push([_path, "Clipboard.ico"])
+                ClipboardPaths.push([_path, "Clipboard"])
             }
         }
     } catch _ex {
@@ -199,7 +199,7 @@ GetFavoritePaths(ByRef paths, ByRef favoritesDir) {
             if _icon
                 _icon := ExpandVariables(_icon)
             else
-                _icon := "Favorite.ico"
+                _icon := "Favorite"
             
             if (_title := Trim(_title, " `t")) {
                 _title := ExpandVariables(_title)
@@ -220,7 +220,7 @@ ReadPinnedPaths(ByRef paths) {
     if _paths {
         loop, parse, _paths, `|
         {
-            paths.push([A_LoopField, "Pin.ico"])
+            paths.push([A_LoopField, "Pin"])
         }
     }
     

@@ -106,6 +106,7 @@ SetDefaultValues() {
     GuiColor       := DarkTheme ? DarkColor : DefaultColor
     
     IconsSize      := 25
+    Last.IconsSize := IconsSize  
     MainFontSize   := 10
     MenuFontSize   := 0
     MainFont       := "Tahoma"
@@ -122,11 +123,12 @@ SetDefaultValues() {
     RestartMousePlaceholder := ""
 
     ; Requires validation
-    PinKey       := "RButton"
-    MainKey      := "^sc10"  ; Ctrl+Q
-    EnforceKey   := EnforceMousePlaceholder
-    IconsDir     := "Icons"
-    FavoritesDir := "Favorites"
+    PinKey        := "RButton"
+    MainKey       := "^sc10"  ; Ctrl+Q
+    EnforceKey    := EnforceMousePlaceholder
+    IconsDir      := "Icons"
+    Last.IconsDir := IconsDir
+    FavoritesDir  := "Favorites"
     
     MainIcon     := IconsDir "\QuickSwitch.ico"
     if !IsFile(MainIcon)

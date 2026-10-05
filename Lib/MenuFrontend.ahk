@@ -4,6 +4,58 @@ Displayed and actual paths are independent of each other,
 which allows menu to display anything (e.g. short path)
 */
 
+LoadIcon(_icon, _iconNumber := 1, _options := "") {
+    global IconsDir, IconsSize
+
+    _file := _icon
+    if !FileExist(_file) {
+        _file := IconsDir "\" _icon
+    }
+    if !FileExist(_file) {
+        for _, _ext in ["ico", "png", "jpg", "jpeg", "tiff", "tif", "bmp", "gif"] {
+            _file := IconsDir "\" _icon "." _ext
+            if FileExist(_file) {
+                break
+            }
+        }
+    }
+
+    if !_options
+        _options := "w" IconsSize * 2 " h" IconsSize * 2 " Icon" _iconNumber
+
+    _id := LoadPicture(_file, _options, _type)
+    _type := (_type = 1) ? "HICON" : "HBITMAP"
+
+    return _type ":*" _id
+}
+
+CreateIcon(_icon, _iconNumber := 1) {
+    global IconsDir, IconsSize, Last
+    
+    static icons := {}
+    if (IconsDir != Last.IconsDir || IconsSize != Last.IconsSize) {
+        ; Clean up cache
+        for _, _id in icons {
+            _arr := StrSplit(_id, ":*")
+            switch _arr[1] {
+            case "HICON":
+                DllCall("DestroyIcon", "ptr", _arr[2] + 0)
+            case "HBITMAP":
+                DllCall("DeleteObject", "ptr", _arr[2] + 0)
+            }
+        }
+    
+        icons := {}
+    }
+
+    if !icons.hasKey(_icon) {
+        ; Cache handle to the icon
+        icons[_icon] := LoadIcon(_icon, _iconNumber)
+    }    
+    
+    return icons[_icon]
+}
+
 AddMenuTitle(_title) {
     Menu, % "ContextMenu", % "Add", % _title, % "Dummy"
     Menu, % "ContextMenu", % "Disable", % _title
@@ -11,20 +63,17 @@ AddMenuTitle(_title) {
 
 AddMenuIcon(_title, _icon, _iconNumber := 1, _isToggle := false) {
     /*
-        Adds an icon to a menu item. If icons are disabled, adds a check mark.
+    Adds an icon to a menu item. If icons are disabled, adds a check mark.
 
-        _icon:          abosolute / relative to IconsDir path to ICO, CUR, ANI, EXE, DLL, CPL, SCR and other resource that contains icons.
-        _iconNumber:    postive number from non-ICO resource.
-        _isToggle:      add check mark if ShowIcons is false.
+    _icon:          absolute / relative to IconsDir path to the image resource.
+    _iconNumber:    postive number from non-ICO resource.
+    _isToggle:      add check mark if ShowIcons is false.
     */
     global ShowIcons, IconsDir, IconsSize
 
     try {
         if ShowIcons {
-            if !IsFile(_icon)
-                _icon := IconsDir "\" _icon
-
-            Menu, % "ContextMenu", % "Icon", % _title, % _icon, % _iconNumber, % IconsSize
+            Menu, % "ContextMenu", % "Icon", % _title, % CreateIcon(_icon, _iconNumber),, % IconsSize
         } else if (_isToggle != -1) {
             Menu, % "ContextMenu", % _isToggle ? "Check" : "UnCheck", % _title
         }
@@ -48,18 +97,18 @@ AddMenuOption(_title, _function, _isToggle := false, _type := "Radio") {
     ; Underline the first letter to activate using keyboard
     _item := "&" _title
     Menu, % "ContextMenu", % "Add", % _item, % _function, % _type
-    
+
     if (_type && _isToggle != -1) {
         _title .= (_isToggle ? "On" : "Off")
     }
-    
+
     ; Add icon with a postfix depending on the toggle
-    AddMenuIcon(_item, _title ".ico", 1, _isToggle)
+    AddMenuIcon(_item, _title, 1, _isToggle)
 }
 
 AddMenuOptions() {
     global DialogAction
-    
+
     Menu, % "ContextMenu", % "Add"
     AddMenuTitle("Options")
 
@@ -108,7 +157,7 @@ CreateMenu() {
     try Menu, % "ContextMenu", % "Delete"  ; Delete previous menu
 
     MenuStack := []
-    
+
     if ShowPinned
         MenuStack.Push(PinnedPaths*)
     if ShowFavorites
@@ -134,10 +183,10 @@ CreateMenu() {
 
         MenuStack.RemoveAt(PathLimit + 1, MenuStack.Length())
         AddMenuPaths(MenuStack, Func("SelectPath").Bind(MenuStack, _offset))
-        
+
         if !IsDialogClosed
             AddMenuOptions()
-            
+
         AddMenuHelpers()
     } else {
         AddMenuTitle("No available paths")
@@ -177,7 +226,7 @@ ShowMenu(_posX := "", _posY := "") {
     To prevent this we must use different approach, see SetForegroundWindow() in Lib\Windows.ahk
     */
     global IsDialogClosed, DialogId
-    
+
     if (_posX = "" || _posY = "") {
         if IsDialogClosed {
             ; Use last position to avoid Menu "jumping" after each click
@@ -238,7 +287,7 @@ ShowMenu(_posX := "", _posY := "") {
         ; Execute menu action (send WM_COMMAND)
         return SendMessageW(A_ScriptHwnd, 0x0111, _cmd)
     }
-    
+
     ; Switch windows focus
     _activeId := WinGetActive()
     if (_activeId != A_ScriptHwnd) {

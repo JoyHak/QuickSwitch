@@ -51,7 +51,7 @@ SelectPath(ByRef paths, _offset := 0, _fromMenu := "", _pos := 1) {
     
     if (ShowPinned && GetKeyState(PinKey)) {
         if (_pos > PinnedPaths.Length())
-            PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin.ico"])
+            PinnedPaths.InsertAt(1, [paths[_pos][1], "Pin"])
         else
             PinnedPaths.RemoveAt(_pos)
 

@@ -78,6 +78,13 @@ ShowSettings() {
 
     Gui, Tab, 2 ;────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
+    ; Preserve this values
+    Last.DarkTheme    := DarkTheme
+    Last.MenuFont     := MenuFont
+    Last.MenuFontSize := MenuFontSize
+    Last.IconsDir     := IconsDir
+    Last.IconsSize    := IconsSize    
+    
     Gui, Add, CheckBox,     x%MarginX% y+8  gSetSettingsInputColors vDarkTheme    checked%DarkTheme%,               Apply &dark theme
     Gui, Add, Text,         y+%MarginH%                                           Section,                          &Menu color (HEX)
     Gui, Add, Text,         y+12,                                                                                   &Settings color (HEX)
@@ -85,10 +92,6 @@ ShowSettings() {
     Gui, Add, Text,         y+12,                                                                                   &Settings font
     Gui, Add, CheckBox,     y+12  gToggleIcons              vShowIcons            checked%ShowIcons%,               Show &icons from
 
-    ; Preserve this values
-    Last.DarkTheme    := DarkTheme
-    Last.MenuFont     := MenuFont
-    Last.MenuFontSize := MenuFontSize
 
     local _paletteIcon := Char(MainFont, Chr(0xD83C) . Chr(0xDFA8), Chr(0x23)) 
     static installedFonts := GetInstalledFonts()
