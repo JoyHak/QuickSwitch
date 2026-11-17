@@ -8,6 +8,10 @@ GroupAdd, ManagerClasses, ahk_class TTOTAL_CMD
 GroupAdd, ManagerClasses, ahk_class CabinetWClass
 GroupAdd, ManagerClasses, ahk_class ThunderRT6FormDC
 GroupAdd, ManagerClasses, ahk_class dopus.lister
+; Prime Files is a gpui app: its window class (Zed::Window) is shared with other gpui apps,
+; so it is recognized by its process name instead (installed name / name of a cargo build).
+GroupAdd, ManagerClasses, ahk_exe PrimeFiles.exe
+GroupAdd, ManagerClasses, ahk_exe prime-files.exe
 
 CabinetWClass(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
     ; Analyzes the attributes of the Explorer COM object. 
@@ -237,4 +241,69 @@ Dopus(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := fals
         paths.insertAt(_length + 1, _activePath)
 
     return paths.length() - _length
+}
+
+;─────────────────────────────────────────────────────────────────────────────
+;
+PrimeFiles(ByRef winId, ByRef paths, _activePaneOnly := false, _activeTabOnly := false, _showLockedTabs := false) {
+;─────────────────────────────────────────────────────────────────────────────
+    ; Asks the running Prime Files for its tabs: `PrimeFiles.exe tabs` prints the handle of
+    ; the explorer window, then the folder of each tab (the active tab first).
+    ; The executable is the one the running instance recorded in %LOCALAPPDATA%\prime-files\ipc.json.
+    ; Returns number of added paths.
+    static _out := A_Temp "\QuickSwitch-PrimeFiles.txt"
+
+    EnvGet, _localAppData, % "LOCALAPPDATA"
+    ; Commands that fail inside the caller's try block throw: check before touching the files
+    _endpointFile := _localAppData "\prime-files\ipc.json"
+    if !FileExist(_endpointFile)
+        return 0
+
+    FileRead, _endpoint, % "*P65001 " _endpointFile
+    if !RegExMatch(_endpoint, """exe""\s*:\s*""((?:[^""\\]|\\.)*)""", _match)
+        return 0
+
+    _exe := StrReplace(_match1, "\\", "\")
+    if !FileExist(_exe)
+        return 0
+
+    if FileExist(_out)
+        FileDelete, % _out
+
+    _quote := """"
+    _command := ComSpec " /c " _quote _quote _exe _quote " tabs > " _quote _out _quote _quote
+    RunWait, % _command,, % "Hide UseErrorLevel"
+
+    ; Prime Files prints UTF-8 (the script reads the system code page by default)
+    if !FileExist(_out)
+        return 0
+
+    FileRead, _text, % "*P65001 " _out
+    FileDelete, % _out
+    if !_text
+        return 0
+
+    _length := paths.Length()
+    _first  := true
+
+    Loop, parse, _text, `n, `r
+    {
+        if !A_LoopField
+            continue
+
+        if _first {
+            _first := false
+            ; The launcher is another window of the same process: nothing to add for it,
+            ; but it is not an elevated manager either (non-zero result).
+            if (winId + 0 != A_LoopField + 0)
+                return 1
+            continue
+        }
+
+        paths.push([A_LoopField, "PrimeFiles"])
+        if _activeTabOnly
+            break
+    }
+
+    return paths.Length() - _length
 }

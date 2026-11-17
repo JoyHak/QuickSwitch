@@ -34,6 +34,10 @@ GetPaths(ByRef paths, _listerIndex := 0, _allDesktops := false, _activePaneOnly 
             case "dopus.lister":
                 ; Function name without dot .
                 _winClass := "Dopus"
+
+            case "Zed::Window":
+                ; Prime Files (gpui window class, not a valid function name)
+                _winClass := "PrimeFiles"
         }
 
         try {
